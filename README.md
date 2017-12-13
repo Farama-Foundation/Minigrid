@@ -24,7 +24,7 @@ pip3 install -e .
 
 ## Usage
 
-To run the standalone UI application:
+To run the standalone UI application, which allows you to manually control the agent with the arrow keys:
 
 ```
 ./standalone.py
@@ -43,4 +43,10 @@ You can perform training using the ACKTR algorithm with:
 
 ```
 python3 basicrl/main.py --env-name MiniGrid-Empty-8x8-v0 --no-vis --num-processes 32 --algo acktr
+```
+
+You can view the result of training using the `enjoy.py` script:
+
+```
+python3 basicrl/enjoy.py --env-name MiniGrid-Empty-8x8-v0 --load-dir ./trained_models/acktr
 ```

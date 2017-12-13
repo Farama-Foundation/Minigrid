@@ -15,7 +15,7 @@ class EmptyEnv6x6(EmptyEnv):
 
 register(
     id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_MiniGrid.envs:EmptyEnv',
+    entry_point='gym_minigrid.envs:EmptyEnv',
     reward_threshold=1000.0
 )
 
