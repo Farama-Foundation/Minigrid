@@ -183,7 +183,7 @@ class MultiRoomEnv(MiniGridEnv):
                 prevDoorColor = doorColor
 
                 prevRoom = roomList[idx-1]
-                prevRoom.exitDoorPos = entryDoorPos
+                prevRoom.exitDoorPos = room.entryDoorPos
 
         # Place the final goal
         while True:
