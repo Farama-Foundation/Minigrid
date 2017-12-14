@@ -20,7 +20,7 @@ register(
 )
 
 register(
-    id='-Empty-6x6-v0',
+    id='MiniGrid-Empty-6x6-v0',
     entry_point='gym_minigrid.envs:EmptyEnv6x6',
     reward_threshold=1000.0
 )
@@ -187,12 +187,14 @@ class MultiRoomEnv(MiniGridEnv):
 
         # Place the final goal
         while True:
-            goalX = self._randInt(topX + 1, topX + sizeX - 1)
-            goalY = self._randInt(topY + 1, topY + sizeY - 1)
+            self.goalPos = (
+                self._randInt(topX + 1, topX + sizeX - 1),
+                self._randInt(topY + 1, topY + sizeY - 1)
+            )
 
             # Make sure the goal doesn't overlap with the agent
-            if (goalX, goalY) != self.startPos:
-                grid.set(goalX, goalY, Goal())
+            if self.goalPos != self.startPos:
+                grid.set(*self.goalPos, Goal())
                 break
 
         return grid
