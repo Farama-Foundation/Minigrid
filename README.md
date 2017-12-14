@@ -4,23 +4,34 @@ Simple and minimailistic grid world environment for OpenAI Gym.
 
 ## Installation
 
-Requirements:
-- Python 3
-- OpenAI gym
-- numpy
-- PyQT5
-- PyTorch (if using the supplied `basicrl` training code)
-- matplotlib (if using the supplied `basicrl` training code)
-
-Start by manually installing [PyTorch](http://pytorch.org/).
-
-Then, clone the repository and install the other dependencies with `pip3`:
+Clone this repository and install the other dependencies with `pip3`:
 
 ```
 git clone https://github.com/maximecb/gym-minigrid.git
 cd gym-minigrid
 pip3 install -e .
 ```
+
+Optionally, if you wish use the reinforcement learning code included
+under [/basicrl](/basicrl), you can install its dependencies as follows:
+
+```
+cd basicrl
+
+# PyTorch
+conda install pytorch torchvision -c soumith
+
+# OpenAI baselines
+git clone https://github.com/openai/baselines.git
+cd baselines
+pip install -e .
+
+# Other requirements
+pip install -r requirements.txt
+```
+
+Note: the basicrl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
+which was modified to work with this environment.
 
 ## Usage
 
