@@ -35,11 +35,37 @@ class Window(QMainWindow):
 
         self.closed = False
 
+        # Callback for keyboard events
+        self.keyDownCb = None
+
     def closeEvent(self, event):
         self.closed = True
 
     def setPixmap(self, pixmap):
         self.imgLabel.setPixmap(pixmap)
+
+    def setKeyDownCb(self, callback):
+        self.keyDownCb = callback
+
+    def keyPressEvent(self, e):
+        if self.keyDownCb == None:
+            return
+
+        keyName = None
+        if e.key() == Qt.Key_Left:
+            keyName = 'LEFT'
+        elif e.key() == Qt.Key_Right:
+            keyName = 'RIGHT'
+        elif e.key() == Qt.Key_Up:
+            keyName = 'UP'
+        elif e.key() == Qt.Key_Down:
+            keyName = 'DOWN'
+        elif e.key() == Qt.Key_Space:
+            keyName = 'SPACE'
+
+        if keyName == None:
+            return
+        self.keyDownCb(keyName)
 
 class Renderer:
     def __init__(self, width, height, ownWindow=False):
