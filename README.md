@@ -1,6 +1,9 @@
 # Minimalistic Grid World Environment (MiniGrid)
 
-Simple and minimailistic grid world environment for OpenAI Gym.
+There are other grid world Gym environments out there, but this one is
+designed to be especially simple, lightweight and fast. The code has very few
+dependencies, loads no external sprites/textures, and can run at up to 5800
+FPS on my quad-core i7 laptop.
 
 ## Installation
 
