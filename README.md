@@ -1,6 +1,6 @@
-# Minimalistic Grid World Environment (MiniGrid)
+# Minimalistic Gridworld Environment (MiniGrid)
 
-There are other grid world Gym environments out there, but this one is
+There are other gridworld Gym environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5800 FPS on a quad-core
