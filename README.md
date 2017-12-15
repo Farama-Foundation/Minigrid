@@ -6,6 +6,9 @@ dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5800 FPS on a quad-core
 laptop, which means you can run your experiments faster.
 
+This environment has been built at the [MILA](https://mila.quebec/en/) as
+part of the [Baby AI game](https://github.com/maximecb/baby-ai-game) project.
+
 ## Installation
 
 Clone this repository and install the other dependencies with `pip3`:
