@@ -1,5 +1,5 @@
-from gym.envs.registration import register
 from gym_minigrid.envs.minigrid_env import *
+from gym_minigrid.envs.register import register
 
 class EmptyEnv(MiniGridEnv):
     """
@@ -15,14 +15,12 @@ class EmptyEnv6x6(EmptyEnv):
 
 register(
     id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv',
-    reward_threshold=1000.0
+    entry_point='gym_minigrid.envs:EmptyEnv'
 )
 
 register(
     id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv6x6',
-    reward_threshold=1000.0
+    entry_point='gym_minigrid.envs:EmptyEnv6x6'
 )
 
 class DoorKeyEnv(MiniGridEnv):
@@ -60,14 +58,12 @@ class DoorKeyEnv16x16(DoorKeyEnv):
 
 register(
     id='MiniGrid-Door-Key-8x8-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv',
-    reward_threshold=1000.0
+    entry_point='gym_minigrid.envs:DoorKeyEnv'
 )
 
 register(
     id='MiniGrid-Door-Key-16x16-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv16x16',
-    reward_threshold=1000.0
+    entry_point='gym_minigrid.envs:DoorKeyEnv16x16'
 )
 
 class Room:
@@ -441,6 +437,5 @@ class FetchEnv(MiniGridEnv):
 
 register(
     id='MiniGrid-Fetch-8x8-v0',
-    entry_point='gym_minigrid.envs:FetchEnv',
-    reward_threshold=900.0
+    entry_point='gym_minigrid.envs:FetchEnv'
 )

@@ -2,6 +2,7 @@
 
 from __future__ import division, print_function
 
+import sys
 import numpy
 import gym
 import time
@@ -38,12 +39,17 @@ def main():
             action = MiniGridEnv.ACTION_FORWARD
         elif keyName == 'SPACE':
             action = MiniGridEnv.ACTION_TOGGLE
+        elif keyName == 'RETURN':
+            env.reset()
+        elif keyName == 'ESCAPE':
+            sys.exit(0)
         else:
-            "unknown key"
+            print("unknown key %s" % keyName)
+            return
 
         obs, reward, done, info = env.step(action)
 
-        print('reward=%s' % reward)
+        print('step=%s, reward=%s' % (env.stepCount, reward))
 
         if done:
             print('done!')

@@ -62,6 +62,10 @@ class Window(QMainWindow):
             keyName = 'DOWN'
         elif e.key() == Qt.Key_Space:
             keyName = 'SPACE'
+        elif e.key() == Qt.Key_Return:
+            keyName = 'RETURN'
+        elif e.key() == Qt.Key_Escape:
+            keyName = 'ESCAPE'
 
         if keyName == None:
             return
