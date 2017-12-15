@@ -89,6 +89,10 @@ Registered configurations:
 - `MiniGrid-Door-Key-8x8-v0`
 - `MiniGrid-Door-Key-16x16-v0`
 
+<p align="center">
+<img src="/figures/door-key-env.png">
+</p>
+
 This environment has a key that the agent must pick up in order to unlock
 a goal and then get to the green goal square. This environment is difficult,
 because of the sparse reward, to solve using classical RL algorithms. It is
@@ -99,7 +103,7 @@ useful to experiment with curiosity or curriculum learning.
 Registered configurations:
 - `MiniGrid-Multi-Room-N6-v0`
 
-<p align="center"> 
+<p align="center">
 <img src="/figures/multi-room.gif" width=416 height=424>
 </p>
 
@@ -114,7 +118,7 @@ rooms and building a curriculum, the environment can be solved.
 Registered configurations:
 - `MiniGrid-Fetch-8x8-v0`
 
-<p align="center"> 
+<p align="center">
 <img src="/figures/fetch-env.png" width=392 height=269>
 </p>
 

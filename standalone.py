@@ -5,13 +5,24 @@ from __future__ import division, print_function
 import numpy
 import gym
 import time
+from optparse import OptionParser
 
 import gym_minigrid
 from gym_minigrid.envs import MiniGridEnv
 
 def main():
+    parser = OptionParser()
+    parser.add_option(
+        "-e",
+        "--env-name",
+        dest="env_name",
+        help="gym environment to load",
+        default='MiniGrid-Multi-Room-N6-v0'
+    )
+    (options, args) = parser.parse_args()
 
-    env = gym.make('MiniGrid-Multi-Room-N6-v0')
+    # Load the gym environment
+    env = gym.make(options.env_name)
     env.reset()
 
     # Create a window to render into
