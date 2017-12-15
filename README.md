@@ -48,7 +48,7 @@ To run the standalone UI application, which allows you to manually control the a
 The environment being run can be selected with the `--env-name` option, eg:
 
 ```
-./standalone.py --env-name MiniGrid-Fetch-8x8-v0
+./standalone.py --env-name MiniGrid-Empty-8x8-v0
 ```
 
 Basic reinforcement learning code is provided in the `basicrl` subdirectory.
@@ -71,27 +71,47 @@ The environments listed below are implemented and registered in [simple_envs.py]
 ### Empty environment
 
 Registered configurations:
-- MiniGrid-Empty-8x8-v0
-- MiniGrid-Empty-6x6-v0
+- `MiniGrid-Empty-8x8-v0`
+- `MiniGrid-Empty-6x6-v0`
+
+This environment is an empty room, and the goal of the agent is to reach the
+green goal square, which provides a sparse reward. A small penalty is
+subtracted for the number of steps to reach the goal. This environment is
+useful, with small rooms, to validate that your RL algorithm works correctly,
+and with large rooms to experiment with sparse rewards.
 
 ### Door & key environment
 
 Registered configurations:
-- MiniGrid-Door-Key-8x8-v0
-- MiniGrid-Door-Key-16x16-v0
-- MiniGrid-Multi-Room-N6-v0
-- MiniGrid-Fetch-8x8-v0
+- `MiniGrid-Door-Key-8x8-v0`
+- `MiniGrid-Door-Key-16x16-v0`
+
+This environment has a key that the agent must pick up in order to unlock
+a goal and then get to the green goal square. This environment is difficult,
+because of the sparse reward, to solve using classical RL algorithms. It is
+useful to experiment with curiosity or curriculum learning.
 
 ### Multi-room environment
 
 Registered configurations:
-- MiniGrid-Multi-Room-N6-v0
+- `MiniGrid-Multi-Room-N6-v0`
 
-TODO: curriculum learning, include gif
+![Multi-room environment](/figures/multi-room.gif)
+
+This environment has a series of connected rooms with doors that must be
+opened in order to get to the next room. The final room has the green goal
+square the agent must get to. This environment is extremely difficult to
+solve using classical RL. However, by gradually increasing the number of
+rooms and building a curriculum, the environment can be solved.
 
 ### Fetch Environment
 
 Registered configurations:
-- MiniGrid-Fetch-8x8-v0
+- `MiniGrid-Fetch-8x8-v0`
 
-Natural language observation ("mission").
+![Fetch environment](/figures/fetch-env.gif)
+
+This environment has multiple objects of assorted types and colors. The
+agent receives a textual string as part of its observation telling it
+which object to pick up. Picking up the wrong object produces a negative
+reward.
