@@ -109,7 +109,7 @@ rooms and building a curriculum, the environment can be solved.
 Registered configurations:
 - `MiniGrid-Fetch-8x8-v0`
 
-![Fetch environment](/figures/fetch-env.gif)
+![Fetch environment](/figures/fetch-env.png)
 
 This environment has multiple objects of assorted types and colors. The
 agent receives a textual string as part of its observation telling it
