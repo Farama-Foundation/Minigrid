@@ -2,7 +2,7 @@
 
 import random
 import gym
-from gym_minigrid.envs.register import envSet
+from gym_minigrid.register import envSet
 
 print('%d environments registered' % len(envSet))
 

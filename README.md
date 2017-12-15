@@ -69,7 +69,7 @@ python3 basicrl/enjoy.py --env-name MiniGrid-Empty-8x8-v0 --load-dir ./trained_m
 
 ## Included Environments
 
-The environments listed below are implemented and registered in [simple_envs.py](gym_minigrid/envs/simple_envs.py).
+The environments listed below are implemented in the [gym_minigrid/envs](/gym_minigrid/envs) directory.
 
 ### Empty environment
 

@@ -3,7 +3,7 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 import numpy as np
-from gym_minigrid.envs.rendering import *
+from gym_minigrid.rendering import *
 
 # Size in pixels of a cell in the full-scale human view
 CELL_PIXELS = 32
