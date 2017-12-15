@@ -37,7 +37,7 @@ pip install -r requirements.txt
 Note: the basicrl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
 which was modified to work with this environment.
 
-## Usage
+## Basic Usage
 
 To run the standalone UI application, which allows you to manually control the agent with the arrow keys:
 
@@ -51,8 +51,6 @@ The environment being run can be selected with the `--env-name` option, eg:
 ./standalone.py --env-name MiniGrid-Fetch-8x8-v0
 ```
 
-To see available environments and their implementation, look at [simple_envs.py](gym_minigrid/envs/simple_envs.py).
-
 Basic reinforcement learning code is provided in the `basicrl` subdirectory.
 You can perform training using the ACKTR algorithm with:
 
@@ -65,3 +63,35 @@ You can view the result of training using the `enjoy.py` script:
 ```
 python3 basicrl/enjoy.py --env-name MiniGrid-Empty-8x8-v0 --load-dir ./trained_models/acktr
 ```
+
+## Included Environments
+
+The environments listed below are implemented and registered in [simple_envs.py](gym_minigrid/envs/simple_envs.py).
+
+### Empty environment
+
+Registered configurations:
+- MiniGrid-Empty-8x8-v0
+- MiniGrid-Empty-6x6-v0
+
+### Door & key environment
+
+Registered configurations:
+- MiniGrid-Door-Key-8x8-v0
+- MiniGrid-Door-Key-16x16-v0
+- MiniGrid-Multi-Room-N6-v0
+- MiniGrid-Fetch-8x8-v0
+
+### Multi-room environment
+
+Registered configurations:
+- MiniGrid-Multi-Room-N6-v0
+
+TODO: curriculum learning, include gif
+
+### Fetch Environment
+
+Registered configurations:
+- MiniGrid-Fetch-8x8-v0
+
+Natural language observation ("mission").

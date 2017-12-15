@@ -59,13 +59,13 @@ class DoorKeyEnv16x16(DoorKeyEnv):
         super(DoorKeyEnv16x16, self).__init__(size=16)
 
 register(
-    id='-Door-Key-8x8-v0',
+    id='MiniGrid-Door-Key-8x8-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv',
     reward_threshold=1000.0
 )
 
 register(
-    id='-Door-Key-16x16-v0',
+    id='MiniGrid-Door-Key-16x16-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv16x16',
     reward_threshold=1000.0
 )
