@@ -7,7 +7,7 @@ external sprites/textures, and it can run at up to 5800 FPS on a quad-core
 laptop, which means you can run your experiments faster.
 
 This environment has been built at the [MILA](https://mila.quebec/en/) as
-part of the [Baby AI game](https://github.com/maximecb/baby-ai-game) project.
+part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
 
 ## Installation
 
@@ -99,7 +99,9 @@ useful to experiment with curiosity or curriculum learning.
 Registered configurations:
 - `MiniGrid-Multi-Room-N6-v0`
 
-![Multi-room environment](/figures/multi-room.gif)
+<p align="center"> 
+<img src="/figures/multi-room.gif" width=416 height=424>
+</p>
 
 This environment has a series of connected rooms with doors that must be
 opened in order to get to the next room. The final room has the green goal
@@ -112,7 +114,9 @@ rooms and building a curriculum, the environment can be solved.
 Registered configurations:
 - `MiniGrid-Fetch-8x8-v0`
 
-![Fetch environment](/figures/fetch-env.png)
+<p align="center"> 
+<img src="/figures/fetch-env.png" width=392 height=269>
+</p>
 
 This environment has multiple objects of assorted types and colors. The
 agent receives a textual string as part of its observation telling it
