@@ -1,4 +1,4 @@
-from gym_minigrid.envs.minigrid import *
+from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
 class EmptyEnv(MiniGridEnv):
