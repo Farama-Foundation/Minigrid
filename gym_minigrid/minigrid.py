@@ -516,6 +516,11 @@ class MiniGridEnv(gym.Env):
         return grid
 
     def _reset(self):
+        # Generate a new random grid at the start of each episode
+        # To prevent this behavior, call env.seed with the same
+        # seed before env.reset
+        self.grid = self._genGrid(self.gridSize, self.gridSize)
+
         # Place the agent in the starting position and direction
         self.agentPos = self.startPos
         self.agentDir = self.startDir
@@ -526,31 +531,18 @@ class MiniGridEnv(gym.Env):
         # Step count since episode start
         self.stepCount = 0
 
-        # Restore the initial grid
-        self.grid = self.seedGrid.copy()
-
         # Return first observation
         obs = self._genObs()
         return obs
 
-    def _seed(self, seed=None):
+    def _seed(self, seed=1337):
         """
         The seed function sets the random elements of the environment,
         and initializes the world.
         """
 
-        # By default, make things deterministic, always
-        # produce the same environment
-        if seed == None:
-            seed = 1337
-
         # Seed the random number generator
         self.np_random, _ = seeding.np_random(seed)
-
-        self.grid = self._genGrid(self.gridSize, self.gridSize)
-
-        # Store a copy of the grid so we can restore it on reset
-        self.seedGrid = self.grid.copy()
 
         return [seed]
 
