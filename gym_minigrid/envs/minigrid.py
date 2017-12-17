@@ -98,8 +98,8 @@ class Goal(WorldObj):
         ])
 
 class Wall(WorldObj):
-    def __init__(self):
-        super(Wall, self).__init__('wall', 'grey')
+    def __init__(self, color='grey'):
+        super(Wall, self).__init__('wall', color)
 
     def render(self, r):
         self._setColor(r)
