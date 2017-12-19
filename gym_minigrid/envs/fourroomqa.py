@@ -102,7 +102,20 @@ class FourRoomQAEnv(MiniGridEnv):
         grid.set(vSplitIdx, hIdx, None)
         grid.set(vSplitIdx-1, hIdx, None)
 
+        vIdx = self._randInt(1, vSplitIdx-1)
+        grid.set(vIdx, hSplitIdx, None)
+        grid.set(vIdx, hSplitIdx-1, None)
+        vIdx = self._randInt(vSplitIdx+1, width-1)
+        grid.set(vIdx, hSplitIdx, None)
+        grid.set(vIdx, hSplitIdx-1, None)
 
+        # Select a random position for the agent to start at
+        self.startDir = self._randInt(0, 4)
+        room = self._randElem(self.rooms)
+        self.startPos = (
+            self._randInt(room.top[0] + 1, room.top[0] + room.size[0] - 1),
+            self._randInt(room.top[1] + 1, room.top[1] + room.size[1] - 1),
+        )
 
 
 
