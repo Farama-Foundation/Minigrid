@@ -126,3 +126,20 @@ This environment has multiple objects of assorted types and colors. The
 agent receives a textual string as part of its observation telling it
 which object to pick up. Picking up the wrong object produces a negative
 reward.
+
+### Four Room Question Answering
+
+Registered configurations:
+- `MiniGrid-FourRoomQA-v0`
+
+<p align="center">
+<img src="/figures/fourroomqa-env.png">
+</p>
+
+This environment is inspired by the
+[Embodied Question Answering](https://arxiv.org/abs/1711.11543) paper.
+There are four colored rooms, and the agent is placed at a random position.
+Multiple objects of different types and colors are also placed at random
+positions in random rooms. A question and answer pair is generated, the
+question is given to the agent as an observation, and the agent has a limited
+number of time steps to explore the environment and produce a response.
