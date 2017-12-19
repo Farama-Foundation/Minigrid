@@ -113,7 +113,7 @@ square the agent must get to. This environment is extremely difficult to
 solve using classical RL. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
 
-### Fetch Environment
+### Fetch environment
 
 Registered configurations:
 - `MiniGrid-Fetch-8x8-v0`
@@ -127,7 +127,7 @@ agent receives a textual string as part of its observation telling it
 which object to pick up. Picking up the wrong object produces a negative
 reward.
 
-### Four Room Question Answering
+### Four room question answering environment
 
 Registered configurations:
 - `MiniGrid-FourRoomQA-v0`
