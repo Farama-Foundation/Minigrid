@@ -1,8 +1,9 @@
 import math
 import gym
+from enum import IntEnum
+import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
-import numpy as np
 from gym_minigrid.rendering import *
 
 # Size in pixels of a cell in the full-scale human view
@@ -458,22 +459,19 @@ class MiniGridEnv(gym.Env):
         'video.frames_per_second' : 10
     }
 
-    # Possible actions
-    NUM_ACTIONS = 4
-    ACTION_LEFT = 0
-    ACTION_RIGHT = 1
-    ACTION_FORWARD = 2
-    ACTION_TOGGLE = 3
+    # Enumeration of possible actions
+    class Actions(IntEnum):
+        left = 0
+        right = 1
+        forward = 2
+        toggle = 3
 
     def __init__(self, gridSize=16, maxSteps=100):
-        # Renderer object used to render the whole grid (full-scale)
-        self.gridRender = None
-
-        # Renderer used to render observations (small-scale agent view)
-        self.obsRender = None
+        # Action enumeration for this environment
+        self.actions = MiniGridEnv.Actions
 
         # Actions are discrete integer values
-        self.action_space = spaces.Discrete(MiniGridEnv.NUM_ACTIONS)
+        self.action_space = spaces.Discrete(len(self.actions))
 
         # The observations are RGB images
         self.observation_space = spaces.Box(
@@ -482,7 +480,14 @@ class MiniGridEnv(gym.Env):
             shape=OBS_ARRAY_SIZE
         )
 
+        # Range of possible rewards
         self.reward_range = (-1, 1000)
+
+        # Renderer object used to render the whole grid (full-scale)
+        self.gridRender = None
+
+        # Renderer used to render observations (small-scale agent view)
+        self.obsRender = None
 
         # Environment configuration
         self.gridSize = gridSize
@@ -615,17 +620,17 @@ class MiniGridEnv(gym.Env):
         done = False
 
         # Rotate left
-        if action == MiniGridEnv.ACTION_LEFT:
+        if action == self.actions.left:
             self.agentDir -= 1
             if self.agentDir < 0:
                 self.agentDir += 4
 
         # Rotate right
-        elif action == MiniGridEnv.ACTION_RIGHT:
+        elif action == self.actions.right:
             self.agentDir = (self.agentDir + 1) % 4
 
         # Move forward
-        elif action == MiniGridEnv.ACTION_FORWARD:
+        elif action == self.actions.forward:
             u, v = self.getDirVec()
             newPos = (self.agentPos[0] + u, self.agentPos[1] + v)
             targetCell = self.grid.get(newPos[0], newPos[1])
@@ -636,7 +641,7 @@ class MiniGridEnv(gym.Env):
                 reward = 1000 - self.stepCount
 
         # Pick up or trigger/activate an item
-        elif action == MiniGridEnv.ACTION_TOGGLE:
+        elif action == self.actions.toggle:
             u, v = self.getDirVec()
             cell = self.grid.get(self.agentPos[0] + u, self.agentPos[1] + v)
             if cell and cell.canPickup() and self.carrying is None:

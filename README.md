@@ -64,7 +64,7 @@ python3 basicrl/main.py --env-name MiniGrid-Empty-8x8-v0 --no-vis --num-processe
 You can view the result of training using the `enjoy.py` script:
 
 ```
-python3 basicrl/enjoy.py --env-name MiniGrid-Empty-8x8-v0 --load-dir ./trained_models/acktr
+python3 basicrl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/acktr
 ```
 
 ## Included Environments

@@ -9,7 +9,6 @@ import time
 from optparse import OptionParser
 
 import gym_minigrid
-from gym_minigrid.envs import MiniGridEnv
 
 def main():
     parser = OptionParser()
@@ -32,13 +31,13 @@ def main():
     def keyDownCb(keyName):
         action = 0
         if keyName == 'LEFT':
-            action = MiniGridEnv.ACTION_LEFT
+            action = env.actions.left
         elif keyName == 'RIGHT':
-            action = MiniGridEnv.ACTION_RIGHT
+            action = env.actions.right
         elif keyName == 'UP':
-            action = MiniGridEnv.ACTION_FORWARD
+            action = env.actions.forward
         elif keyName == 'SPACE':
-            action = MiniGridEnv.ACTION_TOGGLE
+            action = env.actions.toggle
         elif keyName == 'RETURN':
             env.reset()
         elif keyName == 'ESCAPE':
