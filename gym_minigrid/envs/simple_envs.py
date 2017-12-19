@@ -57,12 +57,12 @@ class DoorKeyEnv16x16(DoorKeyEnv):
         super(DoorKeyEnv16x16, self).__init__(size=16)
 
 register(
-    id='MiniGrid-Door-Key-8x8-v0',
+    id='MiniGrid-DoorKey-8x8-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv'
 )
 
 register(
-    id='MiniGrid-Door-Key-16x16-v0',
+    id='MiniGrid-DoorKey-16x16-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv16x16'
 )
 
@@ -323,7 +323,7 @@ class MultiRoomEnvN6(MultiRoomEnv):
         )
 
 register(
-    id='MiniGrid-Multi-Room-N6-v0',
+    id='MiniGrid-MultiRoom-N6-v0',
     entry_point='gym_minigrid.envs:MultiRoomEnvN6',
     reward_threshold=1000.0
 )

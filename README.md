@@ -86,8 +86,8 @@ and with large rooms to experiment with sparse rewards.
 ### Door & key environment
 
 Registered configurations:
-- `MiniGrid-Door-Key-8x8-v0`
-- `MiniGrid-Door-Key-16x16-v0`
+- `MiniGrid-DoorKey-8x8-v0`
+- `MiniGrid-DoorKey-16x16-v0`
 
 <p align="center">
 <img src="/figures/door-key-env.png">
@@ -101,7 +101,7 @@ useful to experiment with curiosity or curriculum learning.
 ### Multi-room environment
 
 Registered configurations:
-- `MiniGrid-Multi-Room-N6-v0`
+- `MiniGrid-MultiRoom-N6-v0`
 
 <p align="center">
 <img src="/figures/multi-room.gif" width=416 height=424>
