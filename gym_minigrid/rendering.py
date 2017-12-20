@@ -149,6 +149,11 @@ class Renderer:
     def setColor(self, r, g, b, a=255):
         self.painter.setBrush(QColor(r, g, b, a))
 
+    def setLineWidth(self, width):
+        pen = self.painter.pen()
+        pen.setWidthF(width)
+        self.painter.setPen(pen)
+
     def drawLine(self, x0, y0, x1, y1):
         self.painter.drawLine(x0, y0, x1, y1)
 

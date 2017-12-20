@@ -127,7 +127,7 @@ class FourRoomQAEnv(MiniGridEnv):
         self.startPos = self._randPos(room)
 
         # Possible object types and colors
-        types = ['key', 'ball']
+        types = ['key', 'ball', 'box']
         colors = list(COLORS.keys())
 
         # Place a number of random objects
@@ -140,6 +140,8 @@ class FourRoomQAEnv(MiniGridEnv):
                 obj = Key(objColor)
             elif objType == 'ball':
                 obj = Ball(objColor)
+            elif objType == 'box':
+                obj = Box(objColor)
 
             # Pick a random position that doesn't overlap with anything
             while True:

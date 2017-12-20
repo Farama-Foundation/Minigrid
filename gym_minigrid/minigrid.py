@@ -42,9 +42,10 @@ OBJECT_TO_IDX = {
     'wall'          : 1,
     'door'          : 2,
     'locked_door'   : 3,
-    'ball'          : 4,
-    'key'           : 5,
-    'goal'          : 6
+    'key'           : 4,
+    'ball'          : 5,
+    'box'           : 6,
+    'goal'          : 7
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -73,7 +74,7 @@ class WorldObj:
         """Can this contain another object?"""
         return False
 
-    def toggle(self, env):
+    def toggle(self, env, pos):
         """Method to trigger/toggle an action this object performs"""
         return False
 
@@ -144,7 +145,7 @@ class Door(WorldObj):
         ])
         r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
-    def toggle(self, env):
+    def toggle(self, env, pos):
         if not self.isOpen:
             self.isOpen = True
             return True
@@ -192,7 +193,7 @@ class LockedDoor(WorldObj):
             CELL_PIXELS * 0.60
         )
 
-    def toggle(self, env):
+    def toggle(self, env, pos):
         # If the player has the right key to open the door
         if isinstance(env.carrying, Key) and env.carrying.color == self.color:
             self.isOpen = True
@@ -204,17 +205,6 @@ class LockedDoor(WorldObj):
     def canOverlap(self):
         """The agent can only walk over this cell when the door is open"""
         return self.isOpen
-
-class Ball(WorldObj):
-    def __init__(self, color='blue'):
-        super(Ball, self).__init__('ball', color)
-
-    def canPickup(self):
-        return True
-
-    def render(self, r):
-        self._setColor(r)
-        r.drawCircle(CELL_PIXELS * 0.5, CELL_PIXELS * 0.5, 10)
 
 class Key(WorldObj):
     def __init__(self, color='blue'):
@@ -252,6 +242,49 @@ class Key(WorldObj):
         r.setLineColor(0, 0, 0)
         r.setColor(0, 0, 0)
         r.drawCircle(18, 9, 2)
+
+class Ball(WorldObj):
+    def __init__(self, color='blue'):
+        super(Ball, self).__init__('ball', color)
+
+    def canPickup(self):
+        return True
+
+    def render(self, r):
+        self._setColor(r)
+        r.drawCircle(CELL_PIXELS * 0.5, CELL_PIXELS * 0.5, 10)
+
+class Box(WorldObj):
+    def __init__(self, color, contains=None):
+        super(Box, self).__init__('box', color)
+        self.contains = contains
+
+    def render(self, r):
+        c = COLORS[self.color]
+        r.setLineColor(c[0], c[1], c[2])
+        r.setColor(0, 0, 0)
+        r.setLineWidth(2)
+
+        r.drawPolygon([
+            (4            , CELL_PIXELS-4),
+            (CELL_PIXELS-4, CELL_PIXELS-4),
+            (CELL_PIXELS-4,             4),
+            (4            ,             4)
+        ])
+
+        r.drawLine(
+            4,
+            CELL_PIXELS / 2,
+            CELL_PIXELS - 4,
+            CELL_PIXELS / 2
+        )
+
+        r.setLineWidth(1)
+
+    def toggle(self, env, pos):
+        # Replace the box by its contents
+        env.grid.set(*pos, self.contains)
+        return True
 
 class Grid:
     """
@@ -643,12 +676,14 @@ class MiniGridEnv(gym.Env):
         # Pick up or trigger/activate an item
         elif action == self.actions.toggle:
             u, v = self.getDirVec()
-            cell = self.grid.get(self.agentPos[0] + u, self.agentPos[1] + v)
-            if cell and cell.canPickup() and self.carrying is None:
-                self.carrying = cell
-                self.grid.set(self.agentPos[0] + u, self.agentPos[1] + v, None)
+            objPos = (self.agentPos[0] + u, self.agentPos[1] + v)
+            cell = self.grid.get(*objPos)
+            if cell and cell.canPickup():
+                if self.carrying is None:
+                    self.carrying = cell
+                    self.grid.set(*objPos, None)
             elif cell:
-                cell.toggle(self)
+                cell.toggle(self, objPos)
 
         else:
             assert False, "unknown action"
