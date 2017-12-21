@@ -34,10 +34,11 @@ sudo apt install libopenmpi-dev zlib1g-dev cmake
 # OpenAI baselines
 git clone https://github.com/openai/baselines.git
 cd baselines
-pip install -e .
+pip3 install -e .
+cd ..
 
 # Other requirements
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Note: the basicrl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
