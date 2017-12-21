@@ -28,6 +28,9 @@ cd basicrl
 # PyTorch
 conda install pytorch torchvision -c soumith
 
+# Dependencies needed by OpenAI baselines
+sudo apt install libopenmpi-dev zlib1g-dev cmake
+
 # OpenAI baselines
 git clone https://github.com/openai/baselines.git
 cd baselines
