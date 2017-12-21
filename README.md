@@ -58,7 +58,7 @@ Basic reinforcement learning code is provided in the `basicrl` subdirectory.
 You can perform training using the ACKTR algorithm with:
 
 ```
-python3 basicrl/main.py --env-name MiniGrid-Empty-8x8-v0 --no-vis --num-processes 32 --algo acktr
+python3 basicrl/main.py --env-name MiniGrid-Empty-6x6-v0 --no-vis --num-processes 32 --algo acktr
 ```
 
 You can view the result of training using the `enjoy.py` script:
