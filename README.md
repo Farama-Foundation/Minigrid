@@ -81,6 +81,10 @@ Registered configurations:
 - `MiniGrid-Empty-8x8-v0`
 - `MiniGrid-Empty-6x6-v0`
 
+<p align="center">
+<img src="/figures/empty-env.png">
+</p>
+
 This environment is an empty room, and the goal of the agent is to reach the
 green goal square, which provides a sparse reward. A small penalty is
 subtracted for the number of steps to reach the goal. This environment is
@@ -141,9 +145,14 @@ Registered configurations:
 </p>
 
 This environment is inspired by the
-[Embodied Question Answering](https://arxiv.org/abs/1711.11543) paper.
-There are four colored rooms, and the agent is placed at a random position.
+[Embodied Question Answering](https://arxiv.org/abs/1711.11543) paper. The question are of the form:
+
+> Are there any keys in the red room?
+
+There are four colored rooms, and the agent starts at a random position in the grid.
 Multiple objects of different types and colors are also placed at random
 positions in random rooms. A question and answer pair is generated, the
 question is given to the agent as an observation, and the agent has a limited
-number of time steps to explore the environment and produce a response.
+number of time steps to explore the environment and produce a response. This
+environment can be easily modified to add more question types or to diversify
+the way the questions are phrased.
