@@ -71,6 +71,25 @@ You can view the result of training using the `enjoy.py` script:
 python3 basicrl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/acktr
 ```
 
+## Features
+
+The environment is partially observable and uses a compact and efficient
+encoding, with just 3 inputs per visible grid cell. It is also easy to
+produce pixels for observations if desired.
+
+Each cell/tile in the grid world contains one object, each object has an
+associated discrete color. The objects currently supported are walls, doors,
+locked doors, keys, balls,boxes and a goal square. The basic version of the
+environment has just 4 possible actions: turn left, turn right, move
+forward and pickup/toggle to interact with objects. The agent can carry
+one carryable item at a time (eg: ball or key). By default, only sparse
+rewards for reaching the goal square are provided.
+
+Design choices were made to try to keep everything as simple as possible.
+Extending the environment with new object types and dynamics should be
+very easy. If you wish to do this, you should take a look at
+the [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
+
 ## Included Environments
 
 The environments listed below are implemented in the [gym_minigrid/envs](/gym_minigrid/envs) directory.
