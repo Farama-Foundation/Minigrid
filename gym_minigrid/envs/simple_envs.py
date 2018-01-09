@@ -7,11 +7,20 @@ class EmptyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8):
-        super(EmptyEnv, self).__init__(gridSize=size, maxSteps=2 * size)
+        super().__init__(gridSize=size, maxSteps=3 * size)
 
 class EmptyEnv6x6(EmptyEnv):
     def __init__(self):
-        super(EmptyEnv6x6, self).__init__(size=6)
+        super().__init__(size=6)
+
+class EmptyEnv15x15(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=15)
+
+register(
+    id='MiniGrid-Empty-6x6-v0',
+    entry_point='gym_minigrid.envs:EmptyEnv6x6'
+)
 
 register(
     id='MiniGrid-Empty-8x8-v0',
@@ -19,8 +28,8 @@ register(
 )
 
 register(
-    id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv6x6'
+    id='MiniGrid-Empty-15x15-v0',
+    entry_point='gym_minigrid.envs:EmptyEnv15x15'
 )
 
 class DoorKeyEnv(MiniGridEnv):
@@ -29,10 +38,10 @@ class DoorKeyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8):
-        super(DoorKeyEnv, self).__init__(gridSize=size, maxSteps=4 * size)
+        super().__init__(gridSize=size, maxSteps=4 * size)
 
     def _genGrid(self, width, height):
-        grid = super(DoorKeyEnv, self)._genGrid(width, height)
+        grid = super()._genGrid(width, height)
         assert width == height
         gridSz = width
 
@@ -43,7 +52,7 @@ class DoorKeyEnv(MiniGridEnv):
 
         # Place a door in the wall
         doorIdx = self._randInt(1, gridSz-2)
-        grid.set(splitIdx, doorIdx, Door('yellow'))
+        grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
 
         # Place a key on the left side
         #keyIdx = self._randInt(1 + gridSz // 2, gridSz-2)
@@ -54,7 +63,7 @@ class DoorKeyEnv(MiniGridEnv):
 
 class DoorKeyEnv16x16(DoorKeyEnv):
     def __init__(self):
-        super(DoorKeyEnv16x16, self).__init__(size=16)
+        super().__init__(size=16)
 
 register(
     id='MiniGrid-DoorKey-8x8-v0',
