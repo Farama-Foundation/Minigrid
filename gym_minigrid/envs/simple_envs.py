@@ -46,7 +46,7 @@ class DoorKeyEnv(MiniGridEnv):
         gridSz = width
 
         # Create a vertical splitting wall
-        splitIdx = self._randInt(2, gridSz-3)
+        splitIdx = self._randInt(2, gridSz-2)
         for i in range(0, gridSz):
             grid.set(splitIdx, i, Wall())
 
@@ -61,9 +61,27 @@ class DoorKeyEnv(MiniGridEnv):
 
         return grid
 
+class DoorKeyEnv5x5(DoorKeyEnv):
+    def __init__(self):
+        super().__init__(size=5)
+
+class DoorKeyEnv6x6(DoorKeyEnv):
+    def __init__(self):
+        super().__init__(size=6)
+
 class DoorKeyEnv16x16(DoorKeyEnv):
     def __init__(self):
         super().__init__(size=16)
+
+register(
+    id='MiniGrid-DoorKey-5x5-v0',
+    entry_point='gym_minigrid.envs:DoorKeyEnv5x5'
+)
+
+register(
+    id='MiniGrid-DoorKey-6x6-v0',
+    entry_point='gym_minigrid.envs:DoorKeyEnv6x6'
+)
 
 register(
     id='MiniGrid-DoorKey-8x8-v0',

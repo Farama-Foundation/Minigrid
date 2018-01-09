@@ -95,6 +95,8 @@ and with large rooms to experiment with sparse rewards.
 ### Door & key environment
 
 Registered configurations:
+- `MiniGrid-DoorKey-5x5-v0`
+- `MiniGrid-DoorKey-6x6-v0`
 - `MiniGrid-DoorKey-8x8-v0`
 - `MiniGrid-DoorKey-16x16-v0`
 
