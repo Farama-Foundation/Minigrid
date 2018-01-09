@@ -80,7 +80,7 @@ The environments listed below are implemented in the [gym_minigrid/envs](/gym_mi
 Registered configurations:
 - `MiniGrid-Empty-6x6-v0`
 - `MiniGrid-Empty-8x8-v0`
-- `MiniGrid-Empty-15x15-v0`
+- `MiniGrid-Empty-16x16-v0`
 
 <p align="center">
 <img src="/figures/empty-env.png">
