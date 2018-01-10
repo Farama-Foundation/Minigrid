@@ -35,7 +35,7 @@ def make_env(env_id, seed, rank, log_dir):
         if len(obs_shape) == 3 and obs_shape[2] == 3:
             env = WrapPyTorch(env)
 
-        env = StateBonus(env)
+        #env = StateBonus(env)
 
         return env
 

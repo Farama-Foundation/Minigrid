@@ -707,6 +707,16 @@ class MiniGridEnv(gym.Env):
         for i in range(self.agentDir + 1):
             grid = grid.rotateLeft()
 
+        # Make it so the agent sees what it's carrying
+        # We do this by placing the carried object at the agent's position
+        # in the agent's partially observable view
+        agentPos = grid.width // 2, grid.height - 1
+        if self.carrying:
+            grid.set(*agentPos, self.carrying)
+        else:
+            grid.set(*agentPos, None)
+
+        # Encode the partially observable view into a numpy array
         obs = grid.encode()
 
         return obs
