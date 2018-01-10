@@ -4,7 +4,15 @@ There are other gridworld Gym environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5800 FPS on a quad-core
-laptop, which means you can run your experiments faster.
+laptop, which means you can run your experiments faster. Batteries are
+included: a known-working RL implementation is supplied in this repository
+to help you get started.
+
+Requirements:
+- Python 3
+- OpenAI gym
+- numpy
+- PyQT for graphics
 
 This environment has been built at the [MILA](https://mila.quebec/en/) as
 part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
@@ -71,11 +79,11 @@ You can view the result of training using the `enjoy.py` script:
 python3 basicrl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/acktr
 ```
 
-## Features
+## Design
 
 The environment is partially observable and uses a compact and efficient
 encoding, with just 3 inputs per visible grid cell. It is also easy to
-produce pixels for observations if desired.
+produce an array of pixels for observations if desired.
 
 Each cell/tile in the grid world contains one object, each object has an
 associated discrete color. The objects currently supported are walls, doors,
@@ -85,7 +93,6 @@ forward and pickup/toggle to interact with objects. The agent can carry
 one carryable item at a time (eg: ball or key). By default, only sparse
 rewards for reaching the goal square are provided.
 
-Design choices were made to try to keep everything as simple as possible.
 Extending the environment with new object types and dynamics should be
 very easy. If you wish to do this, you should take a look at
 the [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
@@ -93,6 +100,9 @@ the [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
 ## Included Environments
 
 The environments listed below are implemented in the [gym_minigrid/envs](/gym_minigrid/envs) directory.
+Each environment provides one or more configurations registered with OpenAI gym. Each environment
+is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning
+or to fine-tune difficulty.
 
 ### Empty environment
 
