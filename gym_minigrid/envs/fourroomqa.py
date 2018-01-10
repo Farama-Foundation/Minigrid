@@ -181,12 +181,6 @@ class FourRoomQAEnv(MiniGridEnv):
 
         # TODO: how many X in the Y room question type
 
-
-
-
-
-
-
         print(self.question)
         print(self.answer)
 
