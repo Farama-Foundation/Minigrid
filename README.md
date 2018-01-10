@@ -10,9 +10,9 @@ to help you get started.
 
 Requirements:
 - Python 3
-- OpenAI gym
-- numpy
-- PyQT for graphics
+- OpenAI Gym
+- NumPy
+- PyQT 5 for graphics
 
 This environment has been built at the [MILA](https://mila.quebec/en/) as
 part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
