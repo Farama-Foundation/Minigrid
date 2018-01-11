@@ -35,6 +35,12 @@ for envName in sorted(envSet):
         assert reward >= env.reward_range[0], reward
         assert reward <= env.reward_range[1], reward
 
+        if done:
+            env.reset()
+
+            # Check that the agent doesn't overlap with an object
+            assert env.grid.get(*env.agentPos) is None
+
         env.render('rgb_array')
 
     env.close()
