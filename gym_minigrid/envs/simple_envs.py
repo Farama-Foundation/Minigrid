@@ -50,14 +50,29 @@ class DoorKeyEnv(MiniGridEnv):
         for i in range(0, gridSz):
             grid.set(splitIdx, i, Wall())
 
+        # Place the agent at a random position and orientation
+        self.startPos = (
+            self._randInt(1, splitIdx),
+            self._randInt(1, gridSz-1)
+        )
+        self.startDir = self._randInt(0, 4)
+
         # Place a door in the wall
         doorIdx = self._randInt(1, gridSz-2)
         grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
 
-        # Place a key on the left side
-        #keyIdx = self._randInt(1 + gridSz // 2, gridSz-2)
-        keyIdx = gridSz-2
-        grid.set(1, keyIdx, Key('yellow'))
+        # Place a yellow key on the left side
+        while True:
+            pos = (
+                self._randInt(1, splitIdx),
+                self._randInt(1, gridSz-1)
+            )
+            if pos == self.startPos:
+                continue
+            if grid.get(*pos) != None:
+                continue
+            grid.set(*pos, Key('yellow'))
+            break
 
         return grid
 
