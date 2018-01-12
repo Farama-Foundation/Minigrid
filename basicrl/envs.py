@@ -19,7 +19,7 @@ except:
     pass
 
 
-def make_env(env_id, seed, rank, log_dir, size=None):
+def make_env(env_id, seed, rank, log_dir, size=None, video=False):
     def _thunk():
 
         env = gym.make(env_id)
@@ -36,10 +36,17 @@ def make_env(env_id, seed, rank, log_dir, size=None):
 
         #env = StateBonus(env)
 
+        if video:
+            env = gym.wrappers.Monitor(
+                env,
+                "./monitor",
+                video_callable=lambda episode_id: True,
+                force=True
+            )
+
         return env
 
     return _thunk
-
 
 class WrapPyTorch(gym.ObservationWrapper):
     def __init__(self, env=None):
