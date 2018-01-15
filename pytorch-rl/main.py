@@ -64,8 +64,10 @@ def main():
     else:
         envs = DummyVecEnv(envs)
 
-    if len(envs.observation_space.shape) == 1:
-        envs = VecNormalize(envs)
+    # Maxime: commented this out because it very much changes the behavior
+    # of the code for seemingly arbitrary reasons
+    #if len(envs.observation_space.shape) == 1:
+    #    envs = VecNormalize(envs)
 
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
@@ -78,6 +80,14 @@ def main():
         assert not args.recurrent_policy, \
             "Recurrent policy is not implemented for the MLP controller"
         actor_critic = MLPPolicy(obs_numel, envs.action_space)
+
+    # Maxime: log some info about the model and its size
+    modelSize = 0
+    for p in actor_critic.parameters():
+        pSize = reduce(operator.mul, p.size(), 1)
+        modelSize += pSize
+    print(str(actor_critic))
+    print('Total model size: %d' % modelSize)
 
     if envs.action_space.__class__.__name__ == "Discrete":
         action_shape = 1
