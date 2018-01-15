@@ -156,7 +156,8 @@ rooms and building a curriculum, the environment can be solved.
 ### Fetch environment
 
 Registered configurations:
-- `MiniGrid-Fetch-8x8-v0`
+- `MiniGrid-Fetch-5x5-N2-v0`
+- `MiniGrid-Fetch-8x8-N3-v0`
 
 <p align="center">
 <img src="/figures/fetch-env.png" width=392 height=269>

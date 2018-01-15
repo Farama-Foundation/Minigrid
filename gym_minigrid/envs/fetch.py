@@ -109,7 +109,16 @@ class FetchEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+class FetchEnv5x5N2(FetchEnv):
+    def __init__(self):
+        super().__init__(size=5, numObjs=2)
+
 register(
-    id='MiniGrid-Fetch-8x8-v0',
+    id='MiniGrid-Fetch-5x5-N2-v0',
+    entry_point='gym_minigrid.envs:FetchEnv5x5N2'
+)
+
+register(
+    id='MiniGrid-Fetch-8x8-N3-v0',
     entry_point='gym_minigrid.envs:FetchEnv'
 )
