@@ -78,8 +78,10 @@ class FetchEnv(MiniGridEnv):
 
         return grid
 
-    def _reset(self):
-        obs = MiniGridEnv._reset(self)
+    def _observation(self, obs):
+        """
+        Encode observations
+        """
 
         obs = {
             'image': obs,
@@ -88,6 +90,10 @@ class FetchEnv(MiniGridEnv):
         }
 
         return obs
+
+    def _reset(self):
+        obs = MiniGridEnv._reset(self)
+        return self._observation(obs)
 
     def _step(self, action):
         obs, reward, done, info = MiniGridEnv._step(self, action)
@@ -101,11 +107,7 @@ class FetchEnv(MiniGridEnv):
                 reward = -1
                 done = True
 
-        obs = {
-            'image': obs,
-            'mission': self.mission,
-            'advice': ''
-        }
+        obs = self._observation(obs)
 
         return obs, reward, done, info
 
