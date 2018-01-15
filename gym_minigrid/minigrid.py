@@ -585,7 +585,21 @@ class MiniGridEnv(gym.Env):
         return [seed]
 
     def _randInt(self, low, high):
+        """
+        Generate random integer in [low,high[
+        """
+
         return self.np_random.randint(low, high)
+
+    def _randPos(self, xLow, xHigh, yLow, yHigh):
+        """
+        Generate a random (x,y) position tuple
+        """
+
+        return (
+            self.np_random.randint(xLow, xHigh),
+            self.np_random.randint(yLow, yHigh)
+        )
 
     def _randElem(self, iterable):
         lst = list(iterable)

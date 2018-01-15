@@ -51,9 +51,9 @@ class DoorKeyEnv(MiniGridEnv):
             grid.set(splitIdx, i, Wall())
 
         # Place the agent at a random position and orientation
-        self.startPos = (
-            self._randInt(1, splitIdx),
-            self._randInt(1, gridSz-1)
+        self.startPos = self._randPos(
+            1, splitIdx,
+            1, gridSz-1
         )
         self.startDir = self._randInt(0, 4)
 
@@ -63,9 +63,9 @@ class DoorKeyEnv(MiniGridEnv):
 
         # Place a yellow key on the left side
         while True:
-            pos = (
-                self._randInt(1, splitIdx),
-                self._randInt(1, gridSz-1)
+            pos = self._randPos(
+                1, splitIdx,
+                1, gridSz-1
             )
             if pos == self.startPos:
                 continue
