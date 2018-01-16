@@ -14,6 +14,7 @@ class FetchEnv(MiniGridEnv):
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
+        self.reward_range = (-1000, 1000)
 
     def _genGrid(self, width, height):
         assert width == height
@@ -104,7 +105,7 @@ class FetchEnv(MiniGridEnv):
                 reward = 1000 - self.stepCount
                 done = True
             else:
-                reward = -1
+                reward = -1000
                 done = True
 
         obs = self._observation(obs)
