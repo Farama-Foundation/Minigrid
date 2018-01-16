@@ -64,4 +64,7 @@ def get_args():
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     args.vis = not args.no_vis
 
+    if not args.cuda:
+        print('*** WARNING: CUDA NOT ENABLED ***')
+
     return args
