@@ -1,3 +1,2 @@
-# Import these environments to make sure they register themselves
-import gym_minigrid.envs.simple_envs
-import gym_minigrid.envs.fourroomqa
+# Import the envs module so that envs register themselves
+import gym_minigrid.envs

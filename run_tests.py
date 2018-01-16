@@ -6,6 +6,9 @@ import numpy as np
 from gym_minigrid.register import envSet
 from gym_minigrid.minigrid import Grid
 
+# Make sure directly importing a specific environment works
+from gym_minigrid.envs import DoorKeyEnv
+
 print('%d environments registered' % len(envSet))
 
 for envName in sorted(envSet):
