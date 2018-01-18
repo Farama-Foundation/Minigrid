@@ -30,20 +30,23 @@ class FourRoomQAEnv(MiniGridEnv):
         right = 1
         forward = 2
         toggle = 3
-        say = 4
+        wait = 4
+        answer = 5
 
     def __init__(self, size=16):
         assert size >= 10
         super(FourRoomQAEnv, self).__init__(gridSize=size, maxSteps=8*size)
 
         # Action enumeration for this environment
-        self.actions = MiniGridEnv.Actions
+        self.actions = FourRoomQAEnv.Actions
 
         # TODO: dictionary action_space, to include answer sentence?
         # Actions are discrete integer values
         self.action_space = spaces.Discrete(len(self.actions))
 
         # TODO: dictionary observation_space, to include question?
+
+        self.reward_range = (-1000, 1000)
 
     def _randPos(self, room, border=1):
         return (
@@ -181,8 +184,8 @@ class FourRoomQAEnv(MiniGridEnv):
 
         # TODO: how many X in the Y room question type
 
-        print(self.question)
-        print(self.answer)
+        #print(self.question)
+        #print(self.answer)
 
         return grid
 
@@ -203,11 +206,19 @@ class FourRoomQAEnv(MiniGridEnv):
         else:
             answer = ''
 
-        obs, reward, done, info = MiniGridEnv._step(self, action)
-
-        if answer == self.answer:
-            reward = 1000 - self.stepCount
+        if action == self.actions.answer:
+            # To the superclass, this action behaves like a noop
+            obs, reward, done, info = MiniGridEnv._step(self, self.actions.wait)
             done = True
+
+            if answer == self.answer:
+                reward = 1000 - self.stepCount
+            else:
+                reward = -1000
+
+        else:
+            # Let the superclass handle the action
+            obs, reward, done, info = MiniGridEnv._step(self, action)
 
         obs = {
             'image': obs,

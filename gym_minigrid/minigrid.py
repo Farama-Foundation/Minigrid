@@ -497,7 +497,10 @@ class MiniGridEnv(gym.Env):
         left = 0
         right = 1
         forward = 2
+        # Toggle/pick up/activate object
         toggle = 3
+        # Wait/stay put/do nothing
+        wait = 4
 
     def __init__(self, gridSize=16, maxSteps=100):
         # Action enumeration for this environment
@@ -698,6 +701,10 @@ class MiniGridEnv(gym.Env):
                     self.grid.set(*objPos, None)
             elif cell:
                 cell.toggle(self, objPos)
+
+        # Wait/do nothing
+        elif action == self.actions.wait:
+            pass
 
         else:
             assert False, "unknown action"
