@@ -13,7 +13,6 @@ def weights_init(m):
         if m.bias is not None:
             m.bias.data.fill_(0)
 
-
 class FFPolicy(nn.Module):
     def __init__(self):
         super(FFPolicy, self).__init__()
@@ -111,7 +110,6 @@ class CNNPolicy(FFPolicy):
                 x = torch.cat(outputs, 0)
         return self.critic_linear(x), x, states
 
-
 def weights_init_mlp(m):
     classname = m.__class__.__name__
     if classname.find('Linear') != -1:
@@ -119,7 +117,6 @@ def weights_init_mlp(m):
         m.weight.data *= 1 / torch.sqrt(m.weight.data.pow(2).sum(1, keepdim=True))
         if m.bias is not None:
             m.bias.data.fill_(0)
-
 
 class MLPPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):

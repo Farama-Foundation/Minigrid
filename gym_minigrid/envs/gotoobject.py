@@ -37,8 +37,8 @@ class GoToObjectEnv(MiniGridEnv):
         objs = []
         objPos = []
 
-        # For each object to be generated
-        for i in range(0, self.numObjs):
+        # Until we have generated all the objects
+        while len(objs) < self.numObjs:
             objType = self._randElem(types)
             objColor = self._randElem(colors)
 
@@ -129,7 +129,16 @@ class GoToObjectEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+class GotoEnv8x8N2(GoToObjectEnv):
+    def __init__(self):
+        super().__init__(size=8, numObjs=2)
+
 register(
     id='MiniGrid-GoToObject-6x6-N2-v0',
     entry_point='gym_minigrid.envs:GoToObjectEnv'
+)
+
+register(
+    id='MiniGrid-GoToObject-8x8-N2-v0',
+    entry_point='gym_minigrid.envs:GotoEnv8x8N2'
 )
