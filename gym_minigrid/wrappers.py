@@ -106,7 +106,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
             assert len(mission) <= self.maxStrLen, "mission string too long"
             mission = mission.lower()
 
-            strArray = np.zeros(shape=(self.maxStrLen, self.numCharCodes))
+            strArray = np.zeros(shape=(self.maxStrLen, self.numCharCodes), dtype='float32')
 
             for idx, ch in enumerate(mission):
                 if ch >= 'a' and ch <= 'z':
