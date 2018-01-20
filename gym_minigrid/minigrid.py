@@ -464,11 +464,13 @@ class Grid:
                 isOpen = True if openIdx == 1 else 0
 
                 if objType == 'wall':
-                    v = Wall()
+                    v = Wall(color)
                 elif objType == 'ball':
                     v = Ball(color)
                 elif objType == 'key':
                     v = Key(color)
+                elif objType == 'box':
+                    v = Box(color)
                 elif objType == 'door':
                     v = Door(color, isOpen)
                 elif objType == 'locked_door':
