@@ -112,7 +112,7 @@ Registered configurations:
 - `MiniGrid-Empty-16x16-v0`
 
 <p align="center">
-<img src="/figures/empty-env.png">
+<img src="/figures/empty-env.png" width=250>
 </p>
 
 This environment is an empty room, and the goal of the agent is to reach the
@@ -153,7 +153,7 @@ square the agent must get to. This environment is extremely difficult to
 solve using classical RL. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
 
-### Go to door environment
+### Go-to-door environment
 
 Registered configurations:
 - `MiniGrid-GoToDoor-5x5-v0`
@@ -161,7 +161,7 @@ Registered configurations:
 - `MiniGrid-GoToDoor-8x8-v0`
 
 <p align="center">
-<img src="/figures/gotodoor-6x6.png">
+<img src="/figures/gotodoor-6x6.png" width=400>
 </p>
 
 This environment is a room with four doors, one on each wall. The agent
@@ -176,7 +176,7 @@ Registered configurations:
 - `MiniGrid-Fetch-8x8-N3-v0`
 
 <p align="center">
-<img src="/figures/fetch-env.png" width=392 height=269>
+<img src="/figures/fetch-env.png" width=450>
 </p>
 
 This environment has multiple objects of assorted types and colors. The
