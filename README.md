@@ -161,9 +161,7 @@ Registered configurations:
 - `MiniGrid-GoToDoor-8x8-v0`
 
 <p align="center">
-<video autoplay loop>
-<source src="/figures/gotodoor-6x6.mp4" type="video/mp4">
-</video>
+<img src="/figures/gotodoor-6x6.png">
 </p>
 
 This environment is a room with four doors, one on each wall. The agent
