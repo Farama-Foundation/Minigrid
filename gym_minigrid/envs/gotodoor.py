@@ -37,8 +37,6 @@ class GoToDoorEnv(MiniGridEnv):
             grid.set(0, j, Wall())
             grid.set(width-1, j, Wall())
 
-        colors = list(COLORS.keys())
-
         # Generate the 4 doors at random positions
         doorPos = []
         doorPos.append((self._randInt(2, width-2), 0))
@@ -49,7 +47,7 @@ class GoToDoorEnv(MiniGridEnv):
         # Generate the door colors
         doorColors = []
         while len(doorColors) < len(doorPos):
-            color = self._randElem(colors)
+            color = self._randElem(COLOR_NAMES)
             if color in doorColors:
                 continue
             doorColors.append(color)

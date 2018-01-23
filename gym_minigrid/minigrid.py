@@ -15,6 +15,7 @@ AGENT_VIEW_SIZE = 7
 # Size of the array given as an observation to the agent
 OBS_ARRAY_SIZE = (AGENT_VIEW_SIZE, AGENT_VIEW_SIZE, 3)
 
+# Map of color names to RGB values
 COLORS = {
     'red'   : (255, 0, 0),
     'green' : (0, 255, 0),
@@ -23,6 +24,8 @@ COLORS = {
     'yellow': (255, 255, 0),
     'grey'  : (100, 100, 100)
 }
+
+COLOR_NAMES = list(COLORS.keys())
 
 # Used to map colors to integers
 COLOR_TO_IDX = {
