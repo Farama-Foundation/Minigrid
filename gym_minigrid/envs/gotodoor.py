@@ -13,7 +13,10 @@ class GoToDoorEnv(MiniGridEnv):
     ):
         super().__init__(gridSize=size, maxSteps=10*size)
 
-        self.reward_range = (-1, self.maxSteps)
+        self.reward_range = (-1000, 1000)
+
+        # Flag determining whether the wait action ends the episode
+        self.waitEnds = True
 
     def _genGrid(self, width, height):
         assert width == height
@@ -58,8 +61,8 @@ class GoToDoorEnv(MiniGridEnv):
 
         # Select a random target door
         doorIdx = self._randInt(0, len(doorPos))
-        self.targetPos = doorPos[idx]
-        self.targetColor = doorColors[idx]
+        self.targetPos = doorPos[doorIdx]
+        self.targetColor = doorColors[doorIdx]
 
         # Generate the mission string
         self.mission = 'go to the %s door' % self.targetColor
@@ -97,12 +100,11 @@ class GoToDoorEnv(MiniGridEnv):
 
         # Reward waiting in front of the target door
         if action == self.actions.wait:
-            if ax == tx and abs(ay - ty) == 1:
+            if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = 1
-            elif ay == ty and abs(ax - tx) == 1:
-                reward = 1
-            #else:
-            #    reward = -0.1
+            else:
+                reward = 0
+            done = self.waitEnds
 
         obs = self._observation(obs)
 
