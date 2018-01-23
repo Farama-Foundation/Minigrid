@@ -87,11 +87,11 @@ produce an array of pixels for observations if desired.
 
 Each cell/tile in the grid world contains one object, each object has an
 associated discrete color. The objects currently supported are walls, doors,
-locked doors, keys, balls,boxes and a goal square. The basic version of the
-environment has just 4 possible actions: turn left, turn right, move
-forward and pickup/toggle to interact with objects. The agent can carry
-one carryable item at a time (eg: ball or key). By default, only sparse
-rewards for reaching the goal square are provided.
+locked doors, keys, balls, boxes and a goal square. The basic version of the
+environment has 5 possible actions: turn left, turn right, move
+forward, pickup/toggle to interact with objects, and a wait/noop action. The
+agent can carry one carryable item at a time (eg: ball or key). By default,
+only sparse rewards for reaching the goal square are provided.
 
 Extending the environment with new object types and dynamics should be
 very easy. If you wish to do this, you should take a look at
@@ -152,6 +152,24 @@ opened in order to get to the next room. The final room has the green goal
 square the agent must get to. This environment is extremely difficult to
 solve using classical RL. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
+
+### Go to door environment
+
+Registered configurations:
+- `MiniGrid-GoToDoor-5x5-v0`
+- `MiniGrid-GoToDoor-6x6-v0`
+- `MiniGrid-GoToDoor-8x8-v0`
+
+<p align="center">
+<video autoplay loop>
+<source src="/figures/gotodoor-6x6.mp4" type="video/mp4">
+</video>
+</p>
+
+This environment is a room with four doors, one on each wall. The agent
+receives a textual (mission) string as input, telling it which door to go to,
+(eg: "go to the red door"). It receives a positive reward for performing the
+`wait` action next to the correct door, as indicated in the mission string.
 
 ### Fetch environment
 
