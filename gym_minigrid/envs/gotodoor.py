@@ -11,6 +11,7 @@ class GoToDoorEnv(MiniGridEnv):
         self,
         size=5
     ):
+        assert size >= 5
         super().__init__(gridSize=size, maxSteps=10*size)
 
         self.reward_range = (-1000, 1000)
@@ -19,7 +20,20 @@ class GoToDoorEnv(MiniGridEnv):
         self.waitEnds = True
 
     def _genGrid(self, width, height):
-        assert width == height
+        # Create the grid
+        grid = Grid(width, height)
+
+        # Randomly vary the room width and height
+        width = self._randInt(5, width+1)
+        height = self._randInt(5, height+1)
+
+        # Generate the surrounding walls
+        for i in range(0, width):
+            grid.set(i, 0, Wall())
+            grid.set(i, height-1, Wall())
+        for j in range(0, height):
+            grid.set(0, j, Wall())
+            grid.set(width-1, j, Wall())
 
         # Randomize the player start position and orientation
         self.startPos = self._randPos(
@@ -27,15 +41,6 @@ class GoToDoorEnv(MiniGridEnv):
             1, height-1
         )
         self.startDir = self._randInt(0, 4)
-
-        # Create a grid surrounded by walls
-        grid = Grid(width, height)
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
 
         # Generate the 4 doors at random positions
         doorPos = []
@@ -75,8 +80,7 @@ class GoToDoorEnv(MiniGridEnv):
 
         obs = {
             'image': obs,
-            'mission': self.mission,
-            'advice' : ''
+            'mission': self.mission
         }
 
         return obs
@@ -94,14 +98,11 @@ class GoToDoorEnv(MiniGridEnv):
         # Don't let the agent open any of the doors
         if action == self.actions.toggle:
             done = True
-            reward = -1
 
         # Reward waiting in front of the target door
         if action == self.actions.wait:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = 1
-            else:
-                reward = 0
             done = self.waitEnds
 
         obs = self._observation(obs)

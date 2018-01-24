@@ -86,8 +86,7 @@ class FetchEnv(MiniGridEnv):
 
         obs = {
             'image': obs,
-            'mission': self.mission,
-            'advice' : ''
+            'mission': self.mission
         }
 
         return obs

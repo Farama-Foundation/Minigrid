@@ -64,6 +64,10 @@ class Window(QMainWindow):
             keyName = 'SPACE'
         elif e.key() == Qt.Key_Return:
             keyName = 'RETURN'
+        elif e.key() == Qt.Key_Alt:
+            keyName = 'ALT'
+        elif e.key() == Qt.Key_Control:
+            keyName = 'CTRL'
         elif e.key() == Qt.Key_Escape:
             keyName = 'ESCAPE'
 

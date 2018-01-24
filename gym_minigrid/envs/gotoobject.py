@@ -72,23 +72,6 @@ class GoToObjectEnv(MiniGridEnv):
         self.targetPos = objPos[objIdx]
 
         descStr = '%s %s' % (self.targetColor, self.targetType)
-
-        """
-        # Generate the mission string
-        idx = self._randInt(0, 5)
-        if idx == 0:
-            self.mission = 'get a %s' % descStr
-        elif idx == 1:
-            self.mission = 'go get a %s' % descStr
-        elif idx == 2:
-            self.mission = 'fetch a %s' % descStr
-        elif idx == 3:
-            self.mission = 'go fetch a %s' % descStr
-        elif idx == 4:
-            self.mission = 'you must fetch a %s' % descStr
-        assert hasattr(self, 'mission')
-        """
-
         self.mission = 'go to the %s' % descStr
         #print(self.mission)
 
@@ -101,8 +84,7 @@ class GoToObjectEnv(MiniGridEnv):
 
         obs = {
             'image': obs,
-            'mission': self.mission,
-            'advice' : ''
+            'mission': self.mission
         }
 
         return obs

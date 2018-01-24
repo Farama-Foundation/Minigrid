@@ -38,6 +38,8 @@ def main():
             action = env.actions.forward
         elif keyName == 'SPACE':
             action = env.actions.toggle
+        elif keyName == 'CTRL':
+            action = env.actions.wait
         elif keyName == 'RETURN':
             env.reset()
         elif keyName == 'ESCAPE':
