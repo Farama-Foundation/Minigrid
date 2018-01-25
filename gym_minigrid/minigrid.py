@@ -688,6 +688,9 @@ class MiniGridEnv(gym.Env):
                     self.grid.set(*objPos, None)
             elif cell:
                 cell.toggle(self, objPos)
+            elif self.carrying:
+                self.grid.set(*objPos, self.carrying)
+                self.carrying = None
 
         # Wait/do nothing
         elif action == self.actions.wait:

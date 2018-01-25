@@ -23,7 +23,13 @@ def main():
 
     # Load the gym environment
     env = gym.make(options.env_name)
-    env.reset()
+
+    def resetEnv():
+        env.reset()
+        if hasattr(env, 'mission'):
+            print('Mission: %s' % env.mission)
+
+    resetEnv()
 
     # Create a window to render into
     renderer = env.render('human')
@@ -41,7 +47,7 @@ def main():
         elif keyName == 'CTRL':
             action = env.actions.wait
         elif keyName == 'RETURN':
-            env.reset()
+            resetEnv()
         elif keyName == 'ESCAPE':
             sys.exit(0)
         else:
@@ -54,7 +60,7 @@ def main():
 
         if done:
             print('done!')
-            env.reset()
+            resetEnv()
 
     renderer.window.setKeyDownCb(keyDownCb)
 
