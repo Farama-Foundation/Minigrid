@@ -10,31 +10,41 @@ class DoorKeyEnv(MiniGridEnv):
         super().__init__(gridSize=size, maxSteps=4 * size)
 
     def _genGrid(self, width, height):
-        grid = super()._genGrid(width, height)
-        assert width == height
-        gridSz = width
+        # Create an empty grid
+        grid = Grid(width, height)
+
+        # Place walls around the edges
+        for i in range(0, width):
+            grid.set(i, 0, Wall())
+            grid.set(i, height - 1, Wall())
+        for j in range(0, height):
+            grid.set(0, j, Wall())
+            grid.set(height - 1, j, Wall())
+
+        # Place a goal in the bottom-right corner
+        grid.set(width - 2, height - 2, Goal())
 
         # Create a vertical splitting wall
-        splitIdx = self._randInt(2, gridSz-2)
-        for i in range(0, gridSz):
+        splitIdx = self._randInt(2, width-2)
+        for i in range(0, height):
             grid.set(splitIdx, i, Wall())
 
         # Place the agent at a random position and orientation
         self.startPos = self._randPos(
             1, splitIdx,
-            1, gridSz-1
+            1, height-1
         )
         self.startDir = self._randInt(0, 4)
 
         # Place a door in the wall
-        doorIdx = self._randInt(1, gridSz-2)
+        doorIdx = self._randInt(1, width-2)
         grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
 
         # Place a yellow key on the left side
         while True:
             pos = self._randPos(
                 1, splitIdx,
-                1, gridSz-1
+                1, height-1
             )
             if pos == self.startPos:
                 continue

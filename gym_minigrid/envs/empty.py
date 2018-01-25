@@ -7,7 +7,24 @@ class EmptyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8):
-        super().__init__(gridSize=size, maxSteps=3 * size)
+        super().__init__(gridSize=size, maxSteps=3*size)
+
+    def _genGrid(self, width, height):
+        # Create an empty grid
+        grid = Grid(width, height)
+
+        # Place walls around the edges
+        for i in range(0, width):
+            grid.set(i, 0, Wall())
+            grid.set(i, height - 1, Wall())
+        for j in range(0, height):
+            grid.set(0, j, Wall())
+            grid.set(height - 1, j, Wall())
+
+        # Place a goal in the bottom-right corner
+        grid.set(width - 2, height - 2, Goal())
+
+        return grid
 
 class EmptyEnv6x6(EmptyEnv):
     def __init__(self):
