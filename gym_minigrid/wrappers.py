@@ -119,6 +119,6 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
             self.cachedStr = mission
             self.cachedArray = strArray
 
-        obs = np.hstack((image.flatten(), self.cachedArray.flatten()))
+        obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
         return obs
