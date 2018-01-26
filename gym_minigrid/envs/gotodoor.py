@@ -14,10 +14,7 @@ class GoToDoorEnv(MiniGridEnv):
         assert size >= 5
         super().__init__(gridSize=size, maxSteps=10*size)
 
-        self.reward_range = (-1000, 1000)
-
-        # Flag determining whether the wait action ends the episode
-        self.waitEnds = True
+        self.reward_range = (-1, 1)
 
     def _genGrid(self, width, height):
         # Create the grid
@@ -103,7 +100,6 @@ class GoToDoorEnv(MiniGridEnv):
         if action == self.actions.wait:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = 1
-            done = self.waitEnds
 
         obs = self._observation(obs)
 

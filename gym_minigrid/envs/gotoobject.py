@@ -10,15 +10,12 @@ class GoToObjectEnv(MiniGridEnv):
     def __init__(
         self,
         size=6,
-        numObjs=2,
-        waitEnds=True
+        numObjs=2
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
 
         self.reward_range = (-1, 1)
-
-        self.waitEnds = waitEnds
 
     def _genGrid(self, width, height):
         assert width == height
@@ -112,7 +109,7 @@ class GoToObjectEnv(MiniGridEnv):
         if action == self.actions.wait:
             if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
                 reward = 1
-            done = self.waitEnds
+            done = True
 
         obs = self._observation(obs)
 
