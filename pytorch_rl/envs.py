@@ -6,7 +6,6 @@ from gym.spaces.box import Box
 try:
     import gym_minigrid
     from gym_minigrid.wrappers import *
-    #from gym_minigrid.envs import *
 except:
     pass
 

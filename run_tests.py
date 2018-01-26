@@ -6,8 +6,11 @@ import numpy as np
 from gym_minigrid.register import envSet
 from gym_minigrid.minigrid import Grid
 
-# Make sure directly importing a specific environment works
+# Test specifically importing a specific environment
 from gym_minigrid.envs import DoorKeyEnv
+
+# Test importing wrappers
+from gym_minigrid.wrappers import *
 
 print('%d environments registered' % len(envSet))
 
