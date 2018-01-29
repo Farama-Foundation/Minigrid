@@ -19,7 +19,7 @@ from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from baselines.common.vec_env.vec_normalize import VecNormalize
 from envs import make_env
 from kfac import KFACOptimizer
-from model import CNNPolicy, MLPPolicy
+from model import RecMLPPolicy, MLPPolicy, CNNPolicy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
@@ -27,8 +27,7 @@ args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
 if args.recurrent_policy:
-    assert args.algo in ['a2c', 'ppo'], \
-        'Recurrent policy is not implemented for ACKTR'
+    assert args.algo in ['a2c', 'ppo'], 'Recurrent policy is not implemented for ACKTR'
 
 num_updates = int(args.num_frames) // args.num_steps // args.num_processes
 
@@ -42,7 +41,6 @@ except OSError:
     files = glob.glob(os.path.join(args.log_dir, '*.monitor.csv'))
     for f in files:
         os.remove(f)
-
 
 def main():
     print("#######")
@@ -76,9 +74,9 @@ def main():
 
     if len(obs_shape) == 3 and obs_numel > 1024:
         actor_critic = CNNPolicy(obs_shape[0], envs.action_space, args.recurrent_policy)
+    elif args.recurrent_policy:
+        actor_critic = RecMLPPolicy(obs_numel, envs.action_space)
     else:
-        assert not args.recurrent_policy, \
-            "Recurrent policy is not implemented for the MLP controller"
         actor_critic = MLPPolicy(obs_numel, envs.action_space)
 
     # Maxime: log some info about the model and its size
