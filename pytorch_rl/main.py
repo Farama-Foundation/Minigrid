@@ -14,9 +14,8 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 from arguments import get_args
-from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
-from baselines.common.vec_env.vec_normalize import VecNormalize
+from vec_env.dummy_vec_env import DummyVecEnv
+from vec_env.subproc_vec_env import SubprocVecEnv
 from envs import make_env
 from kfac import KFACOptimizer
 from model import RecMLPPolicy, MLPPolicy, CNNPolicy

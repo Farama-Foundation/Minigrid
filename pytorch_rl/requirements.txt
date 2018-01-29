@@ -1,4 +1,2 @@
 gym
 matplotlib
-pybullet
-opencv-python

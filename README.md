@@ -36,15 +36,6 @@ cd pytorch_rl
 # PyTorch
 conda install pytorch torchvision -c soumith
 
-# Dependencies needed by OpenAI baselines
-sudo apt install libopenmpi-dev zlib1g-dev cmake
-
-# OpenAI baselines
-git clone https://github.com/openai/baselines.git
-cd baselines
-pip3 install -e .
-cd ..
-
 # Other requirements
 pip3 install -r requirements.txt
 ```
@@ -67,16 +58,16 @@ The environment being run can be selected with the `--env-name` option, eg:
 ```
 
 Basic reinforcement learning code is provided in the `pytorch_rl` subdirectory.
-You can perform training using the ACKTR algorithm with:
+You can perform training using the A2C algorithm with:
 
 ```
-python3 pytorch_rl/main.py --env-name MiniGrid-Empty-6x6-v0 --no-vis --num-processes 32 --algo acktr
+python3 pytorch_rl/main.py --env-name MiniGrid-Empty-6x6-v0 --no-vis --num-processes 48 --algo a2c
 ```
 
 You can view the result of training using the `enjoy.py` script:
 
 ```
-python3 pytorch_rl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/acktr
+python3 pytorch_rl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/a2c
 ```
 
 ## Design

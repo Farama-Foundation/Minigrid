@@ -100,6 +100,7 @@ class GoToDoorEnv(MiniGridEnv):
         if action == self.actions.wait:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = 1
+            done = True
 
         obs = self._observation(obs)
 
