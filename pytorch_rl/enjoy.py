@@ -14,8 +14,8 @@ from envs import make_env
 parser = argparse.ArgumentParser(description='RL')
 parser.add_argument('--seed', type=int, default=1,
                     help='random seed (default: 1)')
-parser.add_argument('--num-stack', type=int, default=4,
-                    help='number of frames to stack (default: 4)')
+parser.add_argument('--num-stack', type=int, default=1,
+                    help='number of frames to stack (default: 1)')
 parser.add_argument('--log-interval', type=int, default=10,
                     help='log interval, one log per n updates (default: 10)')
 parser.add_argument('--env-name', default='PongNoFrameskip-v4',

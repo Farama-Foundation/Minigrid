@@ -232,15 +232,6 @@ class CNNPolicy(FFPolicy):
         x = F.relu(x)
 
         if hasattr(self, 'gru'):
-            if inputs.size(0) == states.size(0):
-                x = states = self.gru(x, states * masks)
-            else:
-                x = x.view(-1, states.size(0), x.size(1))
-                masks = masks.view(-1, states.size(0), 1)
-                outputs = []
-                for i in range(x.size(0)):
-                    hx = states = self.gru(x[i], states * masks[i])
-                    outputs.append(hx)
-                x = torch.cat(outputs, 0)
+            x = states = self.gru(x, states * masks)
 
         return self.critic_linear(x), x, states
