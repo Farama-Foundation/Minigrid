@@ -15,6 +15,10 @@ class GoToObjectEnv(MiniGridEnv):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
 
+        self.observation_space = spaces.Dict({
+            'image': self.observation_space
+        })
+
         self.reward_range = (-1, 1)
 
     def _genGrid(self, width, height):
