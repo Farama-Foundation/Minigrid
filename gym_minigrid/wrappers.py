@@ -86,12 +86,13 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         self.maxStrLen = maxStrLen
         self.numCharCodes = 27
 
-        obsSize = batch_numel = reduce(operator.mul, self.observation_space.shape, 1)
+        imgSpace = env.observation_space.spaces['image']
+        imgSize = reduce(operator.mul, imgSpace.shape, 1)
 
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=obsSize + self.numCharCodes * self.maxStrLen
+            shape=imgSize + self.numCharCodes * self.maxStrLen
         )
 
         self.cachedStr = None

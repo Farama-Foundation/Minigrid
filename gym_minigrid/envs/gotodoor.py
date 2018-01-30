@@ -1,3 +1,4 @@
+from gym import spaces
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
@@ -13,6 +14,10 @@ class GoToDoorEnv(MiniGridEnv):
     ):
         assert size >= 5
         super().__init__(gridSize=size, maxSteps=10*size)
+
+        self.observation_space = spaces.Dict({
+            'image': self.observation_space
+        })
 
         self.reward_range = (-1, 1)
 
