@@ -113,7 +113,6 @@ def main():
 
     obs = envs.reset()
     update_current_obs(obs)
-
     rollouts.observations[0].copy_(current_obs)
 
     # These variables are used to compute average rewards for all processes.
