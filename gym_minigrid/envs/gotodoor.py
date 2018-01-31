@@ -87,12 +87,12 @@ class GoToDoorEnv(MiniGridEnv):
 
         return obs
 
-    def _reset(self):
-        obs = MiniGridEnv._reset(self)
+    def reset(self):
+        obs = MiniGridEnv.reset(self)
         return self._observation(obs)
 
-    def _step(self, action):
-        obs, reward, done, info = MiniGridEnv._step(self, action)
+    def step(self, action):
+        obs, reward, done, info = MiniGridEnv.step(self, action)
 
         ax, ay = self.agentPos
         tx, ty = self.targetPos

@@ -111,14 +111,14 @@ class PutNearEnv(MiniGridEnv):
 
         return obs
 
-    def _reset(self):
-        obs = MiniGridEnv._reset(self)
+    def reset(self):
+        obs = MiniGridEnv.reset(self)
         return self._observation(obs)
 
-    def _step(self, action):
+    def step(self, action):
         preCarrying = self.carrying
 
-        obs, reward, done, info = MiniGridEnv._step(self, action)
+        obs, reward, done, info = MiniGridEnv.step(self, action)
 
         u, v = self.getDirVec()
         ox, oy = (self.agentPos[0] + u, self.agentPos[1] + v)

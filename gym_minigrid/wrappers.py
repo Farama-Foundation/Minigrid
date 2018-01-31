@@ -92,7 +92,8 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=imgSize + self.numCharCodes * self.maxStrLen
+            shape=(1, imgSize + self.numCharCodes * self.maxStrLen),
+            dtype='uint8'
         )
 
         self.cachedStr = None

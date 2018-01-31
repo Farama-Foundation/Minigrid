@@ -6,7 +6,7 @@ setup(
     keywords='memory, environment, agent, rl, openaigym, openai-gym, gym',
     packages=['gym_minigrid', 'gym_minigrid.envs'],
     install_requires=[
-        'gym>=0.9.0',
+        'gym>=0.9.6',
         'numpy>=1.10.0',
         'pyqt5'
     ]

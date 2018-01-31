@@ -518,7 +518,8 @@ class MiniGridEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=OBS_ARRAY_SIZE
+            shape=OBS_ARRAY_SIZE,
+            dtype='uint8'
         )
 
         # Range of possible rewards
@@ -543,7 +544,7 @@ class MiniGridEnv(gym.Env):
     def _genGrid(self, width, height):
         assert False, "_genGrid needs to be implemented by each environment"
 
-    def _reset(self):
+    def reset(self):
         # Generate a new random grid at the start of each episode
         # To keep the same grid for each episode, call env.seed() with
         # the same seed before calling env.reset()
@@ -563,7 +564,7 @@ class MiniGridEnv(gym.Env):
         obs = self._genObs()
         return obs
 
-    def _seed(self, seed=1337):
+    def seed(self, seed=1337):
         """
         The seed function sets the random elements of the environment,
         and initializes the world.
@@ -650,7 +651,7 @@ class MiniGridEnv(gym.Env):
 
         return (topX, topY, botX, botY)
 
-    def _step(self, action):
+    def step(self, action):
         self.stepCount += 1
 
         reward = 0
@@ -773,7 +774,7 @@ class MiniGridEnv(gym.Env):
 
         return r.getPixmap()
 
-    def _render(self, mode='human', close=False):
+    def render(self, mode='human', close=False):
         """
         Render the whole-grid human view
         """

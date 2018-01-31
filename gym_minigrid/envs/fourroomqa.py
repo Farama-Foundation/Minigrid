@@ -189,8 +189,8 @@ class FourRoomQAEnv(MiniGridEnv):
 
         return grid
 
-    def _reset(self):
-        obs = MiniGridEnv._reset(self)
+    def reset(self):
+        obs = MiniGridEnv.reset(self)
 
         obs = {
             'image': obs,
@@ -199,7 +199,7 @@ class FourRoomQAEnv(MiniGridEnv):
 
         return obs
 
-    def _step(self, action):
+    def step(self, action):
         if isinstance(action, dict):
             answer = action['answer']
             action = action['action']
@@ -208,7 +208,7 @@ class FourRoomQAEnv(MiniGridEnv):
 
         if action == self.actions.answer:
             # To the superclass, this action behaves like a noop
-            obs, reward, done, info = MiniGridEnv._step(self, self.actions.wait)
+            obs, reward, done, info = MiniGridEnv.step(self, self.actions.wait)
             done = True
 
             if answer == self.answer:
@@ -218,7 +218,7 @@ class FourRoomQAEnv(MiniGridEnv):
 
         else:
             # Let the superclass handle the action
-            obs, reward, done, info = MiniGridEnv._step(self, action)
+            obs, reward, done, info = MiniGridEnv.step(self, action)
 
         obs = {
             'image': obs,
