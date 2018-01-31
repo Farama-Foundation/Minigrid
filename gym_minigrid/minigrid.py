@@ -166,7 +166,7 @@ class LockedDoor(WorldObj):
     def render(self, r):
         c = COLORS[self.color]
         r.setLineColor(c[0], c[1], c[2])
-        r.setColor(0, 0, 0)
+        r.setColor(c[0], c[1], c[2], 50)
 
         if self.isOpen:
             r.drawPolygon([
@@ -190,10 +190,10 @@ class LockedDoor(WorldObj):
             (2          ,           2)
         ])
         r.drawLine(
+            CELL_PIXELS * 0.55,
+            CELL_PIXELS * 0.5,
             CELL_PIXELS * 0.75,
-            CELL_PIXELS * 0.45,
-            CELL_PIXELS * 0.75,
-            CELL_PIXELS * 0.60
+            CELL_PIXELS * 0.5
         )
 
     def toggle(self, env, pos):
