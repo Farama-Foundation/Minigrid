@@ -144,6 +144,21 @@ square the agent must get to. This environment is extremely difficult to
 solve using classical RL. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
 
+### Fetch environment
+
+Registered configurations:
+- `MiniGrid-Fetch-5x5-N2-v0`
+- `MiniGrid-Fetch-8x8-N3-v0`
+
+<p align="center">
+<img src="/figures/fetch-env.png" width=450>
+</p>
+
+This environment has multiple objects of assorted types and colors. The
+agent receives a textual string as part of its observation telling it
+which object to pick up. Picking up the wrong object produces a negative
+reward.
+
 ### Go-to-door environment
 
 Registered configurations:
@@ -160,20 +175,27 @@ receives a textual (mission) string as input, telling it which door to go to,
 (eg: "go to the red door"). It receives a positive reward for performing the
 `wait` action next to the correct door, as indicated in the mission string.
 
-### Fetch environment
+### Put-near environment
 
 Registered configurations:
-- `MiniGrid-Fetch-5x5-N2-v0`
-- `MiniGrid-Fetch-8x8-N3-v0`
+- `MiniGrid-PutNear-6x6-N2-v0`
+- `MiniGrid-PutNear-8x8-N3-v0`
 
-<p align="center">
-<img src="/figures/fetch-env.png" width=450>
-</p>
+The agent is instructed through a textual string to pick up an object and
+place it next to another object. This environment is easy to solve with two
+objects, but difficult to solve with more, as it involves both textual
+understanding and spatial reasoning involving multiple objects.
 
-This environment has multiple objects of assorted types and colors. The
-agent receives a textual string as part of its observation telling it
-which object to pick up. Picking up the wrong object produces a negative
-reward.
+### Locked Room Environment
+
+Registed configurations:
+- `MiniGrid-LockedRoom-v0`
+
+The environment has six rooms, one of which is locked. The agent receives
+a textual mission string as input, telling it which room to go to in order
+to get the key that opens the locked room. It then has to go into the locked
+room in order to reach the final goal. This environment is extremely difficult
+to solve with vanilla reinforcement learning alone.
 
 ### Four room question answering environment
 
