@@ -22,7 +22,15 @@ for envName in sorted(envSet):
     env.reset()
     env.render('rgb_array')
 
-    env.seed()
+    # Verify that the same seed always produces the same environment
+    for i in range(0, 5):
+        seed = 1337 + i
+        env.seed(seed)
+        grid1 = env.grid.encode()
+        env.seed(seed)
+        grid2 = env.grid.encode()
+        assert np.array_equal(grid2, grid1)
+
     env.reset()
 
     # Run for a few episodes
