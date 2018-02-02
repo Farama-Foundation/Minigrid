@@ -565,11 +565,6 @@ class MiniGridEnv(gym.Env):
         return obs
 
     def seed(self, seed=1337):
-        """
-        The seed function sets the random elements of the environment,
-        and initializes the world.
-        """
-
         # Seed the random number generator
         self.np_random, _ = seeding.np_random(seed)
 
