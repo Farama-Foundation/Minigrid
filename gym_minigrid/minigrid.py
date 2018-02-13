@@ -303,6 +303,19 @@ class Grid:
 
         self.grid = [None] * width * height
 
+    def __contains__(self, key):
+        if isinstance(key, WorldObj):
+            for e in self.grid:
+                if e is key:
+                    return True
+        elif isinstance(key, tuple):
+            for e in self.grid:
+                if e is None:
+                    continue
+                if (e.color, e.type) == key:
+                    return True
+        return False
+
     def copy(self):
         from copy import deepcopy
         return deepcopy(self)

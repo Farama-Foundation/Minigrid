@@ -64,23 +64,19 @@ for envName in sorted(envSet):
 
 ##############################################################################
 
-# Test the env.agentSees() function
 env = gym.make('MiniGrid-Empty-6x6-v0')
 goalPos = (env.grid.width - 2, env.grid.height - 2)
 
-def goalInObs(obs):
-    grid = Grid.decode(obs)
-    for j in range(0, grid.height):
-        for i in range(0, grid.width):
-            cell = grid.get(i, j)
-            if cell and cell.color == 'green':
-                return True
-    return False
+# Test the "in" operator on grid objects
+assert ('green', 'goal') in env.grid
+assert ('blue', 'key') not in env.grid
 
+# Test the env.agentSees() function
 env.reset()
 for i in range(0, 200):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    assert env.agentSees(*goalPos) == goalInObs(obs)
+    goalVisible = ('green', 'goal') in Grid.decode(obs)
+    assert env.agentSees(*goalPos) == goalVisible
     if done:
         env.reset()
