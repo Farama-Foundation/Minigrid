@@ -639,12 +639,20 @@ class MiniGridEnv(gym.Env):
             topX = self.agentPos[0] - AGENT_VIEW_SIZE // 2
             topY = self.agentPos[1] - AGENT_VIEW_SIZE + 1
         else:
-            assert False
+            assert False, "invalid agent direction"
 
         botX = topX + AGENT_VIEW_SIZE
         botY = topY + AGENT_VIEW_SIZE
 
         return (topX, topY, botX, botY)
+
+    def agentSees(self, x, y):
+        """
+        Check if a grid position is visible to the agent
+        """
+
+        topX, topY, botX, botY = self.getViewExts()
+        return (x >= topX and x < botX and y >= topY and y < botY)
 
     def step(self, action):
         self.stepCount += 1
