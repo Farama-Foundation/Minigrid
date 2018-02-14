@@ -3,7 +3,7 @@
 import random
 import gym
 import numpy as np
-from gym_minigrid.register import envSet
+from gym_minigrid.register import envList
 from gym_minigrid.minigrid import Grid
 
 # Test specifically importing a specific environment
@@ -14,9 +14,9 @@ from gym_minigrid.wrappers import *
 
 ##############################################################################
 
-print('%d environments registered' % len(envSet))
+print('%d environments registered' % len(envList))
 
-for envName in sorted(envSet):
+for envName in envList:
     print('testing "%s"' % envName)
 
     # Load the gym environment

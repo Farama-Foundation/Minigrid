@@ -1,6 +1,6 @@
 from gym.envs.registration import register as gymRegister
 
-envSet = set()
+envList = []
 
 def register(
     id,
@@ -8,6 +8,7 @@ def register(
     reward_threshold=900
 ):
     assert id.startswith("MiniGrid-")
+    assert id not in envList
 
     # Register the environment with OpenAI gym
     gymRegister(
@@ -17,4 +18,4 @@ def register(
     )
 
     # Add the environment to the set
-    envSet.add(id)
+    envList.append(id)

@@ -104,10 +104,12 @@ class MultiRoomEnv(MiniGridEnv):
             # If this isn't the first room, place the entry door
             if idx > 0:
                 # Pick a door color different from the previous one
-                doorColors = set(COLORS.keys())
+                doorColors = set(COLOR_NAMES)
                 if prevDoorColor:
                     doorColors.remove(prevDoorColor)
-                doorColor = self._randElem(doorColors)
+                # Note: the use of sorting here guarantees determinism,
+                # This is needed because Python's set is not deterministic
+                doorColor = self._randElem(sorted(doorColors))
 
                 entryDoor = Door(doorColor)
                 grid.set(*room.entryDoorPos, entryDoor)
@@ -204,7 +206,7 @@ class MultiRoomEnv(MiniGridEnv):
             # Pick which wall to place the out door on
             wallSet = set((0, 1, 2, 3))
             wallSet.remove(entryDoorWall)
-            exitDoorWall = self._randElem(wallSet)
+            exitDoorWall = self._randElem(sorted(wallSet))
             nextEntryWall = (exitDoorWall + 2) % 4
 
             # Pick the exit door position

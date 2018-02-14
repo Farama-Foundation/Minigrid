@@ -91,7 +91,7 @@ class LockedRoom(MiniGridEnv):
         # Assign the door colors
         colors = set(COLOR_NAMES)
         for room in self.rooms:
-            color = self._randElem(colors)
+            color = self._randElem(sorted(colors))
             colors.remove(color)
             room.color = color
             if room.locked:
