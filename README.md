@@ -132,6 +132,7 @@ useful to experiment with curiosity or curriculum learning.
 ### Multi-room environment
 
 Registered configurations:
+- `MiniGrid-MultiRoom-N2-S4-v0`
 - `MiniGrid-MultiRoom-N6-v0`
 
 <p align="center">

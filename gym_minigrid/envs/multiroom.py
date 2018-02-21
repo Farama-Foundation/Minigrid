@@ -252,12 +252,26 @@ class MultiRoomEnv(MiniGridEnv):
 
         return True
 
+class MultiRoomEnvN2S4(MultiRoomEnv):
+    def __init__(self):
+        super().__init__(
+            minNumRooms=2,
+            maxNumRooms=2,
+            maxRoomSize=4
+        )
+
 class MultiRoomEnvN6(MultiRoomEnv):
     def __init__(self):
-        super(MultiRoomEnvN6, self).__init__(
+        super().__init__(
             minNumRooms=6,
             maxNumRooms=6
         )
+
+register(
+    id='MiniGrid-MultiRoom-N2-S4-v0',
+    entry_point='gym_minigrid.envs:MultiRoomEnvN2S4',
+    reward_threshold=1000.0
+)
 
 register(
     id='MiniGrid-MultiRoom-N6-v0',
