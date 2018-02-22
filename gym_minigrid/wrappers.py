@@ -18,7 +18,7 @@ class ActionBonus(gym.core.Wrapper):
         super().__init__(env)
         self.counts = {}
 
-    def _step(self, action):
+    def step(self, action):
 
         obs, reward, done, info = self.env.step(action)
 
@@ -50,7 +50,7 @@ class StateBonus(gym.core.Wrapper):
         super().__init__(env)
         self.counts = {}
 
-    def _step(self, action):
+    def step(self, action):
 
         obs, reward, done, info = self.env.step(action)
 
@@ -80,7 +80,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
     and combine these with observed images into one flat array
     """
 
-    def __init__(self, env, maxStrLen=48):
+    def __init__(self, env, maxStrLen=64):
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
@@ -99,7 +99,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         self.cachedStr = None
         self.cachedArray = None
 
-    def _observation(self, obs):
+    def observation(self, obs):
         image = obs['image']
         mission = obs['mission']
 

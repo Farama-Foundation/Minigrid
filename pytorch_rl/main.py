@@ -150,6 +150,8 @@ def main():
 
             if current_obs.dim() == 4:
                 current_obs *= masks.unsqueeze(2).unsqueeze(2)
+            elif current_obs.dim() == 3:
+                current_obs *= masks.unsqueeze(2)
             else:
                 current_obs *= masks
 
