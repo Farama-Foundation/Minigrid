@@ -3,7 +3,7 @@
 There are other gridworld Gym environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
-external sprites/textures, and it can run at up to 5800 FPS on a quad-core
+external sprites/textures, and it can run at up to 6000 FPS on a quad-core i7
 laptop, which means you can run your experiments faster. Batteries are
 included: a known-working RL implementation is supplied in this repository
 to help you get started.
@@ -72,21 +72,42 @@ python3 pytorch_rl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./traine
 
 ## Design
 
-The environment is partially observable and uses a compact and efficient
-encoding, with just 3 inputs per visible grid cell. It is also easy to
-produce an array of pixels for observations if desired.
+MiniGrid is built to support tasks involving natural language and sparse rewards.
+The observations are dictionaries, with an 'image' field, partially observable
+view of the environment, and a 'mission' field which is a textual string
+describing the objective the agent should reach to get a reward. Using
+dictionaries makes it easy for you to add additional information to observations
+if you need to, without having to force everything into a single tensor.
+If your RL code expects a tensor for observations, please take a look at
+`FlatObsWrapper` in 
+[gym_minigrid/wrappers.py](/gym_minigrid/wrappers.py).
 
-Each cell/tile in the grid world contains one object, each object has an
-associated discrete color. The objects currently supported are walls, doors,
-locked doors, keys, balls, boxes and a goal square. The basic version of the
-environment has 5 possible actions: turn left, turn right, move
-forward, pickup/toggle to interact with objects, and a wait/noop action. The
-agent can carry one carryable item at a time (eg: ball or key). By default,
-only sparse rewards for reaching the goal square are provided.
+The partially observable view of the environment uses a compact and efficient
+encoding, with just 3 input values per visible grid cell, 147 values total.
+If you want to obtain an array of RGB pixels instead, see the `getObsRender` method in
+[gym_minigrid/minigrid.py](gym_minigrid/minigrid.py).
 
-Extending the environment with new object types and dynamics should be
-very easy. If you wish to do this, you should take a look at
-the [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
+Structure of the world:
+- The world is an NxM grid of tiles
+- Each tile in the grid world contains zero or one object
+  - Cells that do not contain an object have the value `None`
+- Each object has an associated discrete color (string)
+- Each object has an associated type (string)
+  - Provided object types are: wall, door, locked_doors, key, ball, box and goal
+- The agent can pick up and carry exactly one object (eg: ball or key)
+
+Actions in the basic environment:
+- Turn left
+- Turn right
+- Move forward
+- Toggle (pick up or interact with objects)
+- Wait (noop, do nothing)
+
+By default, sparse rewards for reaching a goal square are provided, but you can
+define your own reward function by creating a class derived from MiniGridEnv. Extending
+the environment with new object types or action should be very easy very easy.
+If you wish to do this, you should take a look at the
+[gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
 
 ## Included Environments
 
