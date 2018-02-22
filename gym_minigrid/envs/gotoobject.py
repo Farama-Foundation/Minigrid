@@ -14,11 +14,6 @@ class GoToObjectEnv(MiniGridEnv):
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
-
-        self.observation_space = spaces.Dict({
-            'image': self.observation_space
-        })
-
         self.reward_range = (-1, 1)
 
     def _genGrid(self, width, height):
@@ -83,22 +78,6 @@ class GoToObjectEnv(MiniGridEnv):
 
         return grid
 
-    def _observation(self, obs):
-        """
-        Encode observations
-        """
-
-        obs = {
-            'image': obs,
-            'mission': self.mission
-        }
-
-        return obs
-
-    def reset(self):
-        obs = MiniGridEnv.reset(self)
-        return self._observation(obs)
-
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
@@ -114,8 +93,6 @@ class GoToObjectEnv(MiniGridEnv):
             if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
                 reward = 1
             done = True
-
-        obs = self._observation(obs)
 
         return obs, reward, done, info
 

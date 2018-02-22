@@ -130,6 +130,8 @@ class MultiRoomEnv(MiniGridEnv):
                 grid.set(*self.goalPos, Goal())
                 break
 
+        self.mission = 'traverse the rooms to get to the goal'
+
         return grid
 
     def _placeRoom(

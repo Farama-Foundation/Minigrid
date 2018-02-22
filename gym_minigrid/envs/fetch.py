@@ -14,11 +14,6 @@ class FetchEnv(MiniGridEnv):
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
-
-        self.observation_space = spaces.Dict({
-            'image': self.observation_space
-        })
-
         self.reward_range = (-1000, 1000)
 
     def _genGrid(self, width, height):
@@ -84,22 +79,6 @@ class FetchEnv(MiniGridEnv):
 
         return grid
 
-    def _observation(self, obs):
-        """
-        Encode observations
-        """
-
-        obs = {
-            'image': obs,
-            'mission': self.mission
-        }
-
-        return obs
-
-    def reset(self):
-        obs = MiniGridEnv.reset(self)
-        return self._observation(obs)
-
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
@@ -111,8 +90,6 @@ class FetchEnv(MiniGridEnv):
             else:
                 reward = -1000
                 done = True
-
-        obs = self._observation(obs)
 
         return obs, reward, done, info
 

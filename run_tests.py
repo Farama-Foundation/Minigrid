@@ -43,7 +43,7 @@ for envName in envList:
         obs, reward, done, info = env.step(action)
 
         # Test observation encode/decode roundtrip
-        img = obs if type(obs) is np.ndarray else obs['image']
+        img = obs['image']
         grid = Grid.decode(img)
         img2 = grid.encode()
         assert np.array_equal(img2, img)
@@ -76,7 +76,7 @@ env.reset()
 for i in range(0, 200):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    goalVisible = ('green', 'goal') in Grid.decode(obs)
+    goalVisible = ('green', 'goal') in Grid.decode(obs['image'])
     assert env.agentSees(*goalPos) == goalVisible
     if done:
         env.reset()

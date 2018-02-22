@@ -527,13 +527,17 @@ class MiniGridEnv(gym.Env):
         # Actions are discrete integer values
         self.action_space = spaces.Discrete(len(self.actions))
 
-        # The observations are RGB images
+        # Observations are dictionaries containing an
+        # encoding of the grid and a textual 'mission' string
         self.observation_space = spaces.Box(
             low=0,
             high=255,
             shape=OBS_ARRAY_SIZE,
             dtype='uint8'
         )
+        self.observation_space = spaces.Dict({
+            'image': self.observation_space
+        })
 
         # Range of possible rewards
         self.reward_range = (-1, 1000)
@@ -745,7 +749,16 @@ class MiniGridEnv(gym.Env):
             grid.set(*agentPos, None)
 
         # Encode the partially observable view into a numpy array
-        obs = grid.encode()
+        image = grid.encode()
+
+        assert hasattr(self, 'mission'), "environments must define a textual mission string"
+
+        # Observations are dictionaries with both an image
+        # and a textual mission string
+        obs = {
+            'image': image,
+            'mission': self.mission
+        }
 
         return obs
 

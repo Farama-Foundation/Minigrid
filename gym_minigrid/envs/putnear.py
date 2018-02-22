@@ -14,11 +14,6 @@ class PutNearEnv(MiniGridEnv):
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
-
-        self.observation_space = spaces.Dict({
-            'image': self.observation_space
-        })
-
         self.reward_range = (-1, 1)
 
     def _genGrid(self, width, height):
@@ -99,22 +94,6 @@ class PutNearEnv(MiniGridEnv):
 
         return grid
 
-    def _observation(self, obs):
-        """
-        Encode observations
-        """
-
-        obs = {
-            'image': obs,
-            'mission': self.mission
-        }
-
-        return obs
-
-    def reset(self):
-        obs = MiniGridEnv.reset(self)
-        return self._observation(obs)
-
     def step(self, action):
         preCarrying = self.carrying
 
@@ -137,8 +116,6 @@ class PutNearEnv(MiniGridEnv):
                     if abs(ox - tx) <= 1 and abs(oy - ty) <= 1:
                         reward = 1
                 done = True
-
-        obs = self._observation(obs)
 
         return obs, reward, done, info
 

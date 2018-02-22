@@ -24,6 +24,8 @@ class EmptyEnv(MiniGridEnv):
         # Place a goal in the bottom-right corner
         grid.set(width - 2, height - 2, Goal())
 
+        self.mission = "get to the green goal square"
+
         return grid
 
 class EmptyEnv6x6(EmptyEnv):

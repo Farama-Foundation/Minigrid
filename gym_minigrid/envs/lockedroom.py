@@ -123,25 +123,8 @@ class LockedRoom(MiniGridEnv):
 
         return grid
 
-    def _observation(self, obs):
-        """
-        Encode observations
-        """
-
-        obs = {
-            'image': obs,
-            'mission': self.mission
-        }
-
-        return obs
-
-    def reset(self):
-        obs = MiniGridEnv.reset(self)
-        return self._observation(obs)
-
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
-        obs = self._observation(obs)
         return obs, reward, done, info
 
 register(

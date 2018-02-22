@@ -53,6 +53,8 @@ class DoorKeyEnv(MiniGridEnv):
             grid.set(*pos, Key('yellow'))
             break
 
+        self.mission = "use the key to open the door and then get to the goal"
+
         return grid
 
 class DoorKeyEnv5x5(DoorKeyEnv):
