@@ -38,8 +38,6 @@ class LockedRoom(MiniGridEnv):
             'image': self.observation_space
         })
 
-        self.reward_range = (-1, 1)
-
     def _genGrid(self, width, height):
         # Create the grid
         grid = Grid(width, height)

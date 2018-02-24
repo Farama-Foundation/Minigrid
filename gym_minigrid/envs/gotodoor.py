@@ -14,7 +14,7 @@ class GoToDoorEnv(MiniGridEnv):
     ):
         assert size >= 5
         super().__init__(gridSize=size, maxSteps=10*size)
-        self.reward_range = (-1, 1)
+        self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
         # Create the grid

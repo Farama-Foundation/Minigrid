@@ -14,7 +14,7 @@ class PutNearEnv(MiniGridEnv):
     ):
         self.numObjs = numObjs
         super().__init__(gridSize=size, maxSteps=5*size)
-        self.reward_range = (-1, 1)
+        self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
         # Create a grid surrounded by walls
