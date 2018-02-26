@@ -79,7 +79,7 @@ describing the objective the agent should reach to get a reward. Using
 dictionaries makes it easy for you to add additional information to observations
 if you need to, without having to force everything into a single tensor.
 If your RL code expects a tensor for observations, please take a look at
-`FlatObsWrapper` in 
+`FlatObsWrapper` in
 [gym_minigrid/wrappers.py](/gym_minigrid/wrappers.py).
 
 The partially observable view of the environment uses a compact and efficient
@@ -153,8 +153,8 @@ useful to experiment with curiosity or curriculum learning.
 ### Multi-room environment
 
 Registered configurations:
-- `MiniGrid-MultiRoom-N2-S4-v0`
-- `MiniGrid-MultiRoom-N6-v0`
+- `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
+- `MiniGrid-MultiRoom-N6-v0` (six room)
 
 <p align="center">
 <img src="/figures/multi-room.gif" width=416 height=424>
@@ -170,6 +170,7 @@ rooms and building a curriculum, the environment can be solved.
 
 Registered configurations:
 - `MiniGrid-Fetch-5x5-N2-v0`
+- `MiniGrid-Fetch-6x6-N2-v0`
 - `MiniGrid-Fetch-8x8-N3-v0`
 
 <p align="center">
