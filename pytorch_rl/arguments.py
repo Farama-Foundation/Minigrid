@@ -55,7 +55,7 @@ def get_args():
                         help='directory to save agent logs (default: ./trained_models/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
-    parser.add_argument('--recurrent-policy', action='store_true', default=False,
+    parser.add_argument('--recurrent-policy', action='store_true', default=True,
                         help='use a recurrent policy')
     parser.add_argument('--no-vis', action='store_true', default=False,
                         help='disables visdom visualization')

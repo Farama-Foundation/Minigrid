@@ -18,7 +18,7 @@ from vec_env.dummy_vec_env import DummyVecEnv
 from vec_env.subproc_vec_env import SubprocVecEnv
 from envs import make_env
 from kfac import KFACOptimizer
-from model import RecMLPPolicy, MLPPolicy, CNNPolicy
+from model import Policy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
@@ -53,30 +53,18 @@ def main():
         viz = Visdom()
         win = None
 
-    envs = [make_env(args.env_name, args.seed, i, args.log_dir)
-                for i in range(args.num_processes)]
+    envs = [make_env(args.env_name, args.seed, i, args.log_dir) for i in range(args.num_processes)]
 
     if args.num_processes > 1:
         envs = SubprocVecEnv(envs)
     else:
         envs = DummyVecEnv(envs)
 
-    # Maxime: commented this out because it very much changes the behavior
-    # of the code for seemingly arbitrary reasons
-    #if len(envs.observation_space.shape) == 1:
-    #    envs = VecNormalize(envs)
-
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
-
     obs_numel = reduce(operator.mul, obs_shape, 1)
 
-    if len(obs_shape) == 3 and obs_numel > 1024:
-        actor_critic = CNNPolicy(obs_shape[0], envs.action_space, args.recurrent_policy)
-    elif args.recurrent_policy:
-        actor_critic = RecMLPPolicy(obs_numel, envs.action_space)
-    else:
-        actor_critic = MLPPolicy(obs_numel, envs.action_space)
+    actor_critic = Policy(obs_numel, envs.action_space)
 
     # Maxime: log some info about the model and its size
     modelSize = 0
