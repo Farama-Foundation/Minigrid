@@ -68,6 +68,8 @@ class Window(QMainWindow):
             keyName = 'ALT'
         elif e.key() == Qt.Key_Control:
             keyName = 'CTRL'
+        elif e.key() == Qt.Key_Backspace:
+            keyName = 'BACKSPACE'
         elif e.key() == Qt.Key_Escape:
             keyName = 'ESCAPE'
 

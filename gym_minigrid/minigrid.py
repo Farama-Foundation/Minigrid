@@ -330,6 +330,18 @@ class Grid:
         assert j >= 0 and j < self.height
         return self.grid[j * self.width + i]
 
+    def horzWall(self, x, y, length=None):
+        if length is None:
+            length = self.width - x
+        for i in range(0, length):
+            self.set(x + i, y, Wall())
+
+    def vertWall(self, x, y, length=None):
+        if length is None:
+            length = self.height - y
+        for j in range(0, length):
+            self.set(x, y + j, Wall())
+
     def rotateLeft(self):
         """
         Rotate the grid to the left (counter-clockwise)
@@ -603,6 +615,20 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(xLow, xHigh),
             self.np_random.randint(yLow, yHigh)
         )
+
+    def placeObj(self, grid, obj, excPos=None):
+        while True:
+            pos = (
+                self._randInt(0, grid.width),
+                self._randInt(0, grid.height)
+            )
+            if grid.get(*pos) != None:
+                continue
+            if pos == excPos:
+                continue
+            break
+        grid.set(*pos, obj)
+        return pos
 
     def _randElem(self, iterable):
         lst = list(iterable)

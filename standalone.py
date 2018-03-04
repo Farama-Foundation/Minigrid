@@ -35,6 +35,13 @@ def main():
     renderer = env.render('human')
 
     def keyDownCb(keyName):
+        if keyName == 'BACKSPACE':
+            resetEnv()
+            return
+
+        if keyName == 'ESCAPE':
+            sys.exit(0)
+
         action = 0
         if keyName == 'LEFT':
             action = env.actions.left
@@ -46,10 +53,6 @@ def main():
             action = env.actions.toggle
         elif keyName == 'CTRL':
             action = env.actions.wait
-        elif keyName == 'RETURN':
-            resetEnv()
-        elif keyName == 'ESCAPE':
-            sys.exit(0)
         else:
             print("unknown key %s" % keyName)
             return

@@ -31,7 +31,6 @@ class GoToObjectEnv(MiniGridEnv):
 
         # Types and colors of objects we can generate
         types = ['key', 'ball', 'box']
-        colors = list(COLORS.keys())
 
         objs = []
         objPos = []
@@ -39,7 +38,7 @@ class GoToObjectEnv(MiniGridEnv):
         # Until we have generated all the objects
         while len(objs) < self.numObjs:
             objType = self._randElem(types)
-            objColor = self._randElem(colors)
+            objColor = self._randElem(COLOR_NAMES)
 
             # If this object already exists, try again
             if (objType, objColor) in objs:
@@ -52,18 +51,7 @@ class GoToObjectEnv(MiniGridEnv):
             elif objType == 'box':
                 obj = Box(objColor)
 
-            while True:
-                pos = (
-                    self._randInt(1, gridSz - 1),
-                    self._randInt(1, gridSz - 1)
-                )
-                if grid.get(*pos) != None:
-                    continue
-                if pos == self.startPos:
-                    continue
-                grid.set(*pos, obj)
-                break
-
+            pos = self.placeObj(grid, obj, self.startPos)
             objs.append((objType, objColor))
             objPos.append(pos)
 
