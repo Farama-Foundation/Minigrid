@@ -25,7 +25,7 @@ COLORS = {
     'grey'  : (100, 100, 100)
 }
 
-COLOR_NAMES = list(COLORS.keys())
+COLOR_NAMES = sorted(list(COLORS.keys()))
 
 # Used to map colors to integers
 COLOR_TO_IDX = {
