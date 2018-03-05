@@ -630,6 +630,15 @@ class MiniGridEnv(gym.Env):
         grid.set(*pos, obj)
         return pos
 
+    def placeAgent(self, grid, randDir=True):
+        pos = self.placeObj(grid, None)
+        self.startPos = pos
+
+        if randDir:
+            self.startDir = self._randInt(0, 4)
+
+        return pos
+
     def _randElem(self, iterable):
         lst = list(iterable)
         idx = self._randInt(0, len(lst))

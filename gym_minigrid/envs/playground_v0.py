@@ -21,9 +21,6 @@ class PlaygroundV0(MiniGridEnv):
         grid.vertWall(0, 0)
         grid.vertWall(width-1, 0)
 
-        self.startPos = (width // 2, height // 2)
-        self.startDir = 0
-
         roomW = width // 3
         roomH = height // 3
 
@@ -55,6 +52,9 @@ class PlaygroundV0(MiniGridEnv):
                     pos = (self._randInt(xL+1, xR-1), yB)
                     color = self._randElem(COLOR_NAMES)
                     grid.set(*pos, Door(color))
+
+        # Randomize the player start position and orientation
+        self.placeAgent(grid)
 
         # Place random objects in the world
         types = ['key', 'ball', 'box']
