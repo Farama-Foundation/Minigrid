@@ -42,16 +42,7 @@ except OSError:
         os.remove(f)
 
 def main():
-    print("#######")
-    print("WARNING: All rewards are clipped or normalized so you need to use a monitor (see envs.py) or visdom plot to get true rewards")
-    print("#######")
-
     os.environ['OMP_NUM_THREADS'] = '1'
-
-    if args.vis:
-        from visdom import Visdom
-        viz = Visdom()
-        win = None
 
     envs = [make_env(args.env_name, args.seed, i, args.log_dir) for i in range(args.num_processes)]
 
@@ -252,20 +243,25 @@ def main():
         if j % args.log_interval == 0:
             end = time.time()
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
-            print("Updates {}, num timesteps {}, FPS {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
-                format(j, total_num_steps,
-                       int(total_num_steps / (end - start)),
-                       final_rewards.mean(),
-                       final_rewards.median(),
-                       final_rewards.min(),
-                       final_rewards.max(), dist_entropy.data[0],
-                       value_loss.data[0], action_loss.data[0]))
+            print(
+                "Updates {}, num timesteps {}, FPS {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
+                format(
+                    j,
+                    total_num_steps,
+                    int(total_num_steps / (end - start)),
+                    final_rewards.mean(),
+                    final_rewards.median(),
+                    final_rewards.min(),
+                    final_rewards.max(), dist_entropy.data[0],
+                    value_loss.data[0], action_loss.data[0]
+                )
+            )
+
         if args.vis and j % args.vis_interval == 0:
-            try:
-                # Sometimes monitor doesn't properly flush the outputs
-                win = visdom_plot(viz, win, args.log_dir, args.env_name, args.algo)
-            except IOError:
-                pass
+            win = visdom_plot(
+                total_num_steps,
+                final_rewards.mean()
+            )
 
 if __name__ == "__main__":
     main()
