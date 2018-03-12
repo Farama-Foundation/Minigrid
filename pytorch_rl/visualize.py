@@ -1,5 +1,4 @@
 import numpy as np
-from visdom import Visdom
 
 vis = None
 
@@ -14,6 +13,10 @@ def visdom_plot(
     total_num_steps,
     mean_reward
 ):
+    # Lazily import visdom so that people don't need to install visdom
+    # if they're not actually using it
+    from visdom import Visdom
+
     global vis
     global win
     global avg_reward
