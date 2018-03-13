@@ -17,26 +17,17 @@ class GoToDoorEnv(MiniGridEnv):
 
     def _genGrid(self, width, height):
         # Create the grid
-        grid = Grid(width, height)
+        self.grid = Grid(width, height)
 
         # Randomly vary the room width and height
         width = self._randInt(5, width+1)
         height = self._randInt(5, height+1)
 
         # Generate the surrounding walls
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
-
-        # Randomize the player start position and orientation
-        self.startPos = self._randPos(
-            1, width-1,
-            1, height-1
-        )
-        self.startDir = self._randInt(0, 4)
+        self.grid.horzWall(0, 0, width)
+        self.grid.horzWall(0, height-1, width)
+        self.grid.vertWall(0, 0, height)
+        self.grid.vertWall(width-1, 0, height)
 
         # Generate the 4 doors at random positions
         doorPos = []
@@ -56,7 +47,7 @@ class GoToDoorEnv(MiniGridEnv):
         # Place the doors in the grid
         for idx, pos in enumerate(doorPos):
             color = doorColors[idx]
-            grid.set(*pos, Door(color))
+            self.grid.set(*pos, Door(color))
 
         # Select a random target door
         doorIdx = self._randInt(0, len(doorPos))
@@ -65,9 +56,6 @@ class GoToDoorEnv(MiniGridEnv):
 
         # Generate the mission string
         self.mission = 'go to the %s door' % self.targetColor
-        #print(self.mission)
-
-        return grid
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)

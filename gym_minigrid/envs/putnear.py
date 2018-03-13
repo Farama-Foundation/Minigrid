@@ -17,14 +17,13 @@ class PutNearEnv(MiniGridEnv):
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
-        # Create a grid surrounded by walls
-        grid = Grid(width, height)
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
+        self.grid = Grid(width, height)
+
+        # Generate the surrounding walls
+        self.grid.horzWall(0, 0)
+        self.grid.horzWall(0, height-1)
+        self.grid.vertWall(0, 0)
+        self.grid.vertWall(width-1, 0)
 
         # Types and colors of objects we can generate
         types = ['key', 'ball']
@@ -66,7 +65,7 @@ class PutNearEnv(MiniGridEnv):
                     continue
                 if pos == self.startPos:
                     continue
-                grid.set(*pos, obj)
+                self.grid.set(*pos, obj)
                 break
 
             objs.append((objType, objColor))
@@ -91,8 +90,6 @@ class PutNearEnv(MiniGridEnv):
             self.targetColor,
             self.targetType
         )
-
-        return grid
 
     def step(self, action):
         preCarrying = self.carrying
