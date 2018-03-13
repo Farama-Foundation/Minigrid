@@ -28,16 +28,11 @@ pip3 install -e .
 ```
 
 Optionally, if you wish use the reinforcement learning code included
-under [/pytorch_rl](/pytorch_rl), you can install its dependencies as follows:
+under [/pytorch_rl](/pytorch_rl), you should install PyTorch as follows:
 
 ```
-cd pytorch_rl
-
 # PyTorch
-conda install pytorch torchvision -c soumith
-
-# Other requirements
-pip3 install -r requirements.txt
+conda install pytorch torchvision -c pytorch
 ```
 
 Note: the pytorch_rl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
