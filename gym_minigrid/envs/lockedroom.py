@@ -40,22 +40,22 @@ class LockedRoom(MiniGridEnv):
 
     def _genGrid(self, width, height):
         # Create the grid
-        grid = Grid(width, height)
+        self.grid = Grid(width, height)
 
         # Generate the surrounding walls
         for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
+            self.grid.set(i, 0, Wall())
+            self.grid.set(i, height-1, Wall())
         for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
+            self.grid.set(0, j, Wall())
+            self.grid.set(width-1, j, Wall())
 
         # Hallway walls
         lWallIdx = width // 2 - 2
         rWallIdx = width // 2 + 2
         for j in range(0, height):
-            grid.set(lWallIdx, j, Wall())
-            grid.set(rWallIdx, j, Wall())
+            self.grid.set(lWallIdx, j, Wall())
+            self.grid.set(rWallIdx, j, Wall())
 
         self.rooms = []
 
@@ -63,9 +63,9 @@ class LockedRoom(MiniGridEnv):
         for n in range(0, 3):
             j = n * (height // 3)
             for i in range(0, lWallIdx):
-                grid.set(i, j, Wall())
+                self.grid.set(i, j, Wall())
             for i in range(rWallIdx, width):
-                grid.set(i, j, Wall())
+                self.grid.set(i, j, Wall())
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
@@ -84,7 +84,7 @@ class LockedRoom(MiniGridEnv):
         lockedRoom = self._randElem(self.rooms)
         lockedRoom.locked = True
         goalPos = lockedRoom.randPos(self)
-        grid.set(*goalPos, Goal())
+        self.grid.set(*goalPos, Goal())
 
         # Assign the door colors
         colors = set(COLOR_NAMES)
@@ -93,9 +93,9 @@ class LockedRoom(MiniGridEnv):
             colors.remove(color)
             room.color = color
             if room.locked:
-                grid.set(*room.doorPos, LockedDoor(color))
+                self.grid.set(*room.doorPos, LockedDoor(color))
             else:
-                grid.set(*room.doorPos, Door(color))
+                self.grid.set(*room.doorPos, Door(color))
 
         # Select a random room to contain the key
         while True:
@@ -103,7 +103,7 @@ class LockedRoom(MiniGridEnv):
             if keyRoom != lockedRoom:
                 break
         keyPos = keyRoom.randPos(self)
-        grid.set(*keyPos, Key(lockedRoom.color))
+        self.grid.set(*keyPos, Key(lockedRoom.color))
 
         # Randomize the player start position and orientation
         self.startPos = self._randPos(
@@ -118,8 +118,6 @@ class LockedRoom(MiniGridEnv):
             'then use it to unlock the %s door '
             'so you can get to the goal'
         ) % (lockedRoom.color, keyRoom.color, lockedRoom.color)
-
-        return grid
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)

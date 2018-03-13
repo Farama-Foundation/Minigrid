@@ -577,7 +577,7 @@ class MiniGridEnv(gym.Env):
         # Generate a new random grid at the start of each episode
         # To keep the same grid for each episode, call env.seed() with
         # the same seed before calling env.reset()
-        self.grid = self._genGrid(self.gridSize, self.gridSize)
+        self._genGrid(self.gridSize, self.gridSize)
 
         # Place the agent in the starting position and direction
         self.agentPos = self.startPos
@@ -606,6 +606,15 @@ class MiniGridEnv(gym.Env):
 
         return self.np_random.randint(low, high)
 
+    def _randElem(self, iterable):
+        """
+        Pick a random element in a list
+        """
+
+        lst = list(iterable)
+        idx = self._randInt(0, len(lst))
+        return lst[idx]
+
     def _randPos(self, xLow, xHigh, yLow, yHigh):
         """
         Generate a random (x,y) position tuple
@@ -616,33 +625,36 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(yLow, yHigh)
         )
 
-    def placeObj(self, grid, obj, excPos=None):
+    def placeObj(self, obj):
+        """
+        Place an object at an empty position in the grid
+        """
+
         while True:
             pos = (
-                self._randInt(0, grid.width),
-                self._randInt(0, grid.height)
+                self._randInt(0, self.grid.width),
+                self._randInt(0, self.grid.height)
             )
-            if grid.get(*pos) != None:
+            if self.grid.get(*pos) != None:
                 continue
-            if pos == excPos:
+            if pos == self.startPos:
                 continue
             break
-        grid.set(*pos, obj)
+        self.grid.set(*pos, obj)
         return pos
 
-    def placeAgent(self, grid, randDir=True):
-        pos = self.placeObj(grid, None)
+    def placeAgent(self, randDir=True):
+        """
+        Set the agent's starting point at an empty position in the grid
+        """
+
+        pos = self.placeObj(None)
         self.startPos = pos
 
         if randDir:
             self.startDir = self._randInt(0, 4)
 
         return pos
-
-    def _randElem(self, iterable):
-        lst = list(iterable)
-        idx = self._randInt(0, len(lst))
-        return lst[idx]
 
     def getStepsRemaining(self):
         return self.maxSteps - self.stepCount

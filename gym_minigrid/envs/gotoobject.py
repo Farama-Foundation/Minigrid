@@ -17,17 +17,13 @@ class GoToObjectEnv(MiniGridEnv):
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
-        assert width == height
-        gridSz = width
+        self.grid = Grid(width, height)
 
-        # Create a grid surrounded by walls
-        grid = Grid(width, height)
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
+        # Generate the surrounding walls
+        self.grid.horzWall(0, 0)
+        self.grid.horzWall(0, height-1)
+        self.grid.vertWall(0, 0)
+        self.grid.vertWall(width-1, 0)
 
         # Types and colors of objects we can generate
         types = ['key', 'ball', 'box']
@@ -51,9 +47,12 @@ class GoToObjectEnv(MiniGridEnv):
             elif objType == 'box':
                 obj = Box(objColor)
 
-            pos = self.placeObj(grid, obj, self.startPos)
+            pos = self.placeObj(obj)
             objs.append((objType, objColor))
             objPos.append(pos)
+
+        # Randomize the player start position and orientation
+        self.placeAgent()
 
         # Choose a random object to be picked up
         objIdx = self._randInt(0, len(objs))
@@ -63,8 +62,6 @@ class GoToObjectEnv(MiniGridEnv):
         descStr = '%s %s' % (self.targetColor, self.targetType)
         self.mission = 'go to the %s' % descStr
         #print(self.mission)
-
-        return grid
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)

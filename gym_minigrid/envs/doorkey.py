@@ -11,23 +11,20 @@ class DoorKeyEnv(MiniGridEnv):
 
     def _genGrid(self, width, height):
         # Create an empty grid
-        grid = Grid(width, height)
+        self.grid = Grid(width, height)
 
-        # Place walls around the edges
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height - 1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(height - 1, j, Wall())
+        # Generate the surrounding walls
+        self.grid.horzWall(0, 0)
+        self.grid.horzWall(0, height-1)
+        self.grid.vertWall(0, 0)
+        self.grid.vertWall(width-1, 0)
 
         # Place a goal in the bottom-right corner
-        grid.set(width - 2, height - 2, Goal())
+        self.grid.set(width - 2, height - 2, Goal())
 
         # Create a vertical splitting wall
         splitIdx = self._randInt(2, width-2)
-        for i in range(0, height):
-            grid.set(splitIdx, i, Wall())
+        self.grid.vertWall(splitIdx, 0)
 
         # Place the agent at a random position and orientation
         self.startPos = self._randPos(
@@ -38,7 +35,7 @@ class DoorKeyEnv(MiniGridEnv):
 
         # Place a door in the wall
         doorIdx = self._randInt(1, width-2)
-        grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
+        self.grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
 
         # Place a yellow key on the left side
         while True:
@@ -48,14 +45,12 @@ class DoorKeyEnv(MiniGridEnv):
             )
             if pos == self.startPos:
                 continue
-            if grid.get(*pos) != None:
+            if self.grid.get(*pos) != None:
                 continue
-            grid.set(*pos, Key('yellow'))
+            self.grid.set(*pos, Key('yellow'))
             break
 
         self.mission = "use the key to open the door and then get to the goal"
-
-        return grid
 
 class DoorKeyEnv5x5(DoorKeyEnv):
     def __init__(self):

@@ -11,22 +11,18 @@ class EmptyEnv(MiniGridEnv):
 
     def _genGrid(self, width, height):
         # Create an empty grid
-        grid = Grid(width, height)
+        self.grid = Grid(width, height)
 
-        # Place walls around the edges
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height - 1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(height - 1, j, Wall())
+        # Generate the surrounding walls
+        self.grid.horzWall(0, 0)
+        self.grid.horzWall(0, height-1)
+        self.grid.vertWall(0, 0)
+        self.grid.vertWall(width-1, 0)
 
-        # Place a goal in the bottom-right corner
-        grid.set(width - 2, height - 2, Goal())
+        # Place a goal square in the bottom-right corner
+        self.grid.set(width - 2, height - 2, Goal())
 
         self.mission = "get to the green goal square"
-
-        return grid
 
 class EmptyEnv6x6(EmptyEnv):
     def __init__(self):

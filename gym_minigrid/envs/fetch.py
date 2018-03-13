@@ -17,44 +17,33 @@ class FetchEnv(MiniGridEnv):
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
-        assert width == height
-        gridSz = width
+        self.grid = Grid(width, height)
 
-        # Create a grid surrounded by walls
-        grid = Grid(width, height)
-        for i in range(0, width):
-            grid.set(i, 0, Wall())
-            grid.set(i, height-1, Wall())
-        for j in range(0, height):
-            grid.set(0, j, Wall())
-            grid.set(width-1, j, Wall())
+        # Generate the surrounding walls
+        self.grid.horzWall(0, 0)
+        self.grid.horzWall(0, height-1)
+        self.grid.vertWall(0, 0)
+        self.grid.vertWall(width-1, 0)
 
         types = ['key', 'ball']
-        colors = list(COLORS.keys())
 
         objs = []
 
         # For each object to be generated
         while len(objs) < self.numObjs:
             objType = self._randElem(types)
-            objColor = self._randElem(colors)
+            objColor = self._randElem(COLOR_NAMES)
 
             if objType == 'key':
                 obj = Key(objColor)
             elif objType == 'ball':
                 obj = Ball(objColor)
 
-            while True:
-                pos = (
-                    self._randInt(1, gridSz - 1),
-                    self._randInt(1, gridSz - 1)
-                )
-
-                if pos != self.startPos:
-                    grid.set(*pos, obj)
-                    break
-
+            self.placeObj(obj)
             objs.append(obj)
+
+        # Randomize the player start position and orientation
+        self.placeAgent()
 
         # Choose a random object to be picked up
         target = objs[self._randInt(0, len(objs))]
@@ -76,8 +65,6 @@ class FetchEnv(MiniGridEnv):
         elif idx == 4:
             self.mission = 'you must fetch a %s' % descStr
         assert hasattr(self, 'mission')
-
-        return grid
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
