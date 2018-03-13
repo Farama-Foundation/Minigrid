@@ -12,7 +12,7 @@ Requirements:
 - Python 3
 - OpenAI Gym
 - NumPy
-- PyQT 5 for graphics
+- PyQT 5 for graphical output
 
 This environment has been built at the [MILA](https://mila.quebec/en/) as
 part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
@@ -28,16 +28,11 @@ pip3 install -e .
 ```
 
 Optionally, if you wish use the reinforcement learning code included
-under [/pytorch_rl](/pytorch_rl), you can install its dependencies as follows:
+under [/pytorch_rl](/pytorch_rl), you can should install PyTorch as follows:
 
 ```
-cd pytorch_rl
-
 # PyTorch
 conda install pytorch torchvision -c soumith
-
-# Other requirements
-pip3 install -r requirements.txt
 ```
 
 Note: the pytorch_rl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
