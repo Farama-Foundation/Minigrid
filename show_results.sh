@@ -28,6 +28,7 @@ MiniGrid-PutNear-8x8-N3-v0
 MiniGrid-LockedRoom-v0
 MiniGrid-FourRoomQA-v0
 "
+    exit 1
 fi
 
 python3 pytorch_rl/enjoy.py --env-name $envname --load-dir ./trained_models/a2c

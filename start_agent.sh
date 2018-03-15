@@ -28,7 +28,8 @@ MiniGrid-PutNear-8x8-N3-v0
 MiniGrid-LockedRoom-v0
 MiniGrid-FourRoomQA-v0
 "
+    exit 1
 fi
-fi
+
 
 python3 pytorch_rl/main.py --env-name $envname --no-vis --num-processes 48 --algo a2c
