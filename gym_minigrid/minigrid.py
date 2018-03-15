@@ -65,6 +65,10 @@ class WorldObj:
         self.color = color
         self.contains = None
 
+    def isOpaque(self):
+        """Can the agent see objects that are behind this?"""
+        return False
+
     def canOverlap(self):
         """Can the agent overlap with this?"""
         return False
@@ -106,6 +110,9 @@ class Wall(WorldObj):
     def __init__(self, color='grey'):
         super(Wall, self).__init__('wall', color)
 
+    def isOpaque(self):
+        return True
+
     def render(self, r):
         self._setColor(r)
         r.drawPolygon([
@@ -116,9 +123,22 @@ class Wall(WorldObj):
         ])
 
 class Door(WorldObj):
-    def __init__(self, color, isOpen=False):
-        super(Door, self).__init__('door', color)
+    def __init__(self, color, isOpen=False, type='door'):
+        super().__init__('door', color)
         self.isOpen = isOpen
+
+    def isOpaque(self):
+        return not self.isOpen
+
+    def canOverlap(self):
+        """The agent can only walk over this cell when the door is open"""
+        return self.isOpen
+
+    def toggle(self, env, pos):
+        if not self.isOpen:
+            self.isOpen = True
+            return True
+        return False
 
     def render(self, r):
         c = COLORS[self.color]
@@ -148,20 +168,18 @@ class Door(WorldObj):
         ])
         r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
+class LockedDoor(Door):
+    def __init__(self, color, isOpen=False):
+        super().__init__(color, isOpen, type='locked_door')
+
     def toggle(self, env, pos):
-        if not self.isOpen:
+        # If the player has the right key to open the door
+        if isinstance(env.carrying, Key) and env.carrying.color == self.color:
             self.isOpen = True
+            # The key has been used, remove it from the agent
+            env.carrying = None
             return True
         return False
-
-    def canOverlap(self):
-        """The agent can only walk over this cell when the door is open"""
-        return self.isOpen
-
-class LockedDoor(WorldObj):
-    def __init__(self, color, isOpen=False):
-        super(LockedDoor, self).__init__('locked_door', color)
-        self.isOpen = isOpen
 
     def render(self, r):
         c = COLORS[self.color]
@@ -195,19 +213,6 @@ class LockedDoor(WorldObj):
             CELL_PIXELS * 0.75,
             CELL_PIXELS * 0.5
         )
-
-    def toggle(self, env, pos):
-        # If the player has the right key to open the door
-        if isinstance(env.carrying, Key) and env.carrying.color == self.color:
-            self.isOpen = True
-            # The key has been used, remove it from the agent
-            env.carrying = None
-            return True
-        return False
-
-    def canOverlap(self):
-        """The agent can only walk over this cell when the door is open"""
-        return self.isOpen
 
 class Key(WorldObj):
     def __init__(self, color='blue'):
@@ -774,17 +779,79 @@ class MiniGridEnv(gym.Env):
 
         return obs, reward, done, {}
 
+    def _getObsGrid(self):
+
+        topX, topY, botX, botY = self.getViewExts()
+        grid = self.grid.slice(topX, topY, AGENT_VIEW_SIZE, AGENT_VIEW_SIZE)
+
+        for i in range(self.agentDir+1):
+            grid = grid.rotateLeft()
+
+        # Matrix of opaque objects (rows going forward, columns)
+        objMatrix = np.zeros((AGENT_VIEW_SIZE, AGENT_VIEW_SIZE))
+
+        for i in range(0, AGENT_VIEW_SIZE):
+            for j in range(0, AGENT_VIEW_SIZE):
+                obj = grid.get(i, AGENT_VIEW_SIZE - (1+j))
+                if obj is not None and obj.isOpaque():
+                    print('opaque')
+                    objMatrix[i, j] = 1
+
+        visMatrix = np.zeros((AGENT_VIEW_SIZE, AGENT_VIEW_SIZE))
+
+        mid = AGENT_VIEW_SIZE // 2
+
+        # The agent can see its own position
+        visMatrix[mid, 0] = 1
+
+        # Agent can see in the first row if not obstructed
+        for k in range(0, mid):
+            i = mid + 1 + k
+            if visMatrix[i-1, 0] and not objMatrix[i, 0]:
+                visMatrix[i, 0] = 1
+        for k in range(0, mid):
+            i = mid - 1 - k
+            if visMatrix[i+1, 0] and not objMatrix[i, 0]:
+                visMatrix[i, 0] = 1
+
+        # Propagate forward the region in which the agent can see
+        for i in range(0, AGENT_VIEW_SIZE):
+            for j in range(1, AGENT_VIEW_SIZE):
+                if visMatrix[i, j-1] and not objMatrix[i, j]:
+                    visMatrix[i, j] = 1
+
+        # Make cells immediately adjacent to the visible region also visible
+        adjMatrix = np.copy(visMatrix)
+        for i in range(0, AGENT_VIEW_SIZE):
+            for j in range(0, AGENT_VIEW_SIZE):
+                if j > 0 and visMatrix[i, j-1]:
+                    adjMatrix[i, j] = 1
+                if i > 0:
+                    if visMatrix[i-1, j]:
+                        adjMatrix[i, j] = 1
+                    if j > 0 and visMatrix[i-1, j-1]:
+                        adjMatrix[i, j] = 1
+                if i < AGENT_VIEW_SIZE - 1:
+                    if visMatrix[i+1, j]:
+                        adjMatrix[i, j] = 1
+                    if j > 0 and visMatrix[i+1, j-1]:
+                        adjMatrix[i, j] = 1
+        visMatrix = adjMatrix
+
+        # Hide non-visible cells
+        for i in range(0, AGENT_VIEW_SIZE):
+            for j in range(0, AGENT_VIEW_SIZE):
+                if visMatrix[i, j] == 0:
+                    grid.set(i, AGENT_VIEW_SIZE - (1+j), Wall('red'))
+
+        return grid, visMatrix
+
     def _genObs(self):
         """
         Generate the agent's view (partially observable, low-resolution encoding)
         """
 
-        topX, topY, botX, botY = self.getViewExts()
-
-        grid = self.grid.slice(topX, topY, AGENT_VIEW_SIZE, AGENT_VIEW_SIZE)
-
-        for i in range(self.agentDir + 1):
-            grid = grid.rotateLeft()
+        grid, visMatrix = self._getObsGrid()
 
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position

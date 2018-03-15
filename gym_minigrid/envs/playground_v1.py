@@ -107,7 +107,7 @@ class PlaygroundV1(MiniGridEnv):
         self.mission = ''
 
     def step(self, action):
-        obs, reward, done, info = super().step(self, action)
+        obs, reward, done, info = super().step(action)
         return obs, reward, done, info
 
 register(
