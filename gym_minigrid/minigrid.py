@@ -342,6 +342,12 @@ class Grid:
         for j in range(0, length):
             self.set(x, y + j, Wall())
 
+    def wallRect(self, x, y, w, h):
+        self.horzWall(x, y, w)
+        self.horzWall(x, y+h-1, w)
+        self.vertWall(x, y, h)
+        self.vertWall(x+w-1, y, h)
+
     def rotateLeft(self):
         """
         Rotate the grid to the left (counter-clockwise)

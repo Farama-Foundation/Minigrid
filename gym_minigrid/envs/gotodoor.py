@@ -24,10 +24,7 @@ class GoToDoorEnv(MiniGridEnv):
         height = self._randInt(5, height+1)
 
         # Generate the surrounding walls
-        self.grid.horzWall(0, 0, width)
-        self.grid.horzWall(0, height-1, width)
-        self.grid.vertWall(0, 0, height)
-        self.grid.vertWall(width-1, 0, height)
+        self.grid.wallRect(0, 0, width, height)
 
         # Generate the 4 doors at random positions
         doorPos = []

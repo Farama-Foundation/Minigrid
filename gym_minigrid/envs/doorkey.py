@@ -14,10 +14,7 @@ class DoorKeyEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.horzWall(0, 0)
-        self.grid.horzWall(0, height-1)
-        self.grid.vertWall(0, 0)
-        self.grid.vertWall(width-1, 0)
+        self.grid.wallRect(0, 0, width, height)
 
         # Place a goal in the bottom-right corner
         self.grid.set(width - 2, height - 2, Goal())

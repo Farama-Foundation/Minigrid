@@ -17,7 +17,8 @@ class Room:
         # Indicates if this room is locked
         self.locked = False
 
-        # TODO: connectivity?
+        # Set of rooms this is connected to
+        self.neighbors = set()
 
         # List of objects contained
         self.objs = []
@@ -57,43 +58,57 @@ class RoomGrid(MiniGridEnv):
 
         self.reward_range = (0, 1)
 
+    def getRoom(self, x, y):
+        """Get the room a given position maps to"""
+
+        assert x >= 0
+        assert y >= 0
+
+        i = x // self.roomSize
+        j = y // self.roomSize
+
+        assert i < self.numCols
+        assert j < self.numRows
+
+        return self.roomGrid[j][i]
+
     def _genGrid(self, width, height):
         # Create the grid
         self.grid = Grid(width, height)
 
-        # Generate the surrounding walls
-        self.grid.horzWall(0, 0)
-        self.grid.horzWall(0, height-1)
-        self.grid.vertWall(0, 0)
-        self.grid.vertWall(width-1, 0)
-
-        roomW = self.roomSize
-        roomH = self.roomSize
-
+        self.roomGrid = []
         self.rooms = []
 
-        # Generate the list of rooms
+        # For each row of rooms
         for j in range(0, self.numRows):
+            row = []
+
+            # For each column of rooms
             for i in range(0, self.numCols):
                 room = Room(
                     (i * (self.roomSize-1), j * (self.roomSize-1)),
                     (self.roomSize, self.roomSize)
                 )
+
+                row.append(room)
                 self.rooms.append(room)
 
-        # TODO: generate walls
-        # May want to add function to Grid class, wallRect(i, j, w, h, color)
+                # Generate the walls for this room
+                self.grid.wallRect(*room.top, *room.size)
 
-
-
-
-
-
-
-
+            self.roomGrid.append(row)
 
         # Randomize the player start position and orientation
         self.placeAgent()
+
+        # Find which room the agent was placed in
+        startRoom = self.getRoom(*self.startPos)
+
+
+
+
+
+
 
         # TODO: respect maxObsPerRoom
 
