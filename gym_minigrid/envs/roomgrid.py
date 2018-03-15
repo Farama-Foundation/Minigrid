@@ -30,16 +30,18 @@ class Room:
             topY + 1, topY + sizeY - 1
         )
 
-class PlaygroundV1(MiniGridEnv):
+class RoomGrid(MiniGridEnv):
     """
     Environment with multiple rooms and random objects.
-    This environment has no specific goals or rewards.
+    This is meant to serve as a base class for other environments.
     """
 
     def __init__(
             self,
             roomSize=6,
-            numCols=4
+            numCols=4,
+            maxObsPerRoom=3,
+            lockedRooms=False
     ):
         assert roomSize > 0
         assert roomSize >= 4
@@ -47,9 +49,12 @@ class PlaygroundV1(MiniGridEnv):
         self.roomSize = roomSize
         self.numCols = numCols
         self.numRows = numCols
+        self.maxObsPerRoom =  maxObsPerRoom
+        self.lockedRooms = False
 
         gridSize = (roomSize - 1) * numCols + 1
         super().__init__(gridSize=gridSize, maxSteps=6*gridSize)
+
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
@@ -90,6 +95,8 @@ class PlaygroundV1(MiniGridEnv):
         # Randomize the player start position and orientation
         self.placeAgent()
 
+        # TODO: respect maxObsPerRoom
+
         # Place random objects in the world
         types = ['key', 'ball', 'box']
         for i in range(0, 12):
@@ -107,10 +114,10 @@ class PlaygroundV1(MiniGridEnv):
         self.mission = ''
 
     def step(self, action):
-        obs, reward, done, info = super().step(self, action)
+        obs, reward, done, info = super().step(action)
         return obs, reward, done, info
 
 register(
-    id='MiniGrid-Playground-v1',
-    entry_point='gym_minigrid.envs:PlaygroundV1'
+    id='MiniGrid-RoomGrid-v0',
+    entry_point='gym_minigrid.envs:RoomGrid'
 )
