@@ -530,6 +530,7 @@ class MiniGridEnv(gym.Env):
 
     # Enumeration of possible actions
     class Actions(IntEnum):
+        # Turn left, turn right, move forward
         left = 0
         right = 1
         forward = 2
@@ -631,22 +632,33 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(yLow, yHigh)
         )
 
-    def placeObj(self, obj):
+    def placeObj(self, obj, top=None, size=None):
         """
         Place an object at an empty position in the grid
+
+        :param top: top-left position of the rectangle where to place
+        :param size: size of the rectangle where to place
         """
+
+        if top is None:
+            top = (0, 0)
+
+        if size is None:
+            size = (self.grid.width, self.grid.height)
 
         while True:
             pos = (
-                self._randInt(0, self.grid.width),
-                self._randInt(0, self.grid.height)
+                self._randInt(top[0], top[0] + size[0]),
+                self._randInt(top[1], top[1] + size[1])
             )
             if self.grid.get(*pos) != None:
                 continue
             if pos == self.startPos:
                 continue
             break
+
         self.grid.set(*pos, obj)
+
         return pos
 
     def placeAgent(self, randDir=True):
@@ -700,7 +712,7 @@ class MiniGridEnv(gym.Env):
         elif self.agentDir == 1:
             topX = self.agentPos[0] - AGENT_VIEW_SIZE // 2
             topY = self.agentPos[1]
-        # Facing right
+        # Facing left
         elif self.agentDir == 2:
             topX = self.agentPos[0] - AGENT_VIEW_SIZE + 1
             topY = self.agentPos[1] - AGENT_VIEW_SIZE // 2
