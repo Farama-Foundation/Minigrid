@@ -154,7 +154,7 @@ class RoomGrid(MiniGridEnv):
 
         return obj
 
-    def add_door(self, i, j, k, color):
+    def add_door(self, i, j, k, color, locked=False):
         """
         Add a door to a room, connecting it to a neighbor
         """
@@ -162,7 +162,12 @@ class RoomGrid(MiniGridEnv):
         room = self.get_room(i, j)
         assert room.doors[k] is None, "door already exists"
 
-        door = Door(color)
+        if locked:
+            door = LockedDoor(color)
+            room.locked = True
+        else:
+            door = Door(color)
+
         self.grid.set(*room.door_pos[k], door)
 
         neighbor = room.neighbors[k]
@@ -196,14 +201,21 @@ class RoomGrid(MiniGridEnv):
             if len(reach) == self.num_rows * self.num_cols:
                 break
 
-            # Add a random door to a random room
+            # Pick a random room and door position
             i = self._randInt(0, self.num_cols)
             j = self._randInt(0, self.num_rows)
             k = self._randInt(0, 4)
             room = self.get_room(i, j)
-            if room.door_pos[k] and not room.doors[k]:
-                color = self._randElem(COLOR_NAMES)
-                self.add_door(i, j, k, color)
+
+            # If there is already a door there, skip
+            if not room.door_pos[k] or room.doors[k]:
+                continue
+
+            if room.locked or room.neighbors[k].locked:
+                continue
+
+            color = self._randElem(COLOR_NAMES)
+            self.add_door(i, j, k, color)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
