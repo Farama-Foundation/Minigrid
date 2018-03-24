@@ -475,7 +475,7 @@ class Grid:
 
         return array
 
-    def decode(self, array):
+    def decode(array):
         """
         Decode an array grid encoding back into a grid
         """
@@ -762,7 +762,7 @@ class MiniGridEnv(gym.Env):
             targetCell = self.grid.get(newPos[0], newPos[1])
             if targetCell == None or targetCell.canOverlap():
                 self.agentPos = newPos
-            elif targetCell.type == 'goal':
+            if targetCell != None and targetCell.type == 'goal':
                 done = True
                 reward = 1000 - self.stepCount
 
