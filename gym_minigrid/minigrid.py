@@ -93,6 +93,9 @@ class Goal(WorldObj):
     def __init__(self):
         super(Goal, self).__init__('goal', 'green')
 
+    def canOverlap(self):
+        return True
+
     def render(self, r):
         self._setColor(r)
         r.drawPolygon([
@@ -472,7 +475,7 @@ class Grid:
 
         return array
 
-    def decode(array):
+    def decode(self, array):
         """
         Decode an array grid encoding back into a grid
         """
