@@ -93,6 +93,9 @@ class Goal(WorldObj):
     def __init__(self):
         super(Goal, self).__init__('goal', 'green')
 
+    def canOverlap(self):
+        return True
+
     def render(self, r):
         self._setColor(r)
         r.drawPolygon([
@@ -759,7 +762,7 @@ class MiniGridEnv(gym.Env):
             targetCell = self.grid.get(newPos[0], newPos[1])
             if targetCell == None or targetCell.canOverlap():
                 self.agentPos = newPos
-            elif targetCell.type == 'goal':
+            if targetCell != None and targetCell.type == 'goal':
                 done = True
                 reward = 1000 - self.stepCount
 
