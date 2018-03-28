@@ -95,7 +95,9 @@ Actions in the basic environment:
 - Turn left
 - Turn right
 - Move forward
-- Toggle (pick up or interact with objects)
+- Pick up an object
+- Drop the object being carried
+- Toggle (interact with objects)
 - Wait (noop, do nothing)
 
 By default, sparse rewards for reaching a goal square are provided, but you can

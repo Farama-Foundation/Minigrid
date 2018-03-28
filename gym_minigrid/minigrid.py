@@ -537,10 +537,16 @@ class MiniGridEnv(gym.Env):
         left = 0
         right = 1
         forward = 2
-        # Toggle/pick up/activate object
-        toggle = 3
+
+        # Pick up an object
+        pickup = 3
+        # Drop an object
+        drop = 4
+        # Toggle/activate an object
+        toggle = 5
+
         # Wait/stay put/do nothing
-        wait = 4
+        wait = 6
 
     def __init__(self, gridSize=16, maxSteps=100):
         # Action enumeration for this environment
@@ -745,6 +751,13 @@ class MiniGridEnv(gym.Env):
         reward = 0
         done = False
 
+        # Get the position in front of the agent
+        u, v = self.getDirVec()
+        fwdPos = (self.agentPos[0] + u, self.agentPos[1] + v)
+
+        # Get the contents of the cell in front of the agent
+        fwdCell = self.grid.get(*fwdPos)
+
         # Rotate left
         if action == self.actions.left:
             self.agentDir -= 1
@@ -757,29 +770,29 @@ class MiniGridEnv(gym.Env):
 
         # Move forward
         elif action == self.actions.forward:
-            u, v = self.getDirVec()
-            newPos = (self.agentPos[0] + u, self.agentPos[1] + v)
-            targetCell = self.grid.get(newPos[0], newPos[1])
-            if targetCell == None or targetCell.canOverlap():
-                self.agentPos = newPos
-            if targetCell != None and targetCell.type == 'goal':
+            if fwdCell == None or fwdCell.canOverlap():
+                self.agentPos = fwdPos
+            if fwdCell != None and fwdCell.type == 'goal':
                 done = True
                 reward = 1000 - self.stepCount
 
-        # Pick up or trigger/activate an item
-        elif action == self.actions.toggle:
-            u, v = self.getDirVec()
-            objPos = (self.agentPos[0] + u, self.agentPos[1] + v)
-            cell = self.grid.get(*objPos)
-            if cell and cell.canPickup():
+        # Pick up an object
+        elif action == self.actions.pickup:
+            if fwdCell and fwdCell.canPickup():
                 if self.carrying is None:
-                    self.carrying = cell
-                    self.grid.set(*objPos, None)
-            elif cell:
-                cell.toggle(self, objPos)
-            elif self.carrying:
-                self.grid.set(*objPos, self.carrying)
+                    self.carrying = fwdCell
+                    self.grid.set(*fwdPos, None)
+
+        # Drop an object
+        elif action == self.actions.drop:
+            if not fwdCell and self.carrying:
+                self.grid.set(*fwdPos, self.carrying)
                 self.carrying = None
+
+        # Toggle/activate an object
+        elif action == self.actions.toggle:
+            if fwdCell:
+                fwdCell.toggle(self, fwdPos)
 
         # Wait/do nothing
         elif action == self.actions.wait:
