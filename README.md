@@ -214,25 +214,3 @@ a textual mission string as input, telling it which room to go to in order
 to get the key that opens the locked room. It then has to go into the locked
 room in order to reach the final goal. This environment is extremely difficult
 to solve with vanilla reinforcement learning alone.
-
-### Four room question answering environment
-
-Registered configurations:
-- `MiniGrid-FourRoomQA-v0`
-
-<p align="center">
-<img src="/figures/fourroomqa-env.png">
-</p>
-
-This environment is inspired by the
-[Embodied Question Answering](https://arxiv.org/abs/1711.11543) paper. The question are of the form:
-
-> Are there any keys in the red room?
-
-There are four colored rooms, and the agent starts at a random position in the grid.
-Multiple objects of different types and colors are also placed at random
-positions in random rooms. A question and answer pair is generated, the
-question is given to the agent as an observation, and the agent has a limited
-number of time steps to explore the environment and produce a response. This
-environment can be easily modified to add more question types or to diversify
-the way the questions are phrased.
