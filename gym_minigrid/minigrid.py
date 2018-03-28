@@ -93,6 +93,9 @@ class Goal(WorldObj):
     def __init__(self):
         super(Goal, self).__init__('goal', 'green')
 
+    def canOverlap(self):
+        return True
+
     def render(self, r):
         self._setColor(r)
         r.drawPolygon([
@@ -342,6 +345,12 @@ class Grid:
         for j in range(0, length):
             self.set(x, y + j, Wall())
 
+    def wallRect(self, x, y, w, h):
+        self.horzWall(x, y, w)
+        self.horzWall(x, y+h-1, w)
+        self.vertWall(x, y, h)
+        self.vertWall(x+w-1, y, h)
+
     def rotateLeft(self):
         """
         Rotate the grid to the left (counter-clockwise)
@@ -524,6 +533,7 @@ class MiniGridEnv(gym.Env):
 
     # Enumeration of possible actions
     class Actions(IntEnum):
+        # Turn left, turn right, move forward
         left = 0
         right = 1
         forward = 2
@@ -625,22 +635,33 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(yLow, yHigh)
         )
 
-    def placeObj(self, obj):
+    def placeObj(self, obj, top=None, size=None):
         """
         Place an object at an empty position in the grid
+
+        :param top: top-left position of the rectangle where to place
+        :param size: size of the rectangle where to place
         """
+
+        if top is None:
+            top = (0, 0)
+
+        if size is None:
+            size = (self.grid.width, self.grid.height)
 
         while True:
             pos = (
-                self._randInt(0, self.grid.width),
-                self._randInt(0, self.grid.height)
+                self._randInt(top[0], top[0] + size[0]),
+                self._randInt(top[1], top[1] + size[1])
             )
             if self.grid.get(*pos) != None:
                 continue
             if pos == self.startPos:
                 continue
             break
+
         self.grid.set(*pos, obj)
+
         return pos
 
     def placeAgent(self, randDir=True):
@@ -694,7 +715,7 @@ class MiniGridEnv(gym.Env):
         elif self.agentDir == 1:
             topX = self.agentPos[0] - AGENT_VIEW_SIZE // 2
             topY = self.agentPos[1]
-        # Facing right
+        # Facing left
         elif self.agentDir == 2:
             topX = self.agentPos[0] - AGENT_VIEW_SIZE + 1
             topY = self.agentPos[1] - AGENT_VIEW_SIZE // 2
@@ -741,7 +762,7 @@ class MiniGridEnv(gym.Env):
             targetCell = self.grid.get(newPos[0], newPos[1])
             if targetCell == None or targetCell.canOverlap():
                 self.agentPos = newPos
-            elif targetCell.type == 'goal':
+            if targetCell != None and targetCell.type == 'goal':
                 done = True
                 reward = 1000 - self.stepCount
 
