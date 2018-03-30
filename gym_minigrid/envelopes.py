@@ -9,7 +9,7 @@ from gym import error, spaces, utils
 
 from minigrid import *
 
-class SafetyEnvelope(gym.core.Wrapper):
+class SafetyEnvelope(gym.core.RewardWrapper):
     """
     Safety envelope for safe exploration.
     The purpose is to detect dangerous actions and block them sending back a modified reward
@@ -20,22 +20,24 @@ class SafetyEnvelope(gym.core.Wrapper):
         self.counts = {}
 
     def step(self, action):
-        env = self.unwrapped
 
         # Get current observations from the environment and decode them
-        obs_pre = env.genObs()['image']
+        obs_pre = self.env.genObs()['image']
         decoded_obs_pre = Grid.decode(obs_pre)
 
+        # Create a window to render into
+        self.env.render('human')
 
         # Apply the agent action to the environment or a safety action
         obs, reward, done, info = self.env.step(action)
 
-
         # Get observations after applying the action to the environment and decode them
-        obs_post = env.genObs()['image']
-        decode_obs_post = Grid.decode(obs_post)
+        # obs_post = env.genObs()['image']
+        # decode_obs_post = Grid.decode(obs_post)
 
         # Modify the reward if necessary
-        reward += 5
+        # reward += 5
 
         return obs, reward, done, info
+
+
