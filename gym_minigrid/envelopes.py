@@ -1,5 +1,6 @@
 import math
 import operator
+import collections
 from functools import reduce
 
 import numpy as np
@@ -9,6 +10,9 @@ from gym import error, spaces, utils
 
 from minigrid import *
 
+# Size of the history collection
+N = 5
+
 class SafetyEnvelope(gym.core.RewardWrapper):
     """
     Safety envelope for safe exploration.
@@ -17,13 +21,21 @@ class SafetyEnvelope(gym.core.RewardWrapper):
 
     def __init__(self, env):
         super().__init__(env)
-        self.counts = {}
+
+        # stores history of the last N observation / actions
+        self.history = collections.deque(N*[(None, None)], N)
 
     def step(self, action):
 
         # Get current observations from the environment and decode them
-        obs_pre = self.env.genObs()['image']
-        decoded_obs_pre = Grid.decode(obs_pre)
+        current_obs = self.env.genObs()['image']
+        current_obs = Grid.decode(current_obs)
+
+        suggested_action = action
+
+        # Store the observation-action tuple in the history
+        self.history.append((current_obs, suggested_action))
+
 
         # Create a window to render into
         self.env.render('human')
