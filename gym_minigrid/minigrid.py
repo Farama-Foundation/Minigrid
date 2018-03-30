@@ -830,6 +830,42 @@ class MiniGridEnv(gym.Env):
 
         return obs
 
+
+    def genObs(self):
+        """
+        Generate the agent's view (partially observable, low-resolution encoding)
+        """
+
+        topX, topY, botX, botY = self.getViewExts()
+
+        grid = self.grid.slice(topX, topY, AGENT_VIEW_SIZE, AGENT_VIEW_SIZE)
+
+        for i in range(self.agentDir + 1):
+            grid = grid.rotateLeft()
+
+        # Make it so the agent sees what it's carrying
+        # We do this by placing the carried object at the agent's position
+        # in the agent's partially observable view
+        agentPos = grid.width // 2, grid.height - 1
+        if self.carrying:
+            grid.set(*agentPos, self.carrying)
+        else:
+            grid.set(*agentPos, None)
+
+        # Encode the partially observable view into a numpy array
+        image = grid.encode()
+
+        assert hasattr(self, 'mission'), "environments must define a textual mission string"
+
+        # Observations are dictionaries with both an image
+        # and a textual mission string
+        obs = {
+            'image': image,
+            'mission': self.mission
+        }
+
+        return obs
+
     def getObsRender(self, obs):
         """
         Render an agent observation for visualization
