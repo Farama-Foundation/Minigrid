@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import random
-import gym
 import numpy as np
+import gym
 from gym_minigrid.register import envList
 from gym_minigrid.minigrid import Grid
 
@@ -28,10 +28,10 @@ for envName in envList:
     for i in range(0, 5):
         seed = 1337 + i
         env.seed(seed)
-        grid1 = env.grid.encode()
+        grid1 = env.grid
         env.seed(seed)
-        grid2 = env.grid.encode()
-        assert np.array_equal(grid2, grid1)
+        grid2 = env.grid
+        assert grid1 == grid2
 
     env.reset()
 
@@ -46,7 +46,7 @@ for envName in envList:
         img = obs['image']
         grid = Grid.decode(img)
         img2 = grid.encode()
-        assert np.array_equal(img2, img)
+        assert np.array_equal(img, img2)
 
         # Check that the reward is within the specified range
         assert reward >= env.reward_range[0], reward

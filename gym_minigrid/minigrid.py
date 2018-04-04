@@ -322,6 +322,14 @@ class Grid:
                     return True
         return False
 
+    def __eq__(self, other):
+        grid1 = self.encode()
+        grid2 = other.encode()
+        return np.array_equal(grid2, grid1)
+
+    def __ne__(self, other):
+        return not self == other
+
     def copy(self):
         from copy import deepcopy
         return deepcopy(self)
