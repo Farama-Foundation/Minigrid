@@ -265,6 +265,9 @@ class Box(WorldObj):
         super(Box, self).__init__('box', color)
         self.contains = contains
 
+    def canPickup(self):
+        return True
+
     def render(self, r):
         c = COLORS[self.color]
         r.setLineColor(c[0], c[1], c[2])
@@ -834,10 +837,13 @@ class MiniGridEnv(gym.Env):
 
         assert hasattr(self, 'mission'), "environments must define a textual mission string"
 
-        # Observations are dictionaries with both an image
-        # and a textual mission string
+        # Observations are dictionaries containing:
+        # - an image (partially observable view of the environment)
+        # - the agent's direction/orientation (acting as a compass)
+        # - a textual mission string (instructions for the agent)
         obs = {
             'image': image,
+            'direction': self.agentDir,
             'mission': self.mission
         }
 
