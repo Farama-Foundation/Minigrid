@@ -44,7 +44,7 @@ class RoomGrid(MiniGridEnv):
         self,
         room_size=6,
         num_cols=4,
-        lockedRooms=False
+        max_steps=200
     ):
         assert room_size > 0
         assert room_size >= 4
@@ -52,10 +52,9 @@ class RoomGrid(MiniGridEnv):
         self.room_size = room_size
         self.num_cols = num_cols
         self.num_rows = num_cols
-        self.lockedRooms = False
 
         grid_size = (room_size - 1) * num_cols + 1
-        super().__init__(gridSize=grid_size, maxSteps=6*grid_size)
+        super().__init__(gridSize=grid_size, maxSteps=max_steps)
 
         self.reward_range = (0, 1)
 
