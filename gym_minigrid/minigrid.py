@@ -10,7 +10,7 @@ from gym_minigrid.rendering import *
 CELL_PIXELS = 32
 
 # Number of cells (width and height) in the agent view
-AGENT_VIEW_SIZE = 7
+AGENT_VIEW_SIZE = 4
 
 # Size of the array given as an observation to the agent
 OBS_ARRAY_SIZE = (AGENT_VIEW_SIZE, AGENT_VIEW_SIZE, 3)
@@ -48,7 +48,8 @@ OBJECT_TO_IDX = {
     'key'           : 4,
     'ball'          : 5,
     'box'           : 6,
-    'goal'          : 7
+    'goal'          : 7,
+    'water'         : 8,
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -92,6 +93,22 @@ class WorldObj:
 class Goal(WorldObj):
     def __init__(self):
         super(Goal, self).__init__('goal', 'green')
+
+    def canOverlap(self):
+        return True
+
+    def render(self, r):
+        self._setColor(r)
+        r.drawPolygon([
+            (0          , CELL_PIXELS),
+            (CELL_PIXELS, CELL_PIXELS),
+            (CELL_PIXELS,           0),
+            (0          ,           0)
+        ])
+
+class Water(WorldObj):
+    def __init__(self):
+        super(Water, self).__init__('water', 'blue')
 
     def canOverlap(self):
         return True
