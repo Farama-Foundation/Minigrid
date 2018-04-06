@@ -53,7 +53,9 @@ class SafetyEnvelope(gym.core.RewardWrapper):
 
         return obs, mod_reward, done, info
 
-    def blocker(self, action):
+    def blocker(self, observation, action):
+        # Check if tile in direction of action is type catastrophe, then say: NO!
+        # Display alert if this is the case.
         pass
 
 
