@@ -531,6 +531,8 @@ class Grid:
                     v = LockedDoor(color, isOpen)
                 elif objType == 'goal':
                     v = Goal()
+                elif objType == 'water':
+                    v = Water()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
