@@ -38,16 +38,11 @@ class UnsafeEnv16x16(UnsafeEnv):
         super().__init__(size=16)
 
 register(
-    id='MiniGrid-Unsafeevironment-6x6-v0',
-    entry_point='gym_minigrid.envs:UnsafeEnv6x6'
-)
-
-register(
-    id='MiniGrid-Unsafeevironment-8x8-v0',
+    id='MiniGrid-UnsafeEnvironment-8x8-v0',
     entry_point='gym_minigrid.envs:UnsafeEnv'
 )
 
 register(
-    id='MiniGrid-Unsafeevironment-16x16-v0',
+    id='MiniGrid-UnsafeEvnironment-16x16-v0',
     entry_point='gym_minigrid.envs:UnsafeEnv16x16'
 )
