@@ -53,4 +53,7 @@ class SafetyEnvelope(gym.core.RewardWrapper):
 
         return obs, mod_reward, done, info
 
+    def blocker(self, action):
+        pass
+
 
