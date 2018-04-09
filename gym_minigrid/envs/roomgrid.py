@@ -54,7 +54,7 @@ class RoomGrid(MiniGridEnv):
         self.num_rows = num_cols
 
         grid_size = (room_size - 1) * num_cols + 1
-        super().__init__(gridSize=grid_size, maxSteps=max_steps)
+        super().__init__(grid_size=grid_size, max_steps=max_steps)
 
         self.reward_range = (0, 1)
 
@@ -125,11 +125,11 @@ class RoomGrid(MiniGridEnv):
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
-        self.startPos = (
+        self.start_pos = (
             (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
             (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
         )
-        self.startDir = 0
+        self.start_dir = 0
 
         # By default, this environment has no mission
         self.mission = ''
@@ -182,7 +182,7 @@ class RoomGrid(MiniGridEnv):
         starting position
         """
 
-        start_room = self.room_from_pos(*self.startPos)
+        start_room = self.room_from_pos(*self.start_pos)
 
         def find_reach():
             reach = set()

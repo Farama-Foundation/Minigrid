@@ -36,7 +36,8 @@ for envName in envList:
     env.reset()
 
     # Run for a few episodes
-    for i in range(5 * env.maxSteps):
+    num_episodes = 0
+    while num_episodes < 5:
         # Pick a random action
         action = random.randint(0, env.action_space.n - 1)
 
@@ -53,10 +54,8 @@ for envName in envList:
         assert reward <= env.reward_range[1], reward
 
         if done:
+            num_episodes += 1
             env.reset()
-
-            # Check that the agent doesn't overlap with an object
-            assert env.grid.get(*env.agentPos) is None
 
         env.render('rgb_array')
 

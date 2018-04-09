@@ -559,7 +559,7 @@ class MiniGridEnv(gym.Env):
         # Wait/stay put/do nothing
         wait = 6
 
-    def __init__(self, gridSize=16, maxSteps=100):
+    def __init__(self, grid_size=16, max_steps=100):
         # Action enumeration for this environment
         self.actions = MiniGridEnv.Actions
 
@@ -582,20 +582,55 @@ class MiniGridEnv(gym.Env):
         self.reward_range = (-1, 1000)
 
         # Renderer object used to render the whole grid (full-scale)
-        self.gridRender = None
+        self.grid_render = None
 
         # Renderer used to render observations (small-scale agent view)
-        self.obsRender = None
+        self.obs_render = None
 
         # Environment configuration
-        self.gridSize = gridSize
-        self.maxSteps = maxSteps
-        self.startPos = (1, 1)
-        self.startDir = 0
+        self.grid_size = grid_size
+        self.max_steps = max_steps
+
+        # Starting position and direction for the agent
+        self.start_pos = None
+        self.start_dir = None
 
         # Initialize the state
         self.seed()
         self.reset()
+
+    def reset(self):
+        # Generate a new random grid at the start of each episode
+        # To keep the same grid for each episode, call env.seed() with
+        # the same seed before calling env.reset()
+        self._genGrid(self.grid_size, self.grid_size)
+
+        # These fields should be defined by _genGrid
+        assert self.start_pos != None
+        assert self.start_dir != None
+
+        # Check that the agent doesn't overlap with an object
+        assert self.grid.get(*self.start_pos) is None
+
+        # Place the agent in the starting position and direction
+        self.agent_pos = self.start_pos
+        self.agent_dir = self.start_dir
+
+        # Item picked up, being carried, initially nothing
+        self.carrying = None
+
+        # Step count since episode start
+        self.step_count = 0
+
+        # Return first observation
+        obs = self._genObs()
+        return obs
+
+    def seed(self, seed=1337):
+        # Seed the random number generator
+        self.np_random, _ = seeding.np_random(seed)
+
+        return [seed]
 
     def __str__(self):
         """
@@ -681,38 +716,12 @@ class MiniGridEnv(gym.Env):
             new_array.append(new_line)
 
         # Add the agent
-        new_array[self.agentPos[1]][self.agentPos[0]] = AGENT_DIR_TO_IDS[self.agentDir]
+        new_array[self.agent_pos[1]][self.agent_pos[0]] = AGENT_DIR_TO_IDS[self.agent_dir]
 
         return "\n".join([" ".join(line) for line in new_array])
 
     def _genGrid(self, width, height):
         assert False, "_genGrid needs to be implemented by each environment"
-
-    def reset(self):
-        # Generate a new random grid at the start of each episode
-        # To keep the same grid for each episode, call env.seed() with
-        # the same seed before calling env.reset()
-        self._genGrid(self.gridSize, self.gridSize)
-
-        # Place the agent in the starting position and direction
-        self.agentPos = self.startPos
-        self.agentDir = self.startDir
-
-        # Item picked up, being carried, initially nothing
-        self.carrying = None
-
-        # Step count since episode start
-        self.stepCount = 0
-
-        # Return first observation
-        obs = self._genObs()
-        return obs
-
-    def seed(self, seed=1337):
-        # Seed the random number generator
-        self.np_random, _ = seeding.np_random(seed)
-
-        return [seed]
 
     def _randInt(self, low, high):
         """
@@ -766,7 +775,7 @@ class MiniGridEnv(gym.Env):
                 continue
 
             # Don't place the object where the agent is
-            if pos == self.startPos:
+            if pos == self.start_pos:
                 continue
 
             # Check if there is a filtering criterion
@@ -779,21 +788,21 @@ class MiniGridEnv(gym.Env):
 
         return pos
 
-    def placeAgent(self, randDir=True):
+    def placeAgent(self, top=None, size=None, randDir=True):
         """
         Set the agent's starting point at an empty position in the grid
         """
 
-        pos = self.placeObj(None)
-        self.startPos = pos
+        pos = self.placeObj(None, top, size)
+        self.start_pos = pos
 
         if randDir:
-            self.startDir = self._randInt(0, 4)
+            self.start_dir = self._randInt(0, 4)
 
         return pos
 
     def getStepsRemaining(self):
-        return self.maxSteps - self.stepCount
+        return self.max_steps - self.step_count
 
     def getDirVec(self):
         """
@@ -802,16 +811,16 @@ class MiniGridEnv(gym.Env):
         """
 
         # Pointing right
-        if self.agentDir == 0:
+        if self.agent_dir == 0:
             return (1, 0)
         # Down (positive Y)
-        elif self.agentDir == 1:
+        elif self.agent_dir == 1:
             return (0, 1)
         # Pointing left
-        elif self.agentDir == 2:
+        elif self.agent_dir == 2:
             return (-1, 0)
         # Up (negative Y)
-        elif self.agentDir == 3:
+        elif self.agent_dir == 3:
             return (0, -1)
         else:
             assert False
@@ -823,21 +832,21 @@ class MiniGridEnv(gym.Env):
         """
 
         # Facing right
-        if self.agentDir == 0:
-            topX = self.agentPos[0]
-            topY = self.agentPos[1] - AGENT_VIEW_SIZE // 2
+        if self.agent_dir == 0:
+            topX = self.agent_pos[0]
+            topY = self.agent_pos[1] - AGENT_VIEW_SIZE // 2
         # Facing down
-        elif self.agentDir == 1:
-            topX = self.agentPos[0] - AGENT_VIEW_SIZE // 2
-            topY = self.agentPos[1]
+        elif self.agent_dir == 1:
+            topX = self.agent_pos[0] - AGENT_VIEW_SIZE // 2
+            topY = self.agent_pos[1]
         # Facing left
-        elif self.agentDir == 2:
-            topX = self.agentPos[0] - AGENT_VIEW_SIZE + 1
-            topY = self.agentPos[1] - AGENT_VIEW_SIZE // 2
+        elif self.agent_dir == 2:
+            topX = self.agent_pos[0] - AGENT_VIEW_SIZE + 1
+            topY = self.agent_pos[1] - AGENT_VIEW_SIZE // 2
         # Facing up
-        elif self.agentDir == 3:
-            topX = self.agentPos[0] - AGENT_VIEW_SIZE // 2
-            topY = self.agentPos[1] - AGENT_VIEW_SIZE + 1
+        elif self.agent_dir == 3:
+            topX = self.agent_pos[0] - AGENT_VIEW_SIZE // 2
+            topY = self.agent_pos[1] - AGENT_VIEW_SIZE + 1
         else:
             assert False, "invalid agent direction"
 
@@ -855,35 +864,35 @@ class MiniGridEnv(gym.Env):
         return (x >= topX and x < botX and y >= topY and y < botY)
 
     def step(self, action):
-        self.stepCount += 1
+        self.step_count += 1
 
         reward = 0
         done = False
 
         # Get the position in front of the agent
         u, v = self.getDirVec()
-        fwdPos = (self.agentPos[0] + u, self.agentPos[1] + v)
+        fwdPos = (self.agent_pos[0] + u, self.agent_pos[1] + v)
 
         # Get the contents of the cell in front of the agent
         fwdCell = self.grid.get(*fwdPos)
 
         # Rotate left
         if action == self.actions.left:
-            self.agentDir -= 1
-            if self.agentDir < 0:
-                self.agentDir += 4
+            self.agent_dir -= 1
+            if self.agent_dir < 0:
+                self.agent_dir += 4
 
         # Rotate right
         elif action == self.actions.right:
-            self.agentDir = (self.agentDir + 1) % 4
+            self.agent_dir = (self.agent_dir + 1) % 4
 
         # Move forward
         elif action == self.actions.forward:
             if fwdCell == None or fwdCell.canOverlap():
-                self.agentPos = fwdPos
+                self.agent_pos = fwdPos
             if fwdCell != None and fwdCell.type == 'goal':
                 done = True
-                reward = 1000 - self.stepCount
+                reward = 1000 - self.step_count
 
         # Pick up an object
         elif action == self.actions.pickup:
@@ -910,7 +919,7 @@ class MiniGridEnv(gym.Env):
         else:
             assert False, "unknown action"
 
-        if self.stepCount >= self.maxSteps:
+        if self.step_count >= self.max_steps:
             done = True
 
         obs = self._genObs()
@@ -926,17 +935,17 @@ class MiniGridEnv(gym.Env):
 
         grid = self.grid.slice(topX, topY, AGENT_VIEW_SIZE, AGENT_VIEW_SIZE)
 
-        for i in range(self.agentDir + 1):
+        for i in range(self.agent_dir + 1):
             grid = grid.rotateLeft()
 
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position
         # in the agent's partially observable view
-        agentPos = grid.width // 2, grid.height - 1
+        agent_pos = grid.width // 2, grid.height - 1
         if self.carrying:
-            grid.set(*agentPos, self.carrying)
+            grid.set(*agent_pos, self.carrying)
         else:
-            grid.set(*agentPos, None)
+            grid.set(*agent_pos, None)
 
         # Encode the partially observable view into a numpy array
         image = grid.encode()
@@ -949,7 +958,7 @@ class MiniGridEnv(gym.Env):
         # - a textual mission string (instructions for the agent)
         obs = {
             'image': image,
-            'direction': self.agentDir,
+            'direction': self.agent_dir,
             'mission': self.mission
         }
 
@@ -960,13 +969,13 @@ class MiniGridEnv(gym.Env):
         Render an agent observation for visualization
         """
 
-        if self.obsRender == None:
-            self.obsRender = Renderer(
+        if self.obs_render == None:
+            self.obs_render = Renderer(
                 AGENT_VIEW_SIZE * CELL_PIXELS // 2,
                 AGENT_VIEW_SIZE * CELL_PIXELS // 2
             )
 
-        r = self.obsRender
+        r = self.obs_render
 
         r.beginFrame()
 
@@ -1002,18 +1011,18 @@ class MiniGridEnv(gym.Env):
         """
 
         if close:
-            if self.gridRender:
-                self.gridRender.close()
+            if self.grid_render:
+                self.grid_render.close()
             return
 
-        if self.gridRender is None:
-            self.gridRender = Renderer(
-                self.gridSize * CELL_PIXELS,
-                self.gridSize * CELL_PIXELS,
+        if self.grid_render is None:
+            self.grid_render = Renderer(
+                self.grid_size * CELL_PIXELS,
+                self.grid_size * CELL_PIXELS,
                 True if mode == 'human' else False
             )
 
-        r = self.gridRender
+        r = self.grid_render
 
         r.beginFrame()
 
@@ -1023,10 +1032,10 @@ class MiniGridEnv(gym.Env):
         # Draw the agent
         r.push()
         r.translate(
-            CELL_PIXELS * (self.agentPos[0] + 0.5),
-            CELL_PIXELS * (self.agentPos[1] + 0.5)
+            CELL_PIXELS * (self.agent_pos[0] + 0.5),
+            CELL_PIXELS * (self.agent_pos[1] + 0.5)
         )
-        r.rotate(self.agentDir * 90)
+        r.rotate(self.agent_dir * 90)
         r.setLineColor(255, 0, 0)
         r.setColor(255, 0, 0)
         r.drawPolygon([
