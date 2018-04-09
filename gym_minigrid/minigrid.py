@@ -596,6 +596,94 @@ class MiniGridEnv(gym.Env):
         # Initialize the state
         self.seed()
         self.reset()
+    
+    def __str__(self):
+        """
+        Produce a pretty string of the environment's grid along with the agent.
+        The agent is represented by `⏩`. A grid pixel is represented by 2-character
+        string, the first one for the object and the second one for the color.
+        """
+
+        from copy import deepcopy
+
+        def rotate_left(array):
+            new_array = deepcopy(array)
+            for i in range(len(array)):
+                for j in range(len(array[0])):
+                    new_array[j][len(array[0])-1-i] = array[i][j]
+            return new_array
+
+        def vertically_symmetrize(array):
+            new_array = deepcopy(array)
+            for i in range(len(array)):
+                for j in range(len(array[0])):
+                    new_array[i][len(array[0])-1-j] = array[i][j]
+            return new_array
+
+        # Map of object id to short string
+        OBJECT_IDX_TO_IDS = {
+            0: ' ',
+            1: 'W',
+            2: 'D',
+            3: 'L',
+            4: 'K',
+            5: 'B',
+            6: 'X',
+            7: 'G'
+        }
+
+        # Short string for opened door
+        OPENDED_DOOR_IDS = '_'
+
+        # Map of color id to short string
+        COLOR_IDX_TO_IDS = {
+            0: 'R',
+            1: 'G',
+            2: 'B',
+            3: 'P',
+            4: 'Y',
+            5: 'E'
+        }
+
+        # Map agent's direction to short string
+        AGENT_DIR_TO_IDS = {
+            0: '⏩',
+            1: '⏬',
+            2: '⏪',
+            3: '⏫'
+        }
+        
+        array = self.grid.encode()
+
+        array = rotate_left(array)
+        array = vertically_symmetrize(array)
+
+        new_array = []
+
+        for line in array:
+            new_line = []
+
+            for pixel in line:
+                # If the door is opened
+                if pixel[0] in [2, 3] and pixel[2] == 1:
+                    object_ids = OPENDED_DOOR_IDS
+                else:
+                    object_ids = OBJECT_IDX_TO_IDS[pixel[0]]
+
+                # If no object
+                if pixel[0] == 0:
+                    color_ids = ' '
+                else:
+                    color_ids = COLOR_IDX_TO_IDS[pixel[1]]
+
+                new_line.append(object_ids + color_ids)
+
+            new_array.append(new_line)
+        
+        # Add the agent
+        new_array[self.agentPos[1]][self.agentPos[0]] = AGENT_DIR_TO_IDS[self.agentDir]
+        
+        return "\n".join([" ".join(line) for line in new_array])
 
     def _genGrid(self, width, height):
         assert False, "_genGrid needs to be implemented by each environment"
