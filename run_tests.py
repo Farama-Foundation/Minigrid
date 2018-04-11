@@ -3,7 +3,7 @@
 import random
 import numpy as np
 import gym
-from gym_minigrid.register import envList
+from gym_minigrid.register import env_list
 from gym_minigrid.minigrid import Grid
 
 # Test specifically importing a specific environment
@@ -14,9 +14,9 @@ from gym_minigrid.wrappers import *
 
 ##############################################################################
 
-print('%d environments registered' % len(envList))
+print('%d environments registered' % len(env_list))
 
-for envName in envList:
+for envName in env_list:
     print('testing "%s"' % envName)
 
     # Load the gym environment
@@ -63,19 +63,21 @@ for envName in envList:
 
 ##############################################################################
 
-env = gym.make('MiniGrid-Empty-6x6-v0')
-goalPos = (env.grid.width - 2, env.grid.height - 2)
+print('testing agent_sees method')
+env = gym.make('MiniGrid-DoorKey-6x6-v0')
+goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
 # Test the "in" operator on grid objects
 assert ('green', 'goal') in env.grid
 assert ('blue', 'key') not in env.grid
 
-# Test the env.agentSees() function
+# Test the env.agent_sees() function
 env.reset()
-for i in range(0, 200):
+for i in range(0, 500):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    goalVisible = ('green', 'goal') in Grid.decode(obs['image'])
-    assert env.agentSees(*goalPos) == goalVisible
+    goal_visible = ('green', 'goal') in Grid.decode(obs['image'])
+    agent_sees_goal = env.agent_sees(*goal_pos)
+    assert agent_sees_goal == goal_visible
     if done:
         env.reset()

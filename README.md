@@ -19,6 +19,19 @@ Requirements:
 This environment has been built at the [MILA](https://mila.quebec/en/) as
 part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
 
+Please use this bibtex if you want to cite this repository in your publications:
+
+```
+@misc{gym_minigrid,
+  author = {Maxime Chevalier-Boisvert},
+  title = {Minimalistic Gridworld Environment for OpenAI Gym},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/maximecb/gym-minigrid}},
+}
+```
+
 ## Installation
 
 Clone this repository and install the other dependencies with `pip3`:
