@@ -2,7 +2,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QColor, QPolygon
 from PyQt5.QtCore import QPoint, QSize, QRect
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel, QFrame
 
 class Window(QMainWindow):
@@ -37,6 +37,9 @@ class Window(QMainWindow):
 
         # Callback for keyboard events
         self.keyDownCb = None
+
+    def displayAlertMessage(self, title, message):
+        QMessageBox.about(self, title, message)
 
     def closeEvent(self, event):
         self.closed = True
@@ -95,6 +98,9 @@ class Renderer:
         Deallocate resources used
         """
         pass
+
+    def displayErrorMessage(self):
+        self.window.displayAlertMessage("Water detected", "Water is bad")
 
     def beginFrame(self):
         self.painter.begin(self.img)

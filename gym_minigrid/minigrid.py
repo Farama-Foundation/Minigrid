@@ -10,7 +10,7 @@ from gym_minigrid.rendering import *
 CELL_PIXELS = 32
 
 # Number of cells (width and height) in the agent view
-AGENT_VIEW_SIZE = 4
+AGENT_VIEW_SIZE = 3
 
 # Size of the array given as an observation to the agent
 OBS_ARRAY_SIZE = (AGENT_VIEW_SIZE, AGENT_VIEW_SIZE, 3)
@@ -315,8 +315,8 @@ class Grid:
     """
 
     def __init__(self, width, height):
-        assert width >= 4
-        assert height >= 4
+        assert width >= 3
+        assert height >= 3
 
         self.width = width
         self.height = height
@@ -865,7 +865,7 @@ class MiniGridEnv(gym.Env):
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position
         # in the agent's partially observable view
-        agentPos = grid.width // 2, grid.height - 1
+        agentPos = 2, 2
         if self.carrying:
             grid.set(*agentPos, self.carrying)
         else:
@@ -925,6 +925,9 @@ class MiniGridEnv(gym.Env):
         r.endFrame()
 
         return r.getPixmap()
+
+    def displayAlert(self):
+        self.gridRender.displayErrorMessage()
 
     def render(self, mode='human', close=False):
         """
