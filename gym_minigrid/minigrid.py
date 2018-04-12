@@ -671,7 +671,8 @@ class MiniGridEnv(gym.Env):
         self,
         grid_size=16,
         max_steps=100,
-        see_through_walls=False
+        see_through_walls=False,
+        seed=None
     ):
         # Action enumeration for this environment
         self.actions = MiniGridEnv.Actions
@@ -709,8 +710,10 @@ class MiniGridEnv(gym.Env):
         self.start_pos = None
         self.start_dir = None
 
+        # Initialize the RNG
+        self.seed(seed=seed)
+
         # Initialize the state
-        self.seed()
         self.reset()
 
     def reset(self):
@@ -743,7 +746,6 @@ class MiniGridEnv(gym.Env):
     def seed(self, seed=1337):
         # Seed the random number generator
         self.np_random, _ = seeding.np_random(seed)
-
         return [seed]
 
     @property
