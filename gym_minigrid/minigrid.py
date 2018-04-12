@@ -359,25 +359,25 @@ class Grid:
         assert j >= 0 and j < self.height
         return self.grid[j * self.width + i]
 
-    def horzWall(self, x, y, length=None):
+    def horz_wall(self, x, y, length=None):
         if length is None:
             length = self.width - x
         for i in range(0, length):
             self.set(x + i, y, Wall())
 
-    def vertWall(self, x, y, length=None):
+    def vert_wall(self, x, y, length=None):
         if length is None:
             length = self.height - y
         for j in range(0, length):
             self.set(x, y + j, Wall())
 
-    def wallRect(self, x, y, w, h):
-        self.horzWall(x, y, w)
-        self.horzWall(x, y+h-1, w)
-        self.vertWall(x, y, h)
-        self.vertWall(x+w-1, y, h)
+    def wall_rect(self, x, y, w, h):
+        self.horz_wall(x, y, w)
+        self.horz_wall(x, y+h-1, w)
+        self.vert_wall(x, y, h)
+        self.vert_wall(x+w-1, y, h)
 
-    def rotateLeft(self):
+    def rotate_left(self):
         """
         Rotate the grid to the left (counter-clockwise)
         """
@@ -413,15 +413,15 @@ class Grid:
 
         return grid
 
-    def render(self, r, tileSize):
+    def render(self, r, tile_size):
         """
         Render this grid at a given scale
         :param r: target renderer object
-        :param tileSize: tile size in pixels
+        :param tile_size: tile size in pixels
         """
 
-        assert r.width == self.width * tileSize
-        assert r.height == self.height * tileSize
+        assert r.width == self.width * tile_size
+        assert r.height == self.height * tile_size
 
         # Total grid size at native scale
         widthPx = self.width * CELL_PIXELS
@@ -445,7 +445,7 @@ class Grid:
 
         # Internally, we draw at the "large" full-grid resolution, but we
         # use the renderer to scale back to the desired size
-        r.scale(tileSize / CELL_PIXELS, tileSize / CELL_PIXELS)
+        r.scale(tile_size / CELL_PIXELS, tile_size / CELL_PIXELS)
 
         # Draw the background of the in-world cells black
         r.fillRect(
@@ -841,23 +841,23 @@ class MiniGridEnv(gym.Env):
     def _gen_grid(self, width, height):
         assert False, "_gen_grid needs to be implemented by each environment"
 
-    def _randInt(self, low, high):
+    def _rand_int(self, low, high):
         """
         Generate random integer in [low,high[
         """
 
         return self.np_random.randint(low, high)
 
-    def _randElem(self, iterable):
+    def _rand_elem(self, iterable):
         """
         Pick a random element in a list
         """
 
         lst = list(iterable)
-        idx = self._randInt(0, len(lst))
+        idx = self._rand_int(0, len(lst))
         return lst[idx]
 
-    def _randPos(self, xLow, xHigh, yLow, yHigh):
+    def _rand_pos(self, xLow, xHigh, yLow, yHigh):
         """
         Generate a random (x,y) position tuple
         """
@@ -867,7 +867,7 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(yLow, yHigh)
         )
 
-    def placeObj(self, obj, top=None, size=None, reject_fn=None):
+    def place_obj(self, obj, top=None, size=None, reject_fn=None):
         """
         Place an object at an empty position in the grid
 
@@ -884,8 +884,8 @@ class MiniGridEnv(gym.Env):
 
         while True:
             pos = (
-                self._randInt(top[0], top[0] + size[0]),
-                self._randInt(top[1], top[1] + size[1])
+                self._rand_int(top[0], top[0] + size[0]),
+                self._rand_int(top[1], top[1] + size[1])
             )
 
             # Don't place the object on top of another object
@@ -906,16 +906,16 @@ class MiniGridEnv(gym.Env):
 
         return pos
 
-    def placeAgent(self, top=None, size=None, randDir=True):
+    def place_agent(self, top=None, size=None, rand_dir=True):
         """
         Set the agent's starting point at an empty position in the grid
         """
 
-        pos = self.placeObj(None, top, size)
+        pos = self.place_obj(None, top, size)
         self.start_pos = pos
 
-        if randDir:
-            self.start_dir = self._randInt(0, 4)
+        if rand_dir:
+            self.start_dir = self._rand_int(0, 4)
 
         return pos
 
@@ -1030,10 +1030,10 @@ class MiniGridEnv(gym.Env):
 
         # Get the position in front of the agent
         u, v = self.get_dir_vec()
-        fwdPos = (self.agent_pos[0] + u, self.agent_pos[1] + v)
+        fwd_pos = (self.agent_pos[0] + u, self.agent_pos[1] + v)
 
         # Get the contents of the cell in front of the agent
-        fwdCell = self.grid.get(*fwdPos)
+        fwd_cell = self.grid.get(*fwd_pos)
 
         # Rotate left
         if action == self.actions.left:
@@ -1047,29 +1047,29 @@ class MiniGridEnv(gym.Env):
 
         # Move forward
         elif action == self.actions.forward:
-            if fwdCell == None or fwdCell.can_overlap():
-                self.agent_pos = fwdPos
-            if fwdCell != None and fwdCell.type == 'goal':
+            if fwd_cell == None or fwd_cell.can_overlap():
+                self.agent_pos = fwd_pos
+            if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
                 reward = 1000 - self.step_count
 
         # Pick up an object
         elif action == self.actions.pickup:
-            if fwdCell and fwdCell.can_pickup():
+            if fwd_cell and fwd_cell.can_pickup():
                 if self.carrying is None:
-                    self.carrying = fwdCell
-                    self.grid.set(*fwdPos, None)
+                    self.carrying = fwd_cell
+                    self.grid.set(*fwd_pos, None)
 
         # Drop an object
         elif action == self.actions.drop:
-            if not fwdCell and self.carrying:
-                self.grid.set(*fwdPos, self.carrying)
+            if not fwd_cell and self.carrying:
+                self.grid.set(*fwd_pos, self.carrying)
                 self.carrying = None
 
         # Toggle/activate an object
         elif action == self.actions.toggle:
-            if fwdCell:
-                fwdCell.toggle(self, fwdPos)
+            if fwd_cell:
+                fwd_cell.toggle(self, fwd_pos)
 
         # Wait/do nothing
         elif action == self.actions.wait:
@@ -1095,7 +1095,7 @@ class MiniGridEnv(gym.Env):
         grid = self.grid.slice(topX, topY, AGENT_VIEW_SIZE, AGENT_VIEW_SIZE)
 
         for i in range(self.agent_dir + 1):
-            grid = grid.rotateLeft()
+            grid = grid.rotate_left()
 
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position

@@ -27,7 +27,7 @@ class GoToObjectEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.wallRect(0, 0, width, height)
+        self.grid.wall_rect(0, 0, width, height)
 
         # Types and colors of objects we can generate
         types = ['key', 'ball', 'box']
@@ -37,8 +37,8 @@ class GoToObjectEnv(MiniGridEnv):
 
         # Until we have generated all the objects
         while len(objs) < self.numObjs:
-            objType = self._randElem(types)
-            objColor = self._randElem(COLOR_NAMES)
+            objType = self._rand_elem(types)
+            objColor = self._rand_elem(COLOR_NAMES)
 
             # If this object already exists, try again
             if (objType, objColor) in objs:
@@ -51,15 +51,15 @@ class GoToObjectEnv(MiniGridEnv):
             elif objType == 'box':
                 obj = Box(objColor)
 
-            pos = self.placeObj(obj)
+            pos = self.place_obj(obj)
             objs.append((objType, objColor))
             objPos.append(pos)
 
         # Randomize the agent start position and orientation
-        self.placeAgent()
+        self.place_agent()
 
         # Choose a random object to be picked up
-        objIdx = self._randInt(0, len(objs))
+        objIdx = self._rand_int(0, len(objs))
         self.targetType, self.target_color = objs[objIdx]
         self.target_pos = objPos[objIdx]
 

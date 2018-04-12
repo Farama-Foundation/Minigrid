@@ -14,10 +14,10 @@ class Room:
         self.color = None
         self.locked = False
 
-    def randPos(self, env):
+    def rand_pos(self, env):
         topX, topY = self.top
         sizeX, sizeY = self.size
-        return env._randPos(
+        return env._rand_pos(
             topX + 1, topX + sizeX - 1,
             topY + 1, topY + sizeY - 1
         )
@@ -81,15 +81,15 @@ class LockedRoom(MiniGridEnv):
             ))
 
         # Choose one random room to be locked
-        lockedRoom = self._randElem(self.rooms)
+        lockedRoom = self._rand_elem(self.rooms)
         lockedRoom.locked = True
-        goalPos = lockedRoom.randPos(self)
+        goalPos = lockedRoom.rand_pos(self)
         self.grid.set(*goalPos, Goal())
 
         # Assign the door colors
         colors = set(COLOR_NAMES)
         for room in self.rooms:
-            color = self._randElem(sorted(colors))
+            color = self._rand_elem(sorted(colors))
             colors.remove(color)
             room.color = color
             if room.locked:
@@ -99,18 +99,17 @@ class LockedRoom(MiniGridEnv):
 
         # Select a random room to contain the key
         while True:
-            keyRoom = self._randElem(self.rooms)
+            keyRoom = self._rand_elem(self.rooms)
             if keyRoom != lockedRoom:
                 break
-        keyPos = keyRoom.randPos(self)
+        keyPos = keyRoom.rand_pos(self)
         self.grid.set(*keyPos, Key(lockedRoom.color))
 
         # Randomize the player start position and orientation
-        self.start_pos = self._randPos(
-            lWallIdx + 1, rWallIdx,
-            1, height-1
+        self.start_pos = self.place_agent(
+            top=(lWallIdx, 0),
+            size=(rWallIdx-lWallIdx, height)
         )
-        self.start_dir = self._randInt(0, 4)
 
         # Generate the mission string
         self.mission = (

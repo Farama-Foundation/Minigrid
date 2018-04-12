@@ -19,7 +19,7 @@ class EmptyEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.wallRect(0, 0, width, height)
+        self.grid.wall_rect(0, 0, width, height)
 
         # Place the agent in the top-left corner
         self.start_pos = (1, 1)

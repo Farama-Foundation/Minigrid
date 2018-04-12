@@ -16,10 +16,10 @@ class PlaygroundV0(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.horzWall(0, 0)
-        self.grid.horzWall(0, height-1)
-        self.grid.vertWall(0, 0)
-        self.grid.vertWall(width-1, 0)
+        self.grid.horz_wall(0, 0)
+        self.grid.horz_wall(0, height-1)
+        self.grid.vert_wall(0, 0)
+        self.grid.vert_wall(width-1, 0)
 
         roomW = width // 3
         roomH = height // 3
@@ -36,33 +36,33 @@ class PlaygroundV0(MiniGridEnv):
 
                 # Bottom wall and door
                 if i+1 < 3:
-                    self.grid.vertWall(xR, yT, roomH)
-                    pos = (xR, self._randInt(yT+1, yB-1))
-                    color = self._randElem(COLOR_NAMES)
+                    self.grid.vert_wall(xR, yT, roomH)
+                    pos = (xR, self._rand_int(yT+1, yB-1))
+                    color = self._rand_elem(COLOR_NAMES)
                     self.grid.set(*pos, Door(color))
 
                 # Bottom wall and door
                 if j+1 < 3:
-                    self.grid.horzWall(xL, yB, roomW)
-                    pos = (self._randInt(xL+1, xR-1), yB)
-                    color = self._randElem(COLOR_NAMES)
+                    self.grid.horz_wall(xL, yB, roomW)
+                    pos = (self._rand_int(xL+1, xR-1), yB)
+                    color = self._rand_elem(COLOR_NAMES)
                     self.grid.set(*pos, Door(color))
 
         # Randomize the player start position and orientation
-        self.placeAgent()
+        self.place_agent()
 
         # Place random objects in the world
         types = ['key', 'ball', 'box']
         for i in range(0, 12):
-            objType = self._randElem(types)
-            objColor = self._randElem(COLOR_NAMES)
+            objType = self._rand_elem(types)
+            objColor = self._rand_elem(COLOR_NAMES)
             if objType == 'key':
                 obj = Key(objColor)
             elif objType == 'ball':
                 obj = Ball(objColor)
             elif objType == 'box':
                 obj = Box(objColor)
-            self.placeObj(obj)
+            self.place_obj(obj)
 
         # No explicit mission in this environment
         self.mission = ''

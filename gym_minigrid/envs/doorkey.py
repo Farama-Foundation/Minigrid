@@ -14,28 +14,25 @@ class DoorKeyEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.wallRect(0, 0, width, height)
+        self.grid.wall_rect(0, 0, width, height)
 
         # Place a goal in the bottom-right corner
         self.grid.set(width - 2, height - 2, Goal())
 
         # Create a vertical splitting wall
-        splitIdx = self._randInt(2, width-2)
-        self.grid.vertWall(splitIdx, 0)
+        splitIdx = self._rand_int(2, width-2)
+        self.grid.vert_wall(splitIdx, 0)
 
         # Place the agent at a random position and orientation
-        self.start_pos = self._randPos(
-            1, splitIdx,
-            1, height-1
-        )
-        self.start_dir = self._randInt(0, 4)
+        # on the left side of the splitting wall
+        self.start_pos = self.place_agent(size=(splitIdx, height))
 
         # Place a door in the wall
-        doorIdx = self._randInt(1, width-2)
+        doorIdx = self._rand_int(1, width-2)
         self.grid.set(splitIdx, doorIdx, LockedDoor('yellow'))
 
         # Place a yellow key on the left side
-        self.placeObj(
+        self.place_obj(
             obj=Key('yellow'),
             top=(0, 0),
             size=(splitIdx, height)

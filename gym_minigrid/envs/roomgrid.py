@@ -44,7 +44,7 @@ class RoomGrid(MiniGridEnv):
         self,
         room_size=6,
         num_cols=4,
-        max_steps=200
+        max_steps=100
     ):
         assert room_size > 0
         assert room_size >= 4
@@ -97,7 +97,7 @@ class RoomGrid(MiniGridEnv):
                 row.append(room)
 
                 # Generate the walls for this room
-                self.grid.wallRect(*room.top, *room.size)
+                self.grid.wall_rect(*room.top, *room.size)
 
             self.room_grid.append(row)
 
@@ -113,10 +113,10 @@ class RoomGrid(MiniGridEnv):
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
                     room.neighbors[0] = self.room_grid[j][i+1]
-                    room.door_pos[0] = (x_m, self._randInt(y_l, y_m))
+                    room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
                     room.neighbors[1] = self.room_grid[j+1][i]
-                    room.door_pos[1] = (self._randInt(x_l, x_m), y_m)
+                    room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
                     room.neighbors[2] = self.room_grid[j][i-1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
@@ -150,7 +150,7 @@ class RoomGrid(MiniGridEnv):
 
         room = self.get_room(i, j)
 
-        self.placeObj(obj, room.top, room.size, reject_fn)
+        self.place_obj(obj, room.top, room.size, reject_fn)
 
         room.objs.append(obj)
 
@@ -204,9 +204,9 @@ class RoomGrid(MiniGridEnv):
                 break
 
             # Pick a random room and door position
-            i = self._randInt(0, self.num_cols)
-            j = self._randInt(0, self.num_rows)
-            k = self._randInt(0, 4)
+            i = self._rand_int(0, self.num_cols)
+            j = self._rand_int(0, self.num_rows)
+            k = self._rand_int(0, 4)
             room = self.get_room(i, j)
 
             # If there is already a door there, skip
@@ -216,7 +216,7 @@ class RoomGrid(MiniGridEnv):
             if room.locked or room.neighbors[k].locked:
                 continue
 
-            color = self._randElem(COLOR_NAMES)
+            color = self._rand_elem(COLOR_NAMES)
             self.add_door(i, j, k, color)
 
     def step(self, action):
