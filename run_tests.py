@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import random
-import gym
 import numpy as np
-from gym_minigrid.register import envList
+import gym
+from gym_minigrid.register import env_list
 from gym_minigrid.minigrid import Grid
 
 # Test specifically importing a specific environment
@@ -14,9 +14,9 @@ from gym_minigrid.wrappers import *
 
 ##############################################################################
 
-print('%d environments registered' % len(envList))
+print('%d environments registered' % len(env_list))
 
-for envName in envList:
+for envName in env_list:
     print('testing "%s"' % envName)
 
     # Load the gym environment
@@ -28,15 +28,16 @@ for envName in envList:
     for i in range(0, 5):
         seed = 1337 + i
         env.seed(seed)
-        grid1 = env.grid.encode()
+        grid1 = env.grid
         env.seed(seed)
-        grid2 = env.grid.encode()
-        assert np.array_equal(grid2, grid1)
+        grid2 = env.grid
+        assert grid1 == grid2
 
     env.reset()
 
     # Run for a few episodes
-    for i in range(5 * env.maxSteps):
+    num_episodes = 0
+    while num_episodes < 5:
         # Pick a random action
         action = random.randint(0, env.action_space.n - 1)
 
@@ -46,17 +47,15 @@ for envName in envList:
         img = obs['image']
         grid = Grid.decode(img)
         img2 = grid.encode()
-        assert np.array_equal(img2, img)
+        assert np.array_equal(img, img2)
 
         # Check that the reward is within the specified range
         assert reward >= env.reward_range[0], reward
         assert reward <= env.reward_range[1], reward
 
         if done:
+            num_episodes += 1
             env.reset()
-
-            # Check that the agent doesn't overlap with an object
-            assert env.grid.get(*env.agentPos) is None
 
         env.render('rgb_array')
 
@@ -64,19 +63,21 @@ for envName in envList:
 
 ##############################################################################
 
-env = gym.make('MiniGrid-Empty-6x6-v0')
-goalPos = (env.grid.width - 2, env.grid.height - 2)
+print('testing agent_sees method')
+env = gym.make('MiniGrid-DoorKey-6x6-v0')
+goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
 # Test the "in" operator on grid objects
 assert ('green', 'goal') in env.grid
 assert ('blue', 'key') not in env.grid
 
-# Test the env.agentSees() function
+# Test the env.agent_sees() function
 env.reset()
-for i in range(0, 200):
+for i in range(0, 500):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    goalVisible = ('green', 'goal') in Grid.decode(obs['image'])
-    assert env.agentSees(*goalPos) == goalVisible
+    goal_visible = ('green', 'goal') in Grid.decode(obs['image'])
+    agent_sees_goal = env.agent_sees(*goal_pos)
+    assert agent_sees_goal == goal_visible
     if done:
         env.reset()

@@ -12,7 +12,7 @@ class GoToDoorEnv(MiniGridEnv):
         size=5
     ):
         assert size >= 5
-        super().__init__(gridSize=size, maxSteps=10*size)
+        super().__init__(grid_size=size, max_steps=10*size)
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
@@ -46,19 +46,22 @@ class GoToDoorEnv(MiniGridEnv):
             color = doorColors[idx]
             self.grid.set(*pos, Door(color))
 
+        # Randomize the agent start position and orientation
+        self.placeAgent(size=(width, height))
+
         # Select a random target door
         doorIdx = self._randInt(0, len(doorPos))
-        self.targetPos = doorPos[doorIdx]
-        self.targetColor = doorColors[doorIdx]
+        self.target_pos = doorPos[doorIdx]
+        self.target_color = doorColors[doorIdx]
 
         # Generate the mission string
-        self.mission = 'go to the %s door' % self.targetColor
+        self.mission = 'go to the %s door' % self.target_color
 
     def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
 
-        ax, ay = self.agentPos
-        tx, ty = self.targetPos
+        ax, ay = self.agent_pos
+        tx, ty = self.target_pos
 
         # Don't let the agent open any of the doors
         if action == self.actions.toggle:

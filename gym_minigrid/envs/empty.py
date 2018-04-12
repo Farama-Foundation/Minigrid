@@ -7,7 +7,7 @@ class EmptyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8):
-        super().__init__(gridSize=size, maxSteps=3*size)
+        super().__init__(grid_size=size, max_steps=3*size)
 
     def _genGrid(self, width, height):
         # Create an empty grid
@@ -18,6 +18,10 @@ class EmptyEnv(MiniGridEnv):
         self.grid.horzWall(0, height-1)
         self.grid.vertWall(0, 0)
         self.grid.vertWall(width-1, 0)
+
+        # Place the agent in the top-left corner
+        self.start_pos = (1, 1)
+        self.start_dir = 0
 
         # Place a goal square in the bottom-right corner
         self.grid.set(width - 2, height - 2, Goal())

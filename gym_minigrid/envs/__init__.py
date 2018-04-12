@@ -6,7 +6,6 @@ from gym_minigrid.envs.gotoobject import *
 from gym_minigrid.envs.gotodoor import *
 from gym_minigrid.envs.putnear import *
 from gym_minigrid.envs.lockedroom import *
-from gym_minigrid.envs.fourroomqa import *
 from gym_minigrid.envs.playground_v0 import *
 from gym_minigrid.envs.roomgrid import *
 from gym_minigrid.envs.unsafeenvironment import *

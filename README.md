@@ -1,5 +1,7 @@
 # Minimalistic Gridworld Environment (MiniGrid)
 
+[![Build Status](https://travis-ci.org/maximecb/gym-minigrid.svg?branch=master)](https://travis-ci.org/maximecb/gym-minigrid)
+
 There are other gridworld Gym environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
@@ -16,6 +18,19 @@ Requirements:
 
 This environment has been built at the [MILA](https://mila.quebec/en/) as
 part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
+
+Please use this bibtex if you want to cite this repository in your publications:
+
+```
+@misc{gym_minigrid,
+  author = {Maxime Chevalier-Boisvert},
+  title = {Minimalistic Gridworld Environment for OpenAI Gym},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/maximecb/gym-minigrid}},
+}
+```
 
 ## Installation
 
@@ -95,7 +110,9 @@ Actions in the basic environment:
 - Turn left
 - Turn right
 - Move forward
-- Toggle (pick up or interact with objects)
+- Pick up an object
+- Drop the object being carried
+- Toggle (interact with objects)
 - Wait (noop, do nothing)
 
 By default, sparse rewards for reaching a goal square are provided, but you can
@@ -214,25 +231,3 @@ a textual mission string as input, telling it which room to go to in order
 to get the key that opens the locked room. It then has to go into the locked
 room in order to reach the final goal. This environment is extremely difficult
 to solve with vanilla reinforcement learning alone.
-
-### Four room question answering environment
-
-Registered configurations:
-- `MiniGrid-FourRoomQA-v0`
-
-<p align="center">
-<img src="/figures/fourroomqa-env.png">
-</p>
-
-This environment is inspired by the
-[Embodied Question Answering](https://arxiv.org/abs/1711.11543) paper. The question are of the form:
-
-> Are there any keys in the red room?
-
-There are four colored rooms, and the agent starts at a random position in the grid.
-Multiple objects of different types and colors are also placed at random
-positions in random rooms. A question and answer pair is generated, the
-question is given to the agent as an observation, and the agent has a limited
-number of time steps to explore the environment and produce a response. This
-environment can be easily modified to add more question types or to diversify
-the way the questions are phrased.

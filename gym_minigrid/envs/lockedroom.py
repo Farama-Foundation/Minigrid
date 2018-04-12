@@ -32,7 +32,7 @@ class LockedRoom(MiniGridEnv):
         self
     ):
         size = 19
-        super().__init__(gridSize=size, maxSteps=10*size)
+        super().__init__(grid_size=size, max_steps=10*size)
 
         self.observation_space = spaces.Dict({
             'image': self.observation_space
@@ -106,11 +106,11 @@ class LockedRoom(MiniGridEnv):
         self.grid.set(*keyPos, Key(lockedRoom.color))
 
         # Randomize the player start position and orientation
-        self.startPos = self._randPos(
+        self.start_pos = self._randPos(
             lWallIdx + 1, rWallIdx,
             1, height-1
         )
-        self.startDir = self._randInt(0, 4)
+        self.start_dir = self._randInt(0, 4)
 
         # Generate the mission string
         self.mission = (

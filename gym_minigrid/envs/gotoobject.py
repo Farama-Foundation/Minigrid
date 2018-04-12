@@ -13,7 +13,7 @@ class GoToObjectEnv(MiniGridEnv):
         numObjs=2
     ):
         self.numObjs = numObjs
-        super().__init__(gridSize=size, maxSteps=5*size)
+        super().__init__(grid_size=size, max_steps=5*size)
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
@@ -48,23 +48,23 @@ class GoToObjectEnv(MiniGridEnv):
             objs.append((objType, objColor))
             objPos.append(pos)
 
-        # Randomize the player start position and orientation
+        # Randomize the agent start position and orientation
         self.placeAgent()
 
         # Choose a random object to be picked up
         objIdx = self._randInt(0, len(objs))
-        self.targetType, self.targetColor = objs[objIdx]
-        self.targetPos = objPos[objIdx]
+        self.targetType, self.target_color = objs[objIdx]
+        self.target_pos = objPos[objIdx]
 
-        descStr = '%s %s' % (self.targetColor, self.targetType)
+        descStr = '%s %s' % (self.target_color, self.targetType)
         self.mission = 'go to the %s' % descStr
         #print(self.mission)
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
-        ax, ay = self.agentPos
-        tx, ty = self.targetPos
+        ax, ay = self.agent_pos
+        tx, ty = self.target_pos
 
         # Toggle/pickup action terminates the episode
         if action == self.actions.toggle:

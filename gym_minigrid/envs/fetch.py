@@ -13,7 +13,7 @@ class FetchEnv(MiniGridEnv):
         numObjs=3
     ):
         self.numObjs = numObjs
-        super().__init__(gridSize=size, maxSteps=5*size)
+        super().__init__(grid_size=size, max_steps=5*size)
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):

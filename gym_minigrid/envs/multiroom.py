@@ -34,12 +34,11 @@ class MultiRoomEnv(MiniGridEnv):
         self.rooms = []
 
         super(MultiRoomEnv, self).__init__(
-            gridSize=25,
-            maxSteps=self.maxNumRooms * 20
+            grid_size=25,
+            max_steps=self.maxNumRooms * 20
         )
 
     def _genGrid(self, width, height):
-
         roomList = []
 
         # Choose a random number of rooms to generate
@@ -69,15 +68,6 @@ class MultiRoomEnv(MiniGridEnv):
         # Store the list of rooms in this environment
         assert len(roomList) > 0
         self.rooms = roomList
-
-        # Randomize the starting agent position and direction
-        topX, topY = roomList[0].top
-        sizeX, sizeY = roomList[0].size
-        self.startPos = (
-            self._randInt(topX + 1, topX + sizeX - 2),
-            self._randInt(topY + 1, topY + sizeY - 2)
-        )
-        self.startDir = self._randInt(0, 4)
 
         # Create the grid
         self.grid = Grid(width, height)
@@ -118,17 +108,11 @@ class MultiRoomEnv(MiniGridEnv):
                 prevRoom = roomList[idx-1]
                 prevRoom.exitDoorPos = room.entryDoorPos
 
-        # Place the final goal
-        while True:
-            self.goalPos = (
-                self._randInt(topX + 1, topX + sizeX - 1),
-                self._randInt(topY + 1, topY + sizeY - 1)
-            )
+        # Randomize the starting agent position and direction
+        self.placeAgent(roomList[0].top, roomList[0].size)
 
-            # Make sure the goal doesn't overlap with the agent
-            if self.goalPos != self.startPos:
-                self.grid.set(*self.goalPos, Goal())
-                break
+        # Place the final goal in the last room
+        self.placeObj(Goal(), roomList[-1].top, roomList[-1].size)
 
         self.mission = 'traverse the rooms to get to the goal'
 
@@ -174,7 +158,7 @@ class MultiRoomEnv(MiniGridEnv):
         # If the room is out of the grid, can't place a room here
         if topX < 0 or topY < 0:
             return False
-        if topX + sizeX > self.gridSize or topY + sizeY >= self.gridSize:
+        if topX + sizeX > self.grid_size or topY + sizeY >= self.grid_size:
             return False
 
         # If the room intersects with previous rooms, can't place it here

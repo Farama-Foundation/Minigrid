@@ -13,7 +13,7 @@ class PutNearEnv(MiniGridEnv):
         numObjs=2
     ):
         self.numObjs = numObjs
-        super().__init__(gridSize=size, maxSteps=5*size)
+        super().__init__(grid_size=size, max_steps=5*size)
         self.reward_range = (0, 1)
 
     def _genGrid(self, width, height):
@@ -26,13 +26,12 @@ class PutNearEnv(MiniGridEnv):
         self.grid.vertWall(width-1, 0)
 
         # Types and colors of objects we can generate
-        types = ['key', 'ball']
-        colors = list(COLORS.keys())
+        types = ['key', 'ball', 'box']
 
         objs = []
         objPos = []
 
-        def nearObj(p1):
+        def near_obj(env, p1):
             for p2 in objPos:
                 dx = p1[0] - p2[0]
                 dy = p1[1] - p2[1]
@@ -43,7 +42,7 @@ class PutNearEnv(MiniGridEnv):
         # Until we have generated all the objects
         while len(objs) < self.numObjs:
             objType = self._randElem(types)
-            objColor = self._randElem(colors)
+            objColor = self._randElem(COLOR_NAMES)
 
             # If this object already exists, try again
             if (objType, objColor) in objs:
@@ -56,63 +55,54 @@ class PutNearEnv(MiniGridEnv):
             elif objType == 'box':
                 obj = Box(objColor)
 
-            while True:
-                pos = (
-                    self._randInt(1, width - 1),
-                    self._randInt(1, height - 1)
-                )
-                if nearObj(pos):
-                    continue
-                if pos == self.startPos:
-                    continue
-                self.grid.set(*pos, obj)
-                break
+            pos = self.placeObj(obj, reject_fn=near_obj)
 
             objs.append((objType, objColor))
             objPos.append(pos)
 
+        # Randomize the agent start position and orientation
+        self.placeAgent()
+
         # Choose a random object to be moved
         objIdx = self._randInt(0, len(objs))
-        self.moveType, self.moveColor = objs[objIdx]
-        self.movePos = objPos[objIdx]
+        self.move_type, self.moveColor = objs[objIdx]
+        self.move_pos = objPos[objIdx]
 
         # Choose a target object (to put the first object next to)
         while True:
             targetIdx = self._randInt(0, len(objs))
             if targetIdx != objIdx:
                 break
-        self.targetType, self.targetColor = objs[targetIdx]
-        self.targetPos = objPos[targetIdx]
+        self.target_type, self.target_color = objs[targetIdx]
+        self.target_pos = objPos[targetIdx]
 
         self.mission = 'put the %s %s near the %s %s' % (
             self.moveColor,
-            self.moveType,
-            self.targetColor,
-            self.targetType
+            self.move_type,
+            self.target_color,
+            self.target_type
         )
 
     def step(self, action):
         preCarrying = self.carrying
 
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
 
-        u, v = self.getDirVec()
-        ox, oy = (self.agentPos[0] + u, self.agentPos[1] + v)
-        tx, ty = self.targetPos
+        u, v = self.get_dir_vec()
+        ox, oy = (self.agent_pos[0] + u, self.agent_pos[1] + v)
+        tx, ty = self.target_pos
 
-        # Pickup/drop action
-        if action == self.actions.toggle:
-            # If we picked up the wrong object, terminate the episode
-            if self.carrying:
-                if self.carrying.type != self.moveType or self.carrying.color != self.moveColor:
-                    done = True
-
-            # If successfully dropping an object near the target
-            if preCarrying:
-                if self.grid.get(ox, oy) is preCarrying:
-                    if abs(ox - tx) <= 1 and abs(oy - ty) <= 1:
-                        reward = 1
+        # If we picked up the wrong object, terminate the episode
+        if action == self.actions.pickup and self.carrying:
+            if self.carrying.type != self.move_type or self.carrying.color != self.moveColor:
                 done = True
+
+        # If successfully dropping an object near the target
+        if action == self.actions.drop and preCarrying:
+            if self.grid.get(ox, oy) is preCarrying:
+                if abs(ox - tx) <= 1 and abs(oy - ty) <= 1:
+                    reward = 1
+            done = True
 
         return obs, reward, done, info
 
