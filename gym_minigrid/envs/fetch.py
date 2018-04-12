@@ -13,10 +13,17 @@ class FetchEnv(MiniGridEnv):
         numObjs=3
     ):
         self.numObjs = numObjs
-        super().__init__(grid_size=size, max_steps=5*size)
+
+        super().__init__(
+            grid_size=size,
+            max_steps=5*size,
+            # Set this to True for maximum speed
+            see_through_walls=True
+        )
+
         self.reward_range = (0, 1)
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls

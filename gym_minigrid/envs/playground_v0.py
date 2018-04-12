@@ -11,7 +11,7 @@ class PlaygroundV0(MiniGridEnv):
         super().__init__(grid_size=19, max_steps=100)
         self.reward_range = (0, 1)
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         # Create the grid
         self.grid = Grid(width, height)
 

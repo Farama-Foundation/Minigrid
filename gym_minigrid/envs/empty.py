@@ -7,17 +7,19 @@ class EmptyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8):
-        super().__init__(grid_size=size, max_steps=3*size)
+        super().__init__(
+            grid_size=size,
+            max_steps=3*size,
+            # Set this to True for maximum speed
+            see_through_walls=True
+        )
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         # Create an empty grid
         self.grid = Grid(width, height)
 
         # Generate the surrounding walls
-        self.grid.horzWall(0, 0)
-        self.grid.horzWall(0, height-1)
-        self.grid.vertWall(0, 0)
-        self.grid.vertWall(width-1, 0)
+        self.grid.wallRect(0, 0, width, height)
 
         # Place the agent in the top-left corner
         self.start_pos = (1, 1)

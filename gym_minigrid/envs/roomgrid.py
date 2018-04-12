@@ -77,7 +77,7 @@ class RoomGrid(MiniGridEnv):
         assert j < self.num_rows
         return self.room_grid[j][i]
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         # Create the grid
         self.grid = Grid(width, height)
 

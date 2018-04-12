@@ -12,10 +12,17 @@ class GoToDoorEnv(MiniGridEnv):
         size=5
     ):
         assert size >= 5
-        super().__init__(grid_size=size, max_steps=10*size)
+
+        super().__init__(
+            grid_size=size,
+            max_steps=5*size,
+            # Set this to True for maximum speed
+            see_through_walls=True
+        )
+
         self.reward_range = (0, 1)
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         # Create the grid
         self.grid = Grid(width, height)
 

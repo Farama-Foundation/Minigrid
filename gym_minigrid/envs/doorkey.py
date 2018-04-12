@@ -9,7 +9,7 @@ class DoorKeyEnv(MiniGridEnv):
     def __init__(self, size=8):
         super().__init__(grid_size=size, max_steps=4 * size)
 
-    def _genGrid(self, width, height):
+    def _gen_grid(self, width, height):
         # Create an empty grid
         self.grid = Grid(width, height)
 

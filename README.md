@@ -84,17 +84,18 @@ python3 pytorch_rl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./traine
 
 MiniGrid is built to support tasks involving natural language and sparse rewards.
 The observations are dictionaries, with an 'image' field, partially observable
-view of the environment, and a 'mission' field which is a textual string
-describing the objective the agent should reach to get a reward. Using
-dictionaries makes it easy for you to add additional information to observations
+view of the environment, a 'mission' field which is a textual string
+describing the objective the agent should reach to get a reward, and a 'direction'
+field which can be used as an optional compass. Using dictionaries makes it
+easy for you to add additional information to observations
 if you need to, without having to force everything into a single tensor.
-If your RL code expects a tensor for observations, please take a look at
+If your RL code expects one single tensor for observations, please take a look at
 `FlatObsWrapper` in
 [gym_minigrid/wrappers.py](/gym_minigrid/wrappers.py).
 
 The partially observable view of the environment uses a compact and efficient
-encoding, with just 3 input values per visible grid cell, 147 values total.
-If you want to obtain an array of RGB pixels instead, see the `getObsRender` method in
+encoding, with just 3 input values per visible grid cell, 7x7x3 values total.
+If you want to obtain an array of RGB pixels instead, see the `get_obs_render` method in
 [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py).
 
 Structure of the world:
@@ -117,7 +118,7 @@ Actions in the basic environment:
 
 By default, sparse rewards for reaching a goal square are provided, but you can
 define your own reward function by creating a class derived from MiniGridEnv. Extending
-the environment with new object types or action should be very easy very easy.
+the environment with new object types or action should be very easy.
 If you wish to do this, you should take a look at the
 [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
 
