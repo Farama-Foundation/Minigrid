@@ -850,6 +850,13 @@ class MiniGridEnv(gym.Env):
 
         return self.np_random.randint(low, high)
 
+    def _rand_bool(self):
+        """
+        Generate random boolean value
+        """
+
+        return (self.np_random.randint(0, 2) == 0)
+
     def _rand_elem(self, iterable):
         """
         Pick a random element in a list
