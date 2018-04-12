@@ -52,10 +52,8 @@ class RoomGrid(MiniGridEnv):
         self.room_size = room_size
         self.num_cols = num_cols
         self.num_rows = num_cols
-
         grid_size = (room_size - 1) * num_cols + 1
         super().__init__(grid_size=grid_size, max_steps=max_steps)
-
         self.reward_range = (0, 1)
 
     def room_from_pos(self, x, y):
@@ -149,6 +147,7 @@ class RoomGrid(MiniGridEnv):
             obj = Box(color)
 
         room = self.get_room(i, j)
+
 
         self.placeObj(obj, room.top, room.size, reject_fn)
 

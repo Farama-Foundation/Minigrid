@@ -48,7 +48,8 @@ OBJECT_TO_IDX = {
     'key'           : 4,
     'ball'          : 5,
     'box'           : 6,
-    'goal'          : 7
+    'goal'          : 7,
+    'water'         : 8,
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -96,6 +97,22 @@ class WorldObj:
 class Goal(WorldObj):
     def __init__(self):
         super(Goal, self).__init__('goal', 'green')
+
+    def can_overlap(self):
+        return True
+
+    def render(self, r):
+        self._setColor(r)
+        r.drawPolygon([
+            (0          , CELL_PIXELS),
+            (CELL_PIXELS, CELL_PIXELS),
+            (CELL_PIXELS,           0),
+            (0          ,           0)
+        ])
+
+class Water(WorldObj):
+    def __init__(self):
+        super(Water, self).__init__('water', 'blue')
 
     def can_overlap(self):
         return True
@@ -311,8 +328,8 @@ class Grid:
     """
 
     def __init__(self, width, height):
-        assert width >= 4
-        assert height >= 4
+        assert width >= 3
+        assert height >= 3
 
         self.width = width
         self.height = height
@@ -537,6 +554,8 @@ class Grid:
                     v = LockedDoor(color, is_open)
                 elif objType == 'goal':
                     v = Goal()
+                elif objType == 'water':
+                    v = Water()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
@@ -817,6 +836,7 @@ class MiniGridEnv(gym.Env):
             self.np_random.randint(yLow, yHigh)
         )
 
+
     def placeObj(self, obj, top=None, size=None, reject_fn=None):
         """
         Place an object at an empty position in the grid
@@ -1076,6 +1096,7 @@ class MiniGridEnv(gym.Env):
 
         return obs
 
+
     def get_obs_render(self, obs):
         """
         Render an agent observation for visualization
@@ -1116,6 +1137,9 @@ class MiniGridEnv(gym.Env):
         r.endFrame()
 
         return r.getPixmap()
+
+    def displayAlert(self):
+        self.gridRender.displayErrorMessage()
 
     def render(self, mode='human', close=False):
         """
