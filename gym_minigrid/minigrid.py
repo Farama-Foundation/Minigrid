@@ -672,7 +672,7 @@ class MiniGridEnv(gym.Env):
         grid_size=16,
         max_steps=100,
         see_through_walls=False,
-        seed=None
+        seed=1337
     ):
         # Action enumeration for this environment
         self.actions = MiniGridEnv.Actions
