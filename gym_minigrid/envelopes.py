@@ -3,6 +3,7 @@ import operator
 import time
 
 import collections
+from minigrid import  AGENT_VIEW_SIZE
 from functools import reduce
 
 import numpy as np
@@ -78,8 +79,9 @@ class SafetyEnvelope(gym.core.RewardWrapper):
 
     def blocker(self, observation, action):
         # Check if tile in direction of action is type catastrophe, then say: NO!
-        # Display alert if this is the case.
-        if (isinstance(observation.get(1,1), Water)):
+        # -2 because we want the index in front of the agent,
+        # floor, to get the middle of the view
+        if isinstance(observation.get((math.floor(AGENT_VIEW_SIZE/2)), AGENT_VIEW_SIZE - 2), Water):
             return True
         return False
 
