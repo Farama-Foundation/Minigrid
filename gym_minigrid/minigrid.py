@@ -866,6 +866,13 @@ class MiniGridEnv(gym.Env):
         idx = self._rand_int(0, len(lst))
         return lst[idx]
 
+    def _rand_color(self):
+        """
+        Generate a random color name (string)
+        """
+
+        return self._rand_elem(COLOR_NAMES)
+
     def _rand_pos(self, xLow, xHigh, yLow, yHigh):
         """
         Generate a random (x,y) position tuple
