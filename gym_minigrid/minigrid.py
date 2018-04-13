@@ -693,7 +693,7 @@ class MiniGridEnv(gym.Env):
         })
 
         # Range of possible rewards
-        self.reward_range = (-1, 1000)
+        self.reward_range = (0, 1)
 
         # Renderer object used to render the whole grid (full-scale)
         self.grid_render = None
@@ -1067,7 +1067,7 @@ class MiniGridEnv(gym.Env):
                 self.agent_pos = fwd_pos
             if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
-                reward = 1000 - self.step_count
+                reward = 1
 
         # Pick up an object
         elif action == self.actions.pickup:

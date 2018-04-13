@@ -20,8 +20,6 @@ class GoToDoorEnv(MiniGridEnv):
             see_through_walls=True
         )
 
-        self.reward_range = (0, 1)
-
     def _gen_grid(self, width, height):
         # Create the grid
         self.grid = Grid(width, height)

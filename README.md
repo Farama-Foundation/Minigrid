@@ -116,10 +116,12 @@ Actions in the basic environment:
 - Toggle (interact with objects)
 - Wait (noop, do nothing)
 
-By default, sparse rewards for reaching a goal square are provided, but you can
-define your own reward function by creating a class derived from MiniGridEnv. Extending
-the environment with new object types or action should be very easy.
-If you wish to do this, you should take a look at the
+By default, sparse rewards are given for reaching a green goal tile. A
+reward of 1 is given for success, and zero for failure. There is also an
+environment-specific time step limit for completing the task.
+You can define your own reward function by creating a class derived
+from `MiniGridEnv`. Extending the environment with new object types or action
+should be very easy. If you wish to do this, you should take a look at the
 [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
 
 ## Included Environments

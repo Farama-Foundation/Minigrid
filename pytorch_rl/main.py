@@ -244,7 +244,7 @@ def main():
             end = time.time()
             total_num_steps = (j + 1) * args.num_processes * args.num_steps
             print(
-                "Updates {}, num timesteps {}, FPS {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
+                "Updates {}, num timesteps {}, FPS {}, mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
                 format(
                     j,
                     total_num_steps,
