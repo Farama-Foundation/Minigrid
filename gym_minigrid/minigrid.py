@@ -561,62 +561,7 @@ class Grid:
 
         return grid
 
-    def process_vis(
-        grid,
-        agent_pos,
-        n_rays = 32,
-        n_steps = 24,
-        a_min = math.pi,
-        a_max = 2 * math.pi
-    ):
-        """
-        Use ray casting to determine the visibility of each grid cell
-        """
-
-        mask = np.zeros(shape=(grid.width, grid.height), dtype=np.bool)
-
-        ang_step = (a_max - a_min) / n_rays
-        dst_step = math.sqrt(grid.width ** 2 + grid.height ** 2) / n_steps
-
-        ax = agent_pos[0] + 0.5
-        ay = agent_pos[1] + 0.5
-
-        for ray_idx in range(0, n_rays):
-            angle = a_min + ang_step * ray_idx
-            dx = dst_step * math.cos(angle)
-            dy = dst_step * math.sin(angle)
-
-            for step_idx in range(0, n_steps):
-                x = ax + (step_idx * dx)
-                y = ay + (step_idx * dy)
-
-                i = math.floor(x)
-                j = math.floor(y)
-
-                # If we're outside of the grid, stop
-                if i < 0 or i >= grid.width or j < 0 or j >= grid.height:
-                    break
-
-                # Mark this cell as visible
-                mask[i, j] = True
-
-                # If we hit the obstructor, stop
-                cell = grid.get(i, j)
-                if cell and not cell.see_behind():
-                    break
-
-        for j in range(0, grid.height):
-            for i in range(0, grid.width):
-                if not mask[i, j]:
-                    grid.set(i, j, None)
-                    #grid.set(i, j, Wall('red'))
-
-        return mask
-
-    def process_vis_prop(
-        grid,
-        agent_pos
-    ):
+    def process_vis(grid, agent_pos):
         mask = np.zeros(shape=(grid.width, grid.height), dtype=np.bool)
 
         mask[agent_pos[0], agent_pos[1]] = True
@@ -650,7 +595,8 @@ class Grid:
             for i in range(0, grid.width):
                 if not mask[i, j]:
                     grid.set(i, j, None)
-                    #grid.set(i, j, Wall('red'))
+
+        return mask
 
 class MiniGridEnv(gym.Env):
     """
@@ -1112,6 +1058,11 @@ class MiniGridEnv(gym.Env):
         for i in range(self.agent_dir + 1):
             grid = grid.rotate_left()
 
+        # Process occluders and visibility
+        # Note that this incurs some performance cost
+        if not self.see_through_walls:
+            grid.process_vis(agent_pos=(3, 6))
+
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position
         # in the agent's partially observable view
@@ -1120,11 +1071,6 @@ class MiniGridEnv(gym.Env):
             grid.set(*agent_pos, self.carrying)
         else:
             grid.set(*agent_pos, None)
-
-        # Process occluders and visibility
-        # Note that this incurs some performance cost
-        if not self.see_through_walls:
-            grid.process_vis_prop(agent_pos=(3, 6))
 
         # Encode the partially observable view into a numpy array
         image = grid.encode()
