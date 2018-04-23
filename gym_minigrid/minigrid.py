@@ -439,20 +439,6 @@ class Grid:
         widthPx = self.width * CELL_PIXELS
         heightPx = self.height * CELL_PIXELS
 
-        """
-        # Draw background (out-of-world) tiles the same colors as walls
-        # so the agent understands these areas are not reachable
-        c = COLORS['grey']
-        r.setLineColor(c[0], c[1], c[2])
-        r.setColor(c[0], c[1], c[2])
-        r.drawPolygon([
-            (0    , heightPx),
-            (widthPx, heightPx),
-            (widthPx,      0),
-            (0    ,      0)
-        ])
-        """
-
         r.push()
 
         # Internally, we draw at the "large" full-grid resolution, but we
@@ -1183,15 +1169,33 @@ class MiniGridEnv(gym.Env):
         ])
         r.pop()
 
-        # Highlight what the agent can see
-        topX, topY, botX, botY = self.get_view_exts()
-        r.fillRect(
-            topX * CELL_PIXELS,
-            topY * CELL_PIXELS,
-            AGENT_VIEW_SIZE * CELL_PIXELS,
-            AGENT_VIEW_SIZE * CELL_PIXELS,
-            200, 200, 200, 75
-        )
+        # Compute which cells are visible to the agent
+        _, vis_mask = self.gen_obs_grid()
+
+        # Compute the absolute coordinates of the bottom-left corner
+        # of the agent's view area
+        f_vec = self.get_dir_vec()
+        r_vec = self.get_right_vec()
+        top_left = self.agent_pos + f_vec * (AGENT_VIEW_SIZE-1) - r_vec * (AGENT_VIEW_SIZE // 2)
+
+        # For each cell in the visibility mask
+        for vis_j in range(0, AGENT_VIEW_SIZE):
+            for vis_i in range(0, AGENT_VIEW_SIZE):
+                # If this cell is not visible, don't highlight it
+                if not vis_mask[vis_i, vis_j]:
+                    continue
+
+                # Compute the world coordinates of this cell
+                abs_i, abs_j = top_left - (f_vec * vis_j) + (r_vec * vis_i)
+
+                # Highlight the cell
+                r.fillRect(
+                    abs_i * CELL_PIXELS,
+                    abs_j * CELL_PIXELS,
+                    CELL_PIXELS,
+                    CELL_PIXELS,
+                    255, 255, 255, 75
+                )
 
         r.endFrame()
 
