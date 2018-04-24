@@ -1049,7 +1049,7 @@ class MiniGridEnv(gym.Env):
         # Process occluders and visibility
         # Note that this incurs some performance cost
         if not self.see_through_walls:
-            vis_mask = grid.process_vis(agent_pos=(3, 6))
+            vis_mask = grid.process_vis(agent_pos=(AGENT_VIEW_SIZE // 2 , AGENT_VIEW_SIZE - 1))
         else:
             vis_mask = np.ones(shape=(grid.width, grid.height), dtype=np.bool)
 
