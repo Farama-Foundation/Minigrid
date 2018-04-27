@@ -152,10 +152,8 @@ class Door(WorldObj):
         return self.is_open
 
     def toggle(self, env, pos):
-        if not self.is_open:
-            self.is_open = True
-            return True
-        return False
+        self.is_open = not self.is_open
+        return True
 
     def render(self, r):
         c = COLORS[self.color]
