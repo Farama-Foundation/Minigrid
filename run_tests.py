@@ -43,6 +43,10 @@ for envName in env_list:
 
         obs, reward, done, info = env.step(action)
 
+        # Validate the agent position
+        assert env.agent_pos[0] < env.grid_size
+        assert env.agent_pos[1] < env.grid_size
+
         # Test observation encode/decode roundtrip
         img = obs['image']
         grid = Grid.decode(img)
