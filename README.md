@@ -16,9 +16,6 @@ Requirements:
 - NumPy
 - PyQT 5 for graphics
 
-This environment has been built at the [MILA](https://mila.quebec/en/) as
-part of the [Baby AI Game](https://github.com/maximecb/baby-ai-game) project.
-
 Please use this bibtex if you want to cite this repository in your publications:
 
 ```
@@ -31,6 +28,8 @@ Please use this bibtex if you want to cite this repository in your publications:
   howpublished = {\url{https://github.com/maximecb/gym-minigrid}},
 }
 ```
+
+This environment has been built as part of work done at the [MILA](https://mila.quebec/en/).
 
 ## Installation
 
