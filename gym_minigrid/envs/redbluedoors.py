@@ -23,8 +23,7 @@ class RedBlueDoorEnv(MiniGridEnv):
         self.grid.wall_rect(self.size//2, 0, self.size, self.size)
 
         # Place the agent in the top-left corner
-        self.start_pos = (self.size, self.size//2)
-        self.start_dir = 0
+        self.place_agent(top=(self.size//2, 0), size=(self.size, self.size))
 
         # Add a red door at a random position in the left wall
         pos = self._rand_int(1, self.size - 1)
@@ -44,7 +43,7 @@ class RedBlueDoorEnv(MiniGridEnv):
         #   - 1 means "red door opened"
         #   - 2 means "red then blue door opened"
         self.resolution_state = 0
-    
+
     def step(self, action):
         red_door_opened_before = self.red_door.is_open
         blue_door_opened_before = self.blue_door.is_open
