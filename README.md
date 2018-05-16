@@ -113,7 +113,7 @@ Actions in the basic environment:
 - Pick up an object
 - Drop the object being carried
 - Toggle (interact with objects)
-- Wait (noop, do nothing)
+- Done (task completed, optional)
 
 By default, sparse rewards are given for reaching a green goal tile. A
 reward of 1 is given for success, and zero for failure. There is also an

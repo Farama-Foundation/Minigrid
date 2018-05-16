@@ -59,7 +59,7 @@ def main():
             action = env.actions.drop
 
         elif keyName == 'CTRL':
-            action = env.actions.wait
+            action = env.actions.done
 
         else:
             print("unknown key %s" % keyName)

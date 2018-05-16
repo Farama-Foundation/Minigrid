@@ -72,8 +72,8 @@ class GoToDoorEnv(MiniGridEnv):
         if action == self.actions.toggle:
             done = True
 
-        # Reward waiting in front of the target door
-        if action == self.actions.wait:
+        # Reward performing done action in front of the target door
+        if action == self.actions.done:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = 1
             done = True

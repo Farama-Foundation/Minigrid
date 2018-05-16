@@ -75,8 +75,8 @@ class GoToObjectEnv(MiniGridEnv):
         if action == self.actions.toggle:
             done = True
 
-        # Reward performing the wait action next to the target object
-        if action == self.actions.wait:
+        # Reward performing the done action next to the target object
+        if action == self.actions.done:
             if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
                 reward = 1
             done = True
