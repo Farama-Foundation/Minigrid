@@ -808,6 +808,23 @@ class MiniGridEnv(gym.Env):
         idx = self._rand_int(0, len(lst))
         return lst[idx]
 
+    def _rand_subset(self, iterable, num_elems):
+        """
+        Sample a random subset of distinct elements of a list
+        """
+
+        lst = list(iterable)
+        assert num_elems <= len(lst)
+
+        out = []
+
+        while len(out) < num_elems:
+            elem = self._rand_elem(lst)
+            lst.remove(elem)
+            out.append(elem)
+
+        return out
+
     def _rand_color(self):
         """
         Generate a random color name (string)
