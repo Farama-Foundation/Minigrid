@@ -60,7 +60,7 @@ class RedBlueDoorEnv(MiniGridEnv):
             self.resolution_state += 1
         elif self.resolution_state == 1 and blue_door_opened:
             self.resolution_state += 1
-            reward = 1
+            reward = self._reward()
             done = True
 
         return obs, reward, done, info

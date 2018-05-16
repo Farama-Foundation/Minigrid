@@ -106,7 +106,7 @@ class PutNearEnv(MiniGridEnv):
         if action == self.actions.drop and preCarrying:
             if self.grid.get(ox, oy) is preCarrying:
                 if abs(ox - tx) <= 1 and abs(oy - ty) <= 1:
-                    reward = 1
+                    reward = self._reward()
             done = True
 
         return obs, reward, done, info

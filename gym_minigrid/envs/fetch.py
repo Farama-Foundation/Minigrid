@@ -16,7 +16,7 @@ class FetchEnv(MiniGridEnv):
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size,
+            max_steps=5*size**2,
             # Set this to True for maximum speed
             see_through_walls=True
         )
@@ -77,7 +77,7 @@ class FetchEnv(MiniGridEnv):
         if self.carrying:
             if self.carrying.color == self.targetColor and \
                self.carrying.type == self.targetType:
-                reward = 1
+                reward = self._reward()
                 done = True
             else:
                 reward = 0

@@ -16,7 +16,7 @@ class GoToObjectEnv(MiniGridEnv):
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size,
+            max_steps=5*size**2,
             # Set this to True for maximum speed
             see_through_walls=True
         )
@@ -78,7 +78,7 @@ class GoToObjectEnv(MiniGridEnv):
         # Reward performing the done action next to the target object
         if action == self.actions.done:
             if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
-                reward = 1
+                reward = self._reward()
             done = True
 
         return obs, reward, done, info

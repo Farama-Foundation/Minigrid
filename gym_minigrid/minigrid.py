@@ -785,6 +785,13 @@ class MiniGridEnv(gym.Env):
     def _gen_grid(self, width, height):
         assert False, "_gen_grid needs to be implemented by each environment"
 
+    def _reward(self):
+        """
+        Compute the reward to be given upon success
+        """
+
+        return 1 - 0.5 * (self.step_count / self.max_steps)
+
     def _rand_int(self, low, high):
         """
         Generate random integer in [low,high[
@@ -1014,7 +1021,7 @@ class MiniGridEnv(gym.Env):
                 self.agent_pos = fwd_pos
             if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
-                reward = 1
+                reward = self._reward()
 
         # Pick up an object
         elif action == self.actions.pickup:

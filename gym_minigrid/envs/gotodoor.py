@@ -15,7 +15,7 @@ class GoToDoorEnv(MiniGridEnv):
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size,
+            max_steps=5*size**2,
             # Set this to True for maximum speed
             see_through_walls=True
         )
@@ -75,7 +75,7 @@ class GoToDoorEnv(MiniGridEnv):
         # Reward performing done action in front of the target door
         if action == self.actions.done:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
-                reward = 1
+                reward = self._reward()
             done = True
 
         return obs, reward, done, info
