@@ -38,12 +38,6 @@ class RedBlueDoorEnv(MiniGridEnv):
         # Generate the mission string
         self.mission = "open the red door then the blue door"
 
-        # Set the resolution state to 0
-        #   - 0 means "no door opened"
-        #   - 1 means "red door opened"
-        #   - 2 means "red then blue door opened"
-        self.resolution_state = 0
-
     def step(self, action):
         red_door_opened_before = self.red_door.is_open
         blue_door_opened_before = self.blue_door.is_open
@@ -53,15 +47,18 @@ class RedBlueDoorEnv(MiniGridEnv):
         red_door_opened_after = self.red_door.is_open
         blue_door_opened_after = self.blue_door.is_open
 
-        red_door_opened = red_door_opened_after and not(red_door_opened_before)
-        blue_door_opened = blue_door_opened_after and not(blue_door_opened_before)
+        if blue_door_opened_after:
+            if red_door_opened_before:
+                reward = self._reward()
+                done = True
+            else:
+                reward = 0
+                done = True
 
-        if self.resolution_state == 0 and red_door_opened:
-            self.resolution_state += 1
-        elif self.resolution_state == 1 and blue_door_opened:
-            self.resolution_state += 1
-            reward = self._reward()
-            done = True
+        elif red_door_opened_after:
+            if blue_door_opened_before:
+                reward = 0
+                done = True
 
         return obs, reward, done, info
 
