@@ -799,6 +799,13 @@ class MiniGridEnv(gym.Env):
 
         return self.np_random.randint(low, high)
 
+    def _rand_float(self, low, high):
+        """
+        Generate random float in [low,high[
+        """
+
+        return self.np_random.uniform(low, high)
+
     def _rand_bool(self):
         """
         Generate random boolean value
