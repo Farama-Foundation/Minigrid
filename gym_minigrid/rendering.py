@@ -10,10 +10,12 @@ class Window(QMainWindow):
     Simple application window to render the environment into
     """
 
-    def __init__(self):
+    def __init__(self, title):
         super().__init__()
 
-        self.setWindowTitle('MiniGrid Gym Environment')
+        if title is None:
+            title = 'MiniGrid Gym Environment'
+        self.setWindowTitle(title)
 
         self.imgLabel = QLabel()
         self.imgLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
@@ -82,7 +84,7 @@ class Window(QMainWindow):
         self.keyDownCb(keyName)
 
 class Renderer:
-    def __init__(self, width, height, ownWindow=False):
+    def __init__(self, width, height, ownWindow=False, title=None):
         self.width = width
         self.height = height
 
@@ -92,7 +94,7 @@ class Renderer:
         self.window = None
         if ownWindow:
             self.app = QApplication([])
-            self.window = Window()
+            self.window = Window(title)
 
     def close(self):
         """
