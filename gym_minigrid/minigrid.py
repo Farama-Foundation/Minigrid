@@ -1160,7 +1160,7 @@ class MiniGridEnv(gym.Env):
 
         return r.getPixmap()
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human', close=False, title=None):
         """
         Render the whole-grid human view
         """
@@ -1174,7 +1174,8 @@ class MiniGridEnv(gym.Env):
             self.grid_render = Renderer(
                 self.grid_size * CELL_PIXELS,
                 self.grid_size * CELL_PIXELS,
-                True if mode == 'human' else False
+                True if mode == 'human' else False,
+                title=title
             )
 
         r = self.grid_render
