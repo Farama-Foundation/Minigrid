@@ -48,8 +48,6 @@ class Window(QMainWindow):
         self.keyDownCb = callback
 
     def keyPressEvent(self, e):
-        if self.keyDownCb == None:
-            return
 
         keyName = None
         if e.key() == Qt.Key_Left:
@@ -79,7 +77,10 @@ class Window(QMainWindow):
 
         if keyName == None:
             return
-        self.keyDownCb(keyName)
+        self.setKeyDownCb(keyName)
+
+    def keyReleaseEvent(self, e):
+        self.setKeyDownCb(None)
 
 class Renderer:
     def __init__(self, width, height, ownWindow=False):
@@ -110,7 +111,6 @@ class Renderer:
 
     def endFrame(self):
         self.painter.end()
-
         if self.window:
             if self.window.closed:
                 self.window = None
