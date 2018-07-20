@@ -777,10 +777,10 @@ class MiniGridEnv(gym.Env):
 
         # Map agent's direction to short string
         AGENT_DIR_TO_IDS = {
-            0: '⏩',
-            1: '⏬',
-            2: '⏪',
-            3: '⏫'
+            0: '⏩ ',
+            1: '⏬ ',
+            2: '⏪ ',
+            3: '⏫ '
         }
 
         array = self.grid.encode()
