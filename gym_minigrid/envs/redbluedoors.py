@@ -11,7 +11,7 @@ class RedBlueDoorEnv(MiniGridEnv):
 
         super().__init__(
             grid_size=2*size,
-            max_steps=20*size*size
+            max_steps=10*size*size
         )
 
     def _gen_grid(self, width, height):
