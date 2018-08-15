@@ -33,24 +33,13 @@ This environment has been built as part of work done at the [MILA](https://mila.
 
 ## Installation
 
-Clone this repository and install the other dependencies with `pip3`:
+Clone this repository and install the dependencies with `pip3`:
 
 ```
 git clone https://github.com/maximecb/gym-minigrid.git
 cd gym-minigrid
 pip3 install -e .
 ```
-
-Optionally, if you wish use the reinforcement learning code included
-under [/pytorch_rl](/pytorch_rl), you should install PyTorch as follows:
-
-```
-# PyTorch
-conda install pytorch torchvision -c pytorch
-```
-
-Note: the pytorch_rl code is a custom fork of [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr),
-which was modified to work with this environment.
 
 ## Basic Usage
 
@@ -66,17 +55,15 @@ The environment being run can be selected with the `--env-name` option, eg:
 ./standalone.py --env-name MiniGrid-Empty-8x8-v0
 ```
 
-Basic reinforcement learning code is provided in the `pytorch_rl` subdirectory.
-You can perform training using the A2C algorithm with:
+## Reinforcement Learning
+
+If you want to train an agent with reinforcement learning, I recommend using the code found in the [pytorch-a2c-ppo](https://github.com/lcswillems/pytorch-a2c-ppo) repository. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
+
+A sample training command is:
 
 ```
-python3 pytorch_rl/main.py --env-name MiniGrid-Empty-6x6-v0 --no-vis --num-processes 48 --algo a2c
-```
-
-You can view the result of training using the `enjoy.py` script:
-
-```
-python3 pytorch_rl/enjoy.py --env-name MiniGrid-Empty-6x6-v0 --load-dir ./trained_models/a2c
+cd pytorch-a2c-ppo
+python3 -m scripts.train --env MiniGrid-Empty-8x8-v0 --algo ppo
 ```
 
 ## Design
