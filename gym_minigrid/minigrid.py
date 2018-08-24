@@ -375,6 +375,8 @@ class Grid:
                     continue
                 if (e.color, e.type) == key:
                     return True
+                if key[0] is None and key[1] == e.type:
+                    return True
         return False
 
     def __eq__(self, other):
