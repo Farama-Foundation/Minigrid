@@ -251,3 +251,14 @@ The agent has to pick up an object which is behind a locked door. The key is
 hidden in another room, and the agent has to explore the environment to find
 it. The mission string does not give the agent any clues as to where the
 key is placed. This environment can be solved without relying on language.
+
+### Blocked unlock pickup environment
+
+Registed configurations:
+- `MiniGrid-BlockedUnlockPickup-v0`
+
+The agent has to pick up a box which is placed in another room, behind a
+locked door. The door is also blocked by a ball which the agent has to move
+before it can unlock the door. Hence, the agent has to learn to move the ball,
+pick up the key, open the door and pick up the object in the other room.
+This environment can be solved without relying on language.
