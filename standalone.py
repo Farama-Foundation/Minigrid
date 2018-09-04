@@ -58,7 +58,7 @@ def main():
         elif keyName == 'PAGE_DOWN':
             action = env.actions.drop
 
-        elif keyName == 'CTRL':
+        elif keyName == 'RETURN':
             action = env.actions.done
 
         else:

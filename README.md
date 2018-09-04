@@ -112,7 +112,7 @@ Actions in the basic environment:
 - Move forward
 - Pick up an object
 - Drop the object being carried
-- Toggle (interact with objects)
+- Toggle (open doors, interact with objects)
 - Done (task completed, optional)
 
 By default, sparse rewards are given for reaching a green goal tile. A
@@ -210,7 +210,7 @@ Registered configurations:
 This environment is a room with four doors, one on each wall. The agent
 receives a textual (mission) string as input, telling it which door to go to,
 (eg: "go to the red door"). It receives a positive reward for performing the
-`wait` action next to the correct door, as indicated in the mission string.
+`done` action next to the correct door, as indicated in the mission string.
 
 ### Put-near environment
 
@@ -236,7 +236,7 @@ memory. The agent, when facing one door, cannot see the door behind him.
 Hence, the agent needs to remember whether or not he has previously opened
 the other door in order to reliably succeed at completing the task.
 
-### Locked Room Environment
+### Locked room environment
 
 Registed configurations:
 - `MiniGrid-LockedRoom-v0`
@@ -246,3 +246,21 @@ a textual mission string as input, telling it which room to go to in order
 to get the key that opens the locked room. It then has to go into the locked
 room in order to reach the final goal. This environment is extremely difficult
 to solve with vanilla reinforcement learning alone.
+
+### Key corridor environment
+
+Registed configurations:
+- `MiniGrid-KeyCorridorS3R1-v0`
+- `MiniGrid-KeyCorridorS3R2-v0`
+- `MiniGrid-KeyCorridorS3R3-v0`
+- `MiniGrid-KeyCorridorS4R3-v0`
+- `MiniGrid-KeyCorridorS5R3-v0`
+- `MiniGrid-KeyCorridorS6R3-v0`
+
+This environment is similar to the locked room environment, but there are
+multiple registered environment configurations of increasing size,
+making it easier to use curriculum learning to train an agent to solve it.
+The agent has to pick up an object which is behind a locked door. The key is
+hidden in another room, and the agent has to explore the environment to find
+it. The mission string does not give the agent any clues as to where the
+key is placed. This environment can be solved without relying on language.
