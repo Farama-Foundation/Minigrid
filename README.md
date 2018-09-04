@@ -5,10 +5,9 @@
 There are other gridworld Gym environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
-external sprites/textures, and it can run at up to 6000 FPS on a quad-core i7
-laptop, which means you can run your experiments faster. Batteries are
-included: a known-working RL implementation is supplied in this repository
-to help you get started.
+external sprites/textures, and it can run at up to 5000 FPS on a Core i7
+laptop, which means you can run your experiments faster. A known-working RL
+implementation can be found [in this repository](https://github.com/lcswillems/pytorch-a2c-ppo).
 
 Requirements:
 - Python 3
@@ -155,7 +154,7 @@ useful to experiment with curiosity or curriculum learning.
 
 Registered configurations:
 - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
-- `MiniGrid-MultiRoom-N6-v0` (six room)
+- `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
 <p align="center">
 <img src="/figures/multi-room.gif" width=416 height=424>
