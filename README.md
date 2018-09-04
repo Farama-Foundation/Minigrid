@@ -10,7 +10,7 @@ laptop, which means you can run your experiments faster. A known-working RL
 implementation can be found [in this repository](https://github.com/lcswillems/pytorch-a2c-ppo).
 
 Requirements:
-- Python 3
+- Python 3.5+
 - OpenAI Gym
 - NumPy
 - PyQT 5 for graphics
