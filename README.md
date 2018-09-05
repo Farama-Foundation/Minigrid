@@ -243,6 +243,15 @@ Registed configurations:
 - `MiniGrid-KeyCorridorS5R3-v0`
 - `MiniGrid-KeyCorridorS6R3-v0`
 
+<p align="center">
+    <img src="figures/KeyCorridorS3R1.png" width="250">
+    <img src="figures/KeyCorridorS3R2.png" width="250">
+    <img src="figures/KeyCorridorS3R3.png" width="250">
+    <img src="figures/KeyCorridorS4R3.png" width="250">
+    <img src="figures/KeyCorridorS5R3.png" width="250">
+    <img src="figures/KeyCorridorS6R3.png" width="250">
+</p>
+
 This environment is similar to the locked room environment, but there are
 multiple registered environment configurations of increasing size,
 making it easier to use curriculum learning to train an agent to solve it.
@@ -256,13 +265,33 @@ key is placed. This environment can be solved without relying on language.
 Registed configurations:
 - `MiniGrid-Unlock-v0`
 
+<p align="center">
+    <img src="figures/Unlock.png" width="200">
+</p>
+
 The agent has to open a locked door. This environment can be solved without
 relying on language.
+
+### Unlock pickup environment
+
+Registed configurations:
+- `MiniGrid-UnlockPickup-v0`
+
+<p align="center">
+    <img src="figures/UnlockPickup.png" width="250">
+</p>
+
+The agent has to pick up a box which is placed in another room, behind a
+locked door. This environment can be solved without relying on language.
 
 ### Blocked unlock pickup environment
 
 Registed configurations:
 - `MiniGrid-BlockedUnlockPickup-v0`
+
+<p align="center">
+    <img src="figures/BlockedUnlockPickup.png" width="250">
+</p>
 
 The agent has to pick up a box which is placed in another room, behind a
 locked door. The door is also blocked by a ball which the agent has to move
@@ -282,6 +311,18 @@ Registered configurations:
 - `MiniGrid-ObstructedMaze-1Q-v0`
 - `MiniGrid-ObstructedMaze-2Q-v0`
 - `MiniGrid-ObstructedMaze-Full-v0`
+
+<p align="center">
+  <img src="figures/ObstructedMaze-1Dl.png" width="250">
+  <img src="figures/ObstructedMaze-1Dlh.png" width="250">
+  <img src="figures/ObstructedMaze-1Dlhb.png" width="250">
+  <img src="figures/ObstructedMaze-2Dl.png" width="100">
+  <img src="figures/ObstructedMaze-2Dlh.png" width="100">
+  <img src="figures/ObstructedMaze-2Dlhb.png" width="100">
+  <img src="figures/ObstructedMaze-1Q.png" width="250">
+  <img src="figures/ObstructedMaze-2Q.png" width="250">
+  <img src="figures/ObstructedMaze-4Q.png" width="250">
+</p>
 
 The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
