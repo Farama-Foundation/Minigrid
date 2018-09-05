@@ -259,6 +259,14 @@ Registed configurations:
 The agent has to open a locked door. This environment can be solved without
 relying on language.
 
+### Unlock pickup environment
+
+Registed configurations:
+- `MiniGrid-UnlockPickup-v0`
+
+The agent has to pick up a box which is placed in another room, behind a
+locked door. This environment can be solved without relying on language.
+
 ### Blocked unlock pickup environment
 
 Registed configurations:
