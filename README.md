@@ -42,16 +42,16 @@ pip3 install -e .
 
 ## Basic Usage
 
-To run the standalone UI application, which allows you to manually control the agent with the arrow keys:
+There is a UI application which allows you to manually control the agent with the arrow keys:
 
 ```
-./standalone.py
+./manual_control.py
 ```
 
 The environment being run can be selected with the `--env-name` option, eg:
 
 ```
-./standalone.py --env-name MiniGrid-Empty-8x8-v0
+./manual_control.py --env-name MiniGrid-Empty-8x8-v0
 ```
 
 ## Reinforcement Learning
