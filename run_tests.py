@@ -21,6 +21,7 @@ for envName in env_list:
 
     # Load the gym environment
     env = gym.make(envName)
+    env.max_steps = min(env.max_steps, 200)
     env.reset()
     env.render('rgb_array')
 
