@@ -243,14 +243,6 @@ Registed configurations:
 - `MiniGrid-KeyCorridorS5R3-v0`
 - `MiniGrid-KeyCorridorS6R3-v0`
 
-This environment is similar to the locked room environment, but there are
-multiple registered environment configurations of increasing size,
-making it easier to use curriculum learning to train an agent to solve it.
-The agent has to pick up an object which is behind a locked door. The key is
-hidden in another room, and the agent has to explore the environment to find
-it. The mission string does not give the agent any clues as to where the
-key is placed. This environment can be solved without relying on language.
-
 <p align="center">
     <img src="figures/KeyCorridorS3R1.png" width="250">
     <img src="figures/KeyCorridorS3R2.png" width="250">
@@ -260,44 +252,52 @@ key is placed. This environment can be solved without relying on language.
     <img src="figures/KeyCorridorS6R3.png" width="250">
 </p>
 
+This environment is similar to the locked room environment, but there are
+multiple registered environment configurations of increasing size,
+making it easier to use curriculum learning to train an agent to solve it.
+The agent has to pick up an object which is behind a locked door. The key is
+hidden in another room, and the agent has to explore the environment to find
+it. The mission string does not give the agent any clues as to where the
+key is placed. This environment can be solved without relying on language.
+
 ### Unlock environment
 
 Registed configurations:
 - `MiniGrid-Unlock-v0`
 
-The agent has to open a locked door. This environment can be solved without
-relying on language.
-
 <p align="center">
     <img src="figures/Unlock.png" width="200">
 </p>
+
+The agent has to open a locked door. This environment can be solved without
+relying on language.
 
 ### Unlock pickup environment
 
 Registed configurations:
 - `MiniGrid-UnlockPickup-v0`
 
-The agent has to pick up a box which is placed in another room, behind a
-locked door. This environment can be solved without relying on language.
-
 <p align="center">
     <img src="figures/UnlockPickup.png" width="250">
 </p>
+
+The agent has to pick up a box which is placed in another room, behind a
+locked door. This environment can be solved without relying on language.
 
 ### Blocked unlock pickup environment
 
 Registed configurations:
 - `MiniGrid-BlockedUnlockPickup-v0`
 
+<p align="center">
+    <img src="figures/BlockedUnlockPickup.png" width="250">
+</p>
+
 The agent has to pick up a box which is placed in another room, behind a
 locked door. The door is also blocked by a ball which the agent has to move
 before it can unlock the door. Hence, the agent has to learn to move the ball,
 pick up the key, open the door and pick up the object in the other room.
 This environment can be solved without relying on language.
-
-<p align="center">
-    <img src="figures/BlockedUnlockPickup.png" width="250">
-</p>
 
 ## Obstructed maze environment
 
@@ -312,10 +312,6 @@ Registered configurations:
 - `MiniGrid-ObstructedMaze-2Q-v0`
 - `MiniGrid-ObstructedMaze-Full-v0`
 
-The agent has to pick up a box which is placed in a corner of a 3x3 maze.
-The doors are locked, the keys are hidden in boxes and doors are obstructed
-by balls. This environment can be solved without relying on language.
-
 <p align="center">
   <img src="figures/ObstructedMaze-1Dl.png" width="250">
   <img src="figures/ObstructedMaze-1Dlh.png" width="250">
@@ -327,3 +323,7 @@ by balls. This environment can be solved without relying on language.
   <img src="figures/ObstructedMaze-2Q.png" width="250">
   <img src="figures/ObstructedMaze-4Q.png" width="250">
 </p>
+
+The agent has to pick up a box which is placed in a corner of a 3x3 maze.
+The doors are locked, the keys are hidden in boxes and doors are obstructed
+by balls. This environment can be solved without relying on language.
