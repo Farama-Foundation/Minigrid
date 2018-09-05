@@ -251,6 +251,14 @@ hidden in another room, and the agent has to explore the environment to find
 it. The mission string does not give the agent any clues as to where the
 key is placed. This environment can be solved without relying on language.
 
+### Unlock environment
+
+Registed configurations:
+- `MiniGrid-Unlock-v0`
+
+The agent has to open a locked door. This environment can be solved without
+relying on language.
+
 ### Blocked unlock pickup environment
 
 Registed configurations:
