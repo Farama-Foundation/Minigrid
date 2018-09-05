@@ -327,3 +327,7 @@ Registered configurations:
 The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
+
+The agent has to pick up a box which is placed in a corner of a 3x3 maze.
+The doors are locked, the keys are hidden in boxes and doors are obstructed
+by balls. This environment can be solved without relying on language.
