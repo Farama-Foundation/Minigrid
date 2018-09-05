@@ -254,7 +254,7 @@ key is placed. This environment can be solved without relying on language.
 ### Unlock environment
 
 Registed configurations:
-- `MiniGrid-BlockedUnlockPickup-v0`
+- `MiniGrid-Unlock-v0`
 
 The agent has to open a locked door. This environment can be solved without
 relying on language.
