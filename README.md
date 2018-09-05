@@ -261,3 +261,20 @@ locked door. The door is also blocked by a ball which the agent has to move
 before it can unlock the door. Hence, the agent has to learn to move the ball,
 pick up the key, open the door and pick up the object in the other room.
 This environment can be solved without relying on language.
+
+## Obstructed maze environment
+
+Registered configurations:
+- `MiniGrid-ObstructedMaze-1Dl-v0`
+- `MiniGrid-ObstructedMaze-1Dlh-v0`
+- `MiniGrid-ObstructedMaze-1Dlhb-v0`
+- `MiniGrid-ObstructedMaze-2Dl-v0`
+- `MiniGrid-ObstructedMaze-2Dlh-v0`
+- `MiniGrid-ObstructedMaze-2Dlhb-v0`
+- `MiniGrid-ObstructedMaze-1Q-v0`
+- `MiniGrid-ObstructedMaze-2Q-v0`
+- `MiniGrid-ObstructedMaze-Full-v0`
+
+The agent has to pick up a box which is placed in a corner of a 3x3 maze.
+The doors are locked, the keys are hidden in boxes and doors are obstructed
+by balls. This environment can be solved without relying on language.
