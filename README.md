@@ -251,6 +251,15 @@ hidden in another room, and the agent has to explore the environment to find
 it. The mission string does not give the agent any clues as to where the
 key is placed. This environment can be solved without relying on language.
 
+<p align="center">
+    <img src="figures/KeyCorridorS3R1.png" width="250">
+    <img src="figures/KeyCorridorS3R2.png" width="250">
+    <img src="figures/KeyCorridorS3R3.png" width="250">
+    <img src="figures/KeyCorridorS4R3.png" width="250">
+    <img src="figures/KeyCorridorS5R3.png" width="250">
+    <img src="figures/KeyCorridorS6R3.png" width="250">
+</p>
+
 ### Unlock environment
 
 Registed configurations:
@@ -259,6 +268,10 @@ Registed configurations:
 The agent has to open a locked door. This environment can be solved without
 relying on language.
 
+<p align="center">
+    <img src="figures/Unlock.png" width="200">
+</p>
+
 ### Unlock pickup environment
 
 Registed configurations:
@@ -266,6 +279,10 @@ Registed configurations:
 
 The agent has to pick up a box which is placed in another room, behind a
 locked door. This environment can be solved without relying on language.
+
+<p align="center">
+    <img src="figures/UnlockPickup.png" width="250">
+</p>
 
 ### Blocked unlock pickup environment
 
@@ -277,6 +294,10 @@ locked door. The door is also blocked by a ball which the agent has to move
 before it can unlock the door. Hence, the agent has to learn to move the ball,
 pick up the key, open the door and pick up the object in the other room.
 This environment can be solved without relying on language.
+
+<p align="center">
+    <img src="figures/BlockedUnlockPickup.png" width="250">
+</p>
 
 ## Obstructed maze environment
 
@@ -294,3 +315,15 @@ Registered configurations:
 The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
+
+<p align="center">
+  <img src="figures/ObstructedMaze-1Dl.png" width="250">
+  <img src="figures/ObstructedMaze-1Dlh.png" width="250">
+  <img src="figures/ObstructedMaze-1Dlhb.png" width="250">
+  <img src="figures/ObstructedMaze-2Dl.png" width="100">
+  <img src="figures/ObstructedMaze-2Dlh.png" width="100">
+  <img src="figures/ObstructedMaze-2Dlhb.png" width="100">
+  <img src="figures/ObstructedMaze-1Q.png" width="250">
+  <img src="figures/ObstructedMaze-2Q.png" width="250">
+  <img src="figures/ObstructedMaze-4Q.png" width="250">
+</p>
