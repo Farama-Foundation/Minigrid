@@ -215,12 +215,30 @@ Registered configurations:
 - `MiniGrid-RedBlueDoors-6x6-v0`
 - `MiniGrid-RedBlueDoors-8x8-v0`
 
+The purpose of this environment is to test memory.
 The agent is randomly placed within a room with one red and one blue door
 facing opposite directions. The agent has to open the red door and then open
-the blue door, in that order. The purpose of this environment is to test
-memory. The agent, when facing one door, cannot see the door behind him.
-Hence, the agent needs to remember whether or not he has previously opened
-the other door in order to reliably succeed at completing the task.
+the blue door, in that order.  The agent, when facing one door, cannot see
+the door behind him. Hence, the agent needs to remember whether or not he has
+previously opened the other door in order to reliably succeed at completing
+the task.
+
+### Memory environment
+
+Registered configurations:
+- `MiniGrid-MemoryS17Random-v0`
+- `MiniGrid-MemoryS13Random-v0`
+- `MiniGrid-MemoryS13-v0`
+- `MiniGrid-MemoryS11-v0`
+- `MiniGrid-MemoryS9-v0`
+- `MiniGrid-MemoryS7-v0`
+
+This environment is a memory test. The agent starts in a small room
+where it sees an object. It then has to go through a narrow hallway
+which ends in a split. At each end of the split there is an object,
+one of which is the same as the object in the starting room. The
+agent has to remember the initial object, and go to the matching
+object at split.
 
 ### Locked room environment
 
