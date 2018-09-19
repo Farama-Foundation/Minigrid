@@ -4,7 +4,6 @@ from enum import IntEnum
 import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
-from gym_minigrid.rendering import *
 
 # Size in pixels of a cell in the full-scale human view
 CELL_PIXELS = 32
@@ -1196,6 +1195,7 @@ class MiniGridEnv(gym.Env):
         """
 
         if self.obs_render == None:
+            from gym_minigrid.rendering import Renderer
             self.obs_render = Renderer(
                 AGENT_VIEW_SIZE * tile_pixels,
                 AGENT_VIEW_SIZE * tile_pixels
@@ -1243,6 +1243,7 @@ class MiniGridEnv(gym.Env):
             return
 
         if self.grid_render is None:
+            from gym_minigrid.rendering import Renderer
             self.grid_render = Renderer(
                 self.grid_size * CELL_PIXELS,
                 self.grid_size * CELL_PIXELS,
