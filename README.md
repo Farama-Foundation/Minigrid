@@ -19,7 +19,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 
 ```
 @misc{gym_minigrid,
-  author = {Maxime Chevalier-Boisvert, Lucas Willems},
+  author = {Chevalier-Boisvert, Maxime and Willems, Lucas},
   title = {Minimalistic Gridworld Environment for OpenAI Gym},
   year = {2018},
   publisher = {GitHub},
