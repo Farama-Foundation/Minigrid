@@ -14,3 +14,4 @@ from gym_minigrid.envs.playground_v0 import *
 from gym_minigrid.envs.redbluedoors import *
 from gym_minigrid.envs.obstructedmaze import *
 from gym_minigrid.envs.memory import *
+from gym_minigrid.envs.walledroom import *
