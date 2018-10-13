@@ -51,7 +51,6 @@ class StateBonus(gym.core.Wrapper):
         self.counts = {}
 
     def step(self, action):
-
         obs, reward, done, info = self.env.step(action)
 
         # Tuple based on which we index the counts
@@ -73,6 +72,41 @@ class StateBonus(gym.core.Wrapper):
         reward += bonus
 
         return obs, reward, done, info
+
+
+class ImgObsWrapper(gym.core.ObservationWrapper):
+    """
+    Use rgb image as the only observation output
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+        self.__dict__.update(vars(env))  # hack to pass values to super wrapper
+
+    def observation(self, obs):
+        return obs['image']
+
+
+class FullyObsWrapper(gym.core.ObservationWrapper):
+    """
+    Fully observable gridworld
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+        self.__dict__.update(vars(env))  # hack to pass values to super wrapper
+        self.observation_space = spaces.Box(
+            low=0,
+            high=255,
+            shape=(self.env.grid_size * 32, self.env.grid_size * 32, 3),  # number of cells
+            dtype='uint8'
+        )
+
+    def observation(self, obs):
+        if self.env.grid_render is None:
+            return np.zeros(shape=self.observation_space.shape)  # dark screen as init state?
+        return self.env.grid_render.getArray()
+
 
 class FlatObsWrapper(gym.core.ObservationWrapper):
     """
