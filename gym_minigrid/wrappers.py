@@ -82,6 +82,7 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
     def __init__(self, env):
         super().__init__(env)
         self.__dict__.update(vars(env))  # hack to pass values to super wrapper
+        self.observation_space = env.observation_space['image']
 
     def observation(self, obs):
         return obs['image']
@@ -105,7 +106,8 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
     def observation(self, obs):
         if self.env.grid_render is None:
             return np.zeros(shape=self.observation_space.shape)  # dark screen as init state?
-        return self.env.grid_render.getArray()
+        obs = self.env.grid_render.getArray()
+        return obs
 
 
 class FlatObsWrapper(gym.core.ObservationWrapper):

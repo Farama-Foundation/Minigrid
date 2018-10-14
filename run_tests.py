@@ -86,3 +86,19 @@ for i in range(0, 500):
     assert agent_sees_goal == goal_visible
     if done:
         env.reset()
+
+#############################################################################
+
+print("testing env wrapper")
+env = gym.make('MiniGrid-FourRooms-v0')
+env = FullyObsWrapper(env)
+
+import matplotlib.pyplot as plt
+
+env.reset()
+renderer = env.render('human')
+action = env.action_space.sample()
+obs, reward, done, info = env.step(action)
+plt.imshow(obs)
+plt.show()
+
