@@ -86,3 +86,6 @@ for i in range(0, 500):
     assert agent_sees_goal == goal_visible
     if done:
         env.reset()
+
+#############################################################################
+
