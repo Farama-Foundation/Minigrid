@@ -107,8 +107,7 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
     def observation(self, obs):
         if self.env.grid_render is None:
             return np.zeros(shape=self.observation_space.shape)  # dark screen as init state?
-        obs = self.env.grid_render.getArray()
-        return obs
+        return self.env.grid_render.getArray()
 
 
 class FlatObsWrapper(gym.core.ObservationWrapper):
