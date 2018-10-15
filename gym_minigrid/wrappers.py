@@ -51,6 +51,7 @@ class StateBonus(gym.core.Wrapper):
         self.counts = {}
 
     def step(self, action):
+
         obs, reward, done, info = self.env.step(action)
 
         # Tuple based on which we index the counts
