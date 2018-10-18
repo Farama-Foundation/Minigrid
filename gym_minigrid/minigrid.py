@@ -1052,7 +1052,7 @@ class MiniGridEnv(gym.Env):
 
         return (topX, topY, botX, botY)
 
-    def field_of_view_coordinates(self, x, y):
+    def relative_coords(self, x, y):
         """
         Check if a grid position belongs to the agent's field of view, and returns the corresponding coordinates
         """
@@ -1064,19 +1064,19 @@ class MiniGridEnv(gym.Env):
 
         return vx, vy
 
-    def is_in_agent_field_of_view(self, x, y):
+    def in_view(self, x, y):
         """
         check if a grid position is visible to the agent
         """
 
-        return self.field_of_view_coordinates(x, y) is not None
+        return self.relative_coords(x, y) is not None
 
     def agent_sees(self, x, y):
         """
         Check if a non-empty grid position is visible to the agent
         """
 
-        coordinates = self.field_of_view_coordinates(x, y)
+        coordinates = self.relative_coords(x, y)
         if coordinates is None:
             return False
         vx, vy = coordinates
