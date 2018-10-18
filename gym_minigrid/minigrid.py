@@ -1076,7 +1076,7 @@ class MiniGridEnv(gym.Env):
         Check if a non-empty grid position is visible to the agent
         """
 
-        coordinates = self.fieldd_of_view_coordinates(x, y)
+        coordinates = self.field_of_view_coordinates(x, y)
         if coordinates is None:
             return False
         vx, vy = coordinates
