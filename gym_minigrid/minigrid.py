@@ -1052,27 +1052,27 @@ class MiniGridEnv(gym.Env):
 
         return (topX, topY, botX, botY)
 
-    def is_in_agent_field_of_view(self, x, y):
+    def field_of_view_coordinates(self, x, y):
         """
-        Check if a grid position belongs to the agent's field of view
+        Check if a grid position belongs to the agent's field of view, and returns the corresponding coordinates
         """
 
         vx, vy = self.get_view_coords(x, y)
 
         if vx < 0 or vy < 0 or vx >= AGENT_VIEW_SIZE or vy >= AGENT_VIEW_SIZE:
-            return False
+            return None
 
-        return True
+        return vx, vy
 
     def agent_sees(self, x, y):
         """
         Check if a non-empty grid position is visible to the agent
         """
 
-        vx, vy = self.get_view_coords(x, y)
-
-        if not self.is_in_agent_field_of_view(x, y):
+        coordinates =  self.firled_of_view_coordinates(x, y)
+        if coordinates is None:
             return False
+        vx, vy = coordinates
 
         obs = self.gen_obs()
         obs_grid = Grid.decode(obs['image'])
