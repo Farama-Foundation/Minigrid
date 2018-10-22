@@ -19,6 +19,7 @@ class ActionBonus(gym.core.Wrapper):
         self.counts = {}
 
     def step(self, action):
+
         obs, reward, done, info = self.env.step(action)
 
         env = self.unwrapped
@@ -50,6 +51,7 @@ class StateBonus(gym.core.Wrapper):
         self.counts = {}
 
     def step(self, action):
+
         obs, reward, done, info = self.env.step(action)
 
         # Tuple based on which we index the counts
@@ -104,7 +106,7 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
 
     def observation(self, obs):
         full_grid = self.env.grid.encode()
-        full_grid[self.env.agent_pos[0]][self.env.agent_pos[1]] = np.array([self.env.grid_size, self.env.agent_dir, 0])
+        full_grid[self.env.agent_pos[0]][self.env.agent_pos[1]] = np.append(self.env.agent_pos,self.env.agent_dir)
         return full_grid
 
 
