@@ -163,7 +163,7 @@ Registered configurations:
 This environment has a series of connected rooms with doors that must be
 opened in order to get to the next room. The final room has the green goal
 square the agent must get to. This environment is extremely difficult to
-solve using classical RL. However, by gradually increasing the number of
+solve using RL alone. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
 
 ### Fetch environment
