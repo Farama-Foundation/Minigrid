@@ -48,7 +48,8 @@ OBJECT_TO_IDX = {
     'key'           : 5,
     'ball'          : 6,
     'box'           : 7,
-    'goal'          : 8
+    'goal'          : 8,
+    'lava'          : 9
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -150,6 +151,51 @@ class Floor(WorldObj):
             (CELL_PIXELS, CELL_PIXELS),
             (CELL_PIXELS,           1),
             (1          ,           1)
+        ])
+
+class Lava(WorldObj):
+    def __init__(self):
+        super().__init__('lava', 'red')
+
+    def can_overlap(self):
+        return True
+
+    def render(self, r):
+        orange = 255, 128, 0
+        r.setLineColor(*orange)
+        r.setColor(*orange)
+        r.drawPolygon([
+            (0          , CELL_PIXELS),
+            (CELL_PIXELS, CELL_PIXELS),
+            (CELL_PIXELS, 0),
+            (0          , 0)
+        ])
+
+        # drawing the waves
+        r.setLineColor(0, 0, 0)
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .3 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .4 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .3 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .4 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .3 * CELL_PIXELS),
+        ])
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .5 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .6 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .5 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .6 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .5 * CELL_PIXELS),
+        ])
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .7 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .8 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .7 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .8 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .7 * CELL_PIXELS),
         ])
 
 class Wall(WorldObj):
@@ -571,6 +617,8 @@ class Grid:
                     v = LockedDoor(color, is_open)
                 elif objType == 'goal':
                     v = Goal()
+                elif objType == 'lava':
+                    v = Lava()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
@@ -1117,6 +1165,8 @@ class MiniGridEnv(gym.Env):
             if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
                 reward = self._reward()
+            if fwd_cell != None and fwd_cell.type == 'lava':
+                done = True
 
         # Pick up an object
         elif action == self.actions.pickup:
