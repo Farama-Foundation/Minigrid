@@ -353,10 +353,10 @@ by balls. This environment can be solved without relying on language.
 ## Lava crossing environment
 
 Registered configurations:
-- `MiniGrid-LavaCrossing-S9N1-v0`
-- `MiniGrid-LavaCrossing-S9N2-v0`
-- `MiniGrid-LavaCrossing-S9N3-v0`
-- `MiniGrid-LavaCrossing-S11N5-v0`
+- `MiniGrid-LavaCrossingS9N1-v0`
+- `MiniGrid-LavaCrossingS9N2-v0`
+- `MiniGrid-LavaCrossingS9N3-v0`
+- `MiniGrid-LavaCrossingS11N5-v0`
 
 <p align="center">
   <img src="figures/LavaCrossingS9N1.png" width="200">
