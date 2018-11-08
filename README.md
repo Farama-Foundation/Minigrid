@@ -89,7 +89,7 @@ Structure of the world:
   - Cells that do not contain an object have the value `None`
 - Each object has an associated discrete color (string)
 - Each object has an associated type (string)
-  - Provided object types are: wall, floor, door, locked_doors, key, ball, box and goal
+  - Provided object types are: wall, floor, lava, door, locked_door, key, ball, box and goal
 - The agent can pick up and carry exactly one object (eg: ball or key)
 
 Actions in the basic environment:
@@ -369,4 +369,5 @@ The agent has to reach the green goal square on the other corner of the room
 while avoiding rivers of deadly lava which terminate the episode in failure.
 Each lava stream runs across the room either horizontally or vertically, and
 has a single crossing point which can be safely used;  Luckily, a path to the
-goal is guaranteed to exist.
+goal is guaranteed to exist. This environment is useful for studying safety and
+safe exploration.
