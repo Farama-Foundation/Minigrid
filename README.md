@@ -349,3 +349,24 @@ by balls. This environment can be solved without relying on language.
 The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
+
+## Lava crossing environment
+
+Registered configurations:
+- `MiniGrid-LavaCrossing-S9N1-v0`
+- `MiniGrid-LavaCrossing-S9N2-v0`
+- `MiniGrid-LavaCrossing-S9N3-v0`
+- `MiniGrid-LavaCrossing-S11N5-v0`
+
+<p align="center">
+  <img src="figures/LavaCrossingS9N1.png" width="200">
+  <img src="figures/LavaCrossingS9N2.png" width="200">
+  <img src="figures/LavaCrossingS9N3.png" width="200">
+  <img src="figures/LavaCrossingS11N5.png" width="250">
+</p>
+
+The agent has to reach the green goal square on the other corner of the room
+while avoiding rivers of deadly lava which terminate the episode in failure.
+Each lava stream runs across the room either horizontally or vertically, and
+has a single crossing point which can be safely used;  Luckily, a path to the
+goal is guaranteed to exist.

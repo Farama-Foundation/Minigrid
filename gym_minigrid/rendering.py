@@ -176,5 +176,10 @@ class Renderer:
         points = map(lambda p: QPoint(p[0], p[1]), points)
         self.painter.drawPolygon(QPolygon(points))
 
+    def drawPolyline(self, points):
+        """Takes a list of points (tuples) as input"""
+        points = map(lambda p: QPoint(p[0], p[1]), points)
+        self.painter.drawPolyline(QPolygon(points))
+
     def fillRect(self, x, y, width, height, r, g, b, a=255):
         self.painter.fillRect(QRect(x, y, width, height), QColor(r, g, b, a))
