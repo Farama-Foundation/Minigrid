@@ -63,11 +63,11 @@ class LavaCrossingEnv(MiniGridEnv):
         for direction in path:
             if direction is h:
                 i = limits_v[room_i + 1]
-                j = np.random.choice(
+                j = self.np_random.choice(
                     range(limits_h[room_j] + 1, limits_h[room_j + 1]))
                 room_i += 1
             elif direction is v:
-                i = np.random.choice(
+                i = self.np_random.choice(
                     range(limits_v[room_i] + 1, limits_v[room_i + 1]))
                 j = limits_h[room_j + 1]
                 room_j += 1
