@@ -7,7 +7,7 @@ designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5000 FPS on a Core i7
 laptop, which means you can run your experiments faster. A known-working RL
-implementation can be found [in this repository](https://github.com/lcswillems/pytorch-a2c-ppo).
+implementation can be found [in this repository](https://github.com/lcswillems/torch-rl).
 
 Requirements:
 - Python 3.5+
@@ -56,12 +56,12 @@ The environment being run can be selected with the `--env-name` option, eg:
 
 ## Reinforcement Learning
 
-If you want to train an agent with reinforcement learning, I recommend using the code found in the [pytorch-a2c-ppo](https://github.com/lcswillems/pytorch-a2c-ppo) repository. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
+If you want to train an agent with reinforcement learning, I recommend using the code found in the [torch_rl](https://github.com/lcswillems/torch-rl) repository. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
 
 A sample training command is:
 
 ```
-cd pytorch-a2c-ppo
+cd torch_rl
 python3 -m scripts.train --env MiniGrid-Empty-8x8-v0 --algo ppo
 ```
 
