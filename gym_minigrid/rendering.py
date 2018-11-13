@@ -2,7 +2,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QColor, QPolygon
 from PyQt5.QtCore import QPoint, QSize, QRect
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTextEdit
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel, QFrame
 
 class Window(QMainWindow):
@@ -15,19 +15,30 @@ class Window(QMainWindow):
 
         self.setWindowTitle('MiniGrid Gym Environment')
 
+        # Image label to display the rendering
         self.imgLabel = QLabel()
         self.imgLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
 
-        # Arrange widgets horizontally
+        # Text box for the mission
+        self.missionBox = QTextEdit()
+        self.missionBox.setReadOnly(True)
+        self.missionBox.setMinimumSize(400, 100)
+
+        # Center the image
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(self.imgLabel)
         hbox.addStretch(1)
 
+        # Arrange widgets vertically
+        vbox = QVBoxLayout()
+        vbox.addLayout(hbox)
+        vbox.addWidget(self.missionBox)
+
         # Create a main widget for the window
         mainWidget = QWidget(self)
         self.setCentralWidget(mainWidget)
-        mainWidget.setLayout(hbox)
+        mainWidget.setLayout(vbox)
 
         # Show the application window
         self.show()
@@ -43,6 +54,9 @@ class Window(QMainWindow):
 
     def setPixmap(self, pixmap):
         self.imgLabel.setPixmap(pixmap)
+
+    def setText(self, text):
+        self.missionBox.setPlainText(text)
 
     def setKeyDownCb(self, callback):
         self.keyDownCb = callback

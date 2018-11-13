@@ -1321,6 +1321,9 @@ class MiniGridEnv(gym.Env):
 
         r = self.grid_render
 
+        if r.window:
+            r.window.setText(self.mission)
+
         r.beginFrame()
 
         # Render the whole grid
