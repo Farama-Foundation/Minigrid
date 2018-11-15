@@ -469,12 +469,12 @@ class Grid:
         Rotate the grid to the left (counter-clockwise)
         """
 
-        grid = Grid(self.width, self.height)
+        grid = Grid(self.height, self.width)
 
-        for j in range(0, self.height):
-            for i in range(0, self.width):
-                v = self.get(self.width - 1 - j, i)
-                grid.set(i, j, v)
+        for i in range(self.width):
+            for j in range(self.height):
+                v = self.get(i, j)
+                grid.set(j, grid.height - 1 - i, v)
 
         return grid
 
