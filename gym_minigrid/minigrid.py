@@ -631,7 +631,7 @@ class Grid:
 
         mask[agent_pos[0], agent_pos[1]] = True
 
-        for j in reversed(range(1, grid.height)):
+        for j in reversed(range(0, grid.height)):
             for i in range(0, grid.width-1):
                 if not mask[i, j]:
                     continue
@@ -641,8 +641,9 @@ class Grid:
                     continue
 
                 mask[i+1, j] = True
-                mask[i+1, j-1] = True
-                mask[i, j-1] = True
+                if j > 0:
+                    mask[i+1, j-1] = True
+                    mask[i, j-1] = True
 
             for i in reversed(range(1, grid.width)):
                 if not mask[i, j]:
@@ -652,9 +653,10 @@ class Grid:
                 if cell and not cell.see_behind():
                     continue
 
-                mask[i-1, j-1] = True
                 mask[i-1, j] = True
-                mask[i, j-1] = True
+                if j > 0:
+                    mask[i-1, j-1] = True
+                    mask[i, j-1] = True
 
         for j in range(0, grid.height):
             for i in range(0, grid.width):
