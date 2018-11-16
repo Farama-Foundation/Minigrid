@@ -64,6 +64,12 @@ for envName in env_list:
 
         env.render('rgb_array')
 
+    # Test the fully observable wrapper
+    env = FullyObsWrapper(env)
+    env.reset()
+    obs, _, _, _ = env.step(0)
+    assert obs.shape == env.observation_space.shape
+
     env.close()
 
 ##############################################################################
@@ -88,4 +94,3 @@ for i in range(0, 500):
         env.reset()
 
 #############################################################################
-
