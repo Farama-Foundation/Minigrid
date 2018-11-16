@@ -40,16 +40,17 @@ IDX_TO_COLOR = dict(zip(COLOR_TO_IDX.values(), COLOR_TO_IDX.keys()))
 
 # Map of object type to integers
 OBJECT_TO_IDX = {
-    'empty'         : 0,
-    'wall'          : 1,
-    'floor'         : 2,
-    'door'          : 3,
-    'locked_door'   : 4,
-    'key'           : 5,
-    'ball'          : 6,
-    'box'           : 7,
-    'goal'          : 8,
-    'lava'          : 9
+    'unseen'        : 0,
+    'empty'         : 1,
+    'wall'          : 2,
+    'floor'         : 3,
+    'door'          : 4,
+    'locked_door'   : 5,
+    'key'           : 6,
+    'ball'          : 7,
+    'box'           : 8,
+    'goal'          : 9,
+    'lava'          : 10
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -551,55 +552,51 @@ class Grid:
 
         r.pop()
 
-    def encode(self):
+    def encode(self, vis_mask=None):
         """
         Produce a compact numpy encoding of the grid
         """
+        if vis_mask is None:
+            vis_mask = np.ones((self.width, self.height), dtype=bool)
 
-        codeSize = self.width * self.height * 3
+        array = np.zeros((self.width, self.height, 3), dtype='uint8')
+        for i in range(self.width):
+            for j in range(self.height):
+                if vis_mask[i, j]:
+                    v = self.get(i, j)
 
-        array = np.zeros(shape=(self.width, self.height, 3), dtype='uint8')
-
-        for j in range(0, self.height):
-            for i in range(0, self.width):
-
-                v = self.get(i, j)
-
-                if v == None:
-                    continue
-
-                array[i, j, 0] = OBJECT_TO_IDX[v.type]
-                array[i, j, 1] = COLOR_TO_IDX[v.color]
-
-                if hasattr(v, 'is_open') and v.is_open:
-                    array[i, j, 2] = 1
+                    if v is None:
+                        array[i, j, 0] = OBJECT_TO_IDX['empty']
+                        array[i, j, 1] = 0
+                        array[i, j, 2] = 0
+                    else:
+                        array[i, j, 0] = OBJECT_TO_IDX[v.type]
+                        array[i, j, 1] = COLOR_TO_IDX[v.color]
+                        array[i, j, 2] = hasattr(v, 'is_open') and v.is_open
 
         return array
 
+    @staticmethod
     def decode(array):
         """
         Decode an array grid encoding back into a grid
         """
 
-        width = array.shape[0]
-        height = array.shape[1]
-        assert array.shape[2] == 3
+        width, height, channels = array.shape
+        assert channels == 3
 
         grid = Grid(width, height)
+        for i in range(width):
+            for j in range(height):
+                typeIdx, colorIdx, openIdx = array[i, j]
 
-        for j in range(0, height):
-            for i in range(0, width):
-
-                typeIdx  = array[i, j, 0]
-                colorIdx = array[i, j, 1]
-                openIdx  = array[i, j, 2]
-
-                if typeIdx == 0:
+                if typeIdx == OBJECT_TO_IDX['unseen'] or \
+                        typeIdx == OBJECT_TO_IDX['empty']:
                     continue
 
                 objType = IDX_TO_OBJECT[typeIdx]
                 color = IDX_TO_COLOR[colorIdx]
-                is_open = True if openIdx == 1 else 0
+                is_open = openIdx == 1
 
                 if objType == 'wall':
                     v = Wall(color)
@@ -1244,7 +1241,7 @@ class MiniGridEnv(gym.Env):
         grid, vis_mask = self.gen_obs_grid()
 
         # Encode the partially observable view into a numpy array
-        image = grid.encode()
+        image = grid.encode(vis_mask)
 
         assert hasattr(self, 'mission'), "environments must define a textual mission string"
 
