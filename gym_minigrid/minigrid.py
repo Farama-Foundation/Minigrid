@@ -800,17 +800,14 @@ class MiniGridEnv(gym.Env):
 
         # Map of object id to short string
         OBJECT_IDX_TO_IDS = {
-            0: 'U',
-            1: ' ',
-            2: 'W',
-            3: 'F',
-            4: 'D',
-            5: 'L',
-            6: 'K',
-            7: 'B',
-            8: 'X',
-            9: 'G',
-            10: 'L'
+            0: ' ',
+            1: 'W',
+            2: 'D',
+            3: 'L',
+            4: 'K',
+            5: 'B',
+            6: 'X',
+            7: 'G'
         }
 
         # Short string for opened door
