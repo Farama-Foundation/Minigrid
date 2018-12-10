@@ -7,7 +7,7 @@ designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5000 FPS on a Core i7
 laptop, which means you can run your experiments faster. A known-working RL
-implementation can be found [in this repository](https://github.com/lcswillems/pytorch-a2c-ppo).
+implementation can be found [in this repository](https://github.com/lcswillems/torch-rl).
 
 Requirements:
 - Python 3.5+
@@ -56,12 +56,12 @@ The environment being run can be selected with the `--env-name` option, eg:
 
 ## Reinforcement Learning
 
-If you want to train an agent with reinforcement learning, I recommend using the code found in the [pytorch-a2c-ppo](https://github.com/lcswillems/pytorch-a2c-ppo) repository. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
+If you want to train an agent with reinforcement learning, I recommend using the code found in the [torch-rl](https://github.com/lcswillems/torch-rl) repository. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
 
 A sample training command is:
 
 ```
-cd pytorch-a2c-ppo
+cd torch-rl
 python3 -m scripts.train --env MiniGrid-Empty-8x8-v0 --algo ppo
 ```
 
@@ -89,7 +89,7 @@ Structure of the world:
   - Cells that do not contain an object have the value `None`
 - Each object has an associated discrete color (string)
 - Each object has an associated type (string)
-  - Provided object types are: wall, floor, door, locked_doors, key, ball, box and goal
+  - Provided object types are: wall, floor, lava, door, locked_door, key, ball, box and goal
 - The agent can pick up and carry exactly one object (eg: ball or key)
 
 Actions in the basic environment:
@@ -163,7 +163,7 @@ Registered configurations:
 This environment has a series of connected rooms with doors that must be
 opened in order to get to the next room. The final room has the green goal
 square the agent must get to. This environment is extremely difficult to
-solve using classical RL. However, by gradually increasing the number of
+solve using RL alone. However, by gradually increasing the number of
 rooms and building a curriculum, the environment can be solved.
 
 ### Fetch environment
@@ -349,3 +349,25 @@ by balls. This environment can be solved without relying on language.
 The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
+
+## Lava crossing environment
+
+Registered configurations:
+- `MiniGrid-LavaCrossingS9N1-v0`
+- `MiniGrid-LavaCrossingS9N2-v0`
+- `MiniGrid-LavaCrossingS9N3-v0`
+- `MiniGrid-LavaCrossingS11N5-v0`
+
+<p align="center">
+  <img src="figures/LavaCrossingS9N1.png" width="200">
+  <img src="figures/LavaCrossingS9N2.png" width="200">
+  <img src="figures/LavaCrossingS9N3.png" width="200">
+  <img src="figures/LavaCrossingS11N5.png" width="250">
+</p>
+
+The agent has to reach the green goal square on the other corner of the room
+while avoiding rivers of deadly lava which terminate the episode in failure.
+Each lava stream runs across the room either horizontally or vertically, and
+has a single crossing point which can be safely used;  Luckily, a path to the
+goal is guaranteed to exist. This environment is useful for studying safety and
+safe exploration.

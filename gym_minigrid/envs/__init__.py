@@ -15,3 +15,4 @@ from gym_minigrid.envs.redbluedoors import *
 from gym_minigrid.envs.obstructedmaze import *
 from gym_minigrid.envs.memory import *
 from gym_minigrid.envs.fourrooms import *
+from gym_minigrid.envs.lavacrossing import *

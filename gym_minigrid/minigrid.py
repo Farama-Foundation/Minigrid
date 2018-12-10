@@ -40,15 +40,17 @@ IDX_TO_COLOR = dict(zip(COLOR_TO_IDX.values(), COLOR_TO_IDX.keys()))
 
 # Map of object type to integers
 OBJECT_TO_IDX = {
-    'empty'         : 0,
-    'wall'          : 1,
-    'floor'         : 2,
-    'door'          : 3,
-    'locked_door'   : 4,
-    'key'           : 5,
-    'ball'          : 6,
-    'box'           : 7,
-    'goal'          : 8
+    'unseen'        : 0,
+    'empty'         : 1,
+    'wall'          : 2,
+    'floor'         : 3,
+    'door'          : 4,
+    'locked_door'   : 5,
+    'key'           : 6,
+    'ball'          : 7,
+    'box'           : 8,
+    'goal'          : 9,
+    'lava'          : 10
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -150,6 +152,51 @@ class Floor(WorldObj):
             (CELL_PIXELS, CELL_PIXELS),
             (CELL_PIXELS,           1),
             (1          ,           1)
+        ])
+
+class Lava(WorldObj):
+    def __init__(self):
+        super().__init__('lava', 'red')
+
+    def can_overlap(self):
+        return True
+
+    def render(self, r):
+        orange = 255, 128, 0
+        r.setLineColor(*orange)
+        r.setColor(*orange)
+        r.drawPolygon([
+            (0          , CELL_PIXELS),
+            (CELL_PIXELS, CELL_PIXELS),
+            (CELL_PIXELS, 0),
+            (0          , 0)
+        ])
+
+        # drawing the waves
+        r.setLineColor(0, 0, 0)
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .3 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .4 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .3 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .4 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .3 * CELL_PIXELS),
+        ])
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .5 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .6 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .5 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .6 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .5 * CELL_PIXELS),
+        ])
+
+        r.drawPolyline([
+            (.1 * CELL_PIXELS, .7 * CELL_PIXELS),
+            (.3 * CELL_PIXELS, .8 * CELL_PIXELS),
+            (.5 * CELL_PIXELS, .7 * CELL_PIXELS),
+            (.7 * CELL_PIXELS, .8 * CELL_PIXELS),
+            (.9 * CELL_PIXELS, .7 * CELL_PIXELS),
         ])
 
 class Wall(WorldObj):
@@ -423,12 +470,12 @@ class Grid:
         Rotate the grid to the left (counter-clockwise)
         """
 
-        grid = Grid(self.width, self.height)
+        grid = Grid(self.height, self.width)
 
-        for j in range(0, self.height):
-            for i in range(0, self.width):
-                v = self.get(self.width - 1 - j, i)
-                grid.set(i, j, v)
+        for i in range(self.width):
+            for j in range(self.height):
+                v = self.get(i, j)
+                grid.set(j, grid.height - 1 - i, v)
 
         return grid
 
@@ -505,55 +552,51 @@ class Grid:
 
         r.pop()
 
-    def encode(self):
+    def encode(self, vis_mask=None):
         """
         Produce a compact numpy encoding of the grid
         """
+        if vis_mask is None:
+            vis_mask = np.ones((self.width, self.height), dtype=bool)
 
-        codeSize = self.width * self.height * 3
+        array = np.zeros((self.width, self.height, 3), dtype='uint8')
+        for i in range(self.width):
+            for j in range(self.height):
+                if vis_mask[i, j]:
+                    v = self.get(i, j)
 
-        array = np.zeros(shape=(self.width, self.height, 3), dtype='uint8')
-
-        for j in range(0, self.height):
-            for i in range(0, self.width):
-
-                v = self.get(i, j)
-
-                if v == None:
-                    continue
-
-                array[i, j, 0] = OBJECT_TO_IDX[v.type]
-                array[i, j, 1] = COLOR_TO_IDX[v.color]
-
-                if hasattr(v, 'is_open') and v.is_open:
-                    array[i, j, 2] = 1
+                    if v is None:
+                        array[i, j, 0] = OBJECT_TO_IDX['empty']
+                        array[i, j, 1] = 0
+                        array[i, j, 2] = 0
+                    else:
+                        array[i, j, 0] = OBJECT_TO_IDX[v.type]
+                        array[i, j, 1] = COLOR_TO_IDX[v.color]
+                        array[i, j, 2] = hasattr(v, 'is_open') and v.is_open
 
         return array
 
+    @staticmethod
     def decode(array):
         """
         Decode an array grid encoding back into a grid
         """
 
-        width = array.shape[0]
-        height = array.shape[1]
-        assert array.shape[2] == 3
+        width, height, channels = array.shape
+        assert channels == 3
 
         grid = Grid(width, height)
+        for i in range(width):
+            for j in range(height):
+                typeIdx, colorIdx, openIdx = array[i, j]
 
-        for j in range(0, height):
-            for i in range(0, width):
-
-                typeIdx  = array[i, j, 0]
-                colorIdx = array[i, j, 1]
-                openIdx  = array[i, j, 2]
-
-                if typeIdx == 0:
+                if typeIdx == OBJECT_TO_IDX['unseen'] or \
+                        typeIdx == OBJECT_TO_IDX['empty']:
                     continue
 
                 objType = IDX_TO_OBJECT[typeIdx]
                 color = IDX_TO_COLOR[colorIdx]
-                is_open = True if openIdx == 1 else 0
+                is_open = openIdx == 1
 
                 if objType == 'wall':
                     v = Wall(color)
@@ -571,6 +614,8 @@ class Grid:
                     v = LockedDoor(color, is_open)
                 elif objType == 'goal':
                     v = Goal()
+                elif objType == 'lava':
+                    v = Lava()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
@@ -583,7 +628,7 @@ class Grid:
 
         mask[agent_pos[0], agent_pos[1]] = True
 
-        for j in reversed(range(1, grid.height)):
+        for j in reversed(range(0, grid.height)):
             for i in range(0, grid.width-1):
                 if not mask[i, j]:
                     continue
@@ -593,8 +638,9 @@ class Grid:
                     continue
 
                 mask[i+1, j] = True
-                mask[i+1, j-1] = True
-                mask[i, j-1] = True
+                if j > 0:
+                    mask[i+1, j-1] = True
+                    mask[i, j-1] = True
 
             for i in reversed(range(1, grid.width)):
                 if not mask[i, j]:
@@ -604,9 +650,10 @@ class Grid:
                 if cell and not cell.see_behind():
                     continue
 
-                mask[i-1, j-1] = True
                 mask[i-1, j] = True
-                mask[i, j-1] = True
+                if j > 0:
+                    mask[i-1, j-1] = True
+                    mask[i, j-1] = True
 
         for j in range(0, grid.height):
             for i in range(0, grid.width):
@@ -1117,6 +1164,8 @@ class MiniGridEnv(gym.Env):
             if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
                 reward = self._reward()
+            if fwd_cell != None and fwd_cell.type == 'lava':
+                done = True
 
         # Pick up an object
         elif action == self.actions.pickup:
@@ -1192,7 +1241,7 @@ class MiniGridEnv(gym.Env):
         grid, vis_mask = self.gen_obs_grid()
 
         # Encode the partially observable view into a numpy array
-        image = grid.encode()
+        image = grid.encode(vis_mask)
 
         assert hasattr(self, 'mission'), "environments must define a textual mission string"
 
@@ -1270,6 +1319,9 @@ class MiniGridEnv(gym.Env):
             )
 
         r = self.grid_render
+
+        if r.window:
+            r.window.setText(self.mission)
 
         r.beginFrame()
 

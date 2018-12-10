@@ -4,7 +4,7 @@ import random
 import numpy as np
 import gym
 from gym_minigrid.register import env_list
-from gym_minigrid.minigrid import Grid
+from gym_minigrid.minigrid import Grid, OBJECT_TO_IDX
 
 # Test specifically importing a specific environment
 from gym_minigrid.envs import DoorKeyEnv
@@ -50,8 +50,8 @@ for envName in env_list:
 
         # Test observation encode/decode roundtrip
         img = obs['image']
-        grid = Grid.decode(img)
-        img2 = grid.encode()
+        vis_mask = img[:, :, 0] != OBJECT_TO_IDX['unseen']  # hackish
+        img2 = Grid.decode(img).encode(vis_mask=vis_mask)
         assert np.array_equal(img, img2)
 
         # Check that the reward is within the specified range
@@ -63,6 +63,12 @@ for envName in env_list:
             env.reset()
 
         env.render('rgb_array')
+
+    # Test the fully observable wrapper
+    env = FullyObsWrapper(env)
+    env.reset()
+    obs, _, _, _ = env.step(0)
+    assert obs.shape == env.observation_space.shape
 
     env.close()
 
@@ -88,4 +94,3 @@ for i in range(0, 500):
         env.reset()
 
 #############################################################################
-
