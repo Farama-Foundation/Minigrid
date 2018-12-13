@@ -556,8 +556,6 @@ class Grid:
         Produce a compact numpy encoding of the grid
         """
 
-        codeSize = self.width * self.height * 3
-
         array = np.zeros(shape=(self.width, self.height, 3), dtype='uint8')
 
         for j in range(0, self.height):
