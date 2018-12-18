@@ -54,6 +54,9 @@ for envName in env_list:
         img2 = Grid.decode(img).encode(vis_mask=vis_mask)
         assert np.array_equal(img, img2)
 
+        # Test the env to string function
+        str(env)
+
         # Check that the reward is within the specified range
         assert reward >= env.reward_range[0], reward
         assert reward <= env.reward_range[1], reward
