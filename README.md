@@ -89,8 +89,9 @@ Structure of the world:
   - Cells that do not contain an object have the value `None`
 - Each object has an associated discrete color (string)
 - Each object has an associated type (string)
-  - Provided object types are: wall, floor, lava, door, locked_door, key, ball, box and goal
+  - Provided object types are: wall, floor, lava, door, key, ball, box and goal
 - The agent can pick up and carry exactly one object (eg: ball or key)
+- To open a locked door, the agent has to be carrying a key matching the door's color
 
 Actions in the basic environment:
 - Turn left

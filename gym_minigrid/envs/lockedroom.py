@@ -93,7 +93,7 @@ class LockedRoom(MiniGridEnv):
             colors.remove(color)
             room.color = color
             if room.locked:
-                self.grid.set(*room.doorPos, LockedDoor(color))
+                self.grid.set(*room.doorPos, Door(color, is_locked=True))
             else:
                 self.grid.set(*room.doorPos, Door(color))
 

@@ -45,12 +45,11 @@ OBJECT_TO_IDX = {
     'wall'          : 2,
     'floor'         : 3,
     'door'          : 4,
-    'locked_door'   : 5,
-    'key'           : 6,
-    'ball'          : 7,
-    'box'           : 8,
-    'goal'          : 9,
-    'lava'          : 10
+    'key'           : 5,
+    'ball'          : 6,
+    'box'           : 7,
+    'goal'          : 8,
+    'lava'          : 9
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -216,9 +215,10 @@ class Wall(WorldObj):
         ])
 
 class Door(WorldObj):
-    def __init__(self, color, is_open=False):
+    def __init__(self, color, is_open=False, is_locked=False):
         super().__init__('door', color)
         self.is_open = is_open
+        self.is_locked = is_locked
 
     def can_overlap(self):
         """The agent can only walk over this cell when the door is open"""
@@ -228,13 +228,23 @@ class Door(WorldObj):
         return self.is_open
 
     def toggle(self, env, pos):
+        # If the player has the right key to open the door
+        if self.is_locked:
+            if isinstance(env.carrying, Key) and env.carrying.color == self.color:
+                self.is_locked = False
+                self.is_open = True
+                # The key has been used, remove it from the agent
+                env.carrying = None
+                return True
+            return False
+
         self.is_open = not self.is_open
         return True
 
     def render(self, r):
         c = COLORS[self.color]
         r.setLineColor(c[0], c[1], c[2])
-        r.setColor(0, 0, 0)
+        r.setColor(c[0], c[1], c[2], 50 if self.is_locked else 0)
 
         if self.is_open:
             r.drawPolygon([
@@ -252,66 +262,23 @@ class Door(WorldObj):
             (0          ,           0)
         ])
         r.drawPolygon([
-            (2          , CELL_PIXELS-2),
+            (2            , CELL_PIXELS-2),
             (CELL_PIXELS-2, CELL_PIXELS-2),
             (CELL_PIXELS-2,           2),
-            (2          ,           2)
+            (2            ,           2)
         ])
-        r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
-class LockedDoor(WorldObj):
-    def __init__(self, color, is_open=False):
-        super(LockedDoor, self).__init__('locked_door', color)
-        self.is_open = is_open
-
-    def toggle(self, env, pos):
-        # If the player has the right key to open the door
-        if isinstance(env.carrying, Key) and env.carrying.color == self.color:
-            self.is_open = True
-            # The key has been used, remove it from the agent
-            env.carrying = None
-            return True
-        return False
-
-    def can_overlap(self):
-        """The agent can only walk over this cell when the door is open"""
-        return self.is_open
-
-    def see_behind(self):
-        return self.is_open
-
-    def render(self, r):
-        c = COLORS[self.color]
-        r.setLineColor(c[0], c[1], c[2])
-        r.setColor(c[0], c[1], c[2], 50)
-
-        if self.is_open:
-            r.drawPolygon([
-                (CELL_PIXELS-2, CELL_PIXELS),
-                (CELL_PIXELS  , CELL_PIXELS),
-                (CELL_PIXELS  ,           0),
-                (CELL_PIXELS-2,           0)
-            ])
-            return
-
-        r.drawPolygon([
-            (0          , CELL_PIXELS),
-            (CELL_PIXELS, CELL_PIXELS),
-            (CELL_PIXELS,           0),
-            (0          ,           0)
-        ])
-        r.drawPolygon([
-            (2          , CELL_PIXELS-2),
-            (CELL_PIXELS-2, CELL_PIXELS-2),
-            (CELL_PIXELS-2,           2),
-            (2          ,           2)
-        ])
-        r.drawLine(
-            CELL_PIXELS * 0.55,
-            CELL_PIXELS * 0.5,
-            CELL_PIXELS * 0.75,
-            CELL_PIXELS * 0.5
-        )
+        if self.is_locked:
+            # Draw key slot
+            r.drawLine(
+                CELL_PIXELS * 0.55,
+                CELL_PIXELS * 0.5,
+                CELL_PIXELS * 0.75,
+                CELL_PIXELS * 0.5
+            )
+        else:
+            # Draw door handle
+            r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
 class Key(WorldObj):
     def __init__(self, color='blue'):
@@ -571,9 +538,16 @@ class Grid:
                         array[i, j, 1] = 0
                         array[i, j, 2] = 0
                     else:
+                        # State, 0: open, 1: closed, 2: locked
+                        state = 0
+                        if hasattr(v, 'is_open') and not v.is_open:
+                            state = 1
+                        if hasattr(v, 'is_locked') and v.is_locked:
+                            state = 2
+
                         array[i, j, 0] = OBJECT_TO_IDX[v.type]
                         array[i, j, 1] = COLOR_TO_IDX[v.color]
-                        array[i, j, 2] = hasattr(v, 'is_open') and v.is_open
+                        array[i, j, 2] = state
 
         return array
 
@@ -589,7 +563,7 @@ class Grid:
         grid = Grid(width, height)
         for i in range(width):
             for j in range(height):
-                typeIdx, colorIdx, openIdx = array[i, j]
+                typeIdx, colorIdx, state = array[i, j]
 
                 if typeIdx == OBJECT_TO_IDX['unseen'] or \
                         typeIdx == OBJECT_TO_IDX['empty']:
@@ -597,7 +571,9 @@ class Grid:
 
                 objType = IDX_TO_OBJECT[typeIdx]
                 color = IDX_TO_COLOR[colorIdx]
-                is_open = openIdx == 1
+                # State, 0: open, 1: closed, 2: locked
+                is_open = state == 0
+                is_locked = state == 2
 
                 if objType == 'wall':
                     v = Wall(color)
@@ -610,9 +586,7 @@ class Grid:
                 elif objType == 'box':
                     v = Box(color)
                 elif objType == 'door':
-                    v = Door(color, is_open)
-                elif objType == 'locked_door':
-                    v = LockedDoor(color, is_open)
+                    v = Door(color, is_open, is_locked)
                 elif objType == 'goal':
                     v = Goal()
                 elif objType == 'lava':
@@ -788,7 +762,6 @@ class MiniGridEnv(gym.Env):
             'wall'          : 'W',
             'floor'         : 'F',
             'door'          : 'D',
-            'locked_door'   : 'L',
             'key'           : 'K',
             'ball'          : 'A',
             'box'           : 'B',
@@ -822,8 +795,13 @@ class MiniGridEnv(gym.Env):
                     str += '  '
                     continue
 
-                if c.type.startswith('door') and c.is_open:
-                    str += '__'
+                if c.type == 'door':
+                    if c.is_open:
+                        str += '__'
+                    elif c.is_locked:
+                        str += 'L' + c.color[0].upper()
+                    else:
+                        str += 'D' + c.color[0].upper()
                     continue
 
                 str += OBJECT_TO_STR[c.type] + c.color[0].upper()
