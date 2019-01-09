@@ -234,7 +234,6 @@ class Door(WorldObj):
                 self.is_locked = False
                 self.is_open = True
                 # The key has been used, remove it from the agent
-                env.carrying = None
                 return True
             return False
 
