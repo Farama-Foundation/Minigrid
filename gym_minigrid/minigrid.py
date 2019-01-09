@@ -233,7 +233,6 @@ class Door(WorldObj):
             if isinstance(env.carrying, Key) and env.carrying.color == self.color:
                 self.is_locked = False
                 self.is_open = True
-                # The key has been used, remove it from the agent
                 return True
             return False
 
