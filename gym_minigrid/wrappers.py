@@ -98,8 +98,8 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
         self.__dict__.update(vars(env))  # hack to pass values to super wrapper
         self.observation_space = spaces.Box(
             low=0,
-            high=self.env.grid_size,
-            shape=(self.env.grid_size, self.env.grid_size, 3),  # number of cells
+            high=255,
+            shape=(self.env.width, self.env.height, 3),  # number of cells
             dtype='uint8'
         )
 

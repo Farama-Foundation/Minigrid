@@ -158,7 +158,7 @@ class MultiRoomEnv(MiniGridEnv):
         # If the room is out of the grid, can't place a room here
         if topX < 0 or topY < 0:
             return False
-        if topX + sizeX > self.grid_size or topY + sizeY >= self.grid_size:
+        if topX + sizeX > self.width or topY + sizeY >= self.height:
             return False
 
         # If the room intersects with previous rooms, can't place it here

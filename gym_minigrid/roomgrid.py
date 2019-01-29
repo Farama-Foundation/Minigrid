@@ -84,13 +84,13 @@ class RoomGrid(MiniGridEnv):
 
         height = (room_size - 1) * num_rows + 1
         width = (room_size - 1) * num_cols + 1
-        grid_size = max(width, height)
 
         # By default, this environment has no mission
         self.mission = ''
 
         super().__init__(
-            grid_size=grid_size,
+            width=width,
+            height=height,
             max_steps=max_steps,
             see_through_walls=False,
             seed=seed
