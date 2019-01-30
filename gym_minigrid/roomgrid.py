@@ -237,6 +237,7 @@ class RoomGrid(MiniGridEnv):
 
         pos = room.door_pos[door_idx]
         self.grid.set(*pos, door)
+        door.cur_pos = pos
 
         neighbor = room.neighbors[door_idx]
         room.doors[door_idx] = door
