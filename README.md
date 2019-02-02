@@ -390,5 +390,5 @@ Registered configurations:
 
 Similar to the `LavaCrossing` environment, the agent has to reach the green
 goal square on the other corner of the room, however lava is replaced by
-walls. This MDP is therefore much simpler and and maybe useful for quickly
+walls. This MDP is therefore much easier and and maybe useful for quickly
 testing your algorithms.
