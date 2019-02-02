@@ -372,3 +372,23 @@ Each lava stream runs across the room either horizontally or vertically, and
 has a single crossing point which can be safely used;  Luckily, a path to the
 goal is guaranteed to exist. This environment is useful for studying safety and
 safe exploration.
+
+## Simple crossing environment
+
+Registered configurations:
+- `MiniGrid-SimpleCrossingS9N1-v0`
+- `MiniGrid-SimpleCrossingS9N2-v0`
+- `MiniGrid-SimpleCrossingS9N3-v0`
+- `MiniGrid-SimpleCrossingS11N5-v0`
+
+<p align="center">
+  <img src="figures/SimpleCrossingS9N1.png" width="200">
+  <img src="figures/SimpleCrossingS9N2.png" width="200">
+  <img src="figures/SimpleCrossingS9N3.png" width="200">
+  <img src="figures/SimpleCrossingS11N5.png" width="250">
+</p>
+
+Similar to the `LavaCrossing` environment, the agent has to reach the green
+goal square on the other corner of the room, however lava is replaced by
+walls. This MDP is therefore much simpler and and maybe useful for quickly
+testing your algorithms.
