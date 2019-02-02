@@ -36,10 +36,10 @@ class CrossingEnv(MiniGridEnv):
         # Place a goal square in the bottom-right corner
         self.grid.set(width - 2, height - 2, Goal())
 
-        # Place walls
+        # Place obstacles (lava or walls)
         v, h = object(), object()  # singleton `vertical` and `horizontal` objects
 
-        # Walls specified by direction and position in grid
+        # Lava rivers or walls specified by direction and position in grid
         rivers = [(v, i) for i in range(2, height - 2, 2)]
         rivers += [(h, j) for j in range(2, width - 2, 2)]
         self.np_random.shuffle(rivers)
@@ -57,7 +57,7 @@ class CrossingEnv(MiniGridEnv):
         path = [h] * len(rivers_v) + [v] * len(rivers_h)
         self.np_random.shuffle(path)
 
-        # Create openings in walls
+        # Create openings
         limits_v = [0] + rivers_v + [height - 1]
         limits_h = [0] + rivers_h + [width - 1]
         room_i, room_j = 0, 0
