@@ -1,4 +1,4 @@
-from gym.envs.registration import register
+from gym.envs.registration import register as gym_register
 
 from gym_minigrid.envs.empty import *
 from gym_minigrid.envs.doorkey import *
@@ -23,6 +23,15 @@ REWARD_THRESHOLD = 900
 
 # Fetch
 # --------------------------------------------------
+
+# NOTE: see end of file for final type
+ENV_LIST = []
+
+
+def register(**kwargs):
+    ENV_LIST.append(kwargs['id'])
+    return gym_register(**kwargs)
+
 
 register(
     id='MiniGridFetch5x5N2-v0',
@@ -411,3 +420,7 @@ register(
     entry_point='gym_minigrid.envs:UnlockPickup',
     reward_threshold=REWARD_THRESHOLD,
 )
+
+# END
+
+ENV_LIST = tuple(ENV_LIST)

@@ -3,20 +3,19 @@
 import random
 import numpy as np
 import gym
-from gym_minigrid.register import env_list
 from gym_minigrid.minigrid import Grid, OBJECT_TO_IDX
 
 # Test specifically importing a specific environment
-from gym_minigrid.envs import DoorKeyEnv
+from gym_minigrid.envs import ENV_LIST, DoorKeyEnv
 
 # Test importing wrappers
 from gym_minigrid.wrappers import *
 
 ##############################################################################
 
-print('%d environments registered' % len(env_list))
+print('%d environments registered' % len(ENV_LIST))
 
-for envName in env_list:
+for envName in ENV_LIST:
     print('testing "%s"' % envName)
 
     # Load the gym environment
@@ -78,7 +77,7 @@ for envName in env_list:
 ##############################################################################
 
 print('testing agent_sees method')
-env = gym.make('MiniGrid-DoorKey-6x6-v0')
+env = gym.make('MiniGridDoorKey6x6-v0')
 goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
 # Test the "in" operator on grid objects
