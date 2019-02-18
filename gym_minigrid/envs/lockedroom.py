@@ -1,6 +1,5 @@
 from gym import spaces
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class Room:
     def __init__(self,
@@ -121,8 +120,3 @@ class LockedRoom(MiniGridEnv):
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
         return obs, reward, done, info
-
-register(
-    id='MiniGrid-LockedRoom-v0',
-    entry_point='gym_minigrid.envs:LockedRoom'
-)

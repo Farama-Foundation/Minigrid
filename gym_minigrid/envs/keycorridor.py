@@ -1,5 +1,4 @@
 from gym_minigrid.roomgrid import RoomGrid
-from gym_minigrid.register import register
 
 class KeyCorridor(RoomGrid):
     """
@@ -105,33 +104,3 @@ class KeyCorridorS6R3(KeyCorridor):
             num_rows=3,
             seed=seed
         )
-
-register(
-    id='MiniGrid-KeyCorridorS3R1-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS3R1'
-)
-
-register(
-    id='MiniGrid-KeyCorridorS3R2-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS3R2'
-)
-
-register(
-    id='MiniGrid-KeyCorridorS3R3-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS3R3'
-)
-
-register(
-    id='MiniGrid-KeyCorridorS4R3-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS4R3'
-)
-
-register(
-    id='MiniGrid-KeyCorridorS5R3-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS5R3'
-)
-
-register(
-    id='MiniGrid-KeyCorridorS6R3-v0',
-    entry_point='gym_minigrid.envs:KeyCorridorS6R3'
-)

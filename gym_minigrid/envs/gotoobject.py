@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class GoToObjectEnv(MiniGridEnv):
     """
@@ -86,13 +85,3 @@ class GoToObjectEnv(MiniGridEnv):
 class GotoEnv8x8N2(GoToObjectEnv):
     def __init__(self):
         super().__init__(size=8, numObjs=2)
-
-register(
-    id='MiniGrid-GoToObject-6x6-N2-v0',
-    entry_point='gym_minigrid.envs:GoToObjectEnv'
-)
-
-register(
-    id='MiniGrid-GoToObject-8x8-N2-v0',
-    entry_point='gym_minigrid.envs:GotoEnv8x8N2'
-)

@@ -1,6 +1,5 @@
 from gym_minigrid.minigrid import Ball
 from gym_minigrid.roomgrid import RoomGrid
-from gym_minigrid.register import register
 
 class Unlock(RoomGrid):
     """
@@ -39,8 +38,3 @@ class Unlock(RoomGrid):
                 done = True
 
         return obs, reward, done, info
-
-register(
-    id='MiniGrid-Unlock-v0',
-    entry_point='gym_minigrid.envs:Unlock'
-)

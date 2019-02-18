@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 
 class FourRoomsEnv(MiniGridEnv):
@@ -71,9 +70,3 @@ class FourRoomsEnv(MiniGridEnv):
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
         return obs, reward, done, info
-
-
-register(
-    id='MiniGrid-FourRooms-v0',
-    entry_point='gym_minigrid.envs:FourRoomsEnv'
-)

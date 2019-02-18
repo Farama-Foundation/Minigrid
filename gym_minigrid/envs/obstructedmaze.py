@@ -1,6 +1,5 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.roomgrid import RoomGrid
-from gym_minigrid.register import register
 
 class ObstructedMazeEnv(RoomGrid):
     """
@@ -176,48 +175,3 @@ class ObstructedMaze_1Q(ObstructedMaze_Full):
 class ObstructedMaze_2Q(ObstructedMaze_Full):
     def __init__(self, seed=None):
         super().__init__((1, 1), True, True, 2, 11, seed)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dl-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dl"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dlh-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dlh"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dlhb-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dlhb"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dl-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dl"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dlh-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dlh"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dlhb-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dlhb"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Q-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Q"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Q-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Q"
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-Full-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_Full"
-)

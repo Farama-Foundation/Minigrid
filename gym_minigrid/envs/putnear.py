@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class PutNearEnv(MiniGridEnv):
     """
@@ -114,13 +113,3 @@ class PutNearEnv(MiniGridEnv):
 class PutNear8x8N3(PutNearEnv):
     def __init__(self):
         super().__init__(size=8, numObjs=3)
-
-register(
-    id='MiniGrid-PutNear-6x6-N2-v0',
-    entry_point='gym_minigrid.envs:PutNearEnv'
-)
-
-register(
-    id='MiniGrid-PutNear-8x8-N3-v0',
-    entry_point='gym_minigrid.envs:PutNear8x8N3'
-)

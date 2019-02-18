@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class EmptyEnv(MiniGridEnv):
     """
@@ -37,18 +36,3 @@ class EmptyEnv6x6(EmptyEnv):
 class EmptyEnv16x16(EmptyEnv):
     def __init__(self):
         super().__init__(size=16)
-
-register(
-    id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv6x6'
-)
-
-register(
-    id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv'
-)
-
-register(
-    id='MiniGrid-Empty-16x16-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv16x16'
-)

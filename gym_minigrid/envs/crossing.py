@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 import itertools as itt
 
@@ -98,26 +97,6 @@ class LavaCrossingS11N5Env(CrossingEnv):
     def __init__(self):
         super().__init__(size=11, num_crossings=5)
 
-register(
-    id='MiniGrid-LavaCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingEnv'
-)
-
-register(
-    id='MiniGrid-LavaCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS9N2Env'
-)
-
-register(
-    id='MiniGrid-LavaCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS9N3Env'
-)
-
-register(
-    id='MiniGrid-LavaCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS11N5Env'
-)
-
 class SimpleCrossingEnv(CrossingEnv):
     def __init__(self):
         super().__init__(size=9, num_crossings=1, obstacle_type=Wall)
@@ -133,23 +112,3 @@ class SimpleCrossingS9N3Env(CrossingEnv):
 class SimpleCrossingS11N5Env(CrossingEnv):
     def __init__(self):
         super().__init__(size=11, num_crossings=5, obstacle_type=Wall)
-
-register(
-    id='MiniGrid-SimpleCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingEnv'
-)
-
-register(
-    id='MiniGrid-SimpleCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS9N2Env'
-)
-
-register(
-    id='MiniGrid-SimpleCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS9N3Env'
-)
-
-register(
-    id='MiniGrid-SimpleCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS11N5Env'
-)

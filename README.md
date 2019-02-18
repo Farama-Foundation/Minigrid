@@ -51,7 +51,7 @@ There is a UI application which allows you to manually control the agent with th
 The environment being run can be selected with the `--env-name` option, eg:
 
 ```
-./manual_control.py --env-name MiniGrid-Empty-8x8-v0
+./manual_control.py --env-name MiniGridEmpty8x8-v0
 ```
 
 ## Reinforcement Learning
@@ -62,7 +62,7 @@ A sample training command is:
 
 ```
 cd torch-rl
-python3 -m scripts.train --env MiniGrid-Empty-8x8-v0 --algo ppo
+python3 -m scripts.train --env MiniGridEmpty8x8-v0 --algo ppo
 ```
 
 ## Design
@@ -120,9 +120,9 @@ or to fine-tune difficulty.
 ### Empty environment
 
 Registered configurations:
-- `MiniGrid-Empty-6x6-v0`
-- `MiniGrid-Empty-8x8-v0`
-- `MiniGrid-Empty-16x16-v0`
+- `MiniGridEmpty6x6-v0`
+- `MiniGridEmpty8x8-v0`
+- `MiniGridEmpty16x16-v0`
 
 <p align="center">
 <img src="/figures/empty-env.png" width=250>
@@ -137,10 +137,10 @@ and with large rooms to experiment with sparse rewards.
 ### Door & key environment
 
 Registered configurations:
-- `MiniGrid-DoorKey-5x5-v0`
-- `MiniGrid-DoorKey-6x6-v0`
-- `MiniGrid-DoorKey-8x8-v0`
-- `MiniGrid-DoorKey-16x16-v0`
+- `MiniGridDoorKey5x5-v0`
+- `MiniGridDoorKey6x6-v0`
+- `MiniGridDoorKey8x8-v0`
+- `MiniGridDoorKey16x16-v0`
 
 <p align="center">
 <img src="/figures/door-key-env.png">
@@ -154,8 +154,8 @@ useful to experiment with curiosity or curriculum learning.
 ### Multi-room environment
 
 Registered configurations:
-- `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
-- `MiniGrid-MultiRoom-N6-v0` (six rooms)
+- `MiniGridMultiRoomN2S4-v0` (two small rooms)
+- `MiniGridMultiRoomN6-v0` (six rooms)
 
 <p align="center">
 <img src="/figures/multi-room.gif" width=416 height=424>
@@ -170,9 +170,9 @@ rooms and building a curriculum, the environment can be solved.
 ### Fetch environment
 
 Registered configurations:
-- `MiniGrid-Fetch-5x5-N2-v0`
-- `MiniGrid-Fetch-6x6-N2-v0`
-- `MiniGrid-Fetch-8x8-N3-v0`
+- `MiniGridFetch-5x5-N2-v0`
+- `MiniGridFetch-6x6-N2-v0`
+- `MiniGridFetch-8x8-N3-v0`
 
 <p align="center">
 <img src="/figures/fetch-env.png" width=450>
@@ -186,9 +186,9 @@ reward.
 ### Go-to-door environment
 
 Registered configurations:
-- `MiniGrid-GoToDoor-5x5-v0`
-- `MiniGrid-GoToDoor-6x6-v0`
-- `MiniGrid-GoToDoor-8x8-v0`
+- `MiniGridGoToDoor5x5-v0`
+- `MiniGridGoToDoor6x6-v0`
+- `MiniGridGoToDoor8x8-v0`
 
 <p align="center">
 <img src="/figures/gotodoor-6x6.png" width=400>
@@ -202,8 +202,8 @@ receives a textual (mission) string as input, telling it which door to go to,
 ### Put-near environment
 
 Registered configurations:
-- `MiniGrid-PutNear-6x6-N2-v0`
-- `MiniGrid-PutNear-8x8-N3-v0`
+- `MiniGridPutNear6x6N2-v0`
+- `MiniGridPutNear8x8N3-v0`
 
 The agent is instructed through a textual string to pick up an object and
 place it next to another object. This environment is easy to solve with two
@@ -213,8 +213,8 @@ understanding and spatial reasoning involving multiple objects.
 ### Red and blue doors environment
 
 Registered configurations:
-- `MiniGrid-RedBlueDoors-6x6-v0`
-- `MiniGrid-RedBlueDoors-8x8-v0`
+- `MiniGridRedBlueDoors6x6-v0`
+- `MiniGridRedBlueDoors8x8-v0`
 
 The purpose of this environment is to test memory.
 The agent is randomly placed within a room with one red and one blue door
@@ -227,12 +227,12 @@ the task.
 ### Memory environment
 
 Registered configurations:
-- `MiniGrid-MemoryS17Random-v0`
-- `MiniGrid-MemoryS13Random-v0`
-- `MiniGrid-MemoryS13-v0`
-- `MiniGrid-MemoryS11-v0`
-- `MiniGrid-MemoryS9-v0`
-- `MiniGrid-MemoryS7-v0`
+- `MiniGridMemoryS17Random-v0`
+- `MiniGridMemoryS13Random-v0`
+- `MiniGridMemoryS13-v0`
+- `MiniGridMemoryS11-v0`
+- `MiniGridMemoryS9-v0`
+- `MiniGridMemoryS7-v0`
 
 This environment is a memory test. The agent starts in a small room
 where it sees an object. It then has to go through a narrow hallway
@@ -244,7 +244,7 @@ object at split.
 ### Locked room environment
 
 Registed configurations:
-- `MiniGrid-LockedRoom-v0`
+- `MiniGridLockedRoom-v0`
 
 The environment has six rooms, one of which is locked. The agent receives
 a textual mission string as input, telling it which room to go to in order
@@ -255,12 +255,12 @@ to solve with vanilla reinforcement learning alone.
 ### Key corridor environment
 
 Registed configurations:
-- `MiniGrid-KeyCorridorS3R1-v0`
-- `MiniGrid-KeyCorridorS3R2-v0`
-- `MiniGrid-KeyCorridorS3R3-v0`
-- `MiniGrid-KeyCorridorS4R3-v0`
-- `MiniGrid-KeyCorridorS5R3-v0`
-- `MiniGrid-KeyCorridorS6R3-v0`
+- `MiniGridKeyCorridorS3R1-v0`
+- `MiniGridKeyCorridorS3R2-v0`
+- `MiniGridKeyCorridorS3R3-v0`
+- `MiniGridKeyCorridorS4R3-v0`
+- `MiniGridKeyCorridorS5R3-v0`
+- `MiniGridKeyCorridorS6R3-v0`
 
 <p align="center">
     <img src="figures/KeyCorridorS3R1.png" width="250">
@@ -282,7 +282,7 @@ key is placed. This environment can be solved without relying on language.
 ### Unlock environment
 
 Registed configurations:
-- `MiniGrid-Unlock-v0`
+- `MiniGridUnlock-v0`
 
 <p align="center">
     <img src="figures/Unlock.png" width="200">
@@ -294,7 +294,7 @@ relying on language.
 ### Unlock pickup environment
 
 Registed configurations:
-- `MiniGrid-UnlockPickup-v0`
+- `MiniGridUnlockPickup-v0`
 
 <p align="center">
     <img src="figures/UnlockPickup.png" width="250">
@@ -306,7 +306,7 @@ locked door. This environment can be solved without relying on language.
 ### Blocked unlock pickup environment
 
 Registed configurations:
-- `MiniGrid-BlockedUnlockPickup-v0`
+- `MiniGridBlockedUnlockPickup-v0`
 
 <p align="center">
     <img src="figures/BlockedUnlockPickup.png" width="250">
@@ -321,15 +321,15 @@ This environment can be solved without relying on language.
 ## Obstructed maze environment
 
 Registered configurations:
-- `MiniGrid-ObstructedMaze-1Dl-v0`
-- `MiniGrid-ObstructedMaze-1Dlh-v0`
-- `MiniGrid-ObstructedMaze-1Dlhb-v0`
-- `MiniGrid-ObstructedMaze-2Dl-v0`
-- `MiniGrid-ObstructedMaze-2Dlh-v0`
-- `MiniGrid-ObstructedMaze-2Dlhb-v0`
-- `MiniGrid-ObstructedMaze-1Q-v0`
-- `MiniGrid-ObstructedMaze-2Q-v0`
-- `MiniGrid-ObstructedMaze-Full-v0`
+- `MiniGridObstructedMaze1Dl-v0`
+- `MiniGridObstructedMaze1Dlh-v0`
+- `MiniGridObstructedMaze1Dlhb-v0`
+- `MiniGridObstructedMaze2Dl-v0`
+- `MiniGridObstructedMaze2Dlh-v0`
+- `MiniGridObstructedMaze2Dlhb-v0`
+- `MiniGridObstructedMaze1Q-v0`
+- `MiniGridObstructedMaze2Q-v0`
+- `MiniGridObstructedMazeFull-v0`
 
 <p align="center">
   <img src="figures/ObstructedMaze-1Dl.png" width="250">
@@ -354,10 +354,10 @@ by balls. This environment can be solved without relying on language.
 ## Lava crossing environment
 
 Registered configurations:
-- `MiniGrid-LavaCrossingS9N1-v0`
-- `MiniGrid-LavaCrossingS9N2-v0`
-- `MiniGrid-LavaCrossingS9N3-v0`
-- `MiniGrid-LavaCrossingS11N5-v0`
+- `MiniGridLavaCrossingS9N1-v0`
+- `MiniGridLavaCrossingS9N2-v0`
+- `MiniGridLavaCrossingS9N3-v0`
+- `MiniGridLavaCrossingS11N5-v0`
 
 <p align="center">
   <img src="figures/LavaCrossingS9N1.png" width="200">
@@ -376,10 +376,10 @@ safe exploration.
 ## Simple crossing environment
 
 Registered configurations:
-- `MiniGrid-SimpleCrossingS9N1-v0`
-- `MiniGrid-SimpleCrossingS9N2-v0`
-- `MiniGrid-SimpleCrossingS9N3-v0`
-- `MiniGrid-SimpleCrossingS11N5-v0`
+- `MiniGridSimpleCrossingS9N1-v0`
+- `MiniGridSimpleCrossingS9N2-v0`
+- `MiniGridSimpleCrossingS9N3-v0`
+- `MiniGridSimpleCrossingS11N5-v0`
 
 <p align="center">
   <img src="figures/SimpleCrossingS9N1.png" width="200">

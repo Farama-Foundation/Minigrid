@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class Room:
     def __init__(self,
@@ -251,14 +250,3 @@ class MultiRoomEnvN6(MultiRoomEnv):
             maxNumRooms=6
         )
 
-register(
-    id='MiniGrid-MultiRoom-N2-S4-v0',
-    entry_point='gym_minigrid.envs:MultiRoomEnvN2S4',
-    reward_threshold=1000.0
-)
-
-register(
-    id='MiniGrid-MultiRoom-N6-v0',
-    entry_point='gym_minigrid.envs:MultiRoomEnvN6',
-    reward_threshold=1000.0
-)

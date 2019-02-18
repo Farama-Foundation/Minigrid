@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 
 class RedBlueDoorEnv(MiniGridEnv):
     """
@@ -66,13 +65,3 @@ class RedBlueDoorEnv(MiniGridEnv):
 class RedBlueDoorEnv6x6(RedBlueDoorEnv):
     def __init__(self):
         super().__init__(size=6)
-
-register(
-    id='MiniGrid-RedBlueDoors-6x6-v0',
-    entry_point='gym_minigrid.envs:RedBlueDoorEnv6x6'
-)
-
-register(
-    id='MiniGrid-RedBlueDoors-8x8-v0',
-    entry_point='gym_minigrid.envs:RedBlueDoorEnv'
-)
