@@ -76,7 +76,7 @@ class StateBonus(gym.core.Wrapper):
 
 class ImgObsWrapper(gym.core.ObservationWrapper):
     """
-    Use rgb image as the only observation output
+    Use the image as the only observation output, no language/mission.
     """
 
     def __init__(self, env):
