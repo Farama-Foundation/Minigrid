@@ -7,7 +7,7 @@ setup(
     packages=['gym_minigrid', 'gym_minigrid.envs'],
     install_requires=[
         'gym>=0.9.6',
-        'numpy==1.15.4', # FIXME: temporary because of bug in numpy 1.16
+        'numpy>=1.15.0',
         'pyqt5>=5.10.1'
     ]
 )
