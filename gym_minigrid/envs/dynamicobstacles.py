@@ -1,7 +1,7 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
-class DynamicObstaclesEnv(EmptyEnv):
+class DynamicObstaclesEnv(MiniGridEnv):
     """
     Empty grid environment with moving obstacles
     """
@@ -41,28 +41,38 @@ class DynamicObstaclesEnv(EmptyEnv):
 
         self.mission = "get to the green goal square"
 
+    def step(self, action):
+        obs, reward, done, info = MiniGridEnv.step(self, action)
+        dirs = [-1, 0, 1]
+        for obst in range(len(self.obstacles)):
+            delta_x = random.choice(dirs)
+            delta_y = random.choice(dirs)
+            delta_pos = (delta_x, delta_y)
+            new_pos = tuple(map(add, old_pos, delta_pos))
 
-class DynamicObstaclesEnv5x5(EmptyEnv):
+            while self.grid.get()
+
+class DynamicObstaclesEnv5x5(MiniGridEnv):
     def __init__(self):
         super().__init__(size=5)
 
 
-class DynamicObstaclesRandomEnv5x5(EmptyEnv):
+class DynamicObstaclesRandomEnv5x5(MiniGridEnv):
     def __init__(self):
         super().__init__(size=5, agent_start_pos=None)
 
 
-class DynamicObstaclesEnv6x6(EmptyEnv):
+class DynamicObstaclesEnv6x6(MiniGridEnv):
     def __init__(self):
         super().__init__(size=6)
 
 
-class DynamicObstaclesRandomEnv6x6(EmptyEnv):
+class DynamicObstaclesRandomEnv6x6(MiniGridEnv):
     def __init__(self):
         super().__init__(size=6, agent_start_pos=None)
 
 
-class DynamicObstaclesEnv16x16(EmptyEnv):
+class DynamicObstaclesEnv16x16(MiniGridEnv):
     def __init__(self):
         super().__init__(size=16)
 
