@@ -49,7 +49,8 @@ OBJECT_TO_IDX = {
     'ball'          : 6,
     'box'           : 7,
     'goal'          : 8,
-    'lava'          : 9
+    'lava'          : 9,
+    'obstacle'      : 10
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -65,6 +66,7 @@ DIR_TO_VEC = [
     # Up (negative Y)
     np.array((0, -1)),
 ]
+
 
 class WorldObj:
     """
@@ -114,6 +116,7 @@ class WorldObj:
         r.setLineColor(c[0], c[1], c[2])
         r.setColor(c[0], c[1], c[2])
 
+
 class Goal(WorldObj):
     def __init__(self):
         super().__init__('goal', 'green')
@@ -129,6 +132,7 @@ class Goal(WorldObj):
             (CELL_PIXELS,           0),
             (0          ,           0)
         ])
+
 
 class Floor(WorldObj):
     """
@@ -152,6 +156,7 @@ class Floor(WorldObj):
             (CELL_PIXELS,           1),
             (1          ,           1)
         ])
+
 
 class Lava(WorldObj):
     def __init__(self):
@@ -198,6 +203,7 @@ class Lava(WorldObj):
             (.9 * CELL_PIXELS, .7 * CELL_PIXELS),
         ])
 
+
 class Wall(WorldObj):
     def __init__(self, color='grey'):
         super().__init__('wall', color)
@@ -213,6 +219,29 @@ class Wall(WorldObj):
             (CELL_PIXELS,           0),
             (0          ,           0)
         ])
+
+
+class Obstacle(WorldObj):
+    """
+    Dynamic Obstacles in the environment
+
+    """
+
+    def __init__(self):
+        super().__init__('obstacle', 'red')
+
+    def can_overlap(self):
+        return False
+
+    def render(self, r):
+        self._set_color(r)
+        r.drawPolygon([
+            (0, CELL_PIXELS),
+            (CELL_PIXELS, CELL_PIXELS),
+            (CELL_PIXELS, 0),
+            (0, 0)
+        ])
+
 
 class Door(WorldObj):
     def __init__(self, color, is_open=False, is_locked=False):
@@ -278,6 +307,7 @@ class Door(WorldObj):
             # Draw door handle
             r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
+
 class Key(WorldObj):
     def __init__(self, color='blue'):
         super(Key, self).__init__('key', color)
@@ -315,6 +345,7 @@ class Key(WorldObj):
         r.setColor(0, 0, 0)
         r.drawCircle(18, 9, 2)
 
+
 class Ball(WorldObj):
     def __init__(self, color='blue'):
         super(Ball, self).__init__('ball', color)
@@ -325,6 +356,7 @@ class Ball(WorldObj):
     def render(self, r):
         self._set_color(r)
         r.drawCircle(CELL_PIXELS * 0.5, CELL_PIXELS * 0.5, 10)
+
 
 class Box(WorldObj):
     def __init__(self, color, contains=None):
@@ -360,6 +392,7 @@ class Box(WorldObj):
         # Replace the box by its contents
         env.grid.set(*pos, self.contains)
         return True
+
 
 class Grid:
     """
@@ -589,6 +622,8 @@ class Grid:
                     v = Goal()
                 elif objType == 'lava':
                     v = Lava()
+                elif objType == 'obstacle':
+                    v = Obstacle()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
@@ -634,6 +669,7 @@ class Grid:
                     grid.set(i, j, None)
 
         return mask
+
 
 class MiniGridEnv(gym.Env):
     """
