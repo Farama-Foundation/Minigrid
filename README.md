@@ -140,7 +140,7 @@ The random variants of the environment have the agent starting at a random
 position for each episode, while the regular variants have the agent always
 starting in the corner opposite to the goal.
 
-### Navigation with dynamic obstacles
+### Dynamic obstacles environment
 <p align="center">
 <img src="https://media.giphy.com/media/4JUmOCqLrASF0r2l6B/giphy.gif">
 </p>
