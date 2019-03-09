@@ -3,6 +3,7 @@ from gym_minigrid.register import register
 import random
 from operator import add
 
+
 class DynamicObstaclesEnv(MiniGridEnv):
     """
     Empty grid environment with moving obstacles
@@ -45,36 +46,18 @@ class DynamicObstaclesEnv(MiniGridEnv):
         n_obstacles = 10
         self.obstacles = []
         for i_obst in range(n_obstacles):
-            y = random.randint(1, width - 2)
-            x = random.randint(1, height - 2)
-            while (x, y) == self.agent_start_pos or (x, y) == (height - 2, width - 2):
-                y = random.randint(1, width - 2)
-                x = random.randint(1, height - 2)
             self.obstacles.append(Obstacle())
-            self.obstacles[i_obst].cur_pos = (x, y)
-            self.grid.set(x, y, self.obstacles[i_obst])
-
+            self.place_obj(self.obstacles[i_obst], max_tries=100)
         self.mission = "get to the green goal square"
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
-        dirs = [-1, 0, 1]
+        # Update obstacle positions
         for i_obst in range(len(self.obstacles)):
             old_pos = self.obstacles[i_obst].cur_pos
-            delta_x = random.choice(dirs)
-            delta_y = random.choice(dirs)
-            delta_pos = (delta_x, delta_y)
-            new_pos = tuple(map(add, old_pos, delta_pos))
-
-            while self.grid.get(*new_pos) != None and not self.grid.get(*new_pos).can_overlap():
-                x_update = random.choice(dirs)
-                y_update = random.choice(dirs)
-                pos_update = (x_update, y_update)
-                new_pos = tuple(map(add, old_pos, pos_update))
-
-            self.grid.set(new_pos[0], new_pos[1], self.obstacles[i_obst])
+            top = tuple(map(add, old_pos, (-1, -1)))
+            self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
             self.grid.set(old_pos[0], old_pos[1], None)
-            self.obstacles[i_obst].cur_pos = new_pos
         return obs, reward, done, info
 
 
