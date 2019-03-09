@@ -25,6 +25,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
             see_through_walls=True
         )
 
+
     def _gen_grid(self, width, height):
         # Create an empty grid
         self.grid = Grid(width, height)
@@ -43,7 +44,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
             self.place_agent()
 
         # Place obstacles
-        n_obstacles = 10
+        n_obstacles = int(min(width-2, height-2)/2)
         self.obstacles = []
         for i_obst in range(n_obstacles):
             self.obstacles.append(Obstacle())

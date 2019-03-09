@@ -732,7 +732,7 @@ class MiniGridEnv(gym.Env):
         })
 
         # Range of possible rewards
-        self.reward_range = (0, 1)
+        self.reward_range = (-1, 1)
 
         # Renderer object used to render the whole grid (full-scale)
         self.grid_render = None
@@ -810,6 +810,7 @@ class MiniGridEnv(gym.Env):
             'box'           : 'B',
             'goal'          : 'G',
             'lava'          : 'V',
+            'obstacle'      : 'O'
         }
 
         # Short string for opened door
