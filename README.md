@@ -142,9 +142,9 @@ starting in the corner opposite to the goal.
 
 ### Navigation with dynamic obstacles
 <p align="center">
-<img src="https://media.giphy.com/media/4JUmOCqLrASF0r2l6B/giphy.gif" width=416 height=424>
+<img src="https://media.giphy.com/media/4JUmOCqLrASF0r2l6B/giphy.gif">
 </p>
-![](https://media.giphy.com/media/4JUmOCqLrASF0r2l6B/giphy.gif)
+
 
 ### Door & key environment
 
