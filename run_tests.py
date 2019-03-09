@@ -41,7 +41,6 @@ for envName in env_list:
     while num_episodes < 5:
         # Pick a random action
         action = random.randint(0, env.action_space.n - 1)
-
         obs, reward, done, info = env.step(action)
 
         # Validate the agent position
