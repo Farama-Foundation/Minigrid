@@ -140,6 +140,9 @@ The random variants of the environment have the agent starting at a random
 position for each episode, while the regular variants have the agent always
 starting in the corner opposite to the goal.
 
+### Navigation with dynamic obstacles
+<iframe src="https://giphy.com/embed/4JUmOCqLrASF0r2l6B" width="400" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/robotics-4JUmOCqLrASF0r2l6B">via GIPHY</a></p>
+
 ### Door & key environment
 
 Registered configurations:
