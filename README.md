@@ -19,7 +19,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 
 ```
 @misc{gym_minigrid,
-  author = {Chevalier-Boisvert, Maxime and Willems, Lucas},
+  author = {Chevalier-Boisvert, Maxime and Willems, Lucas and Pal, Suman},
   title = {Minimalistic Gridworld Environment for OpenAI Gym},
   year = {2018},
   publisher = {GitHub},
@@ -28,7 +28,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 }
 ```
 
-This environment has been built as part of work done at the [MILA](https://mila.quebec/en/).
+This environment has been built as part of work done at the [MILA](https://mila.quebec/en/). The Dyamic Obstacle environment has been added as part of work done at TU Darmstadt and University of Genoa for mobile robot navigation with dynamic obstacles.
 
 ## Installation
 
@@ -51,7 +51,7 @@ There is a UI application which allows you to manually control the agent with th
 The environment being run can be selected with the `--env-name` option, eg:
 
 ```
-./manual_control.py --env-name MiniGrid-Empty-8x8-v0
+./manual_control.py --env-name MiniGrid-Dynamic-Obstacles-16x16-v0
 ```
 
 ## Reinforcement Learning
@@ -141,10 +141,19 @@ position for each episode, while the regular variants have the agent always
 starting in the corner opposite to the goal.
 
 ### Dynamic obstacles environment
+Registered configurations:
+- `MiniGrid-Dynamic-Obstacles-5x5-v0`
+- `MiniGrid-Dynamic-Obstacles-Random-5x5-v0`
+- `MiniGrid-Dynamic-Obstacles-6x6-v0`
+- `MiniGrid-Dynamic-Obstacles-Random-6x6-v0`
+- `MiniGrid-Dynamic-Obstacles-8x8-v0`
+- `MiniGrid-Dynamic-Obstacles-16x16-v0`
+
 <p align="center">
 <img src="https://media.giphy.com/media/4JUmOCqLrASF0r2l6B/giphy.gif">
 </p>
 
+This environment is an empty room with moving obstacles. The goal of the agent is to reach the green goal square without colliding with any obstacle. A large penalty is subtracted if the agent collides with an obstacle and the episode finishes. This environment is useful to test Dynamic Obstacle Avoidance for mobile robots with Reinforcement Learning in Partial Observability.
 
 ### Door & key environment
 
