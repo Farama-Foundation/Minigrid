@@ -33,7 +33,6 @@ for envName in env_list:
         env.seed(seed)
         grid2 = env.grid
         assert grid1 == grid2
-
     env.reset()
 
     # Run for a few episodes
