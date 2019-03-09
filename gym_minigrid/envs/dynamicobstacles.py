@@ -78,27 +78,27 @@ class DynamicObstaclesEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-class DynamicObstaclesEnv5x5(MiniGridEnv):
+class DynamicObstaclesEnv5x5(DynamicObstaclesEnv):
     def __init__(self):
         super().__init__(size=5)
 
 
-class DynamicObstaclesRandomEnv5x5(MiniGridEnv):
+class DynamicObstaclesRandomEnv5x5(DynamicObstaclesEnv):
     def __init__(self):
         super().__init__(size=5, agent_start_pos=None)
 
 
-class DynamicObstaclesEnv6x6(MiniGridEnv):
+class DynamicObstaclesEnv6x6(DynamicObstaclesEnv):
     def __init__(self):
         super().__init__(size=6)
 
 
-class DynamicObstaclesRandomEnv6x6(MiniGridEnv):
+class DynamicObstaclesRandomEnv6x6(DynamicObstaclesEnv):
     def __init__(self):
         super().__init__(size=6, agent_start_pos=None)
 
 
-class DynamicObstaclesEnv16x16(MiniGridEnv):
+class DynamicObstaclesEnv16x16(DynamicObstaclesEnv):
     def __init__(self):
         super().__init__(size=16)
 
