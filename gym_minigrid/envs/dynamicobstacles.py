@@ -52,12 +52,17 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
+
         # Update obstacle positions
         for i_obst in range(len(self.obstacles)):
             old_pos = self.obstacles[i_obst].cur_pos
             top = tuple(map(add, old_pos, (-1, -1)))
             self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
             self.grid.set(old_pos[0], old_pos[1], None)
+            if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
+                print("Collision with obstacle number: ", i_obst)
+                reward = -1
+                done = True
         return obs, reward, done, info
 
 
