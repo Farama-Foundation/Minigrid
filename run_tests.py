@@ -77,7 +77,7 @@ for envName in env_list:
 ##############################################################################
 
 print('testing agent_sees method')
-env = gym.make('MiniGrid-DoorKey-6x6-v0')
+env = gym.make('MiniGrid-Dynamic-Obstacles-8x8-v0')
 goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
 # Test the "in" operator on grid objects
