@@ -51,7 +51,7 @@ There is a UI application which allows you to manually control the agent with th
 The environment being run can be selected with the `--env-name` option, eg:
 
 ```
-./manual_control.py --env-name MiniGrid-Dynamic-Obstacles-16x16-v0
+./manual_control.py --env-name MiniGrid-Empty-8x8-v0
 ```
 
 ## Reinforcement Learning
