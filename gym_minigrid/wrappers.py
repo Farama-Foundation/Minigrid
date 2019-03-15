@@ -158,3 +158,24 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
         return obs
+
+
+class AgentViewSizeWrapper(gym.core.Wrapper):
+    """
+    Wrapper to customize the agent's field of view.
+    """
+
+    def __init__(self, env, agent_view_size=7):
+        super(AgentObsWrapper, self).__init__(env)
+
+        self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
+
+        env.agent_view_size = agent_view_size
+        env.obs_array_size = (env.agent_view_size, env.agent_view_size, 3)
+
+        self.observation_space = gym.spaces.Box(
+            low=0,
+            high=255,
+            shape=env.obs_array_size,
+            dtype='uint8'
+        )
