@@ -166,10 +166,9 @@ class AgentViewSizeWrapper(gym.core.Wrapper):
     """
 
     def __init__(self, env, agent_view_size=7):
-        super(AgentObsWrapper, self).__init__(env)
+        super(AgentViewSizeWrapper, self).__init__(env)
 
         self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
-
         env.agent_view_size = agent_view_size
         env.obs_array_size = (env.agent_view_size, env.agent_view_size, 3)
 
