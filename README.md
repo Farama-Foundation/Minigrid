@@ -28,7 +28,9 @@ Please use this bibtex if you want to cite this repository in your publications:
 }
 ```
 
-This environment has been built as part of work done at the [MILA](https://mila.quebec/en/). The Dyamic Obstacle environment has been added as part of work done at TU Darmstadt and University of Genoa for mobile robot navigation with dynamic obstacles.
+This environment has been built as part of work done at the [MILA](https://mila.quebec/en/). 
+
+The Dyamic Obstacle environment has been added as part of work done at [IAS in TU Darmstadt](https://www.ias.informatik.tu-darmstadt.de/) and the [University of Genoa](https://www.unige.it/en/) for mobile robot navigation with dynamic obstacles.
 
 ## Installation
 
