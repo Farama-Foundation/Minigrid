@@ -66,7 +66,6 @@ DIR_TO_VEC = [
     np.array((0, -1)),
 ]
 
-
 class WorldObj:
     """
     Base class for grid world objects
@@ -115,7 +114,6 @@ class WorldObj:
         r.setLineColor(c[0], c[1], c[2])
         r.setColor(c[0], c[1], c[2])
 
-
 class Goal(WorldObj):
     def __init__(self):
         super().__init__('goal', 'green')
@@ -131,7 +129,6 @@ class Goal(WorldObj):
             (CELL_PIXELS,           0),
             (0          ,           0)
         ])
-
 
 class Floor(WorldObj):
     """
@@ -155,7 +152,6 @@ class Floor(WorldObj):
             (CELL_PIXELS,           1),
             (1          ,           1)
         ])
-
 
 class Lava(WorldObj):
     def __init__(self):
@@ -202,7 +198,6 @@ class Lava(WorldObj):
             (.9 * CELL_PIXELS, .7 * CELL_PIXELS),
         ])
 
-
 class Wall(WorldObj):
     def __init__(self, color='grey'):
         super().__init__('wall', color)
@@ -218,7 +213,6 @@ class Wall(WorldObj):
             (CELL_PIXELS,           0),
             (0          ,           0)
         ])
-
 
 class Door(WorldObj):
     def __init__(self, color, is_open=False, is_locked=False):
@@ -284,7 +278,6 @@ class Door(WorldObj):
             # Draw door handle
             r.drawCircle(CELL_PIXELS * 0.75, CELL_PIXELS * 0.5, 2)
 
-
 class Key(WorldObj):
     def __init__(self, color='blue'):
         super(Key, self).__init__('key', color)
@@ -322,7 +315,6 @@ class Key(WorldObj):
         r.setColor(0, 0, 0)
         r.drawCircle(18, 9, 2)
 
-
 class Ball(WorldObj):
     def __init__(self, color='blue'):
         super(Ball, self).__init__('ball', color)
@@ -333,7 +325,6 @@ class Ball(WorldObj):
     def render(self, r):
         self._set_color(r)
         r.drawCircle(CELL_PIXELS * 0.5, CELL_PIXELS * 0.5, 10)
-
 
 class Box(WorldObj):
     def __init__(self, color, contains=None):
@@ -369,7 +360,6 @@ class Box(WorldObj):
         # Replace the box by its contents
         env.grid.set(*pos, self.contains)
         return True
-
 
 class Grid:
     """
@@ -645,7 +635,6 @@ class Grid:
 
         return mask
 
-
 class MiniGridEnv(gym.Env):
     """
     2D grid world game environment
@@ -784,7 +773,7 @@ class MiniGridEnv(gym.Env):
             'ball'          : 'A',
             'box'           : 'B',
             'goal'          : 'G',
-            'lava'          : 'V'
+            'lava'          : 'V',
         }
 
         # Short string for opened door
@@ -954,6 +943,7 @@ class MiniGridEnv(gym.Env):
             break
 
         self.grid.set(*pos, obj)
+
         if obj is not None:
             obj.init_pos = pos
             obj.cur_pos = pos
