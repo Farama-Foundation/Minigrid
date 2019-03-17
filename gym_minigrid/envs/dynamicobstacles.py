@@ -73,7 +73,6 @@ class DynamicObstaclesEnv(MiniGridEnv):
                 if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
                     reward = -1
                     done = True
-                    print('Collision!')
         return obs, reward, done, info
 
 
