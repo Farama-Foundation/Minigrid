@@ -35,7 +35,7 @@ This environment has been built as part of work done at the [MILA](https://mila.
 Clone this repository and install the dependencies with `pip3`:
 
 ```
-git clone https://github.com/maximecb/gym-minigrid
+git clone https://github.com/maximecb/gym-minigrid.git
 cd gym-minigrid
 pip3 install -e .
 ```
