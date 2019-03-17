@@ -67,7 +67,7 @@ def main():
 
         obs, reward, done, info = env.step(action)
 
-        print('step=%s, reward=%.2f' % (env.step_count, reward))
+        print('action=%s, step=%s, reward=%.2f' % (action, env.step_count, reward))
 
         if done:
             print('done!')

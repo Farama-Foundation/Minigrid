@@ -1,6 +1,5 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
-import random
 from operator import add
 
 
@@ -14,17 +13,27 @@ class DynamicObstaclesEnv(MiniGridEnv):
             size=8,
             agent_start_pos=(1, 1),
             agent_start_dir=0,
+            n_obstacles=4,
+            show_obstacles=True
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
+        self.show_obstacles = show_obstacles
 
+        # Reduce obstacles if there are too many
+        if n_obstacles <= size/2 + 1:
+            self.n_obstacles = int(n_obstacles)
+        else:
+            self.n_obstacles = int(size/2)
         super().__init__(
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
-            see_through_walls=True
+            see_through_walls=True,
         )
-
+        # Allow only 3 actions permitted: left, right, forward
+        self.action_space = spaces.Discrete(self.actions.forward + 1)
+        self.reward_range = (-1, 1)
 
     def _gen_grid(self, width, height):
         # Create an empty grid
@@ -44,51 +53,52 @@ class DynamicObstaclesEnv(MiniGridEnv):
             self.place_agent()
 
         # Place obstacles
-        n_obstacles = int(min(width-2, height-2)/2)
-        self.obstacles = []
-        for i_obst in range(n_obstacles):
-            self.obstacles.append(Obstacle())
-            self.place_obj(self.obstacles[i_obst], max_tries=100)
+        if self.show_obstacles:
+            self.obstacles = []
+            for i_obst in range(self.n_obstacles):
+                self.obstacles.append(Ball())
+                self.place_obj(self.obstacles[i_obst], max_tries=100)
         self.mission = "get to the green goal square"
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
         # Update obstacle positions
-        for i_obst in range(len(self.obstacles)):
-            old_pos = self.obstacles[i_obst].cur_pos
-            top = tuple(map(add, old_pos, (-1, -1)))
-            self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
-            self.grid.set(old_pos[0], old_pos[1], None)
-            if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
-                reward = -1
-                done = True
+        if self.show_obstacles:
+            for i_obst in range(len(self.obstacles)):
+                old_pos = self.obstacles[i_obst].cur_pos
+                top = tuple(map(add, old_pos, (-1, -1)))
+                self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
+                self.grid.set(old_pos[0], old_pos[1], None)
+                if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
+                    reward = -1
+                    done = True
         return obs, reward, done, info
 
 
 class DynamicObstaclesEnv5x5(DynamicObstaclesEnv):
     def __init__(self):
-        super().__init__(size=5)
+        super().__init__(size=5, n_obstacles=2)
 
 
 class DynamicObstaclesRandomEnv5x5(DynamicObstaclesEnv):
     def __init__(self):
-        super().__init__(size=5, agent_start_pos=None)
+        super().__init__(size=5, agent_start_pos=None, n_obstacles=2)
 
 
 class DynamicObstaclesEnv6x6(DynamicObstaclesEnv):
     def __init__(self):
-        super().__init__(size=6)
+        super().__init__(size=6, n_obstacles=3)
 
 
 class DynamicObstaclesRandomEnv6x6(DynamicObstaclesEnv):
     def __init__(self):
-        super().__init__(size=6, agent_start_pos=None)
+        super().__init__(size=6, agent_start_pos=None, n_obstacles=3)
 
 
 class DynamicObstaclesEnv16x16(DynamicObstaclesEnv):
     def __init__(self):
-        super().__init__(size=16)
+        super().__init__(size=16, n_obstacles=8)
 
 
 register(
