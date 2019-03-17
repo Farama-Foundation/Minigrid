@@ -49,8 +49,7 @@ OBJECT_TO_IDX = {
     'ball'          : 6,
     'box'           : 7,
     'goal'          : 8,
-    'lava'          : 9,
-    'obstacle'      : 10
+    'lava'          : 9
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -218,28 +217,6 @@ class Wall(WorldObj):
             (CELL_PIXELS, CELL_PIXELS),
             (CELL_PIXELS,           0),
             (0          ,           0)
-        ])
-
-
-class Obstacle(WorldObj):
-    """
-    Dynamic Obstacles in the environment
-
-    """
-
-    def __init__(self):
-        super().__init__('obstacle', 'red')
-
-    def can_overlap(self):
-        return False
-
-    def render(self, r):
-        self._set_color(r)
-        r.drawPolygon([
-            (0, CELL_PIXELS),
-            (CELL_PIXELS, CELL_PIXELS),
-            (CELL_PIXELS, 0),
-            (0, 0)
         ])
 
 
@@ -622,8 +599,6 @@ class Grid:
                     v = Goal()
                 elif objType == 'lava':
                     v = Lava()
-                elif objType == 'obstacle':
-                    v = Obstacle()
                 else:
                     assert False, "unknown obj type in decode '%s'" % objType
 
@@ -809,8 +784,7 @@ class MiniGridEnv(gym.Env):
             'ball'          : 'A',
             'box'           : 'B',
             'goal'          : 'G',
-            'lava'          : 'V',
-            'obstacle'      : 'O'
+            'lava'          : 'V'
         }
 
         # Short string for opened door
@@ -1156,9 +1130,6 @@ class MiniGridEnv(gym.Env):
                 done = True
                 reward = self._reward()
             if fwd_cell != None and fwd_cell.type == 'lava':
-                done = True
-            if fwd_cell != None and fwd_cell.type == 'obstacle':
-                reward = -1
                 done = True
 
         # Pick up an object
