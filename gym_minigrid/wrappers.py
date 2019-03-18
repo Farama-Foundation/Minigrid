@@ -160,13 +160,13 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         return obs
 
 
-class AgentViewSizeWrapper(gym.core.Wrapper):
+class AgentViewWrapper(gym.core.Wrapper):
     """
     Wrapper to customize the agent's field of view.
     """
 
     def __init__(self, env, agent_view_size=7):
-        super(AgentViewSizeWrapper, self).__init__(env)
+        super(AgentViewWrapper, self).__init__(env)
 
         self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
         env.agent_view_size = agent_view_size
