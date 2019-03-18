@@ -141,6 +141,7 @@ position for each episode, while the regular variants have the agent always
 starting in the corner opposite to the goal.
 
 ### Dynamic obstacles environment
+
 Registered configurations:
 - `MiniGrid-Dynamic-Obstacles-5x5-v0`
 - `MiniGrid-Dynamic-Obstacles-Random-5x5-v0`
@@ -150,7 +151,7 @@ Registered configurations:
 - `MiniGrid-Dynamic-Obstacles-16x16-v0`
 
 <p align="center">
-<img src="https://media.giphy.com/media/NUvVVRNTW4cG0NoQBr/giphy.gif">
+<img src="/figures/dynamic_obstacles.gif">
 </p>
 
 This environment is an empty room with moving obstacles. The goal of the agent is to reach the green goal square without colliding with any obstacle. A large penalty is subtracted if the agent collides with an obstacle and the episode finishes. This environment is useful to test Dynamic Obstacle Avoidance for mobile robots with Reinforcement Learning in Partial Observability.
