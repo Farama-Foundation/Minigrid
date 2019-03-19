@@ -167,18 +167,20 @@ class AgentViewWrapper(gym.core.Wrapper):
 
     def __init__(self, env, agent_view_size=7):
         super(AgentViewWrapper, self).__init__(env)
-
         self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
-        env.agent_view_size = agent_view_size
-        env.obs_array_size = (env.agent_view_size, env.agent_view_size, 3)
 
-        self.observation_space = gym.spaces.Box(
+        # Override default view size
+        env.agent_view_size = agent_view_size
+
+        # Compute observation space with specified view size
+        observation_space = gym.spaces.Box(
             low=0,
             high=255,
-            shape=env.obs_array_size,
+            shape=(agent_view_size, agent_view_size, 3),
             dtype='uint8'
         )
 
-        self.observation_space = spaces.Dict({
-            'image': self.observation_space
+        # Override the environment's observation space
+        env.unwrapped.observation_space = spaces.Dict({
+            'image': observation_space
         })
