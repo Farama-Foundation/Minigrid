@@ -39,6 +39,9 @@ class ActionBonus(gym.core.Wrapper):
 
         return obs, reward, done, info
 
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
+
 class StateBonus(gym.core.Wrapper):
     """
     Adds an exploration bonus based on which positions
@@ -71,6 +74,9 @@ class StateBonus(gym.core.Wrapper):
         reward += bonus
 
         return obs, reward, done, info
+
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
 
 class ImgObsWrapper(gym.core.ObservationWrapper):
     """
@@ -185,3 +191,9 @@ class AgentViewWrapper(gym.core.Wrapper):
         self.observation_space = spaces.Dict({
             'image': observation_space
         })
+
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
+
+    def step(self, action):
+        return self.env.step(action)
