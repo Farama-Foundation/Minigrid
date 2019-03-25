@@ -172,13 +172,12 @@ class AgentViewWrapper(gym.core.Wrapper):
     Wrapper to customize the agent's field of view.
     """
 
-    def __init__(self, env, agent_view_size=7, agent_view_centered=False):
+    def __init__(self, env, agent_view_size=7):
         self.__dict__.update(vars(env))  # Pass values to super wrapper
         super(AgentViewWrapper, self).__init__(env)
 
-        # Override default arguments
-        env.agent_view_size = agent_view_size
-        env.agent_view_centered = agent_view_centered
+        # Override default view size
+        env.unwrapped.agent_view_size = agent_view_size
 
         # Compute observation space with specified view size
         observation_space = gym.spaces.Box(
