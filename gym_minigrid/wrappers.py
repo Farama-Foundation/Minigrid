@@ -15,27 +15,26 @@ class ActionBonus(gym.core.Wrapper):
     """
 
     def __init__(self, env):
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
         self.counts = {}
 
     def step(self, action):
-
         obs, reward, done, info = self.env.step(action)
 
         env = self.unwrapped
-        tup = (env.agentPos, env.agentDir, action)
+        tup = (tuple(env.agent_pos), env.agent_dir, action)
 
         # Get the count for this (s,a) pair
-        preCnt = 0
+        pre_count = 0
         if tup in self.counts:
-            preCnt = self.counts[tup]
+            pre_count = self.counts[tup]
 
         # Update the count for this (s,a) pair
-        newCnt = preCnt + 1
-        self.counts[tup] = newCnt
+        new_count = pre_count + 1
+        self.counts[tup] = new_count
 
-        bonus = 1 / math.sqrt(newCnt)
-
+        bonus = 1 / math.sqrt(new_count)
         reward += bonus
 
         return obs, reward, done, info
@@ -47,29 +46,28 @@ class StateBonus(gym.core.Wrapper):
     """
 
     def __init__(self, env):
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
         self.counts = {}
 
     def step(self, action):
-
         obs, reward, done, info = self.env.step(action)
 
         # Tuple based on which we index the counts
         # We use the position after an update
         env = self.unwrapped
-        tup = (env.agentPos)
+        tup = (tuple(env.agent_pos))
 
         # Get the count for this key
-        preCnt = 0
+        pre_count = 0
         if tup in self.counts:
-            preCnt = self.counts[tup]
+            pre_count = self.counts[tup]
 
         # Update the count for this key
-        newCnt = preCnt + 1
-        self.counts[tup] = newCnt
+        new_count = pre_count + 1
+        self.counts[tup] = new_count
 
-        bonus = 1 / math.sqrt(newCnt)
-
+        bonus = 1 / math.sqrt(new_count)
         reward += bonus
 
         return obs, reward, done, info
@@ -80,8 +78,7 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        # Hack to pass values to super wrapper
-        self.__dict__.update(vars(env))
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.observation_space = env.observation_space.spaces['image']
@@ -95,7 +92,7 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # hack to pass values to super wrapper
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.observation_space = spaces.Box(
@@ -117,6 +114,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env, maxStrLen=64):
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
@@ -168,7 +166,7 @@ class AgentViewWrapper(gym.core.Wrapper):
     """
 
     def __init__(self, env, agent_view_size=7, agent_view_centered=False):
-        self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super(AgentViewWrapper, self).__init__(env)
 
         # Override default arguments
