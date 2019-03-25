@@ -80,9 +80,10 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env)
         # Hack to pass values to super wrapper
         self.__dict__.update(vars(env))
+        super().__init__(env)
+
         self.observation_space = env.observation_space.spaces['image']
 
     def observation(self, obs):
@@ -94,8 +95,9 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env)
         self.__dict__.update(vars(env))  # hack to pass values to super wrapper
+        super().__init__(env)
+
         self.observation_space = spaces.Box(
             low=0,
             high=255,
@@ -165,12 +167,13 @@ class AgentViewWrapper(gym.core.Wrapper):
     Wrapper to customize the agent's field of view.
     """
 
-    def __init__(self, env, agent_view_size=7):
-        super(AgentViewWrapper, self).__init__(env)
+    def __init__(self, env, agent_view_size=7, agent_view_centered=False):
         self.__dict__.update(vars(env))  # Hack to pass values to super wrapper
+        super(AgentViewWrapper, self).__init__(env)
 
-        # Override default view size
+        # Override default arguments
         env.agent_view_size = agent_view_size
+        env.agent_view_centered = agent_view_centered
 
         # Compute observation space with specified view size
         observation_space = gym.spaces.Box(
