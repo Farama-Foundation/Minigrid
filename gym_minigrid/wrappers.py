@@ -120,7 +120,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
     and combine these with observed images into one flat array
     """
 
-    def __init__(self, env, maxStrLen=64):
+    def __init__(self, env, maxStrLen=96):
         self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
@@ -146,7 +146,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
 
         # Cache the last-encoded mission string
         if mission != self.cachedStr:
-            assert len(mission) <= self.maxStrLen, "mission string too long"
+            assert len(mission) <= self.maxStrLen, 'mission string too long ({} chars)'.format(len(mission))
             mission = mission.lower()
 
             strArray = np.zeros(shape=(self.maxStrLen, self.numCharCodes), dtype='float32')
@@ -165,7 +165,6 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
         return obs
-
 
 class AgentViewWrapper(gym.core.Wrapper):
     """
