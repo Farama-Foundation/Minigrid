@@ -109,8 +109,9 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
         )
 
     def observation(self, obs):
-        full_grid = self.env.grid.encode()
-        full_grid[self.env.agent_pos[0]][self.env.agent_pos[1]] = np.array([255, self.env.agent_dir, 0])
+        env = self.unwrapped
+        full_grid = env.grid.encode()
+        full_grid[env.agent_pos[0]][env.agent_pos[1]] = np.array([255, env.agent_dir, 0])
         return full_grid
 
 class FlatObsWrapper(gym.core.ObservationWrapper):
