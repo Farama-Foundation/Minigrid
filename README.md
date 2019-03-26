@@ -140,21 +140,19 @@ The random variants of the environment have the agent starting at a random
 position for each episode, while the regular variants have the agent always
 starting in the corner opposite to the goal.
 
-### Dynamic obstacles environment
+### Four rooms environment
 
 Registered configurations:
-- `MiniGrid-Dynamic-Obstacles-5x5-v0`
-- `MiniGrid-Dynamic-Obstacles-Random-5x5-v0`
-- `MiniGrid-Dynamic-Obstacles-6x6-v0`
-- `MiniGrid-Dynamic-Obstacles-Random-6x6-v0`
-- `MiniGrid-Dynamic-Obstacles-8x8-v0`
-- `MiniGrid-Dynamic-Obstacles-16x16-v0`
+- `MiniGrid-FourRooms-v0`
 
 <p align="center">
-<img src="/figures/dynamic_obstacles.gif">
+<img src="/figures/four-rooms-env.png">
 </p>
 
-This environment is an empty room with moving obstacles. The goal of the agent is to reach the green goal square without colliding with any obstacle. A large penalty is subtracted if the agent collides with an obstacle and the episode finishes. This environment is useful to test Dynamic Obstacle Avoidance for mobile robots with Reinforcement Learning in Partial Observability.
+Classical four room reinforcement learning environment. The agent must navigate
+in a maze composed of four rooms interconnected by 4 gaps in the walls. To
+obtain a reward, the agent must reach the green goal square. Both the agent
+and the goal square are randomly placed in any of the four rooms.
 
 ### Door & key environment
 
@@ -430,3 +428,19 @@ Similar to the `LavaCrossing` environment, the agent has to reach the green
 goal square on the other corner of the room, however lava is replaced by
 walls. This MDP is therefore much easier and and maybe useful for quickly
 testing your algorithms.
+
+### Dynamic obstacles environment
+
+Registered configurations:
+- `MiniGrid-Dynamic-Obstacles-5x5-v0`
+- `MiniGrid-Dynamic-Obstacles-Random-5x5-v0`
+- `MiniGrid-Dynamic-Obstacles-6x6-v0`
+- `MiniGrid-Dynamic-Obstacles-Random-6x6-v0`
+- `MiniGrid-Dynamic-Obstacles-8x8-v0`
+- `MiniGrid-Dynamic-Obstacles-16x16-v0`
+
+<p align="center">
+<img src="/figures/dynamic_obstacles.gif">
+</p>
+
+This environment is an empty room with moving obstacles. The goal of the agent is to reach the green goal square without colliding with any obstacle. A large penalty is subtracted if the agent collides with an obstacle and the episode finishes. This environment is useful to test Dynamic Obstacle Avoidance for mobile robots with Reinforcement Learning in Partial Observability.
