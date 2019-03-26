@@ -146,7 +146,7 @@ Registered configurations:
 - `MiniGrid-FourRooms-v0`
 
 <p align="center">
-<img src="/figures/four-rooms-env.png" width=400>
+<img src="/figures/four-rooms-env.png" width=380>
 </p>
 
 Classic four room reinforcement learning environment. The agent must navigate
