@@ -5,7 +5,7 @@ env_list = []
 def register(
     id,
     entry_point,
-    reward_threshold=900
+    reward_threshold=0.95
 ):
     assert id.startswith("MiniGrid-")
     assert id not in env_list
