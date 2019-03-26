@@ -146,10 +146,10 @@ Registered configurations:
 - `MiniGrid-FourRooms-v0`
 
 <p align="center">
-<img src="/figures/four-rooms-env.png">
+<img src="/figures/four-rooms-env.png" width=400>
 </p>
 
-Classical four room reinforcement learning environment. The agent must navigate
+Classic four room reinforcement learning environment. The agent must navigate
 in a maze composed of four rooms interconnected by 4 gaps in the walls. To
 obtain a reward, the agent must reach the green goal square. Both the agent
 and the goal square are randomly placed in any of the four rooms.
