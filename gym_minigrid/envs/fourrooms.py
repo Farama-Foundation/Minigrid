@@ -7,7 +7,7 @@ from gym_minigrid.register import register
 
 class FourRoomsEnv(MiniGridEnv):
     """
-    Classical 4 rooms Gridworld environmnet.
+    Classic 4 rooms gridworld environment.
     Can specify agent and goal position, if not it set at random.
     """
 
