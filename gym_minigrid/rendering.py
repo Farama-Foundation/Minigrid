@@ -138,17 +138,13 @@ class Renderer:
     def getArray(self):
         """
         Get a numpy array of RGB pixel values.
-        The size argument should be (3,w,h)
+        The array will have shape (height, width, 3)
         """
-
-        width = self.width
-        height = self.height
-        shape = (width, height, 3)
 
         numBytes = self.width * self.height * 3
         buf = self.img.bits().asstring(numBytes)
         output = np.frombuffer(buf, dtype='uint8')
-        output = output.reshape(shape)
+        output = output.reshape((height, width, 3))
 
         return output
 
