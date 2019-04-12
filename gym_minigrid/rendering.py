@@ -144,7 +144,7 @@ class Renderer:
         numBytes = self.width * self.height * 3
         buf = self.img.bits().asstring(numBytes)
         output = np.frombuffer(buf, dtype='uint8')
-        output = output.reshape((height, width, 3))
+        output = output.reshape((self.height, self.width, 3))
 
         return output
 
