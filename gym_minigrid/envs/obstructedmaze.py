@@ -58,6 +58,11 @@ class ObstructedMazeEnv(RoomGrid):
 
         door, door_pos = super().add_door(i, j, door_idx, color, locked=locked)
 
+        if blocked:
+            vec = DIR_TO_VEC[door_idx]
+            blocking_ball = Ball(self.blocking_ball_color) if blocked else None
+            self.grid.set(door_pos[0]-vec[0], door_pos[1]-vec[1], blocking_ball)
+            
         if locked:
             obj = Key(door.color)
             if key_in_box:
@@ -65,10 +70,6 @@ class ObstructedMazeEnv(RoomGrid):
                 box.contains = obj
                 obj = box
             self.place_in_room(i, j, obj)
-        if blocked:
-            vec = DIR_TO_VEC[door_idx]
-            blocking_ball = Ball(self.blocking_ball_color) if blocked else None
-            self.grid.set(door_pos[0]-vec[0], door_pos[1]-vec[1], blocking_ball)
 
         return door, door_pos
 
