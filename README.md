@@ -35,7 +35,7 @@ This environment has been built as part of work done at the [MILA](https://mila.
 There is now a [pip package](https://pypi.org/project/gym-minigrid/) available, which is updated periodically:
 
 ```
-pip install gym-minigrid
+pip3 install gym-minigrid
 ```
 
 Alternatively, to get the latest version of MiniGrid, you can clone this repository and install the dependencies with `pip3`:
