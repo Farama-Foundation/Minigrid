@@ -5,7 +5,7 @@ from functools import reduce
 import numpy as np
 import gym
 from gym import error, spaces, utils
-from .minigrid import OBJECT_TO_IDX
+from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX
 
 class ActionBonus(gym.core.Wrapper):
     """
@@ -113,8 +113,8 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
         full_grid = env.grid.encode()
         full_grid[env.agent_pos[0]][env.agent_pos[1]] = np.array([
             OBJECT_TO_IDX['agent'],
-            env.agent_dir,
-            0
+            COLOR_TO_IDX['red'],
+            env.agent_dir
         ])
 
         return full_grid
