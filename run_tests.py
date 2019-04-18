@@ -71,6 +71,13 @@ for env_name in env_list:
     env.close()
 
     env = gym.make(env_name)
+    env = ReseedWrapper(env)
+    for _ in range(10):
+        env.reset()
+        env.step(0)
+        env.close()
+
+    env = gym.make(env_name)
     env = ImgObsWrapper(env)
     env.reset()
     env.step(0)
