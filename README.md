@@ -181,6 +181,7 @@ useful to experiment with curiosity or curriculum learning.
 
 Registered configurations:
 - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
+- `MiniGrid-MultiRoom-N4-S5-v0` (four rooms)
 - `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
 <p align="center">
