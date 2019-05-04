@@ -113,7 +113,29 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
 
     def observation(self, obs):
         return obs['image']
+    
+class RGBImgObsWrapper(gym.core.ObservationWrapper):
+    """
+    Use the image as the only observation output, no language/mission.
+    use rgb values.
+    """
 
+    def __init__(self, env):
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
+        super().__init__(env)
+
+        self.observation_space = spaces.Box(
+            low=0,
+            high=255,
+            shape=(self.env.width*32, self.env.height*32, 3),  # number of cells
+            dtype='uint8'
+        )
+
+    def observation(self, obs):
+        env = self.unwrapped
+        return env.render(mode = 'rgb_array', highlight = False)
+    
+    
 class FullyObsWrapper(gym.core.ObservationWrapper):
     """
     Fully observable gridworld using a compact grid encoding
