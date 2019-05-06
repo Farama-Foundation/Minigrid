@@ -117,8 +117,9 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
 
 class RGBImgObsWrapper(gym.core.ObservationWrapper):
     """
-    Wrapper to use RGB image as the only observation output, no language/mission.
-    This can be used to force the agent to solve the gridworld in pixel space.
+    Wrapper to use fully observable RGB image as the only observation output,
+    no language/mission. This can be used to have the agent to solve the
+    gridworld in pixel space.
     """
 
     def __init__(self, env):
