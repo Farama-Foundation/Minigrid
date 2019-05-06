@@ -1308,7 +1308,7 @@ class MiniGridEnv(gym.Env):
         top_left = self.agent_pos + f_vec * (self.agent_view_size-1) - r_vec * (self.agent_view_size // 2)
 
         # For each cell in the visibility mask
-        if(highlight):
+        if highlight:
             for vis_j in range(0, self.agent_view_size):
                 for vis_i in range(0, self.agent_view_size):
                     # If this cell is not visible, don't highlight it
