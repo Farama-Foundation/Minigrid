@@ -1254,7 +1254,7 @@ class MiniGridEnv(gym.Env):
 
         return r.getPixmap()
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human', close=False, highlight=True):
         """
         Render the whole-grid human view
         """
@@ -1264,7 +1264,7 @@ class MiniGridEnv(gym.Env):
                 self.grid_render.close()
             return
 
-        if self.grid_render is None:
+        if self.grid_render is None or self.grid_render.window is None:
             from gym_minigrid.rendering import Renderer
             self.grid_render = Renderer(
                 self.width * CELL_PIXELS,
@@ -1308,23 +1308,24 @@ class MiniGridEnv(gym.Env):
         top_left = self.agent_pos + f_vec * (self.agent_view_size-1) - r_vec * (self.agent_view_size // 2)
 
         # For each cell in the visibility mask
-        for vis_j in range(0, self.agent_view_size):
-            for vis_i in range(0, self.agent_view_size):
-                # If this cell is not visible, don't highlight it
-                if not vis_mask[vis_i, vis_j]:
-                    continue
+        if highlight:
+            for vis_j in range(0, self.agent_view_size):
+                for vis_i in range(0, self.agent_view_size):
+                    # If this cell is not visible, don't highlight it
+                    if not vis_mask[vis_i, vis_j]:
+                        continue
 
-                # Compute the world coordinates of this cell
-                abs_i, abs_j = top_left - (f_vec * vis_j) + (r_vec * vis_i)
+                    # Compute the world coordinates of this cell
+                    abs_i, abs_j = top_left - (f_vec * vis_j) + (r_vec * vis_i)
 
-                # Highlight the cell
-                r.fillRect(
-                    abs_i * CELL_PIXELS,
-                    abs_j * CELL_PIXELS,
-                    CELL_PIXELS,
-                    CELL_PIXELS,
-                    255, 255, 255, 75
-                )
+                    # Highlight the cell
+                    r.fillRect(
+                        abs_i * CELL_PIXELS,
+                        abs_j * CELL_PIXELS,
+                        CELL_PIXELS,
+                        CELL_PIXELS,
+                        255, 255, 255, 75
+                    )
 
         r.endFrame()
 

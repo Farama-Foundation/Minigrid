@@ -6,6 +6,7 @@ import numpy as np
 import gym
 from gym import error, spaces, utils
 from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX
+from .minigrid import CELL_PIXELS
 
 class ReseedWrapper(gym.core.Wrapper):
     """
@@ -113,6 +114,30 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
 
     def observation(self, obs):
         return obs['image']
+
+class RGBImgObsWrapper(gym.core.ObservationWrapper):
+    """
+    Wrapper to use fully observable RGB image as the only observation output,
+    no language/mission. This can be used to have the agent to solve the
+    gridworld in pixel space.
+    """
+
+    def __init__(self, env):
+        self.__dict__.update(vars(env))  # Pass values to super wrapper
+        super().__init__(env)
+
+
+        self.observation_space = spaces.Box(
+            low=0,
+            high=255,
+            shape=(self.env.width*CELL_PIXELS, self.env.height*CELL_PIXELS, 3),
+            dtype='uint8'
+        )
+
+    def observation(self, obs):
+        env = self.unwrapped
+        return env.render(mode = 'rgb_array', highlight = False)
+
 
 class FullyObsWrapper(gym.core.ObservationWrapper):
     """
