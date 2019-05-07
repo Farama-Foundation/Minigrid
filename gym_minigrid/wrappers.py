@@ -126,7 +126,6 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
         self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
-
         self.observation_space = spaces.Box(
             low=0,
             high=255,
@@ -137,7 +136,6 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
     def observation(self, obs):
         env = self.unwrapped
         return env.render(mode = 'rgb_array', highlight = False)
-
 
 class FullyObsWrapper(gym.core.ObservationWrapper):
     """
