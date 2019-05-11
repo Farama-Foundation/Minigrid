@@ -3,7 +3,9 @@ from gym_minigrid.register import register
 
 class RedBlueDoorEnv(MiniGridEnv):
     """
-    Empty grid environment, no obstacles, sparse reward
+    Single room with red and blue doors on opposite sides.
+    The red door must be opened before the blue door to
+    obtain a reward.
     """
 
     def __init__(self, size=8):
