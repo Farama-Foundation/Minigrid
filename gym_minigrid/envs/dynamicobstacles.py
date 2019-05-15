@@ -60,6 +60,10 @@ class DynamicObstaclesEnv(MiniGridEnv):
         self.mission = "get to the green goal square"
 
     def step(self, action):
+        # Invalid action
+        if action >= self.action_space.n:
+            action = 0
+
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
         # Update obstacle positions
