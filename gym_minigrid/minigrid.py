@@ -923,8 +923,8 @@ class MiniGridEnv(gym.Env):
             num_tries += 1
 
             pos = np.array((
-                self._rand_int(top[0], top[0] + size[0]),
-                self._rand_int(top[1], top[1] + size[1])
+                self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
+                self._rand_int(top[1], min(top[1] + size[1], self.grid.height))
             ))
 
             # Don't place the object on top of another object
