@@ -908,6 +908,8 @@ class MiniGridEnv(gym.Env):
 
         if top is None:
             top = (0, 0)
+        else:
+            top = (max(top[0], 0), max(top[1], 0))
 
         if size is None:
             size = (self.grid.width, self.grid.height)
