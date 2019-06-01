@@ -2,6 +2,19 @@ from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 from operator import add
 
+
+class NoPickUpBall(WorldObj):
+    def __init__(self, color='blue'):
+        super(NoPickUpBall, self).__init__('ball', color)
+
+    def can_pickup(self):
+        return False
+
+    def render(self, r):
+        self._set_color(r)
+        r.drawCircle(CELL_PIXELS * 0.5, CELL_PIXELS * 0.5, 10)
+
+
 class DynamicObstaclesEnv(MiniGridEnv):
     """
     Single-room square grid environment with moving obstacles
@@ -55,7 +68,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
         if self.show_obstacles:
             self.obstacles = []
             for i_obst in range(self.n_obstacles):
-                self.obstacles.append(Ball())
+                self.obstacles.append(NoPickUpBall())
                 self.place_obj(self.obstacles[i_obst], max_tries=100)
         self.mission = "get to the green goal square"
 
