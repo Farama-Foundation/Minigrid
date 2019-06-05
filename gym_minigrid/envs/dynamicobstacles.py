@@ -85,7 +85,8 @@ class DynamicObstaclesEnv(MiniGridEnv):
                 old_pos = self.obstacles[i_obst].cur_pos
                 top = tuple(map(add, old_pos, (-1, -1)))
                 self.grid.set(*old_pos, None)
-                self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
+                self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100,
+                               avoid_agent=False)
                 if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
                     reward = -1
                     done = True

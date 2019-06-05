@@ -713,6 +713,13 @@ class MiniGridEnv(gym.Env):
         self.start_pos = None
         self.start_dir = None
 
+        # Current position and direction for the agent
+        self.agent_pos = None
+        self.agent_dir = None
+
+        # Set if env is in the process of generating grid
+        self.is_gen_grid = False
+
         # Initialize the RNG
         self.seed(seed=seed)
 
@@ -720,9 +727,16 @@ class MiniGridEnv(gym.Env):
         self.reset()
 
     def reset(self):
+        # Reset positions and directions of agent
+        self.start_pos, self.agent_pos = None, None
+        self.start_dir, self.agent_dir = None, None
+
         # Generate a new random grid at the start of each episode
         # To keep the same grid for each episode, call env.seed() with
         # the same seed before calling env.reset()
+
+        # Start grid generation
+        self.is_gen_grid = True
         self._gen_grid(self.width, self.height)
 
         # These fields should be defined by _gen_grid
@@ -736,6 +750,9 @@ class MiniGridEnv(gym.Env):
         # Place the agent in the starting position and direction
         self.agent_pos = self.start_pos
         self.agent_dir = self.start_dir
+
+        # Set end of grid generation
+        self.is_gen_grid = False
 
         # Item picked up, being carried, initially nothing
         self.carrying = None
@@ -896,6 +913,7 @@ class MiniGridEnv(gym.Env):
         top=None,
         size=None,
         reject_fn=None,
+        avoid_agent=True,
         max_tries=math.inf
     ):
         """
@@ -904,7 +922,11 @@ class MiniGridEnv(gym.Env):
         :param top: top-left position of the rectangle where to place
         :param size: size of the rectangle where to place
         :param reject_fn: function to filter out potential positions
+        :param avoid_agent: Don't place the object where the agent is
         """
+
+        # Consider agent start pos if environment is in the process of grid generation
+        agent_pos = self.start_pos if self.is_gen_grid else self.agent_pos
 
         if top is None:
             top = (0, 0)
@@ -934,7 +956,7 @@ class MiniGridEnv(gym.Env):
                 continue
 
             # Don't place the object where the agent is
-            if np.array_equal(pos, self.start_pos):
+            if avoid_agent and np.array_equal(pos, agent_pos):
                 continue
 
             # Check if there is a filtering criterion
