@@ -38,7 +38,6 @@ class ActionBonus(gym.core.Wrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
         self.counts = {}
 
@@ -72,7 +71,6 @@ class StateBonus(gym.core.Wrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
         self.counts = {}
 
@@ -107,7 +105,6 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.observation_space = env.observation_space.spaces['image']
@@ -123,7 +120,6 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.observation_space = spaces.Box(
@@ -143,7 +139,6 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.observation_space = spaces.Box(
@@ -171,7 +166,6 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
     """
 
     def __init__(self, env, maxStrLen=96):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
@@ -218,11 +212,10 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
 
 class AgentViewWrapper(gym.core.Wrapper):
     """
-    Wrapper to customize the agent's field of view.
+    Wrapper to customize the agent field of view size.
     """
 
     def __init__(self, env, agent_view_size=7):
-        self.__dict__.update(vars(env))  # Pass values to super wrapper
         super(AgentViewWrapper, self).__init__(env)
 
         # Override default view size
