@@ -12,12 +12,10 @@ class DynamicObstaclesEnv(MiniGridEnv):
             size=8,
             agent_start_pos=(1, 1),
             agent_start_dir=0,
-            n_obstacles=4,
-            show_obstacles=True
+            n_obstacles=4
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
-        self.show_obstacles = show_obstacles
 
         # Reduce obstacles if there are too many
         if n_obstacles <= size/2 + 1:
@@ -52,11 +50,11 @@ class DynamicObstaclesEnv(MiniGridEnv):
             self.place_agent()
 
         # Place obstacles
-        if self.show_obstacles:
-            self.obstacles = []
-            for i_obst in range(self.n_obstacles):
-                self.obstacles.append(Ball())
-                self.place_obj(self.obstacles[i_obst], max_tries=100)
+        self.obstacles = []
+        for i_obst in range(self.n_obstacles):
+            self.obstacles.append(Ball())
+            self.place_obj(self.obstacles[i_obst], max_tries=100)
+
         self.mission = "get to the green goal square"
 
     def step(self, action):
@@ -64,18 +62,28 @@ class DynamicObstaclesEnv(MiniGridEnv):
         if action >= self.action_space.n:
             action = 0
 
+        # Check if there is an obstacle in front of the agent
+        front_cell = self.grid.get(*self.front_pos)
+        not_clear = front_cell and front_cell.type != 'goal'
+
         obs, reward, done, info = MiniGridEnv.step(self, action)
 
+        # If the agent tries to walk over an obstacle
+        if action == self.actions.forward and not_clear:
+            reward = -1
+            done = True
+            return obs, reward, done, info
+
         # Update obstacle positions
-        if self.show_obstacles:
-            for i_obst in range(len(self.obstacles)):
-                old_pos = self.obstacles[i_obst].cur_pos
-                top = tuple(map(add, old_pos, (-1, -1)))
-                self.grid.set(*old_pos, None)
+        for i_obst in range(len(self.obstacles)):
+            old_pos = self.obstacles[i_obst].cur_pos
+            top = tuple(map(add, old_pos, (-1, -1)))
+
+            try:
                 self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
-                if np.array_equal(self.obstacles[i_obst].cur_pos, self.agent_pos):
-                    reward = -1
-                    done = True
+                self.grid.set(*old_pos, None)
+            except:
+                pass
 
         return obs, reward, done, info
 
