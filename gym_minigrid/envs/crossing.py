@@ -30,8 +30,8 @@ class CrossingEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Place the agent in the top-left corner
-        self.start_pos = (1, 1)
-        self.start_dir = 0
+        self.agent_pos = (1, 1)
+        self.agent_dir = 0
 
         # Place a goal square in the bottom-right corner
         self.grid.set(width - 2, height - 2, Goal())

@@ -62,8 +62,8 @@ class MemoryEnv(MiniGridEnv):
             self.grid.set(hallway_end + 2, j, Wall())
 
         # Fix the player's start position and orientation
-        self.start_pos = (self._rand_int(1, hallway_end + 1), height // 2)
-        self.start_dir = 0
+        self.agent_pos = (self._rand_int(1, hallway_end + 1), height // 2)
+        self.agent_dir = 0
 
         # Place objects
         start_room_obj = self._rand_elem([Key, Ball])
