@@ -119,19 +119,25 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
     gridworld in pixel space.
     """
 
-    def __init__(self, env):
+    def __init__(self, env, tile_size=8):
         super().__init__(env)
+
+        self.tile_size = tile_size
 
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width*CELL_PIXELS, self.env.height*CELL_PIXELS, 3),
+            shape=(self.env.width*tile_size, self.env.height*tile_size, 3),
             dtype='uint8'
         )
 
     def observation(self, obs):
         env = self.unwrapped
-        return env.render(mode = 'rgb_array', highlight = False)
+        return env.render(
+            mode='rgb_array',
+            highlight=False,
+            tile_size=self.tile_size
+        )
 
 class FullyObsWrapper(gym.core.ObservationWrapper):
     """
