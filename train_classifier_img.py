@@ -65,6 +65,11 @@ class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
 
+class Print(nn.Module):
+    def forward(self, input):
+        print(input.size())
+        return input
+
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -75,21 +80,19 @@ class Model(nn.Module):
             #nn.Conv2d(in_channels=16, out_channels=64, kernel_size=1),
             #nn.LeakyReLU(),
 
-            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=1),
+            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=6, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=1),
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=6, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=64, out_channels=2, kernel_size=1),
-            nn.LeakyReLU(),
-
-            nn.Conv2d(in_channels=2, out_channels=2, kernel_size=7),
+            nn.Conv2d(in_channels=64, out_channels=16, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
-
+            #Print(),
             Flatten(),
 
-            # Two output heads, one for each class
-            nn.Linear(2, 2)
+            nn.Linear(144, 128),
+            nn.LeakyReLU(),
+            nn.Linear(128, 2),
         )
 
         self.apply(init_weights)
@@ -125,6 +128,7 @@ def sample_batch(batch_size=128):
 
         ball_visible = ('red', 'ball') in Grid.decode(obs)
 
+        obs = env.get_obs_render(obs, tile_size=8, mode='rgb_array')
         obs = obs.transpose([2, 0, 1])
 
         imgs.append(np.copy(obs))
@@ -134,11 +138,6 @@ def sample_batch(batch_size=128):
     labels = np.array(labels, dtype=np.long)
 
     return imgs, labels
-
-
-
-
-
 
 
 
@@ -180,7 +179,7 @@ def eval_model(model):
 
 ##############################################################################
 
-batch_size = 128
+batch_size = 64
 
 model = Model()
 model.cuda()
