@@ -8,6 +8,8 @@ from gym_minigrid.register import env_list
 from gym_minigrid.minigrid import Grid, OBJECT_TO_IDX
 import babyai
 
+import matplotlib.pyplot as plt
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -41,21 +43,14 @@ def init_weights(m):
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
 
-class ImageBOWEmbedding(nn.Module):
-    def __init__(self, num_embeddings, embedding_dim, padding_idx=None, reduce_fn=torch.mean):
-        super(ImageBOWEmbedding, self).__init__()
-        self.num_embeddings = num_embeddings
-        self.embedding_dim = embedding_dim
-        self.padding_idx = padding_idx
-        self.reduce_fn = reduce_fn
-        self.embedding = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
-
-    def forward(self, inputs):
-        embeddings = self.embedding(inputs.long())
-        embeddings = self.reduce_fn(embeddings, dim=1)
-        embeddings = torch.transpose(embeddings, 1, 3)
-        embeddings = torch.transpose(embeddings, 2, 3)
-        return embeddings
+def num_params(model):
+    pp=0
+    for p in list(model.parameters()):
+        nn=1
+        for s in list(p.size()):
+            nn = nn*s
+        pp += nn
+    return pp
 
 class Flatten(nn.Module):
     """
@@ -80,11 +75,11 @@ class Model(nn.Module):
             #nn.Conv2d(in_channels=16, out_channels=64, kernel_size=1),
             #nn.LeakyReLU(),
 
-            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=6, stride=2),
+            nn.Conv2d(in_channels=3, out_channels=16, kernel_size=6, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=6, stride=2),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=6, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=64, out_channels=16, kernel_size=6, stride=2),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
             #Print(),
@@ -129,6 +124,10 @@ def sample_batch(batch_size=128):
         ball_visible = ('red', 'ball') in Grid.decode(obs)
 
         obs = env.get_obs_render(obs, tile_size=8, mode='rgb_array')
+
+        #plt.imshow(obs)
+        #plt.show()
+
         obs = obs.transpose([2, 0, 1])
 
         imgs.append(np.copy(obs))
@@ -183,6 +182,8 @@ batch_size = 64
 
 model = Model()
 model.cuda()
+
+print('Num params:', num_params(model))
 
 optimizer = optim.Adam(
     model.parameters(),

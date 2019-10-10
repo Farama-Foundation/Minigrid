@@ -42,20 +42,16 @@ def init_weights(m):
         m.bias.data.fill_(0)
 
 class ImageBOWEmbedding(nn.Module):
-    def __init__(self, num_embeddings, embedding_dim, padding_idx=None, reduce_fn=torch.mean):
-        super(ImageBOWEmbedding, self).__init__()
-        self.num_embeddings = num_embeddings
-        self.embedding_dim = embedding_dim
-        self.padding_idx = padding_idx
-        self.reduce_fn = reduce_fn
-        self.embedding = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
+   def __init__(self, max_value, embedding_dim):
+       super(ImageBOWEmbedding, self).__init__()
+       self.max_value = max_value
+       self.embedding_dim = embedding_dim
+       self.embedding = nn.Embedding(3 * max_value, embedding_dim)
 
-    def forward(self, inputs):
-        embeddings = self.embedding(inputs.long())
-        embeddings = self.reduce_fn(embeddings, dim=1)
-        embeddings = torch.transpose(embeddings, 1, 3)
-        embeddings = torch.transpose(embeddings, 2, 3)
-        return embeddings
+   def forward(self, inputs):
+       offsets = torch.Tensor([0, self.max_value, 2 * self.max_value]).to(inputs.device)
+       inputs = (inputs + offsets[None, :, None, None]).long()
+       return self.embedding(inputs).sum(1).permute(0, 3, 1, 2)
 
 class Flatten(nn.Module):
     """
@@ -65,14 +61,23 @@ class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
 
+def num_params(model):
+    pp=0
+    for p in list(model.parameters()):
+        nn=1
+        for s in list(p.size()):
+            nn = nn*s
+        pp += nn
+    return pp
+
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
 
         self.layers = nn.Sequential(
-            ImageBOWEmbedding(765, embedding_dim=16, padding_idx=0, reduce_fn=torch.mean),
+            ImageBOWEmbedding(765, embedding_dim=32),
 
-            nn.Conv2d(in_channels=16, out_channels=64, kernel_size=1),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=1),
             nn.LeakyReLU(),
             nn.Conv2d(in_channels=64, out_channels=64, kernel_size=1),
             nn.LeakyReLU(),
@@ -91,7 +96,7 @@ class Model(nn.Module):
         self.apply(init_weights)
 
     def forward(self, obs):
-        obs = obs / 16
+        #obs = obs / 16
 
         out = self.layers(obs)
 
@@ -130,8 +135,6 @@ def sample_batch(batch_size=128):
     labels = np.array(labels, dtype=np.long)
 
     return imgs, labels
-
-
 
 
 
@@ -180,6 +183,8 @@ batch_size = 128
 
 model = Model()
 model.cuda()
+
+print('Num params:', num_params(model))
 
 optimizer = optim.Adam(
     model.parameters(),
