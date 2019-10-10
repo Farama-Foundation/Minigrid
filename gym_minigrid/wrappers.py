@@ -146,7 +146,7 @@ class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
 
                 out[i, j, type] = 1
                 out[i, j, len(OBJECT_TO_IDX) + color] = 1
-                out[i, j, len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + color] = 1
+                out[i, j, len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + state] = 1
 
         return {
             'mission': obs['mission'],
