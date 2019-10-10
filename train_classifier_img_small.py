@@ -70,21 +70,21 @@ class Model(nn.Module):
         super().__init__()
 
         self.layers = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=16, kernel_size=6, stride=2),
+            #Print(),
+
+            nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=6, stride=2),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=3, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=6, stride=1),
-            nn.LeakyReLU(),
-            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=5, stride=1),
+            nn.Conv2d(in_channels=16, out_channels=16, kernel_size=2, stride=2),
             nn.LeakyReLU(),
 
             #Print(),
             Flatten(),
 
-            nn.Linear(64, 64),
+            nn.Linear(144, 128),
             nn.LeakyReLU(),
-            nn.Linear(64, 2),
+            nn.Linear(128, 2),
         )
 
         self.apply(init_weights)
@@ -120,7 +120,7 @@ def sample_batch(batch_size=128):
 
         ball_visible = ('red', 'ball') in Grid.decode(obs)
 
-        obs = env.get_obs_render(obs, tile_size=8, mode='rgb_array')
+        obs = env.get_obs_render(obs, tile_size=4, mode='rgb_array')
 
         #plt.imshow(obs)
         #plt.show()
