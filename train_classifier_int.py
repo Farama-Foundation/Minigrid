@@ -41,22 +41,6 @@ def init_weights(m):
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
 
-class ImageBOWEmbedding(nn.Module):
-    def __init__(self, num_embeddings, embedding_dim, padding_idx=None, reduce_fn=torch.mean):
-        super(ImageBOWEmbedding, self).__init__()
-        self.num_embeddings = num_embeddings
-        self.embedding_dim = embedding_dim
-        self.padding_idx = padding_idx
-        self.reduce_fn = reduce_fn
-        self.embedding = nn.Embedding(num_embeddings, embedding_dim, padding_idx=padding_idx)
-
-    def forward(self, inputs):
-        embeddings = self.embedding(inputs.long())
-        embeddings = self.reduce_fn(embeddings, dim=1)
-        embeddings = torch.transpose(embeddings, 1, 3)
-        embeddings = torch.transpose(embeddings, 2, 3)
-        return embeddings
-
 class Flatten(nn.Module):
     """
     Flatten layer, to flatten convolutional layer output
@@ -70,11 +54,6 @@ class Model(nn.Module):
         super().__init__()
 
         self.layers = nn.Sequential(
-
-            #ImageBOWEmbedding(765, embedding_dim=16, padding_idx=0, reduce_fn=torch.mean),
-            #nn.Conv2d(in_channels=16, out_channels=64, kernel_size=1),
-            #nn.LeakyReLU(),
-
             nn.Conv2d(in_channels=3, out_channels=64, kernel_size=1),
             nn.LeakyReLU(),
             nn.Conv2d(in_channels=64, out_channels=64, kernel_size=1),
@@ -84,7 +63,6 @@ class Model(nn.Module):
 
             nn.Conv2d(in_channels=2, out_channels=2, kernel_size=7),
             nn.LeakyReLU(),
-
 
             Flatten(),
 
