@@ -414,17 +414,17 @@ class Grid:
         assert j >= 0 and j < self.height
         return self.grid[j * self.width + i]
 
-    def horz_wall(self, x, y, length=None):
+    def horz_wall(self, x, y, length=None, obj_type=Wall):
         if length is None:
             length = self.width - x
         for i in range(0, length):
-            self.set(x + i, y, Wall())
+            self.set(x + i, y, obj_type())
 
-    def vert_wall(self, x, y, length=None):
+    def vert_wall(self, x, y, length=None, obj_type=Wall):
         if length is None:
             length = self.height - y
         for j in range(0, length):
-            self.set(x, y + j, Wall())
+            self.set(x, y + j, obj_type())
 
     def wall_rect(self, x, y, w, h):
         self.horz_wall(x, y, w)
