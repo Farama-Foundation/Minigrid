@@ -393,6 +393,22 @@ The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
 
+## Lava gap environment
+
+Registered configurations:
+- `MiniGrid-LavaGapS5-v0`
+- `MiniGrid-LavaGapS6-v0`
+- `MiniGrid-LavaGapS7-v0`
+
+<p align="center">
+  <img src="figures/LavaGapS6.png" width="200">
+</p>
+
+The agent has to reach the green goal square at the opposite corner of the room,
+and must pass through a narrow gap in a vertical strip of deadly lava. Touching
+the lava terminate the episode with a zero reward. This environment is useful
+for studying safety and safe exploration.
+
 ## Lava crossing environment
 
 Registered configurations:
