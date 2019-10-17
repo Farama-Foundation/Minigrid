@@ -88,7 +88,7 @@ for env_name in env_list:
     env = FullyObsWrapper(env)
     env.reset()
     obs, _, _, _ = env.step(0)
-    assert obs.shape == env.observation_space.shape
+    assert obs['image'].shape == env.observation_space.spaces['image'].shape
     env.close()
 
     env = gym.make(env_name)
@@ -98,7 +98,7 @@ for env_name in env_list:
     env.close()
 
     env = gym.make(env_name)
-    env = AgentViewWrapper(env, 5)
+    env = ViewSizeWrapper(env, 5)
     env.reset()
     env.step(0)
     env.close()
