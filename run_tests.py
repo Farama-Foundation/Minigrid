@@ -103,6 +103,23 @@ for env_name in env_list:
     env.step(0)
     env.close()
 
+    # Test the wrappers return proper observation spaces.
+    wrappers = [
+        RGBImgObsWrapper,
+        RGBImgPartialObsWrapper,
+        OneHotPartialObsWrapper
+    ]
+    for wrapper in wrappers:
+        env = wrapper(gym.make(env_name))
+        obs_space, wrapper_name = env.observation_space, wrapper.__name__
+        assert isinstance(
+            obs_space, spaces.Dict
+        ), "Observation space for {0} is not a Dict: {1}.".format(
+            wrapper_name, obs_space
+        )
+        # this shuld not fail either
+        ImgObsWrapper(env)
+
 ##############################################################################
 
 print('testing agent_sees method')
