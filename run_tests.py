@@ -112,8 +112,10 @@ for env_name in env_list:
     for wrapper in wrappers:
         env = wrapper(gym.make(env_name))
         obs_space, wrapper_name = env.observation_space, wrapper.__name__
-        assert isinstance(obs_space, spaces.Dict), (
-            f"Observation space for {wrapper_name} is not a Dict: {obs_space}."
+        assert isinstance(
+            obs_space, spaces.Dict
+        ), "Observation space for {0} is not a Dict: {1}.".format(
+            wrapper_name, obs_space
         )
         # this shuld not fail either
         ImgObsWrapper(env)
