@@ -88,7 +88,7 @@ for env_name in env_list:
     env = FullyObsWrapper(env)
     env.reset()
     obs, _, _, _ = env.step(0)
-    assert obs.shape == env.observation_space.shape
+    assert obs['image'].shape == env.observation_space.spaces['image'].shape
     env.close()
 
     env = gym.make(env_name)
@@ -98,10 +98,27 @@ for env_name in env_list:
     env.close()
 
     env = gym.make(env_name)
-    env = AgentViewWrapper(env, 5)
+    env = ViewSizeWrapper(env, 5)
     env.reset()
     env.step(0)
     env.close()
+
+    # Test the wrappers return proper observation spaces.
+    wrappers = [
+        RGBImgObsWrapper,
+        RGBImgPartialObsWrapper,
+        OneHotPartialObsWrapper
+    ]
+    for wrapper in wrappers:
+        env = wrapper(gym.make(env_name))
+        obs_space, wrapper_name = env.observation_space, wrapper.__name__
+        assert isinstance(
+            obs_space, spaces.Dict
+        ), "Observation space for {0} is not a Dict: {1}.".format(
+            wrapper_name, obs_space
+        )
+        # this shuld not fail either
+        ImgObsWrapper(env)
 
 ##############################################################################
 

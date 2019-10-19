@@ -61,6 +61,14 @@ def main():
         elif keyName == 'RETURN':
             action = env.actions.done
 
+        # Screenshot funcitonality
+        elif keyName == 'ALT':
+            screen_path = options.env_name + '.png'
+            print('saving screenshot "{}"'.format(screen_path))
+            pixmap = env.render('pixmap')
+            pixmap.save(screen_path)
+            return
+
         else:
             print("unknown key %s" % keyName)
             return
