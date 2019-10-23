@@ -9,6 +9,7 @@ def makeWave(n, w, h, ground=None):
   if ground is not None:
     wave[:,:,h-1] = 0
     wave[ground,:,h-1] = 1
+  print(wave)
   return wave
 
 def makeAdj(adjLists):
@@ -20,6 +21,7 @@ def makeAdj(adjLists):
       for j in js:
         m[i,j] = 1
     adjMatrices[d] = m
+  print(adjMatrices)
   return adjMatrices
 
 
