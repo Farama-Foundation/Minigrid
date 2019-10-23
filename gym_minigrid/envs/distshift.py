@@ -35,7 +35,7 @@ class DistShiftEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Place a goal square in the bottom-right corner
-        self.grid.set(*self.goal_pos, Goal())
+        self.put_obj(Goal(), *self.goal_pos)
 
         # Place the lava rows
         for i in range(self.width - 6):

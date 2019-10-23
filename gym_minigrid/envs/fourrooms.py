@@ -61,7 +61,7 @@ class FourRoomsEnv(MiniGridEnv):
 
         if self._goal_default_pos is not None:
             goal = Goal()
-            self.grid.set(*self._goal_default_pos, goal)
+            self.put_obj(goal, *self._goal_default_pos)
             goal.init_pos, goal.cur_pos = self._goal_default_pos
         else:
             self.place_obj(Goal())
@@ -71,7 +71,6 @@ class FourRoomsEnv(MiniGridEnv):
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
         return obs, reward, done, info
-
 
 register(
     id='MiniGrid-FourRooms-v0',

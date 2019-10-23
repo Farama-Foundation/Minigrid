@@ -30,7 +30,7 @@ class EmptyEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Place a goal square in the bottom-right corner
-        self.grid.set(width - 2, height - 2, Goal())
+        self.put_obj(Goal(), width - 2, height - 2)
 
         # Place the agent
         if self.agent_start_pos is not None:
