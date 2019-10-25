@@ -1,5 +1,4 @@
 pyfrom wfc_utilities import hash_downto
-from wfc_tiles import make_tile_catalog
 import numpy as np
 
 def unique_patterns_2d(a, k, periodic_input):
@@ -54,6 +53,8 @@ an ordered list of pattern weights, and an ordered list of pattern contents."""
     pattern_list = []
     return pattern_catalog, pattern_weights, pattern_list
 
+
+from wfc_tiles import make_tile_catalog
 
 import imageio
 filename = "images/samples/Red Maze.png"

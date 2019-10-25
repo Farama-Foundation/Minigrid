@@ -225,7 +225,11 @@ def test_run():
 
   assert happy
 
+from pycallgraph import PyCallGraph
+from pycallgraph.output import GraphvizOutput
+
 if __name__ == "__main__":
+  with PyCallGraph(output=GraphvizOutput()):
     test_makeWave()
     test_entropyLocationHeuristic()
     test_observe()
