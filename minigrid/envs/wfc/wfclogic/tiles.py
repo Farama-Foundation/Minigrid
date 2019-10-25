@@ -69,8 +69,14 @@ def image_to_tiles(img, tile_size):
     return tiles
 
 
-
 def make_tile_catalog(image_data, tile_size):
+    """
+  Takes an image and tile size and returns the following:
+  tile_catalog is a dictionary tiles, with the hashed ID as the key
+  tile_grid is the original image, expressed in terms of hashed tile IDs
+  code_list is the original image, expressed in terms of hashed tile IDs and reduced to one dimension
+  unique_tiles is the set of tiles, plus the frequency of occurance
+"""
     channels = 3 # Number of color channels in the image
     tiles = image_to_tiles(image_data, tile_size)
     tile_list = np.array(tiles).reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
@@ -88,12 +94,16 @@ def test_make_tile_catalog():
     filename = "images/samples/Red Maze.png"
     img = imageio.imread(filename)
     print(img)
-    tc, tg, cl, ut = make_tile_catalog(img, 2)
+    tc, tg, cl, ut = make_tile_catalog(img, 1)
+    print("tile catalog")
     print(tc)
+    print("tile grid")
     print(tg)
+    print("code list")
     print(cl)
+    print("unique tiles")
     print(ut)
-    assert(ut[1][0] == 1)
+    assert(ut[1][0] == 7)
 
 if __name__ == "__main__":
     test_make_tile_catalog()
