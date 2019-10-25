@@ -5,56 +5,6 @@ from wfc_utilities import hash_downto
 def image_to_tiles(img, tile_size):
     """
     Takes an images, divides it into tiles, return an array of tiles.
-    >>> image_to_tiles(test_ns.img, test_ns.tile_size)
-    array([[[[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[255, 255, 255]]]],
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-           [[[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]]],
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-           [[[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[255,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]]],
-    <BLANKLINE>
-    <BLANKLINE>
-    <BLANKLINE>
-           [[[[255, 255, 255]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]],
-    <BLANKLINE>
-    <BLANKLINE>
-            [[[  0,   0,   0]]]]], dtype=uint8)
     """
     padding_argument = [(0,0),(0,0),(0,0)]
     for input_dim in [0,1]:
@@ -71,12 +21,12 @@ def image_to_tiles(img, tile_size):
 
 def make_tile_catalog(image_data, tile_size):
     """
-  Takes an image and tile size and returns the following:
-  tile_catalog is a dictionary tiles, with the hashed ID as the key
-  tile_grid is the original image, expressed in terms of hashed tile IDs
-  code_list is the original image, expressed in terms of hashed tile IDs and reduced to one dimension
-  unique_tiles is the set of tiles, plus the frequency of occurance
-"""
+    Takes an image and tile size and returns the following:
+    tile_catalog is a dictionary tiles, with the hashed ID as the key
+    tile_grid is the original image, expressed in terms of hashed tile IDs
+    code_list is the original image, expressed in terms of hashed tile IDs and reduced to one dimension
+    unique_tiles is the set of tiles, plus the frequency of occurance
+    """
     channels = 3 # Number of color channels in the image
     tiles = image_to_tiles(image_data, tile_size)
     tile_list = np.array(tiles).reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
@@ -88,9 +38,20 @@ def make_tile_catalog(image_data, tile_size):
     for i,j in enumerate(code_list):
         tile_catalog[j] = tile_list[i]
     return tile_catalog, tile_grid, code_list, unique_tiles
+
+
+# tests
+import imageio
+
+
+def test_image_to_tiles():
+    filename = "../images/samples/Red Maze.png"
+    img = imageio.imread(filename)
+    tiles = image_to_tiles(img, 1)
+    assert(tiles[2][2][0][0][0] == 255)
+    assert(tiles[2][2][0][0][1] == 0)
     
 def test_make_tile_catalog():
-    import imageio
     filename = "images/samples/Red Maze.png"
     img = imageio.imread(filename)
     print(img)
@@ -106,4 +67,5 @@ def test_make_tile_catalog():
     assert(ut[1][0] == 7)
 
 if __name__ == "__main__":
-    test_make_tile_catalog()
+    test_image_to_tiles()
+    #test_make_tile_catalog()
