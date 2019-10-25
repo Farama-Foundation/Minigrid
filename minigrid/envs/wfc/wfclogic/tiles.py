@@ -7,7 +7,7 @@ def image_to_tiles(img, tile_size):
     Takes an images, divides it into tiles, return an array of tiles.
     """
     padding_argument = [(0,0),(0,0),(0,0)]
-    for input_dim in [0,1]:
+    for input_dim in [0, 1]:
         padding_argument[input_dim] = (0, (tile_size - img.shape[input_dim]) % tile_size)
     img = np.pad(img, padding_argument, mode='constant')
     tiles = img.reshape((img.shape[0]//tile_size, 
@@ -15,7 +15,7 @@ def image_to_tiles(img, tile_size):
                        img.shape[1]//tile_size,
                        tile_size,
                        img.shape[2]
-                      )).swapaxes(1,2)
+                      )).swapaxes(1, 2)
     return tiles
 
 
@@ -35,7 +35,7 @@ def make_tile_catalog(image_data, tile_size):
     unique_tiles = np.unique(tile_grid, return_counts=True)
     
     tile_catalog = {}
-    for i,j in enumerate(code_list):
+    for i, j in enumerate(code_list):
         tile_catalog[j] = tile_list[i]
     return tile_catalog, tile_grid, code_list, unique_tiles
 
