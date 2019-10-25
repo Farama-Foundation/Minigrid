@@ -1,4 +1,4 @@
-from wfc_utilities import hash_downto
+pyfrom wfc_utilities import hash_downto
 from wfc_tiles import make_tile_catalog
 import numpy as np
 
