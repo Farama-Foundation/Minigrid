@@ -29,8 +29,8 @@ def make_tile_catalog(image_data, tile_size):
     """
     channels = 3 # Number of color channels in the image
     tiles = image_to_tiles(image_data, tile_size)
-    tile_list = np.array(tiles).reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
-    code_list = np.array(hash_downto(tiles, 2)).reshape((tiles.shape[0] * tiles.shape[1]))
+    tile_list = np.array(tiles, dtype=np.int64).reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
+    code_list = np.array(hash_downto(tiles, 2), dtype=np.int64).reshape((tiles.shape[0] * tiles.shape[1]))
     tile_grid = np.array(hash_downto(tiles, 2), dtype=np.int64)
     unique_tiles = np.unique(tile_grid, return_counts=True)
     
