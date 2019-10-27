@@ -66,7 +66,12 @@ an ordered list of pattern weights, and an ordered list of pattern contents."""
         dict_of_pattern_ids.update({pattern_overall_id_count: p_hash})
         
         
-        
+    print("dict of pattern ids")
+    print(dict_of_pattern_ids)
+    print("dict_of_pattern_contents")
+    print(dict_of_pattern_contents)
+    print("ordered_list_of_pattern_hashes")
+    print(ordered_list_of_pattern_hashes)
         
     print(patch_codes)
     print("patterns_in_grid")
