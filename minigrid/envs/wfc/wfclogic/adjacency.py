@@ -1,4 +1,7 @@
 """Convert input data to adjacency information"""
+import numpy as np
+
+
 
 #import itertools
 #import math
@@ -9,8 +12,11 @@
 #from wfc.wfc_utilities import CoordXY, CoordRC, hash_downto, find_pattern_center
 #from wfc.wfc_tiles import tiles_to_images
 
-import imageio
 
+
+
+
+import imageio
 filename = "images/samples/Red Maze.png"
 img = imageio.imread(filename)
 print(img)
