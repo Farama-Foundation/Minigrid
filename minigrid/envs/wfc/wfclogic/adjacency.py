@@ -10,6 +10,7 @@ def adjacency_extraction(pattern_grid, pattern_catalog, pattern_size=[2, 2]):
         and return True if the intersection matches."""
         dimensions = (1,0)
         not_a_number = -1
+
         #TODO: can probably speed this up by using the right slices, rather than rolling the whole pattern...
         shifted = np.roll(np.pad(pattern_catalog[pattern_2], max(pattern_size), mode='constant', constant_values = not_a_number), adjacency_direction, dimensions)
         compare = shifted[pattern_size[0] : pattern_size[0] + pattern_size[0], pattern_size[1] : pattern_size[1] + pattern_size[1]]
@@ -21,16 +22,10 @@ def adjacency_extraction(pattern_grid, pattern_catalog, pattern_size=[2, 2]):
         a = pattern_catalog[pattern_1][top:bottom, left:right]
         b = compare[top:bottom, left:right]
         res = np.array_equal(a, b)
-        #if (pattern_1 == -3950451988873469076) and (pattern_2 == -3950451988873469076):
-            #print(adjacency_direction)
-            #print(a)
-            #print(b)
-            #print(res)
         return res
 
     # TODO: generalize this to more than the four cardinal directions
     direction_offsets = list(enumerate([[0, -1], [1, 0], [0, 1], [-1, 0]]))
-    #print(direction_offsets)
 
     pattern_list = list(pattern_catalog.keys())
     legal = []
