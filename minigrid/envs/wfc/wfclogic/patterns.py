@@ -44,29 +44,52 @@ def unique_patterns_brute_force(grid, size, periodic_input):
 def make_pattern_catalog(tile_grid, pattern_width, rotations=8, input_is_periodic=True):
     """Returns a pattern catalog (dictionary of pattern hashes to consituent tiles), 
 an ordered list of pattern weights, and an ordered list of pattern contents."""
-    pattern_overall_id_count = 0
-    
     patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(tile_grid, pattern_width, input_is_periodic)
-
-    ordered_list_of_pattern_hashes = hash_downto(pattern_contents_list, 1)
     dict_of_pattern_contents = {}
     for pat_idx in range(pattern_contents_list.shape[0]):
         p_hash = hash_downto(pattern_contents_list[pat_idx], 0)
         dict_of_pattern_contents.update({np.asscalar(p_hash) : pattern_contents_list[pat_idx]})
     pattern_frequency = Counter(hash_downto(pattern_contents_list, 1))
-    return pattern_catalog, pattern_frequency, pattern_contents_list
+    return dict_of_pattern_contents, pattern_frequency, hash_downto(pattern_contents_list, 1)
 
 
-from wfc_tiles import make_tile_catalog
+def test_unique_patterns_2d():
+    from wfc_tiles import make_tile_catalog
+    import imageio
+    filename = "images/samples/Red Maze.png"
+    img = imageio.imread(filename)
+    tile_size = 1
+    pattern_width = 2
+    rotations = 0
+    tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
-import imageio
-filename = "images/samples/Red Maze.png"
-img = imageio.imread(filename)
-tile_size = 1
-pattern_width = 2
-rotations = 0
-tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
+    patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(tile_grid, pattern_width, True)
+    #print(patterns_in_grid)
+    #print(pattern_contents_list)
+    #print(patch_codes)
+    assert(patch_codes[1][2] == 4867810695119132864)
+    assert(pattern_contents_list[7][1][1] == 8253868773529191888)
+    
+    
+def test_make_pattern_catalog():
+    from wfc_tiles import make_tile_catalog
+    import imageio
+    filename = "images/samples/Red Maze.png"
+    img = imageio.imread(filename)
+    tile_size = 1
+    pattern_width = 2
+    rotations = 0
+    tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
-pattern_catalog, pattern_weights, pattern_list = make_pattern_catalog(tile_grid, pattern_width, rotations)
-print("---")
-print(pattern_catalog)
+    pattern_catalog, pattern_weights, pattern_list = make_pattern_catalog(tile_grid, pattern_width, rotations)
+    #print("---")
+    #print(pattern_catalog)
+    #print(pattern_weights)
+    #print(pattern_list)
+    assert(pattern_weights[-6150964001204120324] == 1)
+    assert(pattern_list[3] == 2800765426490226432)
+    assert(pattern_catalog[5177878755649963747][0][1] == -8754995591521426669)
+
+if __name__ == "__main__":
+    test_unique_patterns_2d()
+    test_make_pattern_catalog()
