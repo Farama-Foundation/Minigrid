@@ -50,7 +50,7 @@ an ordered list of pattern weights, and an ordered list of pattern contents."""
         p_hash = hash_downto(pattern_contents_list[pat_idx], 0)
         dict_of_pattern_contents.update({np.asscalar(p_hash) : pattern_contents_list[pat_idx]})
     pattern_frequency = Counter(hash_downto(pattern_contents_list, 1))
-    return dict_of_pattern_contents, pattern_frequency, hash_downto(pattern_contents_list, 1)
+    return dict_of_pattern_contents, pattern_frequency, hash_downto(pattern_contents_list, 1), patch_codes
 
 
 def test_unique_patterns_2d():
@@ -81,7 +81,7 @@ def test_make_pattern_catalog():
     rotations = 0
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
-    pattern_catalog, pattern_weights, pattern_list = make_pattern_catalog(tile_grid, pattern_width, rotations)
+    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
     #print("---")
     #print(pattern_catalog)
     #print(pattern_weights)
