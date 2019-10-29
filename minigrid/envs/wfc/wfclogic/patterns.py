@@ -52,6 +52,16 @@ an ordered list of pattern weights, and an ordered list of pattern contents."""
     pattern_frequency = Counter(hash_downto(pattern_contents_list, 1))
     return dict_of_pattern_contents, pattern_frequency, hash_downto(pattern_contents_list, 1), patch_codes
 
+def pattern_grid_to_tiles(pattern_grid, pattern_catalog):
+    anchor_x = 0
+    anchor_y = 0
+    def pattern_to_tile(pattern):
+        return pattern_catalog[pattern][anchor_x][anchor_y]
+    return np.vectorize(pattern_to_tile)(pattern_grid)
+
+
+
+
 
 def test_unique_patterns_2d():
     from wfc_tiles import make_tile_catalog
@@ -81,7 +91,7 @@ def test_make_pattern_catalog():
     rotations = 0
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
+    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations) 
     #print("---")
     #print(pattern_catalog)
     #print(pattern_weights)
@@ -90,6 +100,25 @@ def test_make_pattern_catalog():
     assert(pattern_list[3] == 2800765426490226432)
     assert(pattern_catalog[5177878755649963747][0][1] == -8754995591521426669)
 
+def test_pattern_to_tile():
+    from wfc_tiles import make_tile_catalog
+    import imageio
+    filename = "images/samples/Red Maze.png"
+    img = imageio.imread(filename)
+    tile_size = 1
+    pattern_width = 2
+    rotations = 0
+    tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
+
+    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
+    new_tile_grid = pattern_grid_to_tiles(pattern_grid, pattern_catalog)
+    #print(tile_grid)
+    #print(pattern_grid)
+    #print(new_tile_grid)
+    assert(np.array_equal(tile_grid, new_tile_grid))
+    
+    
 if __name__ == "__main__":
     test_unique_patterns_2d()
     test_make_pattern_catalog()
+    test_pattern_to_tile()
