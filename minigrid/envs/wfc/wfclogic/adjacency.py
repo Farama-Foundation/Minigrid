@@ -3,7 +3,7 @@ from wfc_utilities import CoordXY, CoordRC
 from collections import Counter
 import numpy as np
 
-def adjacency_extraction(pattern_grid, pattern_catalog, pattern_size=[2, 2]):
+def adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, pattern_size=[2, 2]):
     """Takes a pattern grid and returns a list of all of the legal adjacencies found in it."""
     def is_valid_overlap_xy(adjacency_direction, pattern_1, pattern_2):
         """Given a direction and two patterns, find the overlap of the two patterns 
@@ -24,8 +24,7 @@ def adjacency_extraction(pattern_grid, pattern_catalog, pattern_size=[2, 2]):
         res = np.array_equal(a, b)
         return res
 
-    # TODO: generalize this to more than the four cardinal directions
-    direction_offsets = list(enumerate([[0, -1], [1, 0], [0, 1], [-1, 0]]))
+    
 
     pattern_list = list(pattern_catalog.keys())
     legal = []
@@ -33,7 +32,7 @@ def adjacency_extraction(pattern_grid, pattern_catalog, pattern_size=[2, 2]):
         for pattern_2 in pattern_list:
             for direction_index, direction in direction_offsets:
                 if is_valid_overlap_xy(direction, pattern_1, pattern_2):
-                    legal.append((direction_index, pattern_1, pattern_2))
+                    legal.append((direction, pattern_1, pattern_2))
     return legal
     
 
@@ -43,7 +42,9 @@ def test_adjacency_extraction():
     from wfc_patterns import make_pattern_catalog
     import imageio
 
-    adjacency_directions = dict(enumerate([CoordXY(x=0,y=-1),CoordXY(x=1,y=0),CoordXY(x=0,y=1),CoordXY(x=-1,y=0)])), # The list of adjacencies that we care about - these will be turned into the edges of the graph
+    # TODO: generalize this to more than the four cardinal directions
+    direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
+
 
     filename = "images/samples/Red Maze.png"
     img = imageio.imread(filename)
@@ -52,14 +53,14 @@ def test_adjacency_extraction():
     rotations = 0
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
-    adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog)
-    assert((0, -6150964001204120324, -4042134092912931260) in adjacency_relations)
-    assert((3, -4042134092912931260, 3069048847358774683) in adjacency_relations)
-    assert((1, -3950451988873469076, -3950451988873469076) in adjacency_relations)
-    assert((3, -3950451988873469076, -3950451988873469076) in adjacency_relations)
-    assert((2, -3950451988873469076, 3336256675067683735) in adjacency_relations)
-    assert(not (0, -3950451988873469076, -3950451988873469076) in adjacency_relations)
-    assert(not (2, -3950451988873469076, -3950451988873469076) in adjacency_relations)
+    adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets)
+    assert(((0, -1), -6150964001204120324, -4042134092912931260) in adjacency_relations)
+    assert(((-1, 0), -4042134092912931260, 3069048847358774683) in adjacency_relations)
+    assert(((1, 0), -3950451988873469076, -3950451988873469076) in adjacency_relations)
+    assert(((-1, 0), -3950451988873469076, -3950451988873469076) in adjacency_relations)
+    assert(((0, 1), -3950451988873469076, 3336256675067683735) in adjacency_relations)
+    assert(not ((0, -1), -3950451988873469076, -3950451988873469076) in adjacency_relations)
+    assert(not ((0, 1), -3950451988873469076, -3950451988873469076) in adjacency_relations)
 
 
 if __name__ == "__main__":

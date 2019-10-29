@@ -35,15 +35,6 @@ for i in adjacency_relations:
     adjacency_list[i[0]][decode_patterns[i[1]]].add(decode_patterns[i[2]])
         
 
-# len(direction_offsets)
-# print(dict(direction_offsets))
-# print({j:i for i,j in direction_offsets})
-
-
-# print(encode_patterns)
-# print(decode_patterns)
-# print(adjacency_list)
-
 wave = makeWave(number_of_patterns, output_size[0], output_size[1])
 adjacency_matrix = makeAdj(adjacency_list)
 

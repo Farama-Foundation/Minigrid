@@ -9,15 +9,17 @@ def makeWave(n, w, h, ground=None):
   if ground is not None:
     wave[:,:,h-1] = 0
     wave[ground,:,h-1] = 1
-  print(wave)
+  #print(wave)
   return wave
 
 def makeAdj(adjLists):
   adjMatrices = {}
+  print(adjLists)
   num_patterns = len(list(adjLists.values())[0])
   for d in adjLists:
     m = numpy.zeros((num_patterns,num_patterns),dtype=bool)
     for i, js in enumerate(adjLists[d]):
+      print(js)
       for j in js:
         m[i,j] = 1
     adjMatrices[d] = m
