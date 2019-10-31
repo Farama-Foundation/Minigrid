@@ -2,7 +2,7 @@ from wfc_tiles import make_tile_catalog
 from wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles
 from wfc_adjacency import adjacency_extraction
 from wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic
-from wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog
+from wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
 import imageio
 import numpy as np
 
@@ -11,7 +11,7 @@ img = imageio.imread(filename)
 tile_size = 1
 pattern_width = 2
 rotations = 0
-output_size = [6, 6]
+output_size = [8, 8]
 ground = None
 
 # TODO: generalize this to more than the four cardinal directions
@@ -36,17 +36,21 @@ decode_directions = {j:i for i,j in direction_offsets}
 adjacency_list = {}
 for i,d in direction_offsets:
     adjacency_list[d] = [set() for i in pattern_weights]
-print(adjacency_list)
+#print(adjacency_list)
 for i in adjacency_relations:
     #print(i)
     #print(decode_patterns[i[1]])
     adjacency_list[i[0]][decode_patterns[i[1]]].add(decode_patterns[i[2]])
-        
+
+
+figure_adjacencies(adjacency_list, pattern_catalog, tile_catalog)
+
 
 wave = makeWave(number_of_patterns, output_size[0], output_size[1])
 adjacency_matrix = makeAdj(adjacency_list)
 
 #print(adjacency_matrix)
+
 
 solution = run(wave.copy(),
                adjacency_matrix,
@@ -60,8 +64,10 @@ solution = run(wave.copy(),
 #print(solution)
 solution_as_ids = np.vectorize(lambda x : encode_patterns[x])(solution)
 solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
-    
+
 print(solution_tile_grid)
+render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], "result.png")
+
 
 
 def wfc_execute():
