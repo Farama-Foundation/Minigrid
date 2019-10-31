@@ -39,7 +39,9 @@ def make_tile_catalog(image_data, tile_size):
         tile_catalog[j] = tile_list[i]
     return tile_catalog, tile_grid, code_list, unique_tiles
 
-
+def tiles_to_images(tile_grid, tile_catalog):
+    return
+    
 # tests
 import imageio
 

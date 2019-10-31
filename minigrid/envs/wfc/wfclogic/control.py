@@ -1,5 +1,5 @@
 from wfc_tiles import make_tile_catalog
-from wfc_patterns import make_pattern_catalog
+from wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles
 from wfc_adjacency import adjacency_extraction
 from wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic
 import imageio
@@ -50,8 +50,10 @@ solution = run(wave.copy(),
                onBacktrack=None)
 
 print(solution)
-               
-               
+solution_as_ids = np.vectorize(lambda x : encode_patterns[x])(solution)
+solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
+    
+print(solution_tile_grid)
 
 
 def wfc_execute():
