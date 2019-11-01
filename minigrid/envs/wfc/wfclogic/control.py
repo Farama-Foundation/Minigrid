@@ -26,6 +26,9 @@ figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_w
 
 adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets)
 
+print(adjacency_relations)
+figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size])
+
 
 
 number_of_patterns = len(pattern_weights)
@@ -41,9 +44,6 @@ for i in adjacency_relations:
     #print(i)
     #print(decode_patterns[i[1]])
     adjacency_list[i[0]][decode_patterns[i[1]]].add(decode_patterns[i[2]])
-
-
-figure_adjacencies(adjacency_list, pattern_catalog, tile_catalog)
 
 
 wave = makeWave(number_of_patterns, output_size[0], output_size[1])
