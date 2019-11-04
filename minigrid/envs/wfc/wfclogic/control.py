@@ -11,7 +11,7 @@ img = imageio.imread(filename)
 tile_size = 1
 pattern_width = 2
 rotations = 0
-output_size = [8, 8]
+output_size = [84, 84]
 ground = None
 
 # TODO: generalize this to more than the four cardinal directions

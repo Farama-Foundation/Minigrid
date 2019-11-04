@@ -88,6 +88,39 @@ def observe(wave, locationHeuristic, patternHeuristic):
   pattern = patternHeuristic(wave[:,i,j])
   return pattern, i, j
 
+
+def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
+  stack = []
+  while True:
+    if checkFeasible:
+      if not checkFeasible(wave):
+        raise Contradiction
+    stack.append(wave.copy())
+    propagate(wave, adj, periodic=periodic)
+    try:
+      pattern, i, j = observe(wave, locationHeuristic, patternHeuristic) 
+      if onChoice:
+        onChoice(pattern, i, j)
+      wave[:, i, j] = False
+      wave[pattern, i, j] = True
+      propagate(wave, adj, periodic=periodic)
+      if wave.sum() > wave.shape[1] * wave.shape[2]:
+        pass
+      else:
+        return numpy.argmax(wave, 0)
+    except Contradiction:
+      if backtracking:
+        if onBacktrack:
+          onBacktrack()
+        wave = stack.pop()
+        wave[pattern, i, j] = False
+      else:
+        raise
+
+  
+
+
+
 def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
   if checkFeasible:
     if not checkFeasible(wave):
