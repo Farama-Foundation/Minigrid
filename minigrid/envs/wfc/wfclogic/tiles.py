@@ -70,4 +70,4 @@ def test_make_tile_catalog():
 
 if __name__ == "__main__":
     test_image_to_tiles()
-    #test_make_tile_catalog()
+    test_make_tile_catalog()

@@ -14,16 +14,16 @@ def makeWave(n, w, h, ground=None):
 
 def makeAdj(adjLists):
   adjMatrices = {}
-  print(adjLists)
+  #print(adjLists)
   num_patterns = len(list(adjLists.values())[0])
   for d in adjLists:
     m = numpy.zeros((num_patterns,num_patterns),dtype=bool)
     for i, js in enumerate(adjLists[d]):
-      print(js)
+      #print(js)
       for j in js:
         m[i,j] = 1
     adjMatrices[d] = m
-  print(adjMatrices)
+  #print(adjMatrices)
   return adjMatrices
 
 
@@ -51,6 +51,15 @@ def lexicalLocationHeuristic(wave):
 def lexicalPatternHeuristic(weights):
   return numpy.nonzero(weights)[0][0]
 
+def makeWeightedPatternHeuristic(weights):
+  num_of_patterns = len(weights)
+  def weightedPatternHeuristic(wave):
+    # TODO: there's maybe a faster, more controlled way to do this sampling...
+    weighted_wave = (weights * wave)
+    weighted_wave /= weighted_wave.sum()
+    result = numpy.random.choice(num_of_patterns, p=weighted_wave)
+    return result
+  return weightedPatternHeuristic
 
 
 #####################################

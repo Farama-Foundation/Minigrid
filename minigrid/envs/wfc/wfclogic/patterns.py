@@ -74,9 +74,6 @@ def test_unique_patterns_2d():
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
     patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(tile_grid, pattern_width, True)
-    #print(patterns_in_grid)
-    #print(pattern_contents_list)
-    #print(patch_codes)
     assert(patch_codes[1][2] == 4867810695119132864)
     assert(pattern_contents_list[7][1][1] == 8253868773529191888)
     
@@ -92,10 +89,6 @@ def test_make_pattern_catalog():
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
 
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations) 
-    #print("---")
-    #print(pattern_catalog)
-    #print(pattern_weights)
-    #print(pattern_list)
     assert(pattern_weights[-6150964001204120324] == 1)
     assert(pattern_list[3] == 2800765426490226432)
     assert(pattern_catalog[5177878755649963747][0][1] == -8754995591521426669)
@@ -112,9 +105,6 @@ def test_pattern_to_tile():
 
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
     new_tile_grid = pattern_grid_to_tiles(pattern_grid, pattern_catalog)
-    #print(tile_grid)
-    #print(pattern_grid)
-    #print(new_tile_grid)
     assert(np.array_equal(tile_grid, new_tile_grid))
     
     

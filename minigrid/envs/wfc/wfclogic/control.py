@@ -1,7 +1,7 @@
 from wfc_tiles import make_tile_catalog
 from wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles
 from wfc_adjacency import adjacency_extraction
-from wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic
+from wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic
 from wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
 import imageio
 import numpy as np
@@ -11,7 +11,7 @@ img = imageio.imread(filename)
 tile_size = 1
 pattern_width = 2
 rotations = 0
-output_size = [8, 8]
+output_size = [32, 32]
 ground = None
 
 # TODO: generalize this to more than the four cardinal directions
@@ -26,15 +26,14 @@ figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_w
 
 adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets)
 
-print(adjacency_relations)
+#print(adjacency_relations)
 figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size])
 
 
-
 number_of_patterns = len(pattern_weights)
-encode_patterns = dict(enumerate(pattern_list))
-decode_patterns = {x: i for i, x in enumerate(pattern_list)}
-decode_directions = {j:i for i,j in direction_offsets}
+decode_patterns = dict(enumerate(pattern_list))
+encode_patterns = {x: i for i, x in enumerate(pattern_list)}
+encode_directions = {j:i for i,j in direction_offsets}
 
 adjacency_list = {}
 for i,d in direction_offsets:
@@ -43,7 +42,7 @@ for i,d in direction_offsets:
 for i in adjacency_relations:
     #print(i)
     #print(decode_patterns[i[1]])
-    adjacency_list[i[0]][decode_patterns[i[1]]].add(decode_patterns[i[2]])
+    adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
 
 
 wave = makeWave(number_of_patterns, output_size[0], output_size[1])
@@ -51,18 +50,24 @@ adjacency_matrix = makeAdj(adjacency_list)
 
 #print(adjacency_matrix)
 
+encoded_weights = np.zeros((number_of_patterns), dtype=np.float64)
+for w_id, w_val in pattern_weights.items():
+    encoded_weights[encode_patterns[w_id]] = w_val
+
+pattern_heuristic =  lexicalPatternHeuristic
+pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
 
 solution = run(wave.copy(),
                adjacency_matrix,
                locationHeuristic=lexicalLocationHeuristic,
-               patternHeuristic=lexicalPatternHeuristic,
+               patternHeuristic=pattern_heuristic,
                periodic=True,
                backtracking=False,
                onChoice=None,
                onBacktrack=None)
 
 #print(solution)
-solution_as_ids = np.vectorize(lambda x : encode_patterns[x])(solution)
+solution_as_ids = np.vectorize(lambda x : decode_patterns[x])(solution)
 solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
 
 print(solution_tile_grid)
