@@ -23,7 +23,6 @@ def makeAdj(adjLists):
       for j in js:
         m[i,j] = 1
     adjMatrices[d] = m
-  #print(adjMatrices)
   return adjMatrices
 
 

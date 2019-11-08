@@ -1,16 +1,18 @@
 from wfc_tiles import make_tile_catalog
-from wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles
+from wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from wfc_adjacency import adjacency_extraction
 from wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic
 from wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
 import imageio
 import numpy as np
 
-filename = "images/samples/Red Maze.png"
+
+
+filename = "../images/samples/Red Maze.png"
 img = imageio.imread(filename)
 tile_size = 1
 pattern_width = 2
-rotations = 0
+rotations = 7
 output_size = [32, 32]
 ground = None
 
@@ -18,7 +20,7 @@ ground = None
 direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
 tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
-pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog(tile_grid, pattern_width, rotations)
+pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width, rotations)
 
 figure_list_of_tiles(unique_tiles, tile_catalog)
 figure_false_color_tile_grid(tile_grid)
