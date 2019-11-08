@@ -1,5 +1,4 @@
 """Convert input data to adjacency information"""
-from wfc_utilities import CoordXY, CoordRC
 from collections import Counter
 import numpy as np
 

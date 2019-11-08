@@ -1,5 +1,5 @@
 "Extract patterns from grids of tiles."
-from wfc_utilities import hash_downto
+from wfc.wfc_utilities import hash_downto
 from collections import Counter
 import numpy as np
 

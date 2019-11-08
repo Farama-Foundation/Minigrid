@@ -97,7 +97,7 @@ def observe(wave, locationHeuristic, patternHeuristic):
   return pattern, i, j
 
 
-def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
+def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
   stack = []
   while True:
     if checkFeasible:
@@ -129,7 +129,8 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
 
 
 
-def run_recurse(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
+def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
+  #print(".", end='')
   if checkFeasible:
     if not checkFeasible(wave):
       raise Contradiction

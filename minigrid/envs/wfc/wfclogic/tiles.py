@@ -1,6 +1,6 @@
 """Breaks an image into consituant tiles."""
 import numpy as np
-from wfc_utilities import hash_downto
+from wfc.wfc_utilities import hash_downto
 
 def image_to_tiles(img, tile_size):
     """
