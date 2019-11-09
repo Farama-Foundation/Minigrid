@@ -36,16 +36,17 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width)
 
-    visualize_tiles(unique_tiles, tile_catalog, tile_grid)
-    visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
+    #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
+    #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
 
     adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets)
 
     #print(adjacency_relations)
-    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size])
+    #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size])
 
 
     number_of_patterns = len(pattern_weights)
+    print(f"# patterns: {number_of_patterns}")
     decode_patterns = dict(enumerate(pattern_list))
     encode_patterns = {x: i for i, x in enumerate(pattern_list)}
     encode_directions = {j:i for i,j in direction_offsets}
@@ -59,7 +60,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         #print(decode_patterns[i[1]])
         adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
 
-
+    print("adjacency")
     wave = makeWave(number_of_patterns, output_size[0], output_size[1])
     adjacency_matrix = makeAdj(adjacency_list)
 
@@ -72,6 +73,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     pattern_heuristic =  lexicalPatternHeuristic
     pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
 
+    print("solving...")
     attempts = 0
     while attempts < attempt_limit:
         attempts += 1

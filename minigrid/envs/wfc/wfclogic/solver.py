@@ -130,11 +130,12 @@ def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, bac
 
 
 def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
-  #print(".", end='')
+  print(".")
   if checkFeasible:
     if not checkFeasible(wave):
       raise Contradiction
   original = wave.copy()
+  #print("propagate")
   propagate(wave, adj, periodic=periodic)
   try:
     pattern, i, j = observe(wave, locationHeuristic, patternHeuristic) 
@@ -142,6 +143,7 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
       onChoice(pattern, i, j)
     wave[:, i, j] = False
     wave[pattern, i, j] = True
+    #print("propagate")
     propagate(wave, adj, periodic=periodic)
     if wave.sum() > wave.shape[1] * wave.shape[2]:
       return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack)
