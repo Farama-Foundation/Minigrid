@@ -1,4 +1,8 @@
 import numpy
+import sys
+
+sys.setrecursionlimit(5500)
+
 
 class Contradiction(Exception):
   """Solving could not proceed without backtracking/restarting."""
