@@ -41,16 +41,16 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
 
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
-    figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"tilelist_{filename}_{timecode}")
-    figure_false_color_tile_grid(tile_grid, output_filename=f"tile_falsecolor_{filename}_{timecode}")
-    figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"pattern_catalog_{filename}_{timecode}")
+    figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
+    figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
+    figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
 
 
     adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
     #print(adjacency_relations)
-    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"adjacency_{filename}_{timecode}_A")
-    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"adjacency_{filename}_{timecode}_B", render_b_first=True)
+    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
+    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
 
 
     number_of_patterns = len(pattern_weights)
@@ -88,7 +88,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         try:
             #profiler = pprofile.Profile()
             #with profiler:
-                #with PyCallGraph(output=GraphvizOutput(output_file=f"pycallgraph_{filename}_{timecode}.png")):
+                #with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
             solution = run(wave.copy(),
                                    adjacency_matrix,
                                    locationHeuristic=lexicalLocationHeuristic,
@@ -97,7 +97,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    backtracking=False,
                                    onChoice=None,
                                    onBacktrack=None)
-            #profiler.dump_stats(f"profile_{filename}_{timecode}.txt")
+            #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
 
 
             #print(solution)
