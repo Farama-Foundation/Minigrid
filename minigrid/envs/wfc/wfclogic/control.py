@@ -39,7 +39,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
 
-    adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets)
+
+    adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
     #print(adjacency_relations)
     #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size])
