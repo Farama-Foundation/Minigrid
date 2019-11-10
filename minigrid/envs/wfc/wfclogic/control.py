@@ -8,6 +8,9 @@ import numpy as np
 import time
 import os
 
+from pycallgraph import PyCallGraph
+from pycallgraph.output import GraphvizOutput
+import pprofile
 
 def visualize_tiles(unique_tiles, tile_catalog, tile_grid):
     if False:
@@ -79,14 +82,18 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     while attempts < attempt_limit:
         attempts += 1
         try:
+            #profiler = pprofile.Profile()
+            #with profiler:
+                #with PyCallGraph(output=GraphvizOutput(output_file=f"pycallgraph_{filename}_{timecode}.png")):
             solution = run(wave.copy(),
-                   adjacency_matrix,
-                   locationHeuristic=lexicalLocationHeuristic,
-                   patternHeuristic=pattern_heuristic,
-                   periodic=True,
-                   backtracking=False,
-                   onChoice=None,
-                   onBacktrack=None)
+                                   adjacency_matrix,
+                                   locationHeuristic=lexicalLocationHeuristic,
+                                   patternHeuristic=pattern_heuristic,
+                                   periodic=output_periodic,
+                                   backtracking=False,
+                                   onChoice=None,
+                                   onBacktrack=None)
+            #profiler.dump_stats(f"profile_{filename}_{timecode}.txt")
 
 
             #print(solution)
