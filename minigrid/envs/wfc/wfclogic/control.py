@@ -20,7 +20,7 @@ def visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_w
 
     
 
-def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=10):
+def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=10, output_periodic=True, input_periodic=True):
     timecode = f"{time.time()}"
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
