@@ -1,11 +1,18 @@
+from scipy import sparse
 import numpy
 import sys
+
 
 sys.setrecursionlimit(5500)
 
 
 class Contradiction(Exception):
   """Solving could not proceed without backtracking/restarting."""
+  pass
+
+
+class StopEarly(Exception):
+  """Aborting solve early."""
   pass
 
 def makeWave(n, w, h, ground=None):
@@ -26,7 +33,7 @@ def makeAdj(adjLists):
       #print(js)
       for j in js:
         m[i,j] = 1
-    adjMatrices[d] = m
+    adjMatrices[d] = sparse.csr_matrix(m)
   return adjMatrices
 
 
@@ -81,7 +88,10 @@ def propagate(wave, adj, periodic=False):
     for d in adj:
       dx,dy = d
       shifted = padded[:,1+dx:1+wave.shape[1]+dx,1+dy:1+wave.shape[2]+dy]
-      supports[d] = numpy.einsum('pwh,pq->qwh', shifted, adj[d]) > 0
+      #print(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
+      #raise StopEarly
+      #supports[d] = numpy.einsum('pwh,pq->qwh', shifted, adj[d]) > 0
+      supports[d] = (adj[d] @ shifted.reshape(shifted.shape[0], -1)).reshape(shifted.shape) > 0
 
     for d in adj:
       wave *= supports[d]
@@ -134,7 +144,7 @@ def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, bac
 
 
 def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
-  print(".")
+  #print(".")
   if checkFeasible:
     if not checkFeasible(wave):
       raise Contradiction

@@ -1,7 +1,7 @@
 from wfc.wfc_tiles import make_tile_catalog
 from wfc.wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from wfc.wfc_adjacency import adjacency_extraction
-from wfc.wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction
+from wfc.wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly
 from wfc.wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
 import imageio
 import numpy as np
@@ -41,16 +41,16 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
 
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
-    figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
-    figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
-    figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
+    #figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
+    #figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
+    #figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
 
 
     adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
     #print(adjacency_relations)
-    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
-    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
+    #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
+    #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
 
 
     number_of_patterns = len(pattern_weights)
@@ -108,6 +108,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             #print(solution_tile_grid)
             render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + "_" + filename + "_" + timecode + ".png")
             return solution_tile_grid
+        except StopEarly:
+            print("Skipping...")
         except Contradiction as e_c:
             print("Contradiction")
         return None
