@@ -37,22 +37,22 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width)
+    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width, input_is_periodic=input_periodic)
 
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
     #figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
     #figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
-    #figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
+    figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
 
 
     adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
     #print(adjacency_relations)
-    #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
+    figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
     #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
 
-
+    print(f"output size: {output_size}\noutput periodic: {output_periodic}")
     number_of_patterns = len(pattern_weights)
     print(f"# patterns: {number_of_patterns}")
     decode_patterns = dict(enumerate(pattern_list))
@@ -110,6 +110,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             return solution_tile_grid
         except StopEarly:
             print("Skipping...")
+            return None
         except Contradiction as e_c:
             print("Contradiction")
-        return None
+    return None
