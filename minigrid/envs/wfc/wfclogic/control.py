@@ -39,7 +39,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width, input_is_periodic=input_periodic)
+    pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width, input_is_periodic=input_periodic, rotations=rotations)
 
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
@@ -76,9 +76,19 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
 
     print("adjacency")
-    wave = makeWave(number_of_patterns, output_size[0], output_size[1])
+
+    ground_list = []
+    if not (ground is 0):
+        for g in range(abs(ground)):
+            ground_list.append(encode_patterns[pattern_grid.flat[-g]])
+    if len(ground_list) < 1:
+        ground_list = None
+        
+    
+    wave = makeWave(number_of_patterns, output_size[0], output_size[1], ground=ground_list)
     adjacency_matrix = makeAdj(adjacency_list)
 
+    
     #print(adjacency_matrix)
 
     encoded_weights = np.zeros((number_of_patterns), dtype=np.float64)

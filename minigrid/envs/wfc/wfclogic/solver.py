@@ -18,9 +18,13 @@ class StopEarly(Exception):
 def makeWave(n, w, h, ground=None):
   wave = numpy.ones((n, w, h),dtype=bool)
   if ground is not None:
-    wave[:,:,h-1] = 0
-    wave[ground,:,h-1] = 1
+      wave[:,:,h-1] = 0
+      for g in ground:
+        wave[g,:,] = 0
+        wave[g,:,h-1] = 1
   #print(wave)
+  #for i in range(wave.shape[0]):
+  #  print(wave[i])
   return wave
 
 def makeAdj(adjLists):
