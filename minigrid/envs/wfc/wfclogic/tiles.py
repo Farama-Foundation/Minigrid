@@ -27,7 +27,7 @@ def make_tile_catalog(image_data, tile_size):
     code_list is the original image, expressed in terms of hashed tile IDs and reduced to one dimension
     unique_tiles is the set of tiles, plus the frequency of occurance
     """
-    channels = 3 # Number of color channels in the image
+    channels = image_data.shape[2] # Number of color channels in the image
     tiles = image_to_tiles(image_data, tile_size)
     tile_list = np.array(tiles, dtype=np.int64).reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
     code_list = np.array(hash_downto(tiles, 2), dtype=np.int64).reshape((tiles.shape[0] * tiles.shape[1]))

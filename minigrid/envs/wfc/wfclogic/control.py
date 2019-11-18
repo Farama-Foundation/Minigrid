@@ -32,6 +32,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     
     # Load the image
     img = imageio.imread(input_folder + filename + ".png")
+    img = img[:,:,:3] # TODO: handle alpha channels
+
 
     # TODO: generalize this to more than the four cardinal directions
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
@@ -45,8 +47,13 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     #figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
     figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
 
+    profiler = pprofile.Profile()
+    with profiler:
+        adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
-    adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
+    profiler.dump_stats(f"logs/profile_adj_{filename}_{timecode}.txt")
+
+
 
     #print(adjacency_relations)
     figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
@@ -98,7 +105,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    onChoice=None,
                                    onBacktrack=None)
             #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
-
+    
 
             #print(solution)
             solution_as_ids = np.vectorize(lambda x : decode_patterns[x])(solution)
