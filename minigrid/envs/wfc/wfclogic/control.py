@@ -69,9 +69,19 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
 
     print("adjacency")
-    wave = makeWave(number_of_patterns, output_size[0], output_size[1])
+
+    ground_list = []
+    if not (ground is 0):
+        for g in range(abs(ground)):
+            ground_list.append(encode_patterns[pattern_grid.flat[-g]])
+    if len(ground_list) < 1:
+        ground_list = None
+        
+    
+    wave = makeWave(number_of_patterns, output_size[0], output_size[1], ground=ground_list)
     adjacency_matrix = makeAdj(adjacency_list)
 
+    
     #print(adjacency_matrix)
 
     encoded_weights = np.zeros((number_of_patterns), dtype=np.float64)
