@@ -79,7 +79,7 @@ def makeWeightedPatternHeuristic(weights):
 #####################################
 # Solver
 
-def propagate(wave, adj, periodic=False):
+def propagate(wave, adj, periodic=False, onPropagate=None):
   last_count = wave.sum()
 
   while True:
@@ -105,6 +105,9 @@ def propagate(wave, adj, periodic=False):
     else:
       last_count = wave.sum()
 
+  if onPropagate:
+    onPropagate(wave)
+
   if wave.sum() == 0:
     raise Contradiction
 
@@ -115,54 +118,58 @@ def observe(wave, locationHeuristic, patternHeuristic):
   return pattern, i, j
 
 
-def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
-  stack = []
-  while True:
-    if checkFeasible:
-      if not checkFeasible(wave):
-        raise Contradiction
-    stack.append(wave.copy())
-    propagate(wave, adj, periodic=periodic)
-    try:
-      pattern, i, j = observe(wave, locationHeuristic, patternHeuristic) 
-      if onChoice:
-        onChoice(pattern, i, j)
-      wave[:, i, j] = False
-      wave[pattern, i, j] = True
-      propagate(wave, adj, periodic=periodic)
-      if wave.sum() > wave.shape[1] * wave.shape[2]:
-        pass
-      else:
-        return numpy.argmax(wave, 0)
-    except Contradiction:
-      if backtracking:
-        if onBacktrack:
-          onBacktrack()
-        wave = stack.pop()
-        wave[pattern, i, j] = False
-      else:
-        raise
+# def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
+#   stack = []
+#   while True:
+#     if checkFeasible:
+#       if not checkFeasible(wave):
+#         raise Contradiction
+#     stack.append(wave.copy())
+#     propagate(wave, adj, periodic=periodic)
+#     try:
+#       pattern, i, j = observe(wave, locationHeuristic, patternHeuristic) 
+#       if onChoice:
+#         onChoice(pattern, i, j)
+#       wave[:, i, j] = False
+#       wave[pattern, i, j] = True
+#       propagate(wave, adj, periodic=periodic)
+#       if wave.sum() > wave.shape[1] * wave.shape[2]:
+#         pass
+#       else:
+#         return numpy.argmax(wave, 0)
+#     except Contradiction:
+#       if backtracking:
+#         if onBacktrack:
+#           onBacktrack()
+#         wave = stack.pop()
+#         wave[pattern, i, j] = False
+#       else:
+#         raise
 
   
 
 
 
-def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
-  #print(".")
+def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, onObserve=None, onPropagate=None, checkFeasible=None):
+  #print("run.")
   if checkFeasible:
     if not checkFeasible(wave):
       raise Contradiction
   original = wave.copy()
-  propagate(wave, adj, periodic=periodic)
+  propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
   try:
-    pattern, i, j = observe(wave, locationHeuristic, patternHeuristic) 
+    pattern, i, j = observe(wave, locationHeuristic, patternHeuristic)
     if onChoice:
       onChoice(pattern, i, j)
     wave[:, i, j] = False
     wave[pattern, i, j] = True
-    propagate(wave, adj, periodic=periodic)
+    if onObserve:
+      onObserve(wave)
+    propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
     if wave.sum() > wave.shape[1] * wave.shape[2]:
-      return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack)
+      #return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack)
+      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
+
     else:
       return numpy.argmax(wave, 0)
   except Contradiction:
@@ -171,7 +178,7 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
         onBacktrack()
       wave = original
       wave[pattern, i, j] = False
-      return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack, checkFeasible)
+      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
     else:
       raise
 
@@ -179,8 +186,11 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
 # Tests
 
 def test_makeWave():
-  wave = makeWave(3, 10, 20, ground=-1)
-  assert wave.sum() == (10*20*3 - 2*10)
+  wave = makeWave(3, 10, 20, ground=[-1])
+  #print(wave)
+  #print(wave.sum())
+  #print((2*10*19) + (1*10*1))
+  assert wave.sum() == (2*10*19) + (1*10*1)
   assert wave[2,5,19] == True
   assert wave[1,5,19] == False
 
@@ -296,7 +306,7 @@ def test_recurse_vs_loop():
   from wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
 
   import imageio
-  img = imageio.imread("images/samples/Red Maze.png")
+  img = imageio.imread("../images/samples/Red Maze.png")
   tile_size = 1
   pattern_width = 2
   rotations = 0
@@ -349,6 +359,6 @@ if __name__ == "__main__":
     test_entropyLocationHeuristic()
     test_observe()
     test_propagate()
-    #test_run()
-    test_recurse_vs_loop()
+    test_run()
+    #test_recurse_vs_loop()
 

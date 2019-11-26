@@ -1,8 +1,8 @@
-from wfc.wfc_tiles import make_tile_catalog
-from wfc.wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
-from wfc.wfc_adjacency import adjacency_extraction
-from wfc.wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly
-from wfc.wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies
+from .wfc_tiles import make_tile_catalog
+from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
+from .wfc_adjacency import adjacency_extraction
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly
+from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers
 import imageio
 import numpy as np
 import time
@@ -23,7 +23,7 @@ def visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_w
 
     
 
-def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=10, output_periodic=True, input_periodic=True):
+def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=1, output_periodic=True, input_periodic=True):
     timecode = f"{time.time()}"
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
@@ -98,6 +98,9 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     pattern_heuristic =  lexicalPatternHeuristic
     pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
 
+    visualize_choice, visualize_wave = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
+    
+    
     print("solving...")
     attempts = 0
     while attempts < attempt_limit:
@@ -112,8 +115,11 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    patternHeuristic=pattern_heuristic,
                                    periodic=output_periodic,
                                    backtracking=False,
-                                   onChoice=None,
-                                   onBacktrack=None)
+                                   onChoice=visualize_choice,
+                                   onBacktrack=None,
+                                   onObserve=visualize_wave,
+                                   onPropagate=None
+            )
             #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
     
 
@@ -130,4 +136,5 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             return None
         except Contradiction as e_c:
             print("Contradiction")
+        assert False
     return None

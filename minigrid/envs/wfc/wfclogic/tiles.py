@@ -1,6 +1,6 @@
 """Breaks an image into consituant tiles."""
 import numpy as np
-from wfc.wfc_utilities import hash_downto
+from .wfc_utilities import hash_downto
 
 def image_to_tiles(img, tile_size):
     """
@@ -54,7 +54,7 @@ def test_image_to_tiles():
     assert(tiles[2][2][0][0][1] == 0)
     
 def test_make_tile_catalog():
-    filename = "images/samples/Red Maze.png"
+    filename = "../images/samples/Red Maze.png"
     img = imageio.imread(filename)
     print(img)
     tc, tg, cl, ut = make_tile_catalog(img, 1)

@@ -45,7 +45,7 @@ def test_adjacency_extraction():
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
 
-    filename = "images/samples/Red Maze.png"
+    filename = "../images/samples/Red Maze.png"
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2

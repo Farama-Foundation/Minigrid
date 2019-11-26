@@ -1,5 +1,5 @@
 "Extract patterns from grids of tiles."
-from wfc.wfc_utilities import hash_downto
+from .wfc_utilities import hash_downto
 from collections import Counter
 import numpy as np
 
@@ -115,7 +115,7 @@ def pattern_grid_to_tiles(pattern_grid, pattern_catalog):
 def test_unique_patterns_2d():
     from wfc_tiles import make_tile_catalog
     import imageio
-    filename = "images/samples/Red Maze.png"
+    filename = "../images/samples/Red Maze.png"
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
@@ -130,7 +130,7 @@ def test_unique_patterns_2d():
 def test_make_pattern_catalog():
     from wfc_tiles import make_tile_catalog
     import imageio
-    filename = "images/samples/Red Maze.png"
+    filename = "../images/samples/Red Maze.png"
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
@@ -145,7 +145,7 @@ def test_make_pattern_catalog():
 def test_pattern_to_tile():
     from wfc_tiles import make_tile_catalog
     import imageio
-    filename = "images/samples/Red Maze.png"
+    filename = "../images/samples/Red Maze.png"
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
