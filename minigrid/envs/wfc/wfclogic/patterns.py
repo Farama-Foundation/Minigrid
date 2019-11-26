@@ -105,6 +105,14 @@ def pattern_grid_to_tiles(pattern_grid, pattern_catalog):
     anchor_x = 0
     anchor_y = 0
     def pattern_to_tile(pattern):
+        # if isinstance(pattern, list):
+        #     ptrns = []
+        #     for p in pattern:
+        #         print(p)
+        #         ptrns.push(pattern_to_tile(p))
+        #     print(ptrns)
+        #     assert False
+        #     return ptrns
         return pattern_catalog[pattern][anchor_x][anchor_y]
     return np.vectorize(pattern_to_tile)(pattern_grid)
 

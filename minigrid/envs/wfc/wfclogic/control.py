@@ -129,7 +129,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
 
             print("Solution:")
             #print(solution_tile_grid)
-            render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + "_" + filename + "_" + timecode + ".png")
+            render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + filename + "_" + timecode + ".png")
             return solution_tile_grid
         except StopEarly:
             print("Skipping...")
