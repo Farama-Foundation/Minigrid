@@ -41,21 +41,28 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = make_pattern_catalog_with_rotations(tile_grid, pattern_width, input_is_periodic=input_periodic, rotations=rotations)
 
+    print("pattern catalog")
+
     #visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     #visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
     #figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
     #figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
     figure_pattern_catalog(pattern_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/pattern_catalog_{filename}_{timecode}")
 
-    profiler = pprofile.Profile()
-    with profiler:
+    print("profiling adjacency relations")
+    adjacency_relations = None
+
+    if False:
+        profiler = pprofile.Profile()
+        with profiler:
+            adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
+        profiler.dump_stats(f"logs/profile_adj_{filename}_{timecode}.txt")
+    else:
         adjacency_relations = adjacency_extraction(pattern_grid, pattern_catalog, direction_offsets, [pattern_width, pattern_width])
 
-    profiler.dump_stats(f"logs/profile_adj_{filename}_{timecode}.txt")
+    print("adjacency_relations")
 
-
-
-    #print(adjacency_relations)
+    
     figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_A")
     #figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
 
@@ -75,16 +82,25 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         #print(decode_patterns[i[1]])
         adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
 
-    print("adjacency")
+    print(f"adjacency: {len(adjacency_list)}")
 
+    # print(np.vectorize(lambda x : encode_patterns[x])(pattern_grid))
+    # print(list(np.vectorize(lambda x : encode_patterns[x])(pattern_grid).flat))
     ground_list = []
     if not (ground is 0):
-        for g in range(abs(ground)):
-            ground_list.append(encode_patterns[pattern_grid.flat[-g]])
+        # for g in range(abs(ground)):
+        #     ground_list.append(encode_patterns[pattern_grid.flat[-g]])
+        ground_list = np.vectorize(lambda x : encode_patterns[x])(pattern_grid.flat[(ground - 1):])
     if len(ground_list) < 1:
         ground_list = None
+
+    # print(ground_list)
+    if not (ground_list is None):
+        ground_catalog = {encode_patterns[k]:v for k,v in pattern_catalog.items() if encode_patterns[k] in ground_list}
+        # print(ground_catalog)
+        figure_pattern_catalog(ground_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/patterns_ground_{filename}_{timecode}")
+    # assert False
         
-    
     wave = makeWave(number_of_patterns, output_size[0], output_size[1], ground=ground_list)
     adjacency_matrix = makeAdj(adjacency_list)
 
@@ -136,5 +152,4 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             return None
         except Contradiction as e_c:
             print("Contradiction")
-        assert False
     return None

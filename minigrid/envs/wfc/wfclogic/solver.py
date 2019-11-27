@@ -171,6 +171,8 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
       return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
 
     else:
+      if onObserve:
+        onObserve(wave)
       return numpy.argmax(wave, 0)
   except Contradiction:
     if backtracking:
