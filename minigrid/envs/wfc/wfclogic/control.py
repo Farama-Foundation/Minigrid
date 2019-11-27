@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers
 import imageio
 import numpy as np
@@ -111,8 +111,12 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     for w_id, w_val in pattern_weights.items():
         encoded_weights[encode_patterns[w_id]] = w_val
 
+
+    choice_random_weighting = np.random(wave.shape[1:])
     pattern_heuristic =  lexicalPatternHeuristic
     pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
+    location_heuristic = lexicalLocationHeuristic
+    location_heuristic = makeEntropyLocationHeuristic(choice_random_weighting)
 
     visualize_choice, visualize_wave = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
     
@@ -127,7 +131,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                 #with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
             solution = run(wave.copy(),
                                    adjacency_matrix,
-                                   locationHeuristic=lexicalLocationHeuristic,
+                                   locationHeuristic=location_heuristic,
                                    patternHeuristic=pattern_heuristic,
                                    periodic=output_periodic,
                                    backtracking=False,
