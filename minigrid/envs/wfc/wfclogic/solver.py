@@ -150,7 +150,7 @@ def observe(wave, locationHeuristic, patternHeuristic):
 
 
 
-def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, onObserve=None, onPropagate=None, checkFeasible=None):
+def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, onObserve=None, onPropagate=None, checkFeasible=None, onFinal=None):
   #print("run.")
   if checkFeasible:
     if not checkFeasible(wave):
@@ -171,9 +171,13 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
       return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
 
     else:
-      if onObserve:
-        onObserve(wave)
-      return numpy.argmax(wave, 0)
+      stats = {}
+      if onFinal:
+        print("onFinal")
+        stats = onFinal(wave)
+        print(stats)
+        input("stats?")
+      return numpy.argmax(wave, 0), stats
   except Contradiction:
     if backtracking:
       if onBacktrack:
