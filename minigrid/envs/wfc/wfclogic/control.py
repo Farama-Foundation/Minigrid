@@ -188,7 +188,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + filename + "_" + timecode + ".png")
 
             time_solve_end = time.time()
-            stats = {"outcome":"success"}.update(stats)
+            stats.update({"outcome":"success"})
             succeeded = True
         except StopEarly:
             print("Skipping...")
@@ -196,7 +196,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             return None
         except Contradiction as e_c:
             print("Contradiction")
-            stats.update({"outcome":"contradiction\t'-\t'-\t'-\t'-"})
+            stats.update({"outcome":"\t-\t-\t-\t-\tcontradiction"})
             
         outstats = {}
         outstats.update(input_stats)
