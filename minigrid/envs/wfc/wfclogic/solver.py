@@ -82,7 +82,7 @@ def makeWeightedPatternHeuristic(weights):
 def make_global_use_all_patterns():
   def global_use_all_patterns(wave):
     """Returns true if at least one instance of each pattern is still possible."""
-    return np.all(np.any(wave, axis=(1,2)))
+    return numpy.all(numpy.any(wave, axis=(1,2)))
   return global_use_all_patterns
 
 
@@ -182,10 +182,9 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
       return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
 
     else:
-      stats = {}
       if onFinal:
-        stats = onFinal(wave)
-        return numpy.argmax(wave, 0), stats
+        onFinal(wave)
+      return numpy.argmax(wave, 0)
   except Contradiction:
     if backtracking:
       if onBacktrack:
