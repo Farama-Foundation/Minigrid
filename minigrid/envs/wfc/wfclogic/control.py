@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers, make_solver_loggers
 import imageio
 import numpy as np
@@ -39,7 +39,7 @@ def make_log_stats():
     return log_stats
 
 
-def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=1, output_periodic=True, input_periodic=True, loc_heuristic="lexical", choice_heuristic="lexical", visualize=True, global_constraint=False, backtracking=False, log_filename="log", logging=True):
+def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=1, output_periodic=True, input_periodic=True, loc_heuristic="lexical", choice_heuristic="lexical", visualize=True, global_constraint=False, backtracking=False, log_filename="log", logging=True, global_constraints=None):
     timecode = f"{time.time()}"
     time_begin = time.time()
     output_destination = r"./output/"
@@ -105,6 +105,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     print(f"adjacency: {len(adjacency_list)}")
 
     time_adjacency = time.time()
+
     ### Ground ###
 
     ground_list = []
@@ -141,17 +142,25 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     if visualize:
         visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
     if logging:
-        input("logging?")
         visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
-        
+
+    ### Global Constraints ###
+    active_global_constraint = None
+    if global_constraint == "allpatterns":
+        active_global_constraint = make_global_use_all_patterns()
             
     ### Solving ###
+
+    time_solve_start = None
+    time_solve_end = None
     
+    solution_tile_grid = None
     print("solving...")
     attempts = 0
     while attempts < attempt_limit:
         attempts += 1
         time_solve_start = time.time()
+        stats = {}
         try:
             #profiler = pprofile.Profile()
             #with profiler:
@@ -167,11 +176,10 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    onObserve=visualize_wave,
                                    onPropagate=visualize_propagate,
                                    onFinal=visualize_final
+                                   checkFeasible=active_global_constraint
             )
             #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
-            print(stats)
-            input("stats return?")
-
+            
             #print(solution)
             solution_as_ids = np.vectorize(lambda x : decode_patterns[x])(solution)
             solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
@@ -181,15 +189,23 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + filename + "_" + timecode + ".png")
 
             time_solve_end = time.time()
-            
-            stats.update({"attempts": attempts, "time_start": time_begin, "time_adjacency": time_adjacency, "time solve start": time_solve_start, "time solve end": time_solve_end})
-            stats.update(input_stats)
-            log_stats_to_output(stats, output_destination + log_filename + ".tsv")
-            
-            return solution_tile_grid
+            stats.update{"outcome":"success"}
+            succeeded = True
         except StopEarly:
             print("Skipping...")
+            stats.update{"outcome":"skipped"}
             return None
         except Contradiction as e_c:
             print("Contradiction")
+            stats.update{"outcome":"contradiction"}
+            
+        outstats = {}
+        outstats.update(input_stats)
+        outstats.update({"attempts": attempts, "time_start": time_begin, "time_adjacency": time_adjacency, "time solve start": time_solve_start, "time solve end": time_solve_end, "pattern count": number_of_patterns})
+        outstats.update(stats)
+        log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
+        if solution_tile_grid:
+            return solution_tile_grid
+
+
     return None

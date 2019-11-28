@@ -2,7 +2,8 @@ from scipy import sparse
 import numpy
 import sys
 
-
+# By default Python has a very low recursion limit.
+# Might still be better to rewrite te recursion as a loop, of course
 sys.setrecursionlimit(5500)
 
 
@@ -74,6 +75,16 @@ def makeWeightedPatternHeuristic(weights):
     result = numpy.random.choice(num_of_patterns, p=weighted_wave)
     return result
   return weightedPatternHeuristic
+
+######################################
+# Global Constraints
+
+def make_global_use_all_patterns():
+  def global_use_all_patterns(wave):
+    """Returns true if at least one instance of each pattern is still possible."""
+    return np.all(np.any(wave, axis=(1,2)))
+  return global_use_all_patterns
+
 
 
 #####################################
@@ -173,11 +184,8 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
     else:
       stats = {}
       if onFinal:
-        print("onFinal")
         stats = onFinal(wave)
-        print(stats)
-        input("stats?")
-      return numpy.argmax(wave, 0), stats
+        return numpy.argmax(wave, 0), stats
   except Contradiction:
     if backtracking:
       if onBacktrack:
