@@ -175,7 +175,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    onBacktrack=visualize_backtracking,
                                    onObserve=visualize_wave,
                                    onPropagate=visualize_propagate,
-                                   onFinal=visualize_final
+                                   onFinal=visualize_final,
                                    checkFeasible=active_global_constraint
             )
             #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
@@ -189,15 +189,15 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             render_tiles_to_output(solution_tile_grid, tile_catalog, [tile_size, tile_size], output_destination + filename + "_" + timecode + ".png")
 
             time_solve_end = time.time()
-            stats.update{"outcome":"success"}
+            stats.update({"outcome":"success"})
             succeeded = True
         except StopEarly:
             print("Skipping...")
-            stats.update{"outcome":"skipped"}
+            stats.update({"outcome":"skipped"})
             return None
         except Contradiction as e_c:
             print("Contradiction")
-            stats.update{"outcome":"contradiction"}
+            stats.update({"outcome":"contradiction"})
             
         outstats = {}
         outstats.update(input_stats)
