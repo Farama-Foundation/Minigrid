@@ -204,7 +204,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         outstats.update({"attempts": attempts, "time_start": time_begin, "time_adjacency": time_adjacency, "time solve start": time_solve_start, "time solve end": time_solve_end, "pattern count": number_of_patterns})
         outstats.update(stats)
         log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
-        if solution_tile_grid:
+        if not solution_tile_grid is None:
             return solution_tile_grid
 
 
