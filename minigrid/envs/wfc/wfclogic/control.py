@@ -139,16 +139,17 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
 
     ### Visualization ###
 
-    visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final = None, None, None, None, None
+    visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = None, None, None, None, None, None
     if visualize:
-        visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
+        visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
     if logging:
-        visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
+        visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
 
     ### Global Constraints ###
-    active_global_constraint = None
+    active_global_constraint = lambda wave: True
     if global_constraint == "allpatterns":
         active_global_constraint = make_global_use_all_patterns()
+    print(active_global_constraint)
             
     ### Solving ###
 
@@ -166,7 +167,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             #profiler = pprofile.Profile()
             #with profiler:
                 #with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
-            solution, stats = run(wave.copy(),
+            solution = run(wave.copy(),
                                    adjacency_matrix,
                                    locationHeuristic=location_heuristic,
                                    patternHeuristic=pattern_heuristic,
@@ -180,8 +181,10 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    checkFeasible=active_global_constraint
             )
             #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
-            
+            if visualize_after:
+                stats = visualize_after()
             #print(solution)
+            #print(stats)
             solution_as_ids = np.vectorize(lambda x : decode_patterns[x])(solution)
             solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
 
