@@ -82,7 +82,7 @@ def makeWeightedPatternHeuristic(weights):
 def make_global_use_all_patterns():
   def global_use_all_patterns(wave):
     """Returns true if at least one instance of each pattern is still possible."""
-    return np.all(np.any(wave, axis=(1,2)))
+    return numpy.all(numpy.any(wave, axis=(1,2)))
   return global_use_all_patterns
 
 
