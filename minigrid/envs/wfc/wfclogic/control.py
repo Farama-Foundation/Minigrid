@@ -39,14 +39,13 @@ def make_log_stats():
     return log_stats
 
 
-def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=1, output_periodic=True, input_periodic=True, loc_heuristic="lexical", choice_heuristic="lexical", visualize=True, global_constraint=False, backtracking=False, log_filename="log", logging=True, global_constraints=None):
+def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size=[48,48], ground=None, attempt_limit=1, output_periodic=True, input_periodic=True, loc_heuristic="lexical", choice_heuristic="lexical", visualize=True, global_constraint=False, backtracking=False, log_filename="log", logging=True, global_constraints=None, log_stats_to_output=None):
     timecode = f"{time.time()}"
     time_begin = time.time()
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
 
     rotations -= 1 # change to zero-based
-    log_stats_to_output = make_log_stats()
 
     input_stats = {"tile_size": tile_size, "pattern_width": pattern_width, "rotations": rotations, "output_size": output_size, "ground": ground, "attempt_limit": attempt_limit, "output_periodic": output_periodic, "input_periodic": input_periodic, "location heuristic": loc_heuristic, "choice heurisitic": choice_heuristic, "global constraint": global_constraint, "backtracking":backtracking}
     
@@ -203,7 +202,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         outstats.update(input_stats)
         outstats.update({"attempts": attempts, "time_start": time_begin, "time_adjacency": time_adjacency, "time solve start": time_solve_start, "time solve end": time_solve_end, "pattern count": number_of_patterns})
         outstats.update(stats)
-        log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
+        if not log_stats_to_output is None:
+            log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
         if not solution_tile_grid is None:
             return solution_tile_grid
 
