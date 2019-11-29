@@ -48,7 +48,7 @@ def makeAdj(adjLists):
 def makeRandomLocationHeuristic(preferences):
   def randomLocationHeuristic(wave):
     unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
-    cell_weights = numpy.where(unresolved_cell_mask * numpy.random.random(wave.shape[1:]), numpy.count_nonzero(wave, axis=0), numpy.inf)
+    cell_weights = numpy.where(unresolved_cell_mask, preferences, numpy.inf)
     row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
     return [row, col]
   return randomLocationHeuristic
