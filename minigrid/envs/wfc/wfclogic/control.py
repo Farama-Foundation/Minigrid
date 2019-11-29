@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers, make_solver_loggers
 import imageio
 import numpy as np
@@ -134,7 +134,10 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     location_heuristic = lexicalLocationHeuristic
     if loc_heuristic == "entropy":
         location_heuristic = makeEntropyLocationHeuristic(choice_random_weighting)
+    if loc_heuristic == "random":
+        location_heuristic = makeRandomLocationHeuristic(choice_random_weighting)
 
+        
     ### Visualization ###
 
     visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = None, None, None, None, None, None
