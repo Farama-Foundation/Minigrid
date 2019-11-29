@@ -142,6 +142,19 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
     if logging:
         visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
+    if logging and visualize:
+        vis = make_solver_visualizers(f"{filename}_{timecode}", wave, decode_patterns=decode_patterns, pattern_catalog=pattern_catalog, tile_catalog=tile_catalog, tile_size=[tile_size, tile_size])
+        log = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
+
+        def visfunc(idx):
+            def vf(*args, **kwargs):
+                if vis[idx]:
+                    vis[idx](*args, **kwargs)
+                if log[idx]:
+                    return log[idx](*args, **kwargs)
+            return vf
+        visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = [visfunc(x) for x in range(len(vis))]
+
 
     ### Global Constraints ###
     active_global_constraint = lambda wave: True
