@@ -217,7 +217,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                     stats.update({"outcome":"skipped"})
                 except Contradiction as e_c:
                     print("Contradiction")
-                    stats.update({"outcome":"\t-\t-\t-\tcontradiction"})
+                    stats.update({"outcome":"contradiction"})
         profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
             
         outstats = {}

@@ -201,6 +201,8 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
       wave[pattern, i, j] = False
       return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
     else:
+      if onFinal:
+        onFinal(wave)
       raise
 
 #############################
