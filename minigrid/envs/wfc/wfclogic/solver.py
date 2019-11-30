@@ -11,6 +11,9 @@ class Contradiction(Exception):
   """Solving could not proceed without backtracking/restarting."""
   pass
 
+class TimedOut(Exception):
+  """Solve timed out."""
+  pass
 
 class StopEarly(Exception):
   """Aborting solve early."""
@@ -180,11 +183,16 @@ def observe(wave, locationHeuristic, patternHeuristic):
 
 
 
-def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, onObserve=None, onPropagate=None, checkFeasible=None, onFinal=None):
+def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, onObserve=None, onPropagate=None, checkFeasible=None, onFinal=None, depth=0, depth_limit=None):
   #print("run.")
   if checkFeasible:
     if not checkFeasible(wave):
       raise Contradiction
+    if depth_limit:
+      if depth > depthlimit:
+        raise TimedOut
+  if depth % 1000 == 0:
+    print(depth)
   original = wave.copy()
   propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
   try:
@@ -198,8 +206,7 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
     propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
     if wave.sum() > wave.shape[1] * wave.shape[2]:
       #return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack)
-      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
-
+      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible, depth=depth+1, depth_limit=depth_limit)
     else:
       if onFinal:
         onFinal(wave)
@@ -210,7 +217,7 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
         onBacktrack()
       wave = original
       wave[pattern, i, j] = False
-      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible)
+      return run(wave, adj, locationHeuristic, patternHeuristic, periodic=periodic, backtracking=backtracking, onBacktrack=onBacktrack, onChoice=onChoice, onObserve=onObserve, onPropagate=onPropagate, checkFeasible=checkFeasible, depth=depth+1, depth_limit=depth_limit)
     else:
       if onFinal:
         onFinal(wave)

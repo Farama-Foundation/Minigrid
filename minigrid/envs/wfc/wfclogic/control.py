@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic, TimedOut
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers, make_solver_loggers
 import imageio
 import numpy as np
@@ -168,6 +168,19 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     if global_constraint == "allpatterns":
         active_global_constraint = make_global_use_all_patterns()
     print(active_global_constraint)
+
+    ### Search Depth Limit
+    def makeSearchLengthLimit(max_limit):
+        search_length_counter = 0
+        def searchLengthLimit(wave):
+            nonlocal search_length_counter
+            search_length_counter += 1
+            return search_length_counter <= max_limit
+    #search_limit_fn = makeSearchLengthLimit(1000)
+
+    combined_constraints = [active_global_constraint, makeSearchLengthLimit(1000)
+    def combinedConstraints(wave):
+        return all([fn(wave) for fn in combined_constraints])
             
     ### Solving ###
 
@@ -198,7 +211,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    onObserve=visualize_wave,
                                    onPropagate=visualize_propagate,
                                    onFinal=visualize_final,
-                                   checkFeasible=active_global_constraint
+                                   checkFeasible=conbinedConsraints
                     )
                     if visualize_after:
                         stats = visualize_after()
@@ -218,6 +231,11 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                     print("Skipping...")
                     end_early = True
                     stats.update({"outcome":"skipped"})
+                except TimedOut as e_c:
+                    print("Timed Out")
+                    if visualize_after:
+                        stats = visualize_after()
+                    stats.update({"outcome":"timed_out"})
                 except Contradiction as e_c:
                     print("Contradiction")
                     if visualize_after:
