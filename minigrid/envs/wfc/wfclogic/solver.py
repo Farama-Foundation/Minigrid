@@ -84,6 +84,17 @@ def makeWeightedPatternHeuristic(weights):
     return result
   return weightedPatternHeuristic
 
+def makeRandomPatternHeuristic(weights):
+  num_of_patterns = len(weights)
+  def randomPatternHeuristic(wave):
+    # TODO: there's maybe a faster, more controlled way to do this sampling...
+    weighted_wave = (1.0 * wave)
+    weighted_wave /= weighted_wave.sum()
+    result = numpy.random.choice(num_of_patterns, p=weighted_wave)
+    return result
+  return randomPatternHeuristic
+
+
 ######################################
 # Global Constraints
 
