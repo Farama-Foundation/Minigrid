@@ -176,10 +176,11 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             nonlocal search_length_counter
             search_length_counter += 1
             return search_length_counter <= max_limit
-    #search_limit_fn = makeSearchLengthLimit(1000)
+        return searchLengthLimit
 
     combined_constraints = [active_global_constraint, makeSearchLengthLimit(1000)]
     def combinedConstraints(wave):
+        print
         return all([fn(wave) for fn in combined_constraints])
             
     ### Solving ###
