@@ -211,7 +211,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                                    onObserve=visualize_wave,
                                    onPropagate=visualize_propagate,
                                    onFinal=visualize_final,
-                                   checkFeasible=conbinedConsraints
+                                   checkFeasible=combinedConstraints
                     )
                     if visualize_after:
                         stats = visualize_after()
