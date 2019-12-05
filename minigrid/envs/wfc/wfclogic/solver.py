@@ -1,6 +1,8 @@
 from scipy import sparse
 import numpy
 import sys
+import math
+import itertools
 
 # By default Python has a very low recursion limit.
 # Might still be better to rewrite te recursion as a loop, of course
@@ -64,10 +66,94 @@ def makeEntropyLocationHeuristic(preferences):
     return [row, col]
   return entropyLocationHeuristic
 
+def spiral_transforms():
+  for N in itertools.count(start=1):
+    if N % 2 == 0:
+      yield (0, 1) # right
+      for i in range(N):
+        yield (1, 0) # down
+      for i in range(N):
+        yield (0, -1) # left
+    else:
+      yield (0, -1) # left
+      for i in range(N):
+        yield (-1, 0) # up
+      for i in range(N):
+        yield (0, 1) # right
+
+def spiral_coords(x, y):
+  yield x,y
+  for transform in spiral_transforms():
+    x += transform[0]
+    y += transform[1]
+    yield x,y
+
+def fill_with_curve(arr, curve_gen):
+    arr_len = numpy.prod(arr.shape)
+    fill = 0
+    for idx, coord in enumerate(curve_gen):
+      print(fill, idx, coord)
+      if fill < arr_len:
+        try: 
+          arr[coord] = fill / arr_len
+          fill += 1
+        except IndexError:
+          pass
+      else:  
+        break
+    return arr
+
+    
+
+def makeSpiralLocationHeuristic(preferences):
+  # https://stackoverflow.com/a/23707273/5562922
+  
+  spiral_gen = (sc for sc in spiral_coords(preferences.shape[0] // 2, preferences.shape[1] // 2))
+  
+  cell_order = fill_with_curve(preferences, spiral_gen)
+    
+  def spiralLocationHeuristic(wave):
+    unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
+    cell_weights = numpy.where(unresolved_cell_mask, cell_order, numpy.inf)
+    row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
+    return [row, col]
+  
+  return spiralLocationHeuristic
+
+from hilbertcurve.hilbertcurve import HilbertCurve
+
+def makeHilbertLocationHeuristic(preferences):
+  curve_size = math.ceil( math.sqrt(max(preferences.shape[0], preferences.shape[1]))) + 1
+  print(curve_size)
+  h_curve = HilbertCurve(curve_size, 2)
+
+  def h_coords():
+    for i in range(100000):
+      #print(i)
+      coords = h_curve.coordinates_from_distance(i)
+      #print(coords)
+      yield coords
+      
+  cell_order = fill_with_curve(preferences, h_coords())
+    
+  def hilbertLocationHeuristic(wave):
+    unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
+    cell_weights = numpy.where(unresolved_cell_mask, cell_order, numpy.inf)
+    row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
+    return [row, col]
+
+  return hilbertLocationHeuristic
+
+def simpleLocationHeuristic(wave):
+  unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
+  cell_weights = numpy.where(unresolved_cell_mask, numpy.count_nonzero(wave, axis=0), numpy.inf)
+  row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
+  return [row, col]
+
 
 def lexicalLocationHeuristic(wave):
   unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
-  cell_weights = numpy.where(unresolved_cell_mask,  numpy.count_nonzero(wave, axis=0), numpy.inf)
+  cell_weights = numpy.where(unresolved_cell_mask, 1.0, numpy.inf)
   row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
   return [row, col]
 
@@ -191,7 +277,7 @@ def run(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtrac
     if depth_limit:
       if depth > depthlimit:
         raise TimedOut
-  if depth % 1000 == 0:
+  if depth % 50 == 0:
     print(depth)
   original = wave.copy()
   propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)

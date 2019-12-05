@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic, TimedOut
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic, TimedOut, simpleLocationHeuristic, makeSpiralLocationHeuristic, makeHilbertLocationHeuristic
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers, make_solver_loggers
 import imageio
 import numpy as np
@@ -140,6 +140,12 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         location_heuristic = makeEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "random":
         location_heuristic = makeRandomLocationHeuristic(choice_random_weighting)
+    if loc_heuristic == "simple":
+        location_heuristic = simpleLocationHeuristic
+    if loc_heuristic == "spiral":
+        location_heuristic = makeSpiralLocationHeuristic(choice_random_weighting)
+    if loc_heuristic == "hilbert":
+        location_heuristic = makeHilbertLocationHeuristic(choice_random_weighting)
 
         
     ### Visualization ###
@@ -178,7 +184,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
             return search_length_counter <= max_limit
         return searchLengthLimit
 
-    combined_constraints = [active_global_constraint, makeSearchLengthLimit(1000)]
+    combined_constraints = [active_global_constraint, makeSearchLengthLimit(1200)]
     def combinedConstraints(wave):
         print
         return all([fn(wave) for fn in combined_constraints])
@@ -196,7 +202,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         end_early = False
         time_solve_start = time.time()
         stats = {}
-        #profiler = pprofile.Profile()
+        profiler = pprofile.Profile()
         if True:
         #with profiler:
             #with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
@@ -242,7 +248,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                     if visualize_after:
                         stats = visualize_after()
                     stats.update({"outcome":"contradiction"})
-        #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
+        profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
             
         outstats = {}
         outstats.update(input_stats)
