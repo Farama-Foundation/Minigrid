@@ -92,7 +92,7 @@ def fill_with_curve(arr, curve_gen):
     arr_len = numpy.prod(arr.shape)
     fill = 0
     for idx, coord in enumerate(curve_gen):
-      print(fill, idx, coord)
+      #print(fill, idx, coord)
       if fill < arr_len:
         try: 
           arr[coord] = fill / arr_len
@@ -123,8 +123,8 @@ def makeSpiralLocationHeuristic(preferences):
 from hilbertcurve.hilbertcurve import HilbertCurve
 
 def makeHilbertLocationHeuristic(preferences):
-  curve_size = math.ceil( math.sqrt(max(preferences.shape[0], preferences.shape[1]))) + 1
-  print(curve_size)
+  curve_size = math.ceil( math.sqrt(max(preferences.shape[0], preferences.shape[1])))
+  #print(curve_size)
   h_curve = HilbertCurve(curve_size, 2)
 
   def h_coords():
