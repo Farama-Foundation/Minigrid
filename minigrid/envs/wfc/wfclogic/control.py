@@ -47,7 +47,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
 
     rotations -= 1 # change to zero-based
 
-    input_stats = {"filename": filename, "tile_size": tile_size, "pattern_width": pattern_width, "rotations": rotations, "output_size": output_size, "ground": ground, "attempt_limit": attempt_limit, "output_periodic": output_periodic, "input_periodic": input_periodic, "location heuristic": loc_heuristic, "choice heurisitic": choice_heuristic, "global constraint": global_constraint, "backtracking":backtracking}
+    input_stats = {"filename": filename, "tile_size": tile_size, "pattern_width": pattern_width, "rotations": rotations, "output_size": output_size, "ground": ground, "attempt_limit": attempt_limit, "output_periodic": output_periodic, "input_periodic": input_periodic, "location heuristic": loc_heuristic, "choice heuristic": choice_heuristic, "global constraint": global_constraint, "backtracking":backtracking}
     
     # Load the image
     img = imageio.imread(input_folder + filename + ".png")
@@ -134,8 +134,11 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
     if choice_heuristic == "random":
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights)
-    
+
+    print(loc_heuristic)
     location_heuristic = lexicalLocationHeuristic
+    if loc_heuristic == "anti-entropy":
+        location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "entropy":
         location_heuristic = makeEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "random":

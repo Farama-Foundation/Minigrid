@@ -66,6 +66,15 @@ def makeEntropyLocationHeuristic(preferences):
     return [row, col]
   return entropyLocationHeuristic
 
+def makeAntiEntropyLocationHeuristic(preferences):
+  def antiEntropyLocationHeuristic(wave):
+    unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
+    cell_weights = numpy.where(unresolved_cell_mask, preferences + numpy.count_nonzero(wave, axis=0), -numpy.inf)
+    row, col = numpy.unravel_index(numpy.argmax(cell_weights), cell_weights.shape)
+    return [row, col]
+  return entropyLocationHeuristic
+
+
 def spiral_transforms():
   for N in itertools.count(start=1):
     if N % 2 == 0:
@@ -95,12 +104,13 @@ def fill_with_curve(arr, curve_gen):
       #print(fill, idx, coord)
       if fill < arr_len:
         try: 
-          arr[coord] = fill / arr_len
+          arr[coord[0], coord[1]] = fill / arr_len
           fill += 1
         except IndexError:
           pass
       else:  
         break
+    #print(arr)
     return arr
 
     
@@ -123,18 +133,23 @@ def makeSpiralLocationHeuristic(preferences):
 from hilbertcurve.hilbertcurve import HilbertCurve
 
 def makeHilbertLocationHeuristic(preferences):
-  curve_size = math.ceil( math.sqrt(max(preferences.shape[0], preferences.shape[1])))
-  #print(curve_size)
+  curve_size = math.ceil( math.sqrt(max(preferences.shape[0], preferences.shape[1]))) 
+  print(curve_size)
+  curve_size = 4
   h_curve = HilbertCurve(curve_size, 2)
 
   def h_coords():
     for i in range(100000):
       #print(i)
-      coords = h_curve.coordinates_from_distance(i)
+      try:
+        coords = h_curve.coordinates_from_distance(i)
+      except ValueError:
+          coords = [0,0]
       #print(coords)
       yield coords
       
   cell_order = fill_with_curve(preferences, h_coords())
+  #print(cell_order)
     
   def hilbertLocationHeuristic(wave):
     unresolved_cell_mask = (numpy.count_nonzero(wave, axis=0) > 1)
