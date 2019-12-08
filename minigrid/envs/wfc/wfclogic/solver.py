@@ -72,7 +72,7 @@ def makeAntiEntropyLocationHeuristic(preferences):
     cell_weights = numpy.where(unresolved_cell_mask, preferences + numpy.count_nonzero(wave, axis=0), -numpy.inf)
     row, col = numpy.unravel_index(numpy.argmax(cell_weights), cell_weights.shape)
     return [row, col]
-  return entropyLocationHeuristic
+  return antiEntropyLocationHeuristic
 
 
 def spiral_transforms():

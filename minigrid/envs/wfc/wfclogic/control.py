@@ -1,7 +1,7 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import make_pattern_catalog, pattern_grid_to_tiles, make_pattern_catalog_with_rotations
 from .wfc_adjacency import adjacency_extraction
-from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic, TimedOut, simpleLocationHeuristic, makeSpiralLocationHeuristic, makeHilbertLocationHeuristic
+from .wfc_solver import run, makeWave, makeAdj, lexicalLocationHeuristic, lexicalPatternHeuristic, makeWeightedPatternHeuristic, Contradiction, StopEarly, makeEntropyLocationHeuristic, make_global_use_all_patterns, makeRandomLocationHeuristic, makeRandomPatternHeuristic, TimedOut, simpleLocationHeuristic, makeSpiralLocationHeuristic, makeHilbertLocationHeuristic, makeAntiEntropyLocationHeuristic
 from .wfc_visualize import figure_list_of_tiles, figure_false_color_tile_grid, figure_pattern_catalog, render_tiles_to_output, figure_adjacencies, visualize_solver, make_solver_visualizers, make_solver_loggers
 import imageio
 import numpy as np
