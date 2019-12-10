@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 # TODO: anti-aliased version, fill_coords_aa?
@@ -14,6 +15,18 @@ def fill_coords(img, fn, color):
                 img[y, x] = color
 
     return img
+
+def rotate_fn(fin, cx, cy, theta):
+    def fout(x, y):
+        x = x - cx
+        y = y - cy
+
+        x2 = cx + x * math.cos(-theta) - y * math.sin(-theta)
+        y2 = cy + y * math.cos(-theta) + x * math.sin(-theta)
+
+        return fin(x2, y2)
+
+    return fout
 
 def point_in_circle(cx, cy, r):
     def fn(x, y):

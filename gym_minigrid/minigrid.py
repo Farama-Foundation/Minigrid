@@ -535,7 +535,14 @@ class Grid:
 
         # TODO: overlay agent on top
         if agent_dir is not None:
-            pass
+            tri_fn = point_in_triangle(
+                (0.12, 0.19),
+                (0.87, 0.50),
+                (0.12, 0.81),
+            )
+
+            tri_fn = rotate_fn(tri_fn, cx=0.5, cy=0.5, theta=0.5*math.pi*agent_dir)
+            fill_coords(img, tri_fn, (255, 0, 0))
 
         # TODO: highlighting
         if highlight:
@@ -546,7 +553,12 @@ class Grid:
 
         return img
 
-    def render(self, tile_size):
+    def render(
+        self,
+        tile_size,
+        agent_pos=None,
+        agent_dir=None
+    ):
         """
         Render this grid at a given scale
         :param r: target renderer object
@@ -566,7 +578,7 @@ class Grid:
 
                 tile_img = Grid.render_tile(
                     cell,
-                    agent_dir=None,
+                    agent_dir=agent_dir if agent_pos == (i, j) else None,
                     highlight=False,
                     tile_size=tile_size
                 )
@@ -1302,27 +1314,11 @@ class MiniGridEnv(gym.Env):
         """
 
         # Render the whole grid
-        img = self.grid.render(tile_size)
-
-        """
-        # Draw the agent
-        ratio = tile_size / TILE_PIXELS
-        r.push()
-        r.scale(ratio, ratio)
-        r.translate(
-            TILE_PIXELS * (self.agent_pos[0] + 0.5),
-            TILE_PIXELS * (self.agent_pos[1] + 0.5)
+        img = self.grid.render(
+            tile_size,
+            self.agent_pos,
+            self.agent_dir
         )
-        r.rotate(self.agent_dir * 90)
-        r.setLineColor(255, 0, 0)
-        r.setColor(255, 0, 0)
-        r.drawPolygon([
-            (-12, 10),
-            ( 12,  0),
-            (-12, -10)
-        ])
-        r.pop()
-        """
 
         """
         # Compute which cells are visible to the agent
