@@ -157,8 +157,8 @@ class Goal(WorldObj):
     def can_overlap(self):
         return True
 
-    def render(self, r):
-        fill_coords(img, point_in_rect(0.5, 0.5, 0.5, 0.5), COLORS[self.color])
+    def render(self, img):
+        fill_coords(img, point_in_rect(0, 1, 0, 1), COLORS[self.color])
 
 class Floor(WorldObj):
     """
@@ -235,8 +235,8 @@ class Wall(WorldObj):
     def see_behind(self):
         return False
 
-    def render(self, r):
-        fill_coords(img, point_in_rect(0.5, 0.5, 0.5, 0.5), COLORS[self.color])
+    def render(self, img):
+        fill_coords(img, point_in_rect(0, 1, 0, 1), COLORS[self.color])
 
 class Door(WorldObj):
     def __init__(self, color, is_open=False, is_locked=False):
@@ -518,14 +518,20 @@ class Grid:
         """
 
         # Hash map lookup key for the cache
-        key = obj.encode() + (agent_dir, highlight, tile_size)
+        key = (agent_dir, highlight, tile_size)
+        key = obj.encode() + key if obj else key
 
         if key in cls.tile_cache:
-            return tile_cache[key]
+            return cls.tile_cache[key]
 
         img = np.zeros(shape=(tile_size, tile_size, 3), dtype=np.uint8)
 
-        obj.render_tile(img)
+        # Draw the grid lines (top and left edges)
+        fill_coords(img, point_in_rect(0, 0.031, 0, 1), (100, 100, 100))
+        fill_coords(img, point_in_rect(0, 1, 0, 0.031), (100, 100, 100))
+
+        if obj != None:
+            obj.render(img)
 
         # TODO: overlay agent on top
         if agent_dir is not None:
@@ -536,7 +542,7 @@ class Grid:
             pass
 
         # Cache the rendered tile
-        tile_cache[key] = img
+        cls.tile_cache[key] = img
 
         return img
 
@@ -553,33 +559,23 @@ class Grid:
 
         img = np.zeros(shape=(height_px, width_px, 3), dtype=np.uint8)
 
-        """
-        # Draw grid lines
-        r.setLineColor(100, 100, 100)
-        for rowIdx in range(0, self.height):
-            y = TILE_PIXELS * rowIdx
-            r.drawLine(0, y, widthPx, y)
-        for colIdx in range(0, self.width):
-            x = TILE_PIXELS * colIdx
-            r.drawLine(x, 0, x, heightPx)
-        """
-
         # Render the grid
         for j in range(0, self.height):
             for i in range(0, self.width):
                 cell = self.get(i, j)
-                if cell == None:
-                    continue
 
-                """
                 tile_img = Grid.render_tile(
                     cell,
                     agent_dir=None,
                     highlight=False,
                     tile_size=tile_size
                 )
-                """
 
+                ymin = j * tile_size
+                ymax = (j+1) * tile_size
+                xmin = i * tile_size
+                xmax = (i+1) * tile_size
+                img[ymin:ymax, xmin:xmax, :] = tile_img
 
         return img
 

@@ -17,12 +17,12 @@ def fill_coords(img, fn, color):
 
 def point_in_circle(cx, cy, r):
     def fn(x, y):
-        return (x-cx)*(x-cx) + (y-cy)*(y-cy) < r * r
+        return (x-cx)*(x-cx) + (y-cy)*(y-cy) <= r * r
     return fn
 
-def point_in_rect(cx, cy, rx, ry):
+def point_in_rect(xmin, xmax, ymin, ymax):
     def fn(x, y):
-        return abs(x-cx) < rx and abs(y - cy) < ry
+        return x >= xmin and x <= xmax and y >= ymin and y <= ymax
     return fn
 
 def point_in_triangle(a, b, c):
