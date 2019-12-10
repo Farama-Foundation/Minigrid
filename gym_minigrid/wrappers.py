@@ -6,7 +6,6 @@ import numpy as np
 import gym
 from gym import error, spaces, utils
 from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX, STATE_TO_IDX
-from .minigrid import CELL_PIXELS
 
 class ReseedWrapper(gym.core.Wrapper):
     """
