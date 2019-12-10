@@ -10,6 +10,6 @@ setup(
     install_requires=[
         'gym>=0.9.6',
         'numpy>=1.15.0',
-        'pyqt5>=5.10.1'
+        'matplotlib'
     ]
 )
