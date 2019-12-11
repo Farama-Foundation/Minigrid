@@ -79,17 +79,6 @@ args = parser.parse_args()
 
 env = gym.make(args.env_name)
 
-"""
-t0 = time.time()
-
-for i in range(1000):
-    img = env.render('rgb_array')
-
-t1 = time.time()
-dt = int(1000 * (t1-t0))
-print(dt)
-"""
-
 fig, ax = plt.subplots()
 
 # Keyboard handler
@@ -102,8 +91,9 @@ fig.canvas.set_window_title('gym_minigrid - ' + args.env_name)
 ax.set_xticks([], [])
 ax.set_yticks([], [])
 
-#plt.figure(num='gym-minigrid')
-imshow_obj = ax.imshow(img)
+# Show the first image of the environment
+img = env.render('rgb_array')
+imshow_obj = ax.imshow(img, interpolation='bilinear')
 
 reset()
 

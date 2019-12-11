@@ -64,3 +64,12 @@ def point_in_triangle(a, b, c):
         return (u >= 0) and (v >= 0) and (u + v) < 1
 
     return fn
+
+def highlight_img(img, color=(255, 255, 255), alpha=0.30):
+    """
+    Add highlighting to an image
+    """
+
+    img = img + alpha * (np.array(color) - img)
+    img = img.clip(0, 255)
+    return img
