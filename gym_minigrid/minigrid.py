@@ -285,20 +285,18 @@ class Door(WorldObj):
             return
 
         # Door frame and door
-        inner_color = 0.45 * np.array(c) if self.is_locked else c
-        fill_color = inner_color if self.is_locked else (0,0,0)
-        fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
-        fill_coords(img, point_in_rect(0.04, 0.96, 0.04, 0.96), (0,0,0))
-        fill_coords(img, point_in_rect(0.08, 0.92, 0.08, 0.92), inner_color)
-        fill_coords(img, point_in_rect(0.12, 0.88, 0.12, 0.88), fill_color)
-
-        #r.setLineColor(c[0], c[1], c[2])
-        #r.setColor(c[0], c[1], c[2], 50 if self.is_locked else 0)
-
         if self.is_locked:
+            fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
+            fill_coords(img, point_in_rect(0.06, 0.94, 0.06, 0.94), 0.45 * np.array(c))
+
             # Draw key slot
             fill_coords(img, point_in_rect(0.52, 0.75, 0.50, 0.56), c)
         else:
+            fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
+            fill_coords(img, point_in_rect(0.04, 0.96, 0.04, 0.96), (0,0,0))
+            fill_coords(img, point_in_rect(0.08, 0.92, 0.08, 0.92), c)
+            fill_coords(img, point_in_rect(0.12, 0.88, 0.12, 0.88), (0,0,0))
+
             # Draw door handle
             fill_coords(img, point_in_circle(cx=0.75, cy=0.50, r=0.08), c)
 
@@ -310,36 +308,18 @@ class Key(WorldObj):
         return True
 
     def render(self, img):
-        pass
+        c = COLORS[self.color]
 
-        """
         # Vertical quad
-        r.drawPolygon([
-            (16, 10),
-            (20, 10),
-            (20, 28),
-            (16, 28)
-        ])
+        fill_coords(img, point_in_rect(0.50, 0.63, 0.31, 0.89), c)
 
         # Teeth
-        r.drawPolygon([
-            (12, 19),
-            (16, 19),
-            (16, 21),
-            (12, 21)
-        ])
-        r.drawPolygon([
-            (12, 26),
-            (16, 26),
-            (16, 28),
-            (12, 28)
-        ])
+        fill_coords(img, point_in_rect(0.38, 0.50, 0.59, 0.66), c)
+        fill_coords(img, point_in_rect(0.38, 0.50, 0.81, 0.88), c)
 
-        r.drawCircle(18, 9, 6)
-        r.setLineColor(0, 0, 0)
-        r.setColor(0, 0, 0)
-        r.drawCircle(18, 9, 2)
-        """
+        # Ring
+        fill_coords(img, point_in_circle(cx=0.56, cy=0.28, r=0.190), c)
+        fill_coords(img, point_in_circle(cx=0.56, cy=0.28, r=0.064), (0,0,0))
 
 class Ball(WorldObj):
     def __init__(self, color='blue'):
