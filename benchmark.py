@@ -10,7 +10,7 @@ parser.add_argument(
     "--env-name",
     dest="env_name",
     help="gym environment to load",
-    default='MiniGrid-DoorKey-8x8-v0'
+    default='MiniGrid-LavaGapS7-v0'
 )
 parser.add_argument("--num_frames", default=2000)
 args = parser.parse_args()

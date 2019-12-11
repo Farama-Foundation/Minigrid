@@ -339,27 +339,15 @@ class Box(WorldObj):
     def can_pickup(self):
         return True
 
-    def render(self, r):
+    def render(self, img):
         c = COLORS[self.color]
-        r.setLineColor(c[0], c[1], c[2])
-        r.setColor(0, 0, 0)
-        r.setLineWidth(2)
 
-        r.drawPolygon([
-            (4            , TILE_PIXELS-4),
-            (TILE_PIXELS-4, TILE_PIXELS-4),
-            (TILE_PIXELS-4,             4),
-            (4            ,             4)
-        ])
+        # Outline
+        fill_coords(img, point_in_rect(0.12, 0.88, 0.12, 0.88), c)
+        fill_coords(img, point_in_rect(0.18, 0.82, 0.18, 0.82), (0,0,0))
 
-        r.drawLine(
-            4,
-            TILE_PIXELS / 2,
-            TILE_PIXELS - 4,
-            TILE_PIXELS / 2
-        )
-
-        r.setLineWidth(1)
+        # Vertical slit
+        fill_coords(img, point_in_rect(0.48, 0.52, 0.16, 0.84), c)
 
     def toggle(self, env, pos):
         # Replace the box by its contents
@@ -540,8 +528,8 @@ class Grid:
             highlight_mask = np.zeros(shape=(self.width, self.height), dtype=np.bool)
 
         # Compute the total grid size
-        width_px = self.width * TILE_PIXELS
-        height_px = self.height * TILE_PIXELS
+        width_px = self.width * tile_size
+        height_px = self.height * tile_size
 
         img = np.zeros(shape=(height_px, width_px, 3), dtype=np.uint8)
 

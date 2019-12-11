@@ -14,7 +14,7 @@ def reset():
         print('Mission: %s' % env.mission)
         plt.xlabel(env.mission)
 
-    img = env.render('rgb_array')
+    img = env.render('rgb_array', tile_size=args.tile_size)
     imshow_obj.set_data(img)
     fig.canvas.draw()
 
@@ -26,7 +26,7 @@ def step(action):
         print('done!')
         reset()
 
-    img = env.render('rgb_array')
+    img = env.render('rgb_array', tile_size=args.tile_size)
     imshow_obj.set_data(img)
     fig.canvas.draw()
 
@@ -68,13 +68,18 @@ def key_handler(event):
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "-e",
-    "--env-name",
-    dest="env_name",
+    "--env_name",
     help="gym environment to load",
     #default='MiniGrid-MultiRoom-N6-v0'
     default='MiniGrid-KeyCorridorS3R3-v0'
 )
+parser.add_argument(
+    "--tile_size",
+    type=int,
+    help="size at which to render tiles",
+    default=32
+)
+
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
@@ -91,8 +96,10 @@ fig.canvas.set_window_title('gym_minigrid - ' + args.env_name)
 ax.set_xticks([], [])
 ax.set_yticks([], [])
 
+print(args.tile_size)
+
 # Show the first image of the environment
-img = env.render('rgb_array')
+img = env.render('rgb_array', tile_size=args.tile_size)
 imshow_obj = ax.imshow(img, interpolation='bilinear')
 
 reset()
