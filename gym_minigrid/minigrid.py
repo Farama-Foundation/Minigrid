@@ -578,7 +578,7 @@ class Grid:
 
                 tile_img = Grid.render_tile(
                     cell,
-                    agent_dir=agent_dir if agent_pos == (i, j) else None,
+                    agent_dir=agent_dir if np.array_equal(agent_pos, (i, j)) else None,
                     highlight=False,
                     tile_size=tile_size
                 )

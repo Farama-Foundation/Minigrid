@@ -1,95 +1,111 @@
 #!/usr/bin/env python3
 
-from __future__ import division, print_function
-
-import sys
-import numpy
-import gym
 import time
-from optparse import OptionParser
-
+import argparse
+import matplotlib.pyplot as plt
+import numpy as np
+import gym
 import gym_minigrid
 
-def main():
-    parser = OptionParser()
-    parser.add_option(
-        "-e",
-        "--env-name",
-        dest="env_name",
-        help="gym environment to load",
-        default='MiniGrid-MultiRoom-N6-v0'
-    )
-    (options, args) = parser.parse_args()
+def reset():
+    env.reset()
 
-    # Load the gym environment
-    env = gym.make(options.env_name)
+    if hasattr(env, 'mission'):
+        print('Mission: %s' % env.mission)
+        plt.xlabel(env.mission)
 
-    def resetEnv():
-        env.reset()
-        if hasattr(env, 'mission'):
-            print('Mission: %s' % env.mission)
+    img = env.render('rgb_array')
+    imshow_obj.set_data(img)
+    fig.canvas.draw()
 
-    resetEnv()
+def step(action):
+    obs, reward, done, info = env.step(action)
+    print('step=%s, reward=%.2f' % (env.step_count, reward))
 
-    # Create a window to render into
-    renderer = env.render('human')
+    if done:
+        print('done!')
+        reset()
 
-    def keyDownCb(keyName):
-        if keyName == 'BACKSPACE':
-            resetEnv()
-            return
+    img = env.render('rgb_array')
+    imshow_obj.set_data(img)
+    fig.canvas.draw()
 
-        if keyName == 'ESCAPE':
-            sys.exit(0)
+def key_handler(event):
+    print('pressed', event.key)
 
-        action = 0
+    if event.key == 'escape':
+        plt.close()
+        return
 
-        if keyName == 'LEFT':
-            action = env.actions.left
-        elif keyName == 'RIGHT':
-            action = env.actions.right
-        elif keyName == 'UP':
-            action = env.actions.forward
+    if event.key == 'backspace':
+        reset()
+        return
 
-        elif keyName == 'SPACE':
-            action = env.actions.toggle
-        elif keyName == 'PAGE_UP':
-            action = env.actions.pickup
-        elif keyName == 'PAGE_DOWN':
-            action = env.actions.drop
+    if event.key == 'left':
+        step(env.actions.left)
+        return
+    if event.key == 'right':
+        step(env.actions.right)
+        return
+    if event.key == 'up':
+        step(env.actions.forward)
+        return
 
-        elif keyName == 'RETURN':
-            action = env.actions.done
+    # Spacebar
+    if event.key == ' ':
+        step(env.actions.toggle)
+        return
+    if event.key == 'pageup':
+        step(env.actions.pickup)
+        return
+    if event.key == 'pagedown':
+        step(env.actions.drop)
+        return
 
-        # Screenshot funcitonality
-        elif keyName == 'ALT':
-            screen_path = options.env_name + '.png'
-            print('saving screenshot "{}"'.format(screen_path))
-            pixmap = env.render('pixmap')
-            pixmap.save(screen_path)
-            return
+    if event.key == 'enter':
+        step(env.actions.done)
+        return
 
-        else:
-            print("unknown key %s" % keyName)
-            return
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-e",
+    "--env-name",
+    dest="env_name",
+    help="gym environment to load",
+    #default='MiniGrid-MultiRoom-N6-v0'
+    default='MiniGrid-Empty-8x8-v0'
+)
+args = parser.parse_args()
 
-        obs, reward, done, info = env.step(action)
+env = gym.make(args.env_name)
 
-        print('step=%s, reward=%.2f' % (env.step_count, reward))
+"""
+t0 = time.time()
 
-        if done:
-            print('done!')
-            resetEnv()
+for i in range(1000):
+    img = env.render('rgb_array')
 
-    renderer.window.setKeyDownCb(keyDownCb)
+t1 = time.time()
+dt = int(1000 * (t1-t0))
+print(dt)
+"""
 
-    while True:
-        env.render('human')
-        time.sleep(0.01)
+fig, ax = plt.subplots()
 
-        # If the window was closed
-        if renderer.window == None:
-            break
+# Keyboard handler
+fig.canvas.mpl_connect('key_press_event', key_handler)
 
-if __name__ == "__main__":
-    main()
+# Show the env name in the window title
+fig.canvas.set_window_title('gym_minigrid - ' + args.env_name)
+
+# Turn off x/y axis numbering/ticks
+ax.set_xticks([], [])
+ax.set_yticks([], [])
+
+#plt.figure(num='gym-minigrid')
+imshow_obj = ax.imshow(img)
+
+reset()
+
+# Show the plot, enter the matplotlib event loop
+plt.show()
