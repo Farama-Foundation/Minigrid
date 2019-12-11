@@ -1213,29 +1213,11 @@ class MiniGridEnv(gym.Env):
         grid = Grid.decode(obs)
 
         # Render the whole grid
-        img = grid.render(r, tile_size)
-
-        assert False
-
-        """
-        # Draw the agent
-        ratio = tile_size / TILE_PIXELS
-        r.push()
-        r.scale(ratio, ratio)
-        r.translate(
-            TILE_PIXELS * (0.5 + self.agent_view_size // 2),
-            TILE_PIXELS * (self.agent_view_size - 0.5)
+        img = grid.render(
+            tile_size,
+            agent_pos=(self.agent_view_size // 2, self.agent_view_size - 1),
+            agent_dir = 3
         )
-        r.rotate(3 * 90)
-        r.setLineColor(255, 0, 0)
-        r.setColor(255, 0, 0)
-        r.drawPolygon([
-            (-12, 10),
-            ( 12,  0),
-            (-12, -10)
-        ])
-        r.pop()
-        """
 
         return img
 
