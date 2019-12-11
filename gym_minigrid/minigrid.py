@@ -346,8 +346,8 @@ class Box(WorldObj):
         fill_coords(img, point_in_rect(0.12, 0.88, 0.12, 0.88), c)
         fill_coords(img, point_in_rect(0.18, 0.82, 0.18, 0.82), (0,0,0))
 
-        # Vertical slit
-        fill_coords(img, point_in_rect(0.48, 0.52, 0.16, 0.84), c)
+        # Horizontal slit
+        fill_coords(img, point_in_rect(0.16, 0.84, 0.47, 0.53), c)
 
     def toggle(self, env, pos):
         # Replace the box by its contents
