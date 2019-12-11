@@ -73,7 +73,7 @@ parser.add_argument(
     dest="env_name",
     help="gym environment to load",
     #default='MiniGrid-MultiRoom-N6-v0'
-    default='MiniGrid-Empty-8x8-v0'
+    default='MiniGrid-GoToDoor-5x5-v0'
 )
 args = parser.parse_args()
 

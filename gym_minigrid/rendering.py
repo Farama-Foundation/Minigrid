@@ -9,8 +9,8 @@ def fill_coords(img, fn, color):
 
     for y in range(img.shape[0]):
         for x in range(img.shape[1]):
-            yf = y / img.shape[0]
-            xf = x / img.shape[1]
+            yf = (y + 0.5) / img.shape[0]
+            xf = (x + 0.5) / img.shape[1]
             if fn(xf, yf):
                 img[y, x] = color
 
@@ -70,6 +70,6 @@ def highlight_img(img, color=(255, 255, 255), alpha=0.30):
     Add highlighting to an image
     """
 
-    img = img + alpha * (np.array(color) - img)
-    img = img.clip(0, 255)
-    return img
+    blend_img = img + alpha * (np.array(color, dtype=np.uint8) - img)
+    blend_img = blend_img.clip(0, 255).astype(np.uint8)
+    img[:, :, :] = blend_img

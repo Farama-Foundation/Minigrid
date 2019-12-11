@@ -276,44 +276,31 @@ class Door(WorldObj):
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
-    def render(self, r):
+    def render(self, img):
         c = COLORS[self.color]
-        r.setLineColor(c[0], c[1], c[2])
-        r.setColor(c[0], c[1], c[2], 50 if self.is_locked else 0)
 
         if self.is_open:
-            r.drawPolygon([
-                (TILE_PIXELS-2, TILE_PIXELS),
-                (TILE_PIXELS  , TILE_PIXELS),
-                (TILE_PIXELS  ,           0),
-                (TILE_PIXELS-2,           0)
-            ])
+            fill_coords(img, point_in_rect(0.88, 1.00, 0.00, 1.00), c)
+            fill_coords(img, point_in_rect(0.92, 0.96, 0.04, 0.96), (0,0,0))
             return
 
-        r.drawPolygon([
-            (0          , TILE_PIXELS),
-            (TILE_PIXELS, TILE_PIXELS),
-            (TILE_PIXELS,           0),
-            (0          ,           0)
-        ])
-        r.drawPolygon([
-            (2            , TILE_PIXELS-2),
-            (TILE_PIXELS-2, TILE_PIXELS-2),
-            (TILE_PIXELS-2,           2),
-            (2            ,           2)
-        ])
+        # Door frame and door
+        inner_color = 0.45 * np.array(c) if self.is_locked else c
+        fill_color = inner_color if self.is_locked else (0,0,0)
+        fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
+        fill_coords(img, point_in_rect(0.04, 0.96, 0.04, 0.96), (0,0,0))
+        fill_coords(img, point_in_rect(0.08, 0.92, 0.08, 0.92), inner_color)
+        fill_coords(img, point_in_rect(0.12, 0.88, 0.12, 0.88), fill_color)
+
+        #r.setLineColor(c[0], c[1], c[2])
+        #r.setColor(c[0], c[1], c[2], 50 if self.is_locked else 0)
 
         if self.is_locked:
             # Draw key slot
-            r.drawLine(
-                TILE_PIXELS * 0.55,
-                TILE_PIXELS * 0.5,
-                TILE_PIXELS * 0.75,
-                TILE_PIXELS * 0.5
-            )
+            fill_coords(img, point_in_rect(0.52, 0.75, 0.50, 0.56), c)
         else:
             # Draw door handle
-            r.drawCircle(TILE_PIXELS * 0.75, TILE_PIXELS * 0.5, 2)
+            fill_coords(img, point_in_circle(cx=0.75, cy=0.50, r=0.08), c)
 
 class Key(WorldObj):
     def __init__(self, color='blue'):
@@ -322,9 +309,10 @@ class Key(WorldObj):
     def can_pickup(self):
         return True
 
-    def render(self, r):
-        self._set_color(r)
+    def render(self, img):
+        pass
 
+        """
         # Vertical quad
         r.drawPolygon([
             (16, 10),
@@ -351,6 +339,7 @@ class Key(WorldObj):
         r.setLineColor(0, 0, 0)
         r.setColor(0, 0, 0)
         r.drawCircle(18, 9, 2)
+        """
 
 class Ball(WorldObj):
     def __init__(self, color='blue'):
@@ -547,7 +536,7 @@ class Grid:
 
         # Highlight the cell if needed
         if highlight:
-            img = highlight_img(img)
+            highlight_img(img)
 
         # Cache the rendered tile
         cls.tile_cache[key] = img
