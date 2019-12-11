@@ -96,8 +96,6 @@ fig.canvas.set_window_title('gym_minigrid - ' + args.env_name)
 ax.set_xticks([], [])
 ax.set_yticks([], [])
 
-print(args.tile_size)
-
 # Show the first image of the environment
 img = env.render('rgb_array', tile_size=args.tile_size)
 imshow_obj = ax.imshow(img, interpolation='bilinear')

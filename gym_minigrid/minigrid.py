@@ -190,43 +190,20 @@ class Lava(WorldObj):
     def can_overlap(self):
         return True
 
-    def render(self, r):
-        orange = 255, 128, 0
-        r.setLineColor(*orange)
-        r.setColor(*orange)
-        r.drawPolygon([
-            (0          , TILE_PIXELS),
-            (TILE_PIXELS, TILE_PIXELS),
-            (TILE_PIXELS, 0),
-            (0          , 0)
-        ])
+    def render(self, img):
+        c = (255, 128, 0)
 
-        # drawing the waves
-        r.setLineColor(0, 0, 0)
+        # Background color
+        fill_coords(img, point_in_rect(0, 1, 0, 1), c)
 
-        r.drawPolyline([
-            (.1 * TILE_PIXELS, .3 * TILE_PIXELS),
-            (.3 * TILE_PIXELS, .4 * TILE_PIXELS),
-            (.5 * TILE_PIXELS, .3 * TILE_PIXELS),
-            (.7 * TILE_PIXELS, .4 * TILE_PIXELS),
-            (.9 * TILE_PIXELS, .3 * TILE_PIXELS),
-        ])
-
-        r.drawPolyline([
-            (.1 * TILE_PIXELS, .5 * TILE_PIXELS),
-            (.3 * TILE_PIXELS, .6 * TILE_PIXELS),
-            (.5 * TILE_PIXELS, .5 * TILE_PIXELS),
-            (.7 * TILE_PIXELS, .6 * TILE_PIXELS),
-            (.9 * TILE_PIXELS, .5 * TILE_PIXELS),
-        ])
-
-        r.drawPolyline([
-            (.1 * TILE_PIXELS, .7 * TILE_PIXELS),
-            (.3 * TILE_PIXELS, .8 * TILE_PIXELS),
-            (.5 * TILE_PIXELS, .7 * TILE_PIXELS),
-            (.7 * TILE_PIXELS, .8 * TILE_PIXELS),
-            (.9 * TILE_PIXELS, .7 * TILE_PIXELS),
-        ])
+        # Little waves
+        for i in range(3):
+            ylo = 0.3 + 0.2 * i
+            yhi = 0.4 + 0.2 * i
+            fill_coords(img, point_in_line(0.1, ylo, 0.3, yhi, r=0.03), (0,0,0))
+            fill_coords(img, point_in_line(0.3, yhi, 0.5, ylo, r=0.03), (0,0,0))
+            fill_coords(img, point_in_line(0.5, ylo, 0.7, yhi, r=0.03), (0,0,0))
+            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0,0,0))
 
 class Wall(WorldObj):
     def __init__(self, color='grey'):

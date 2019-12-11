@@ -28,6 +28,27 @@ def rotate_fn(fin, cx, cy, theta):
 
     return fout
 
+def point_in_line(x0, y0, x1, y1, r):
+    p0 = np.array([x0, y0])
+    p1 = np.array([x1, y1])
+    dir = p1 - p0
+    dist = np.linalg.norm(dir)
+    dir = dir / dist
+
+    def fn(x, y):
+        q = np.array([x, y])
+        pq = q - p0
+
+        # Closest point on line
+        a = np.dot(pq, dir)
+        a = np.clip(a, 0, dist)
+        p = p0 + a * dir
+
+        dist_to_line = np.linalg.norm(q - p)
+        return dist_to_line <= r
+
+    return fn
+
 def point_in_circle(cx, cy, r):
     def fn(x, y):
         return (x-cx)*(x-cx) + (y-cy)*(y-cy) <= r * r
