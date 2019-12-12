@@ -73,8 +73,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--env_name",
     help="gym environment to load",
-    #default='MiniGrid-MultiRoom-N6-v0'
-    default='MiniGrid-KeyCorridorS3R3-v0'
+    default='MiniGrid-MultiRoom-N6-v0'
 )
 parser.add_argument(
     "--tile_size",

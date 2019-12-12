@@ -1,7 +1,20 @@
 import math
 import numpy as np
 
-# TODO: anti-aliased version, fill_coords_aa?
+def downsample(img, factor):
+    """
+    Downsample an image along both dimensions by some factor
+    """
+
+    assert img.shape[0] % factor == 0
+    assert img.shape[1] % factor == 0
+
+    img = img.reshape([img.shape[0]//factor, factor, img.shape[1]//factor, factor, 3])
+    img = img.mean(axis=3)
+    img = img.mean(axis=1)
+
+    return img
+
 def fill_coords(img, fn, color):
     """
     Fill pixels of an image with coordinates matching a filter function

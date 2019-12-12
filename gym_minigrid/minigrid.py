@@ -445,7 +445,8 @@ class Grid:
         obj,
         agent_dir=None,
         highlight=False,
-        tile_size=TILE_PIXELS
+        tile_size=TILE_PIXELS,
+        subdivs=3
     ):
         """
         Render a tile and cache the result
@@ -458,7 +459,7 @@ class Grid:
         if key in cls.tile_cache:
             return cls.tile_cache[key]
 
-        img = np.zeros(shape=(tile_size, tile_size, 3), dtype=np.uint8)
+        img = np.zeros(shape=(tile_size * subdivs, tile_size * subdivs, 3), dtype=np.uint8)
 
         # Draw the grid lines (top and left edges)
         fill_coords(img, point_in_rect(0, 0.031, 0, 1), (100, 100, 100))
@@ -482,6 +483,9 @@ class Grid:
         # Highlight the cell if needed
         if highlight:
             highlight_img(img)
+
+        # Downsample the image to perform supersampling/anti-aliasing
+        img = downsample(img, subdivs)
 
         # Cache the rendered tile
         cls.tile_cache[key] = img
