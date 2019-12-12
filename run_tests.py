@@ -50,8 +50,8 @@ for env_name in env_list:
 
         # Test observation encode/decode roundtrip
         img = obs['image']
-        vis_mask = img[:, :, 0] != OBJECT_TO_IDX['unseen']  # hackish
-        img2 = Grid.decode(img).encode(vis_mask=vis_mask)
+        grid, vis_mask = Grid.decode(img)
+        img2 = grid.encode(vis_mask=vis_mask)
         assert np.array_equal(img, img2)
 
         # Test the env to string function
@@ -135,10 +135,11 @@ env.reset()
 for i in range(0, 500):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    goal_visible = ('green', 'goal') in Grid.decode(obs['image'])
+
+    grid, _ = Grid.decode(obs['image'])
+    goal_visible = ('green', 'goal') in grid
+
     agent_sees_goal = env.agent_sees(*goal_pos)
     assert agent_sees_goal == goal_visible
     if done:
         env.reset()
-
-#############################################################################
