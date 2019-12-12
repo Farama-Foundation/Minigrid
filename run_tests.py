@@ -91,6 +91,14 @@ for env_name in env_list:
     assert obs['image'].shape == env.observation_space.spaces['image'].shape
     env.close()
 
+    # RGB image observation wrapper
+    env = gym.make(env_name)
+    env = RGBImgPartialObsWrapper(env)
+    env.reset()
+    obs, _, _, _ = env.step(0)
+    assert obs['image'].mean() > 0
+    env.close()
+
     env = gym.make(env_name)
     env = FlatObsWrapper(env)
     env.reset()
@@ -117,7 +125,7 @@ for env_name in env_list:
         ), "Observation space for {0} is not a Dict: {1}.".format(
             wrapper_name, obs_space
         )
-        # this shuld not fail either
+        # This should not fail either
         ImgObsWrapper(env)
 
 ##############################################################################

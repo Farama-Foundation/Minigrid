@@ -84,7 +84,7 @@ parser.add_argument(
 parser.add_argument(
     '--agent_view',
     default=False,
-    help="Draw the agent's partially observable view",
+    help="draw the agent sees only (partially observable view)",
     action='store_true'
 )
 
