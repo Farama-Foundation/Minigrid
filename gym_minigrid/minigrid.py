@@ -288,7 +288,7 @@ class Key(WorldObj):
         c = COLORS[self.color]
 
         # Vertical quad
-        fill_coords(img, point_in_rect(0.50, 0.63, 0.31, 0.89), c)
+        fill_coords(img, point_in_rect(0.50, 0.63, 0.31, 0.88), c)
 
         # Teeth
         fill_coords(img, point_in_rect(0.38, 0.50, 0.59, 0.66), c)
@@ -619,7 +619,7 @@ class MiniGridEnv(gym.Env):
     """
 
     metadata = {
-        'render.modes': ['human', 'rgb_array', 'pixmap'],
+        'render.modes': ['human', 'rgb_array'],
         'video.frames_per_second' : 10
     }
 
@@ -680,11 +680,8 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
-        # Renderer object used to render the whole grid (full-scale)
-        self.grid_render = None
-
-        # Renderer used to render observations (small-scale agent view)
-        self.obs_render = None
+        # Window to use for human rendering mode
+        self.window = None
 
         # Environment configuration
         self.width = width
@@ -1226,12 +1223,15 @@ class MiniGridEnv(gym.Env):
         Render the whole-grid human view
         """
 
-        """
         if close:
-            if self.grid_render:
-                self.grid_render.close()
+            if self.window:
+                self.window.close()
             return
-        """
+
+        if mode == 'human' and not self.window:
+            import gym_minigrid.window
+            self.window = gym_minigrid.window.Window('gym_minigrid')
+            self.window.show(block=False)
 
         # Compute which cells are visible to the agent
         _, vis_mask = self.gen_obs_grid()
@@ -1270,5 +1270,9 @@ class MiniGridEnv(gym.Env):
             self.agent_dir,
             highlight_mask=highlight_mask if highlight else None
         )
+
+        if mode == 'human':
+            self.window.show_img(img)
+            self.window.set_caption(self.mission)
 
         return img

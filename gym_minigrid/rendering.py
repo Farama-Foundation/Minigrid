@@ -41,6 +41,7 @@ def point_in_line(x0, y0, x1, y1, r):
     ymax = max(y0, y1) + r
 
     def fn(x, y):
+        # Fast, early escape test
         if x < xmin or x > xmax or y < ymin or y > ymax:
             return False
 

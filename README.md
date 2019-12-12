@@ -13,7 +13,7 @@ Requirements:
 - Python 3.5+
 - OpenAI Gym
 - NumPy
-- PyQT 5 for graphics
+- Matplotlib (optional, only needed for display)
 
 Please use this bibtex if you want to cite this repository in your publications:
 

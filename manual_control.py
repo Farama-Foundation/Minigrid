@@ -2,34 +2,24 @@
 
 import time
 import argparse
-import matplotlib.pyplot as plt
 import numpy as np
 import gym
 import gym_minigrid
 from gym_minigrid.wrappers import *
-
-fig = None
-imshow_obj = None
+from gym_minigrid.window import Window
 
 def redraw(img):
-    global imshow_obj
-
     if not args.agent_view:
         img = env.render('rgb_array', tile_size=args.tile_size)
 
-    # Show the first image of the environment
-    if imshow_obj is None:
-        imshow_obj = ax.imshow(img, interpolation='bilinear')
-
-    imshow_obj.set_data(img)
-    fig.canvas.draw()
+    window.show_img(img)
 
 def reset():
     obs = env.reset()
 
     if hasattr(env, 'mission'):
         print('Mission: %s' % env.mission)
-        plt.xlabel(env.mission)
+        window.set_caption(env.mission)
 
     redraw(obs)
 
@@ -47,7 +37,7 @@ def key_handler(event):
     print('pressed', event.key)
 
     if event.key == 'escape':
-        plt.close()
+        window.close()
         return
 
     if event.key == 'backspace':
@@ -107,19 +97,10 @@ if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
     env = ImgObsWrapper(env)
 
-fig, ax = plt.subplots()
-
-# Keyboard handler
-fig.canvas.mpl_connect('key_press_event', key_handler)
-
-# Show the env name in the window title
-fig.canvas.set_window_title('gym_minigrid - ' + args.env_name)
-
-# Turn off x/y axis numbering/ticks
-ax.set_xticks([], [])
-ax.set_yticks([], [])
+window = Window('gym_minigrid - ' + args.env_name)
+window.reg_key_handler(key_handler)
 
 reset()
 
-# Show the plot, enter the matplotlib event loop
-plt.show()
+# Blocking event loop
+window.show(block=True)
