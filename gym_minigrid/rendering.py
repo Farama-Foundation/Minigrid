@@ -35,7 +35,15 @@ def point_in_line(x0, y0, x1, y1, r):
     dist = np.linalg.norm(dir)
     dir = dir / dist
 
+    xmin = min(x0, x1) - r
+    xmax = max(x0, x1) + r
+    ymin = min(y0, y1) - r
+    ymax = max(y0, y1) + r
+
     def fn(x, y):
+        if x < xmin or x > xmax or y < ymin or y > ymax:
+            return False
+
         q = np.array([x, y])
         pq = q - p0
 
