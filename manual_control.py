@@ -15,6 +15,9 @@ def redraw(img):
     window.show_img(img)
 
 def reset():
+    if args.seed != -1:
+        env.seed(args.seed)
+
     obs = env.reset()
 
     if hasattr(env, 'mission'):
@@ -74,6 +77,12 @@ parser.add_argument(
     "--env",
     help="gym environment to load",
     default='MiniGrid-MultiRoom-N6-v0'
+)
+parser.add_argument(
+    "--seed",
+    type=int,
+    help="random seed to generate the environment with",
+    default=-1
 )
 parser.add_argument(
     "--tile_size",
