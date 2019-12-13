@@ -71,7 +71,7 @@ def key_handler(event):
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--env_name",
+    "--env",
     help="gym environment to load",
     default='MiniGrid-MultiRoom-N6-v0'
 )
@@ -84,19 +84,19 @@ parser.add_argument(
 parser.add_argument(
     '--agent_view',
     default=False,
-    help="draw the agent sees only (partially observable view)",
+    help="draw the agent sees (partially observable view)",
     action='store_true'
 )
 
 args = parser.parse_args()
 
-env = gym.make(args.env_name)
+env = gym.make(args.env)
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
     env = ImgObsWrapper(env)
 
-window = Window('gym_minigrid - ' + args.env_name)
+window = Window('gym_minigrid - ' + args.env)
 window.reg_key_handler(key_handler)
 
 reset()
