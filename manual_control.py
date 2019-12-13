@@ -33,8 +33,8 @@ def step(action):
     if done:
         print('done!')
         reset()
-
-    redraw(obs)
+    else:
+        redraw(obs)
 
 def key_handler(event):
     print('pressed', event.key)
