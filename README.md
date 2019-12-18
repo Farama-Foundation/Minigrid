@@ -29,6 +29,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 ```
 
 List of publications & submissions using MiniGrid (please open a pull request to add missing entries):
+- [Working Memory Graphs](https://arxiv.org/abs/1911.07141) (MSR, Nov 2019)
 - [Generalization in Reinforcement Learning with Selective Noise Injection and Information Bottleneck
 ](https://arxiv.org/abs/1910.12911) (MSR, NeurIPS, Oct 2019)
 - [Learning Effective Subgoals with Multi-Task Hierarchical Reinforcement Learning](http://surl.tirl.info/proceedings/SURL-2019_paper_10.pdf) (Tsinghua University, August 2019)
