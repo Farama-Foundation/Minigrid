@@ -119,6 +119,7 @@ These values are **not pixels**. If you want to obtain an array of RGB pixels as
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```
+from gym_minigrid.wrappers import *
 env = gym.make('MiniGrid-Empty-8x8-v0')
 env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field
