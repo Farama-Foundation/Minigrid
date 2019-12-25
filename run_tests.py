@@ -16,8 +16,8 @@ from gym_minigrid.wrappers import *
 
 print('%d environments registered' % len(env_list))
 
-for env_name in env_list:
-    print('testing "%s"' % env_name)
+for env_idx, env_name in enumerate(env_list):
+    print('testing {} ({}/{})'.format(env_name, env_idx+1, len(env_list)))
 
     # Load the gym environment
     env = gym.make(env_name)
