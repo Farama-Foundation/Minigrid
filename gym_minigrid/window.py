@@ -41,6 +41,10 @@ class Window:
         self.imshow_obj.set_data(img)
         self.fig.canvas.draw()
 
+        # Let matplotlib process UI events
+        # This is needed for interactive mode to work properly
+        plt.pause(0.001)
+
     def set_caption(self, text):
         """
         Set/update the caption text below the image
@@ -63,10 +67,13 @@ class Window:
 
         # If not blocking, trigger interactive mode
         if not block:
+            print('INTERACTIVE MODE')
             plt.ion()
 
-        # Show the plot, enter the matplotlib event loop
-        plt.show(block=block)
+        # Show the plot
+        # In non-interative mode, this enters the matplotlib event loop
+        # In interactive mode, this call does not block
+        plt.show()
 
     def close(self):
         """
