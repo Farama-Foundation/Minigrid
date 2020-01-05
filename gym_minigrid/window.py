@@ -29,6 +29,14 @@ class Window:
         self.ax.set_xticks([], [])
         self.ax.set_yticks([], [])
 
+        # Flag indicating the window was closed
+        self.closed = False
+
+        def close_handler(evt):
+            self.closed = True
+
+        self.fig.canvas.mpl_connect('close_event', close_handler)
+
     def show_img(self, img):
         """
         Show an image or update the image being shown
@@ -67,7 +75,6 @@ class Window:
 
         # If not blocking, trigger interactive mode
         if not block:
-            print('INTERACTIVE MODE')
             plt.ion()
 
         # Show the plot
