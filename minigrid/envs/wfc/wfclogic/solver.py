@@ -203,7 +203,7 @@ def makeRarestPatternHeuristic(weights):
 
 def makeRandomPatternHeuristic(weights, _):
   num_of_patterns = len(weights)
-  def randomPatternHeuristic(wave):
+  def randomPatternHeuristic(wave, _):
     # TODO: there's maybe a faster, more controlled way to do this sampling...
     weighted_wave = (1.0 * wave)
     weighted_wave /= weighted_wave.sum()
