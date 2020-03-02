@@ -48,7 +48,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     rotations -= 1 # change to zero-based
 
     input_stats = {"filename": filename, "tile_size": tile_size, "pattern_width": pattern_width, "rotations": rotations, "output_size": output_size, "ground": ground, "attempt_limit": attempt_limit, "output_periodic": output_periodic, "input_periodic": input_periodic, "location heuristic": loc_heuristic, "choice heuristic": choice_heuristic, "global constraint": global_constraint, "backtracking":backtracking}
-    
+
     # Load the image
     img = imageio.imread(input_folder + filename + ".png")
     img = img[:,:,:3] # TODO: handle alpha channels
@@ -118,17 +118,17 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         ground_catalog = {encode_patterns[k]:v for k,v in pattern_catalog.items() if encode_patterns[k] in ground_list}
         if visualize:
             figure_pattern_catalog(ground_catalog, tile_catalog, pattern_weights, pattern_width, output_filename=f"visualization/patterns_ground_{filename}_{timecode}")
-        
+
     wave = makeWave(number_of_patterns, output_size[0], output_size[1], ground=ground_list)
     adjacency_matrix = makeAdj(adjacency_list)
 
     ### Heuristics ###
-    
+
     encoded_weights = np.zeros((number_of_patterns), dtype=np.float64)
     for w_id, w_val in pattern_weights.items():
         encoded_weights[encode_patterns[w_id]] = w_val
     choice_random_weighting = np.random.random(wave.shape[1:]) * 0.1
-    
+
     pattern_heuristic =  lexicalPatternHeuristic
     if choice_heuristic == "weighted":
         pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
@@ -150,7 +150,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     if loc_heuristic == "hilbert":
         location_heuristic = makeHilbertLocationHeuristic(choice_random_weighting)
 
-        
+
     ### Visualization ###
 
     visualize_choice, visualize_wave, visualize_backtracking, visualize_propagate, visualize_final, visualize_after = None, None, None, None, None, None
@@ -191,12 +191,12 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     def combinedConstraints(wave):
         print
         return all([fn(wave) for fn in combined_constraints])
-            
+
     ### Solving ###
 
     time_solve_start = None
     time_solve_end = None
-    
+
     solution_tile_grid = None
     print("solving...")
     attempts = 0
@@ -205,7 +205,7 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
         end_early = False
         time_solve_start = time.time()
         stats = {}
-        profiler = pprofile.Profile()
+        #profiler = pprofile.Profile()
         if True:
         #with profiler:
             #with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
@@ -251,8 +251,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
                     if visualize_after:
                         stats = visualize_after()
                     stats.update({"outcome":"contradiction"})
-        profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
-            
+        #profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
+
         outstats = {}
         outstats.update(input_stats)
         solve_duration = time.time() - time_solve_start
