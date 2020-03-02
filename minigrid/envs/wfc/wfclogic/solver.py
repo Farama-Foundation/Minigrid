@@ -180,7 +180,7 @@ def lexicalPatternHeuristic(weights):
 
 def makeWeightedPatternHeuristic(weights):
   num_of_patterns = len(weights)
-  def weightedPatternHeuristic(wave):
+  def weightedPatternHeuristic(wave, _):
     # TODO: there's maybe a faster, more controlled way to do this sampling...
     weighted_wave = (weights * wave)
     weighted_wave /= weighted_wave.sum()
@@ -188,9 +188,22 @@ def makeWeightedPatternHeuristic(weights):
     return result
   return weightedPatternHeuristic
 
+def makeRarestPatternHeuristic(weights):
+  """Return a function that chooses the rarest (currently least-used) pattern."""
+  num_of_patterns = len(weights)
+  def weightedPatternHeuristic(wave, total_wave):
+    print(total_wave.shape)
+    #[print(e) for e in wave]
+    wave_sums = numpy.sum(total_wave, (1,2))
+        #wave_sums += numpy.random.rand(wave.shape[0])
+    print(wave_sums)
+    selected_pattern = numpy.argmax(wave_sums)
+    return selected_pattern
+  return weightedPatternHeuristic
+
 def makeRandomPatternHeuristic(weights):
   num_of_patterns = len(weights)
-  def randomPatternHeuristic(wave):
+  def randomPatternHeuristic(wave, _):
     # TODO: there's maybe a faster, more controlled way to do this sampling...
     weighted_wave = (1.0 * wave)
     weighted_wave /= weighted_wave.sum()
@@ -248,7 +261,7 @@ def propagate(wave, adj, periodic=False, onPropagate=None):
 
 def observe(wave, locationHeuristic, patternHeuristic):
   i,j = locationHeuristic(wave)
-  pattern = patternHeuristic(wave[:,i,j])
+  pattern = patternHeuristic(wave[:,i,j], wave)
   return pattern, i, j
 
 

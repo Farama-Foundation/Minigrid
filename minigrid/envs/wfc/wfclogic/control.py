@@ -130,6 +130,8 @@ def execute_wfc(filename, tile_size=0, pattern_width=2, rotations=8, output_size
     choice_random_weighting = np.random.random(wave.shape[1:]) * 0.1
 
     pattern_heuristic =  lexicalPatternHeuristic
+    if choice_heuristic == "rarest":
+        pattern_heuristic = makeRarestPatternHeuristic(encoded_weights)
     if choice_heuristic == "weighted":
         pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
     if choice_heuristic == "random":
