@@ -82,10 +82,10 @@ There is a UI application which allows you to manually control the agent with th
 ./manual_control.py
 ```
 
-The environment being run can be selected with the `--env_name` option, eg:
+The environment being run can be selected with the `--env` option, eg:
 
 ```
-./manual_control.py --env_name MiniGrid-Empty-8x8-v0
+./manual_control.py --env MiniGrid-Empty-8x8-v0
 ```
 
 ## Reinforcement Learning
