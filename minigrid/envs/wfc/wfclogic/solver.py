@@ -195,9 +195,26 @@ def makeRarestPatternHeuristic(weights):
     print(total_wave.shape)
     #[print(e) for e in wave]
     wave_sums = numpy.sum(total_wave, (1,2))
-        #wave_sums += numpy.random.rand(wave.shape[0])
+    # TODO: fix to add random tiebreaking
+    # wave_sums += numpy.random.rand(wave.shape[0])
     print(wave_sums)
     selected_pattern = numpy.argmax(wave_sums)
+    return selected_pattern
+  return weightedPatternHeuristic
+
+
+
+def makeMostCommonPatternHeuristic(weights):
+  """Return a function that chooses the most common (currently most-used) pattern."""
+  num_of_patterns = len(weights)
+  def weightedPatternHeuristic(wave, total_wave):
+    print(total_wave.shape)
+    #[print(e) for e in wave]
+    wave_sums = numpy.sum(total_wave, (1,2))
+    # TODO: fix to add random tiebreaking
+    # wave_sums += numpy.random.rand(wave.shape[0])
+    print(wave_sums)
+    selected_pattern = numpy.argmin(wave_sums)
     return selected_pattern
   return weightedPatternHeuristic
 
