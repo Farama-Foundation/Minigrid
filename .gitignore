@@ -6,3 +6,5 @@ trained_models
 # PyPI
 build/*
 dist/*
+
+.DS_Store
