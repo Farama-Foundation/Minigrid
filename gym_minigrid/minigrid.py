@@ -142,7 +142,7 @@ class WorldObj:
         elif obj_type == 'lava':
             v = Lava()
         else:
-            assert False, "unknown object type in decode '%s'" % objType
+            assert False, "unknown object type in decode '%s'" % obj_type
 
         return v
 
