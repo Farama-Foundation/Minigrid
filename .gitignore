@@ -6,3 +6,4 @@ trained_models
 # PyPI
 build/*
 dist/*
+.idea/
