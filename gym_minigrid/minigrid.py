@@ -171,17 +171,11 @@ class Floor(WorldObj):
     def can_overlap(self):
         return True
 
-    def render(self, r):
+    def render(self, img):
         # Give the floor a pale color
-        c = COLORS[self.color]
-        r.setLineColor(100, 100, 100, 0)
-        r.setColor(*c/2)
-        r.drawPolygon([
-            (1          , TILE_PIXELS),
-            (TILE_PIXELS, TILE_PIXELS),
-            (TILE_PIXELS,           1),
-            (1          ,           1)
-        ])
+        color = COLORS[self.color] / 2        
+        fill_coords(img, point_in_rect(0.031, 1, 0.031, 1), color)
+
 
 class Lava(WorldObj):
     def __init__(self):
