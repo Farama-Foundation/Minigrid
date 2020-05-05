@@ -127,6 +127,9 @@ for env_idx, env_name in enumerate(env_list):
         )
         # This should not fail either
         ImgObsWrapper(env)
+        env.reset()
+        env.step(0)
+        env.close()
 
 ##############################################################################
 
