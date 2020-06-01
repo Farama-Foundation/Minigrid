@@ -424,8 +424,7 @@ class Grid:
                 x = topX + i
                 y = topY + j
 
-                if x >= 0 and x < self.width and \
-                   y >= 0 and y < self.height:
+                if 0 <= x < self.width and 0 <= y < self.height:
                     v = self.get(x, y)
                 else:
                     v = Wall()
@@ -1034,22 +1033,28 @@ class MiniGridEnv(gym.Env):
         Note: the bottom extent indices are not included in the set
         """
 
+        # vision is extended on the left first, then on the right
+        # e.g. view_size=5: ooXoo; 6: oooXoo; 7: oooXooo
+        n_cells_on_the_left = self.agent_view_size // 2
+        n_cells_on_the_right = self.agent_view_size - 1 - n_cells_on_the_left
+        n_cells_in_front = self.agent_view_size - 1
+
         # Facing right
         if self.agent_dir == 0:
             topX = self.agent_pos[0]
-            topY = self.agent_pos[1] - self.agent_view_size // 2
+            topY = self.agent_pos[1] - n_cells_on_the_left
         # Facing down
         elif self.agent_dir == 1:
-            topX = self.agent_pos[0] - self.agent_view_size // 2
+            topX = self.agent_pos[0] - n_cells_on_the_right
             topY = self.agent_pos[1]
         # Facing left
         elif self.agent_dir == 2:
-            topX = self.agent_pos[0] - self.agent_view_size + 1
-            topY = self.agent_pos[1] - self.agent_view_size // 2
+            topX = self.agent_pos[0] - n_cells_in_front
+            topY = self.agent_pos[1] - n_cells_on_the_right
         # Facing up
         elif self.agent_dir == 3:
-            topX = self.agent_pos[0] - self.agent_view_size // 2
-            topY = self.agent_pos[1] - self.agent_view_size + 1
+            topX = self.agent_pos[0] - n_cells_on_the_left
+            topY = self.agent_pos[1] - n_cells_in_front
         else:
             assert False, "invalid agent direction"
 
@@ -1118,12 +1123,12 @@ class MiniGridEnv(gym.Env):
 
         # Move forward
         elif action == self.actions.forward:
-            if fwd_cell == None or fwd_cell.can_overlap():
+            if fwd_cell is None or fwd_cell.can_overlap():
                 self.agent_pos = fwd_pos
-            if fwd_cell != None and fwd_cell.type == 'goal':
+            if fwd_cell is not None and fwd_cell.type == 'goal':
                 done = True
                 reward = self._reward()
-            if fwd_cell != None and fwd_cell.type == 'lava':
+            if fwd_cell is not None and fwd_cell.type == 'lava':
                 done = True
 
         # Pick up an object
@@ -1168,23 +1173,23 @@ class MiniGridEnv(gym.Env):
         """
 
         topX, topY, botX, botY = self.get_view_exts()
-
         grid = self.grid.slice(topX, topY, self.agent_view_size, self.agent_view_size)
 
+        # sets view so that the agent is placed at the mid bottom and looks upward
         for i in range(self.agent_dir + 1):
             grid = grid.rotate_left()
+        agent_pos = (self.agent_view_size // 2, self.agent_view_size - 1)
 
         # Process occluders and visibility
         # Note that this incurs some performance cost
         if not self.see_through_walls:
-            vis_mask = grid.process_vis(agent_pos=(self.agent_view_size // 2 , self.agent_view_size - 1))
+            vis_mask = grid.process_vis(agent_pos=agent_pos)
         else:
             vis_mask = np.ones(shape=(grid.width, grid.height), dtype=np.bool)
 
         # Make it so the agent sees what it's carrying
         # We do this by placing the carried object at the agent's position
         # in the agent's partially observable view
-        agent_pos = grid.width // 2, grid.height - 1
         if self.carrying:
             grid.set(*agent_pos, self.carrying)
         else:
