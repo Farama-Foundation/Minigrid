@@ -174,7 +174,7 @@ class Floor(WorldObj):
 
     def render(self, img):
         # Give the floor a pale color
-        color = COLORS[self.color] / 2        
+        color = COLORS[self.color] / 2
         fill_coords(img, point_in_rect(0.031, 1, 0.031, 1), color)
 
 
@@ -665,6 +665,8 @@ class MiniGridEnv(gym.Env):
         self.action_space = spaces.Discrete(len(self.actions))
 
         # Number of cells (width and height) in the agent view
+        assert agent_view_size % 2 == 1
+        assert agent_view_size >= 3
         self.agent_view_size = agent_view_size
 
         # Observations are dictionaries containing an

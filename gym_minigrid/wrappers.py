@@ -307,6 +307,9 @@ class ViewSizeWrapper(gym.core.Wrapper):
     def __init__(self, env, agent_view_size=7):
         super().__init__(env)
 
+        assert agent_view_size % 2 == 1
+        assert agent_view_size >= 3
+
         # Override default view size
         env.unwrapped.agent_view_size = agent_view_size
 
