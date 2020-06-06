@@ -582,7 +582,7 @@ class Grid:
         mask[agent_pos[0], agent_pos[1]] = True
 
         for j in reversed(range(0, grid.height)):
-            for i in range(0, grid.width-1):
+            for i in range(agent_pos[0], grid.width):
                 if not mask[i, j]:
                     continue
 
@@ -590,12 +590,14 @@ class Grid:
                 if cell and not cell.see_behind():
                     continue
 
-                mask[i+1, j] = True
+                if i < grid.width - 1:
+                    mask[i + 1, j] = True
                 if j > 0:
-                    mask[i+1, j-1] = True
-                    mask[i, j-1] = True
+                    mask[i, j - 1] = True
+                    if i < grid.width - 1:
+                        mask[i + 1, j - 1] = True
 
-            for i in reversed(range(1, grid.width)):
+            for i in reversed(range(0, agent_pos[0]+1)):
                 if not mask[i, j]:
                     continue
 
@@ -603,16 +605,18 @@ class Grid:
                 if cell and not cell.see_behind():
                     continue
 
-                mask[i-1, j] = True
+                if i > 0:
+                    mask[i - 1, j] = True
                 if j > 0:
-                    mask[i-1, j-1] = True
-                    mask[i, j-1] = True
+                    mask[i, j - 1] = True
+                    if i > 0:
+                        mask[i - 1, j - 1] = True
 
         for j in range(0, grid.height):
             for i in range(0, grid.width):
                 if not mask[i, j]:
                     grid.set(i, j, None)
-
+        
         return mask
 
 class MiniGridEnv(gym.Env):
