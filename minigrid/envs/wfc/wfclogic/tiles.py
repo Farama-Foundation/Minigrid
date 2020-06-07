@@ -53,36 +53,3 @@ def make_tile_catalog(image_data, tile_size):
 
 def tiles_to_images(tile_grid, tile_catalog):
     return
-
-
-# tests
-import imageio
-
-
-def test_image_to_tiles():
-    filename = "../images/samples/Red Maze.png"
-    img = imageio.imread(filename)
-    tiles = image_to_tiles(img, 1)
-    assert tiles[2][2][0][0][0] == 255
-    assert tiles[2][2][0][0][1] == 0
-
-
-def test_make_tile_catalog():
-    filename = "../images/samples/Red Maze.png"
-    img = imageio.imread(filename)
-    print(img)
-    tc, tg, cl, ut = make_tile_catalog(img, 1)
-    print("tile catalog")
-    print(tc)
-    print("tile grid")
-    print(tg)
-    print("code list")
-    print(cl)
-    print("unique tiles")
-    print(ut)
-    assert ut[1][0] == 7
-
-
-if __name__ == "__main__":
-    test_image_to_tiles()
-    test_make_tile_catalog()
