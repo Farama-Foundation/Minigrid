@@ -37,7 +37,7 @@ def test_observe():
         assert numpy.array_equal(wave, my_wave)
         return 1, 2
 
-    def patHeu(weights):
+    def patHeu(weights, wave):
         assert numpy.array_equal(weights, my_wave[:, 1, 2])
         return 3
 
@@ -128,7 +128,7 @@ def test_run():
 
     assert numpy.array_equal(second_result, expected_second_result)
     print(event_log)
-    assert event_log == [(0, 0, 0), "backtrack"]
+    assert event_log == [(0, 0, 0), "backtrack", (2, 0, 0)]
 
     class Infeasible(Exception):
         pass
@@ -155,7 +155,8 @@ def test_run():
     assert happy
 
 
-def test_recurse_vs_loop(resources):
+def _test_recurse_vs_loop(resources):
+    # FIXME: run_recurse or run_loop do not exist anymore
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     tile_size = 1

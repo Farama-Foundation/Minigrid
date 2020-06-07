@@ -206,7 +206,7 @@ def lexicalLocationHeuristic(wave):
 # Pattern Heuristics
 
 
-def lexicalPatternHeuristic(weights):
+def lexicalPatternHeuristic(weights, wave):
     return numpy.nonzero(weights)[0][0]
 
 
@@ -380,7 +380,7 @@ def run(
         if not checkFeasible(wave):
             raise Contradiction
         if depth_limit:
-            if depth > depthlimit:
+            if depth > depth_limit:
                 raise TimedOut
     if depth % 50 == 0:
         print(depth)
