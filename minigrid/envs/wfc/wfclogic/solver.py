@@ -100,15 +100,15 @@ def spiral_transforms():
     for N in itertools.count(start=1):
         if N % 2 == 0:
             yield (0, 1)  # right
-            for i in range(N):
+            for _ in range(N):
                 yield (1, 0)  # down
-            for i in range(N):
+            for _ in range(N):
                 yield (0, -1)  # left
         else:
             yield (0, -1)  # left
-            for i in range(N):
+            for _ in range(N):
                 yield (-1, 0)  # up
-            for i in range(N):
+            for _ in range(N):
                 yield (0, 1)  # right
 
 
@@ -123,7 +123,7 @@ def spiral_coords(x, y):
 def fill_with_curve(arr, curve_gen):
     arr_len = numpy.prod(arr.shape)
     fill = 0
-    for idx, coord in enumerate(curve_gen):
+    for _, coord in enumerate(curve_gen):
         # print(fill, idx, coord)
         if fill < arr_len:
             try:
@@ -225,8 +225,6 @@ def makeWeightedPatternHeuristic(weights):
 
 def makeRarestPatternHeuristic(weights):
     """Return a function that chooses the rarest (currently least-used) pattern."""
-    num_of_patterns = len(weights)
-
     def weightedPatternHeuristic(wave, total_wave):
         print(total_wave.shape)
         # [print(e) for e in wave]
@@ -242,8 +240,6 @@ def makeRarestPatternHeuristic(weights):
 
 def makeMostCommonPatternHeuristic(weights):
     """Return a function that chooses the most common (currently most-used) pattern."""
-    num_of_patterns = len(weights)
-
     def weightedPatternHeuristic(wave, total_wave):
         print(total_wave.shape)
         # [print(e) for e in wave]

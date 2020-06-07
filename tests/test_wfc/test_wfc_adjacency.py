@@ -15,8 +15,8 @@ def test_adjacency_extraction(resources):
     tile_size = 1
     pattern_width = 2
     rotations = 0
-    tile_catalog, tile_grid, code_list, unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
+    _tile_catalog, tile_grid, _code_list, _unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
+    pattern_catalog, _pattern_weights, _pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
         tile_grid, pattern_width, rotations
     )
     adjacency_relations = wfc_adjacency.adjacency_extraction(

@@ -164,7 +164,7 @@ def _test_recurse_vs_loop(resources):
     rotations = 0
     output_size = [84, 84]
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
-    tile_catalog, tile_grid, code_list, unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
+    _tile_catalog, tile_grid, _code_list, _unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
     pattern_catalog, pattern_weights, pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
         tile_grid, pattern_width, rotations
     )

@@ -9,9 +9,9 @@ def test_unique_patterns_2d(resources):
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
-    tile_catalog, tile_grid, code_list, unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
+    _tile_catalog, tile_grid, _code_list, _unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
 
-    patterns_in_grid, pattern_contents_list, patch_codes = wfc_patterns.unique_patterns_2d(
+    _patterns_in_grid, pattern_contents_list, patch_codes = wfc_patterns.unique_patterns_2d(
         tile_grid, pattern_width, True
     )
     assert patch_codes[1][2] == 4867810695119132864
@@ -23,9 +23,9 @@ def test_make_pattern_catalog(resources):
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
-    tile_catalog, tile_grid, code_list, unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
+    _tile_catalog, tile_grid, _code_list, _unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
 
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
+    pattern_catalog, pattern_weights, pattern_list, _pattern_grid = wfc_patterns.make_pattern_catalog(
         tile_grid, pattern_width
     )
     assert pattern_weights[-6150964001204120324] == 1
@@ -38,9 +38,9 @@ def test_pattern_to_tile(resources):
     img = imageio.imread(filename)
     tile_size = 1
     pattern_width = 2
-    tile_catalog, tile_grid, code_list, unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
+    _tile_catalog, tile_grid, _code_list, _unique_tiles = wfc_tiles.make_tile_catalog(img, tile_size)
 
-    pattern_catalog, pattern_weights, pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
+    pattern_catalog, _pattern_weights, _pattern_list, pattern_grid = wfc_patterns.make_pattern_catalog(
         tile_grid, pattern_width
     )
     new_tile_grid = wfc_patterns.pattern_grid_to_tiles(pattern_grid, pattern_catalog)

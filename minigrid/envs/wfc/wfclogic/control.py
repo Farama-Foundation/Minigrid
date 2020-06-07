@@ -1,6 +1,5 @@
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import (
-    make_pattern_catalog,
     pattern_grid_to_tiles,
     make_pattern_catalog_with_rotations,
 )
@@ -23,6 +22,7 @@ from .wfc_solver import (
     makeSpiralLocationHeuristic,
     makeHilbertLocationHeuristic,
     makeAntiEntropyLocationHeuristic,
+    makeRarestPatternHeuristic,
 )
 from .wfc_visualize import (
     figure_list_of_tiles,
@@ -30,18 +30,12 @@ from .wfc_visualize import (
     figure_pattern_catalog,
     render_tiles_to_output,
     figure_adjacencies,
-    visualize_solver,
     make_solver_visualizers,
     make_solver_loggers,
 )
 import imageio
 import numpy as np
 import time
-import os
-
-from pycallgraph import PyCallGraph
-from pycallgraph.output import GraphvizOutput
-import pprofile
 
 
 def visualize_tiles(unique_tiles, tile_catalog, tile_grid):
@@ -126,7 +120,7 @@ def execute_wfc(
     # TODO: generalize this to more than the four cardinal directions
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
-    tile_catalog, tile_grid, code_list, unique_tiles = make_tile_catalog(img, tile_size)
+    tile_catalog, tile_grid, _code_list, _unique_tiles = make_tile_catalog(img, tile_size)
     (
         pattern_catalog,
         pattern_weights,
@@ -155,6 +149,7 @@ def execute_wfc(
     adjacency_relations = None
 
     if False:
+        import pprofile
         profiler = pprofile.Profile()
         with profiler:
             adjacency_relations = adjacency_extraction(
@@ -191,7 +186,7 @@ def execute_wfc(
     print(f"# patterns: {number_of_patterns}")
     decode_patterns = dict(enumerate(pattern_list))
     encode_patterns = {x: i for i, x in enumerate(pattern_list)}
-    encode_directions = {j: i for i, j in direction_offsets}
+    _encode_directions = {j: i for i, j in direction_offsets}
 
     adjacency_list = {}
     for i, d in direction_offsets:
@@ -209,7 +204,7 @@ def execute_wfc(
     ### Ground ###
 
     ground_list = []
-    if not (ground is 0):
+    if ground != 0:
         ground_list = np.vectorize(lambda x: encode_patterns[x])(
             pattern_grid.flat[(ground - 1) :]
         )
@@ -405,17 +400,16 @@ def execute_wfc(
 
                 time_solve_end = time.time()
                 stats.update({"outcome": "success"})
-                succeeded = True
             except StopEarly:
                 print("Skipping...")
                 end_early = True
                 stats.update({"outcome": "skipped"})
-            except TimedOut as e_c:
+            except TimedOut:
                 print("Timed Out")
                 if visualize_after:
                     stats = visualize_after()
                 stats.update({"outcome": "timed_out"})
-            except Contradiction as e_c:
+            except Contradiction:
                 print("Contradiction")
                 if visualize_after:
                     stats = visualize_after()

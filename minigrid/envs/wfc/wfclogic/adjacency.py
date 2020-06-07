@@ -1,5 +1,4 @@
 """Convert input data to adjacency information"""
-from collections import Counter
 import numpy as np
 
 
@@ -43,7 +42,7 @@ def adjacency_extraction(
     legal = []
     for pattern_1 in pattern_list:
         for pattern_2 in pattern_list:
-            for direction_index, direction in direction_offsets:
+            for _direction_index, direction in direction_offsets:
                 if is_valid_overlap_xy(direction, pattern_1, pattern_2):
                     legal.append((direction, pattern_1, pattern_2))
     return legal

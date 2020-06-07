@@ -67,14 +67,14 @@ def unique_patterns_brute_force(grid, size, periodic_input):
 def make_pattern_catalog(tile_grid, pattern_width, input_is_periodic=True):
     """Returns a pattern catalog (dictionary of pattern hashes to consituent tiles), 
 an ordered list of pattern weights, and an ordered list of pattern contents."""
-    patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(
+    _patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(
         tile_grid, pattern_width, input_is_periodic
     )
     dict_of_pattern_contents = {}
     for pat_idx in range(pattern_contents_list.shape[0]):
         p_hash = hash_downto(pattern_contents_list[pat_idx], 0)
         dict_of_pattern_contents.update(
-            {np.asscalar(p_hash): pattern_contents_list[pat_idx]}
+            {p_hash.item(): pattern_contents_list[pat_idx]}
         )
     pattern_frequency = Counter(hash_downto(pattern_contents_list, 1))
     return (
@@ -86,18 +86,18 @@ an ordered list of pattern weights, and an ordered list of pattern contents."""
 
 
 def identity_grid(grid):
-    "do nothing to the grid"
+    """Do nothing to the grid"""
     # return np.array([[7,5,5,5],[5,0,0,0],[5,0,1,0],[5,0,0,0]])
     return grid
 
 
 def reflect_grid(grid):
-    "reflect the grid left/right"
+    """Reflect the grid left/right"""
     return np.fliplr(grid)
 
 
 def rotate_grid(grid):
-    "rotate the grid"
+    """Rotate the grid"""
     return np.rot90(grid, axes=(1, 0))
 
 
