@@ -29,6 +29,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 ```
 
 List of publications & submissions using MiniGrid or BabyAI (please open a pull request to add missing entries):
+- [Learning with AMIGO: Adversarially Motivated Intrinsic Goals](https://arxiv.org/pdf/2006.12122.pdf) (FAIR, June 2020)
 - [RIDE: Rewarding Impact-Driven Exploration for Procedurally-Generated Environments](https://openreview.net/forum?id=rkg-TJBFPB) (FAIR, ICLR 2020)
 - [Learning to Request Guidance in Emergent Communication](https://arxiv.org/pdf/1912.05525.pdf) (University of Amsterdam, Dec 2019)
 - [Working Memory Graphs](https://arxiv.org/abs/1911.07141) (MSR, Nov 2019)
