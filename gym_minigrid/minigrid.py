@@ -438,6 +438,7 @@ class Grid:
     def render_tile(
         cls,
         obj,
+        carrying=None,
         agent_dir=None,
         highlight=False,
         tile_size=TILE_PIXELS,
@@ -450,6 +451,7 @@ class Grid:
         # Hash map lookup key for the cache
         key = (agent_dir, highlight, tile_size)
         key = obj.encode() + key if obj else key
+        key = carrying.encode() + key if carrying else key
 
         if key in cls.tile_cache:
             return cls.tile_cache[key]
@@ -462,6 +464,8 @@ class Grid:
 
         if obj != None:
             obj.render(img)
+        if carrying != None:
+            carrying.render(img)
 
         # Overlay the agent on top
         if agent_dir is not None:
@@ -490,6 +494,7 @@ class Grid:
     def render(
         self,
         tile_size,
+        carrying=None,
         agent_pos=None,
         agent_dir=None,
         highlight_mask=None
@@ -517,6 +522,7 @@ class Grid:
                 agent_here = np.array_equal(agent_pos, (i, j))
                 tile_img = Grid.render_tile(
                     cell,
+                    carrying=carrying if agent_here else None,
                     agent_dir=agent_dir if agent_here else None,
                     highlight=highlight_mask[i, j],
                     tile_size=tile_size
@@ -1183,15 +1189,6 @@ class MiniGridEnv(gym.Env):
         else:
             vis_mask = np.ones(shape=(grid.width, grid.height), dtype=np.bool)
 
-        # Make it so the agent sees what it's carrying
-        # We do this by placing the carried object at the agent's position
-        # in the agent's partially observable view
-        agent_pos = grid.width // 2, grid.height - 1
-        if self.carrying:
-            grid.set(*agent_pos, self.carrying)
-        else:
-            grid.set(*agent_pos, None)
-
         return grid, vis_mask
 
     def gen_obs(self):
@@ -1228,6 +1225,7 @@ class MiniGridEnv(gym.Env):
         # Render the whole grid
         img = grid.render(
             tile_size,
+            carrying=self.carrying,
             agent_pos=(self.agent_view_size // 2, self.agent_view_size - 1),
             agent_dir=3,
             highlight_mask=vis_mask
@@ -1283,8 +1281,9 @@ class MiniGridEnv(gym.Env):
         # Render the whole grid
         img = self.grid.render(
             tile_size,
-            self.agent_pos,
-            self.agent_dir,
+            carrying=self.carrying,
+            agent_pos=self.agent_pos,
+            agent_dir=self.agent_dir,
             highlight_mask=highlight_mask if highlight else None
         )
 
