@@ -316,7 +316,7 @@ def propagate(wave, adj, periodic=False, onPropagate=None):
     if onPropagate:
         onPropagate(wave)
 
-    if wave.sum() == 0:
+    if (wave.sum(axis=0) == 0).any():
         raise Contradiction
 
 
