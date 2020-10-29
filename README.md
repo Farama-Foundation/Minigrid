@@ -38,7 +38,7 @@ List of publications & submissions using MiniGrid or BabyAI (please open a pull 
 Natural Language in Reinforcement Learning](https://arxiv.org/pdf/1910.04040.pdf) (Oct 2019, University of Antwerp)
 - [Generalization in Reinforcement Learning with Selective Noise Injection and Information Bottleneck
 ](https://arxiv.org/abs/1910.12911) (MSR, NeurIPS, Oct 2019)
-- [Recurrent Independent Mechanisms](https://arxiv.org/pdf/1909.10893.pdf) (Mila, Sept 2019) 
+- [Recurrent Independent Mechanisms](https://arxiv.org/pdf/1909.10893.pdf) (Mila, Sept 2019)
 - [Learning Effective Subgoals with Multi-Task Hierarchical Reinforcement Learning](http://surl.tirl.info/proceedings/SURL-2019_paper_10.pdf) (Tsinghua University, August 2019)
 - [Mastering emergent language: learning to guide in simulated navigation](https://arxiv.org/abs/1908.05135) (University of Amsterdam, Aug 2019)
 - [Transfer Learning by Modeling a Distribution over Policies](https://arxiv.org/abs/1906.03574) (Mila, June 2019)
@@ -150,7 +150,7 @@ Actions in the basic environment:
 - Done (task completed, optional)
 
 Default tile/observation encoding:
-- Each tile is encoded as a 3 dimensional tuple: (OBJECT_IDX, COLOR_IDX, STATE) 
+- Each tile is encoded as a 3 dimensional tuple: (OBJECT_IDX, COLOR_IDX, STATE)
 - OBJECT_TO_IDX and COLOR_TO_IDX mapping can be found in [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py)
 - e.g. door STATE -> 0: open, 1: closed, 2: locked
 
@@ -420,9 +420,6 @@ The agent has to pick up a box which is placed in a corner of a 3x3 maze.
 The doors are locked, the keys are hidden in boxes and doors are obstructed
 by balls. This environment can be solved without relying on language.
 
-The agent has to pick up a box which is placed in a corner of a 3x3 maze.
-The doors are locked, the keys are hidden in boxes and doors are obstructed
-by balls. This environment can be solved without relying on language.
 
 ## Distributional shift environment
 

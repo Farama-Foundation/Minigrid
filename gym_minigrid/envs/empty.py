@@ -1,6 +1,7 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
+
 class EmptyEnv(MiniGridEnv):
     """
     Empty grid environment, no obstacles, sparse reward
@@ -56,6 +57,7 @@ class EmptyEnv6x6(EmptyEnv):
 class EmptyRandomEnv6x6(EmptyEnv):
     def __init__(self):
         super().__init__(size=6, agent_start_pos=None)
+
 
 class EmptyEnv16x16(EmptyEnv):
     def __init__(self, **kwargs):

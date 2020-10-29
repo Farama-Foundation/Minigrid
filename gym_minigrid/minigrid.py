@@ -70,6 +70,7 @@ DIR_TO_VEC = [
     np.array((0, -1)),
 ]
 
+
 class WorldObj:
     """
     Base class for grid world objects
