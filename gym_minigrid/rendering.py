@@ -1,195 +1,118 @@
+import math
 import numpy as np
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap, QPainter, QColor, QPolygon
-from PyQt5.QtCore import QPoint, QSize, QRect
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTextEdit
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel, QFrame
 
-class Window(QMainWindow):
+def downsample(img, factor):
     """
-    Simple application window to render the environment into
+    Downsample an image along both dimensions by some factor
     """
 
-    def __init__(self):
-        super().__init__()
+    assert img.shape[0] % factor == 0
+    assert img.shape[1] % factor == 0
 
-        self.setWindowTitle('MiniGrid Gym Environment')
+    img = img.reshape([img.shape[0]//factor, factor, img.shape[1]//factor, factor, 3])
+    img = img.mean(axis=3)
+    img = img.mean(axis=1)
 
-        # Image label to display the rendering
-        self.imgLabel = QLabel()
-        self.imgLabel.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+    return img
 
-        # Text box for the mission
-        self.missionBox = QTextEdit()
-        self.missionBox.setReadOnly(True)
-        self.missionBox.setMinimumSize(400, 100)
+def fill_coords(img, fn, color):
+    """
+    Fill pixels of an image with coordinates matching a filter function
+    """
 
-        # Center the image
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(self.imgLabel)
-        hbox.addStretch(1)
+    for y in range(img.shape[0]):
+        for x in range(img.shape[1]):
+            yf = (y + 0.5) / img.shape[0]
+            xf = (x + 0.5) / img.shape[1]
+            if fn(xf, yf):
+                img[y, x] = color
 
-        # Arrange widgets vertically
-        vbox = QVBoxLayout()
-        vbox.addLayout(hbox)
-        vbox.addWidget(self.missionBox)
+    return img
 
-        # Create a main widget for the window
-        mainWidget = QWidget(self)
-        self.setCentralWidget(mainWidget)
-        mainWidget.setLayout(vbox)
+def rotate_fn(fin, cx, cy, theta):
+    def fout(x, y):
+        x = x - cx
+        y = y - cy
 
-        # Show the application window
-        self.show()
-        self.setFocus()
+        x2 = cx + x * math.cos(-theta) - y * math.sin(-theta)
+        y2 = cy + y * math.cos(-theta) + x * math.sin(-theta)
 
-        self.closed = False
+        return fin(x2, y2)
 
-        # Callback for keyboard events
-        self.keyDownCb = None
+    return fout
 
-    def closeEvent(self, event):
-        self.closed = True
+def point_in_line(x0, y0, x1, y1, r):
+    p0 = np.array([x0, y0])
+    p1 = np.array([x1, y1])
+    dir = p1 - p0
+    dist = np.linalg.norm(dir)
+    dir = dir / dist
 
-    def setPixmap(self, pixmap):
-        self.imgLabel.setPixmap(pixmap)
+    xmin = min(x0, x1) - r
+    xmax = max(x0, x1) + r
+    ymin = min(y0, y1) - r
+    ymax = max(y0, y1) + r
 
-    def setText(self, text):
-        self.missionBox.setPlainText(text)
+    def fn(x, y):
+        # Fast, early escape test
+        if x < xmin or x > xmax or y < ymin or y > ymax:
+            return False
 
-    def setKeyDownCb(self, callback):
-        self.keyDownCb = callback
+        q = np.array([x, y])
+        pq = q - p0
 
-    def keyPressEvent(self, e):
-        if self.keyDownCb == None:
-            return
+        # Closest point on line
+        a = np.dot(pq, dir)
+        a = np.clip(a, 0, dist)
+        p = p0 + a * dir
 
-        keyName = None
-        if e.key() == Qt.Key_Left:
-            keyName = 'LEFT'
-        elif e.key() == Qt.Key_Right:
-            keyName = 'RIGHT'
-        elif e.key() == Qt.Key_Up:
-            keyName = 'UP'
-        elif e.key() == Qt.Key_Down:
-            keyName = 'DOWN'
-        elif e.key() == Qt.Key_Space:
-            keyName = 'SPACE'
-        elif e.key() == Qt.Key_Return:
-            keyName = 'RETURN'
-        elif e.key() == Qt.Key_Alt:
-            keyName = 'ALT'
-        elif e.key() == Qt.Key_Control:
-            keyName = 'CTRL'
-        elif e.key() == Qt.Key_PageUp:
-            keyName = 'PAGE_UP'
-        elif e.key() == Qt.Key_PageDown:
-            keyName = 'PAGE_DOWN'
-        elif e.key() == Qt.Key_Backspace:
-            keyName = 'BACKSPACE'
-        elif e.key() == Qt.Key_Escape:
-            keyName = 'ESCAPE'
+        dist_to_line = np.linalg.norm(q - p)
+        return dist_to_line <= r
 
-        if keyName == None:
-            return
-        self.keyDownCb(keyName)
+    return fn
 
-class Renderer:
-    def __init__(self, width, height, ownWindow=False):
-        self.width = width
-        self.height = height
+def point_in_circle(cx, cy, r):
+    def fn(x, y):
+        return (x-cx)*(x-cx) + (y-cy)*(y-cy) <= r * r
+    return fn
 
-        self.img = QImage(width, height, QImage.Format_RGB888)
-        self.painter = QPainter()
+def point_in_rect(xmin, xmax, ymin, ymax):
+    def fn(x, y):
+        return x >= xmin and x <= xmax and y >= ymin and y <= ymax
+    return fn
 
-        self.window = None
-        if ownWindow:
-            self.app = QApplication([])
-            self.window = Window()
+def point_in_triangle(a, b, c):
+    a = np.array(a)
+    b = np.array(b)
+    c = np.array(c)
 
-    def close(self):
-        """
-        Deallocate resources used
-        """
-        pass
+    def fn(x, y):
+        v0 = c - a
+        v1 = b - a
+        v2 = np.array((x, y)) - a
 
-    def beginFrame(self):
-        self.painter.begin(self.img)
-        self.painter.setRenderHint(QPainter.Antialiasing, False)
+        # Compute dot products
+        dot00 = np.dot(v0, v0)
+        dot01 = np.dot(v0, v1)
+        dot02 = np.dot(v0, v2)
+        dot11 = np.dot(v1, v1)
+        dot12 = np.dot(v1, v2)
 
-        # Clear the background
-        self.painter.setBrush(QColor(0, 0, 0))
-        self.painter.drawRect(0, 0, self.width - 1, self.height - 1)
+        # Compute barycentric coordinates
+        inv_denom = 1 / (dot00 * dot11 - dot01 * dot01)
+        u = (dot11 * dot02 - dot01 * dot12) * inv_denom
+        v = (dot00 * dot12 - dot01 * dot02) * inv_denom
 
-    def endFrame(self):
-        self.painter.end()
+        # Check if point is in triangle
+        return (u >= 0) and (v >= 0) and (u + v) < 1
 
-        if self.window:
-            if self.window.closed:
-                self.window = None
-            else:
-                self.window.setPixmap(self.getPixmap())
-                self.app.processEvents()
+    return fn
 
-    def getPixmap(self):
-        return QPixmap.fromImage(self.img)
+def highlight_img(img, color=(255, 255, 255), alpha=0.30):
+    """
+    Add highlighting to an image
+    """
 
-    def getArray(self):
-        """
-        Get a numpy array of RGB pixel values.
-        The array will have shape (height, width, 3)
-        """
-
-        numBytes = self.width * self.height * 3
-        buf = self.img.bits().asstring(numBytes)
-        output = np.frombuffer(buf, dtype='uint8')
-        output = output.reshape((self.height, self.width, 3))
-
-        return output
-
-    def push(self):
-        self.painter.save()
-
-    def pop(self):
-        self.painter.restore()
-
-    def rotate(self, degrees):
-        self.painter.rotate(degrees)
-
-    def translate(self, x, y):
-        self.painter.translate(x, y)
-
-    def scale(self, x, y):
-        self.painter.scale(x, y)
-
-    def setLineColor(self, r, g, b, a=255):
-        self.painter.setPen(QColor(r, g, b, a))
-
-    def setColor(self, r, g, b, a=255):
-        self.painter.setBrush(QColor(r, g, b, a))
-
-    def setLineWidth(self, width):
-        pen = self.painter.pen()
-        pen.setWidthF(width)
-        self.painter.setPen(pen)
-
-    def drawLine(self, x0, y0, x1, y1):
-        self.painter.drawLine(x0, y0, x1, y1)
-
-    def drawCircle(self, x, y, r):
-        center = QPoint(x, y)
-        self.painter.drawEllipse(center, r, r)
-
-    def drawPolygon(self, points):
-        """Takes a list of points (tuples) as input"""
-        points = map(lambda p: QPoint(p[0], p[1]), points)
-        self.painter.drawPolygon(QPolygon(points))
-
-    def drawPolyline(self, points):
-        """Takes a list of points (tuples) as input"""
-        points = map(lambda p: QPoint(p[0], p[1]), points)
-        self.painter.drawPolyline(QPolygon(points))
-
-    def fillRect(self, x, y, width, height, r, g, b, a=255):
-        self.painter.fillRect(QRect(x, y, width, height), QColor(r, g, b, a))
+    blend_img = img + alpha * (np.array(color, dtype=np.uint8) - img)
+    blend_img = blend_img.clip(0, 255).astype(np.uint8)
+    img[:, :, :] = blend_img

@@ -66,14 +66,6 @@ class DynamicObstaclesEnv(MiniGridEnv):
         front_cell = self.grid.get(*self.front_pos)
         not_clear = front_cell and front_cell.type != 'goal'
 
-        obs, reward, done, info = MiniGridEnv.step(self, action)
-
-        # If the agent tries to walk over an obstacle
-        if action == self.actions.forward and not_clear:
-            reward = -1
-            done = True
-            return obs, reward, done, info
-
         # Update obstacle positions
         for i_obst in range(len(self.obstacles)):
             old_pos = self.obstacles[i_obst].cur_pos
@@ -84,6 +76,15 @@ class DynamicObstaclesEnv(MiniGridEnv):
                 self.grid.set(*old_pos, None)
             except:
                 pass
+
+        # Update the agent's position/direction
+        obs, reward, done, info = MiniGridEnv.step(self, action)
+
+        # If the agent tried to walk over an obstacle or wall
+        if action == self.actions.forward and not_clear:
+            reward = -1
+            done = True
+            return obs, reward, done, info
 
         return obs, reward, done, info
 

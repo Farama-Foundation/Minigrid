@@ -16,8 +16,8 @@ from gym_minigrid.wrappers import *
 
 print('%d environments registered' % len(env_list))
 
-for env_name in env_list:
-    print('testing "%s"' % env_name)
+for env_idx, env_name in enumerate(env_list):
+    print('testing {} ({}/{})'.format(env_name, env_idx+1, len(env_list)))
 
     # Load the gym environment
     env = gym.make(env_name)
@@ -50,8 +50,8 @@ for env_name in env_list:
 
         # Test observation encode/decode roundtrip
         img = obs['image']
-        vis_mask = img[:, :, 0] != OBJECT_TO_IDX['unseen']  # hackish
-        img2 = Grid.decode(img).encode(vis_mask=vis_mask)
+        grid, vis_mask = Grid.decode(img)
+        img2 = grid.encode(vis_mask=vis_mask)
         assert np.array_equal(img, img2)
 
         # Test the env to string function
@@ -91,6 +91,14 @@ for env_name in env_list:
     assert obs['image'].shape == env.observation_space.spaces['image'].shape
     env.close()
 
+    # RGB image observation wrapper
+    env = gym.make(env_name)
+    env = RGBImgPartialObsWrapper(env)
+    env.reset()
+    obs, _, _, _ = env.step(0)
+    assert obs['image'].mean() > 0
+    env.close()
+
     env = gym.make(env_name)
     env = FlatObsWrapper(env)
     env.reset()
@@ -117,8 +125,11 @@ for env_name in env_list:
         ), "Observation space for {0} is not a Dict: {1}.".format(
             wrapper_name, obs_space
         )
-        # this shuld not fail either
+        # This should not fail either
         ImgObsWrapper(env)
+        env.reset()
+        env.step(0)
+        env.close()
 
 ##############################################################################
 
@@ -135,10 +146,11 @@ env.reset()
 for i in range(0, 500):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
-    goal_visible = ('green', 'goal') in Grid.decode(obs['image'])
+
+    grid, _ = Grid.decode(obs['image'])
+    goal_visible = ('green', 'goal') in grid
+
     agent_sees_goal = env.agent_sees(*goal_pos)
     assert agent_sees_goal == goal_visible
     if done:
         env.reset()
-
-#############################################################################

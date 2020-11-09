@@ -20,7 +20,7 @@ class DoorKeyEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Place a goal in the bottom-right corner
-        self.grid.set(width - 2, height - 2, Goal())
+        self.put_obj(Goal(), width - 2, height - 2)
 
         # Create a vertical splitting wall
         splitIdx = self._rand_int(2, width-2)
@@ -32,7 +32,7 @@ class DoorKeyEnv(MiniGridEnv):
 
         # Place a door in the wall
         doorIdx = self._rand_int(1, width-2)
-        self.grid.set(splitIdx, doorIdx, Door('yellow', is_locked=True))
+        self.put_obj(Door('yellow', is_locked=True), splitIdx, doorIdx)
 
         # Place a yellow key on the left side
         self.place_obj(

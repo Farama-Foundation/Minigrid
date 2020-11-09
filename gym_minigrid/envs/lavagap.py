@@ -32,7 +32,7 @@ class LavaGapEnv(MiniGridEnv):
 
         # Place a goal square in the bottom-right corner
         self.goal_pos = np.array((width - 2, height - 2))
-        self.grid.set(*self.goal_pos, Goal())
+        self.put_obj(Goal(), *self.goal_pos)
 
         # Generate and store random gap position
         self.gap_pos = np.array((

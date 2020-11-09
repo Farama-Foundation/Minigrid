@@ -34,7 +34,7 @@ class CrossingEnv(MiniGridEnv):
         self.agent_dir = 0
 
         # Place a goal square in the bottom-right corner
-        self.grid.set(width - 2, height - 2, Goal())
+        self.put_obj(Goal(), width - 2, height - 2)
 
         # Place obstacles (lava or walls)
         v, h = object(), object()  # singleton `vertical` and `horizontal` objects
@@ -51,7 +51,7 @@ class CrossingEnv(MiniGridEnv):
             itt.product(rivers_v, range(1, height - 1)),
         )
         for i, j in obstacle_pos:
-            self.grid.set(i, j, self.obstacle_type())
+            self.put_obj(self.obstacle_type(), i, j)
 
         # Sample path to goal
         path = [h] * len(rivers_v) + [v] * len(rivers_h)

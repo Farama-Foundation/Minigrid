@@ -6,7 +6,6 @@ import numpy as np
 import gym
 from gym import error, spaces, utils
 from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX, STATE_TO_IDX
-from .minigrid import CELL_PIXELS
 
 class ReseedWrapper(gym.core.Wrapper):
     """
@@ -136,7 +135,7 @@ class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
 
     def observation(self, obs):
         img = obs['image']
-        out = np.zeros(self.observation_space.shape, dtype='uint8')
+        out = np.zeros(self.observation_space.spaces['image'].shape, dtype='uint8')
 
         for i in range(img.shape[0]):
             for j in range(img.shape[1]):
@@ -168,7 +167,7 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
         self.observation_space.spaces['image'] = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width*tile_size, self.env.height*tile_size, 3),
+            shape=(self.env.width * tile_size, self.env.height * tile_size, 3),
             dtype='uint8'
         )
 
@@ -198,7 +197,7 @@ class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
 
         self.tile_size = tile_size
 
-        obs_shape = env.observation_space['image'].shape
+        obs_shape = env.observation_space.spaces['image'].shape
         self.observation_space.spaces['image'] = spaces.Box(
             low=0,
             high=255,
@@ -211,8 +210,7 @@ class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
 
         rgb_img_partial = env.get_obs_render(
             obs['image'],
-            tile_size=self.tile_size,
-            mode='rgb_array'
+            tile_size=self.tile_size
         )
 
         return {
@@ -267,7 +265,7 @@ class FlatObsWrapper(gym.core.ObservationWrapper):
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(1, imgSize + self.numCharCodes * self.maxStrLen),
+            shape=(imgSize + self.numCharCodes * self.maxStrLen,),
             dtype='uint8'
         )
 
@@ -309,6 +307,9 @@ class ViewSizeWrapper(gym.core.Wrapper):
     def __init__(self, env, agent_view_size=7):
         super().__init__(env)
 
+        assert agent_view_size % 2 == 1
+        assert agent_view_size >= 3
+
         # Override default view size
         env.unwrapped.agent_view_size = agent_view_size
 
@@ -330,3 +331,27 @@ class ViewSizeWrapper(gym.core.Wrapper):
 
     def step(self, action):
         return self.env.step(action)
+
+from .minigrid import Goal
+class DirectionObsWrapper(gym.core.ObservationWrapper):
+    """
+    Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
+    type = {slope , angle}
+    """
+    def __init__(self, env,type='slope'):
+        super().__init__(env)
+        self.goal_position = None
+        self.type = type
+
+    def reset(self):
+        obs = self.env.reset()
+        if not self.goal_position:
+            self.goal_position = [x for x,y in enumerate(self.grid.grid) if isinstance(y,(Goal) ) ]
+            if len(self.goal_position) >= 1: # in case there are multiple goals , needs to be handled for other env types
+                self.goal_position = (int(self.goal_position[0]/self.height) , self.goal_position[0]%self.width)
+        return obs
+
+    def observation(self, obs):
+        slope = np.divide( self.goal_position[1] - self.agent_pos[1] ,  self.goal_position[0] - self.agent_pos[0])
+        obs['goal_direction'] = np.arctan( slope ) if self.type == 'angle' else slope
+        return obs
