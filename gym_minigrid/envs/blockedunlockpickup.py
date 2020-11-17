@@ -8,14 +8,15 @@ class BlockedUnlockPickup(RoomGrid):
     in another room
     """
 
-    def __init__(self, seed=None):
+    def __init__(self, seed=None, agent_view_size=7):
         room_size = 6
         super().__init__(
             num_rows=1,
             num_cols=2,
             room_size=room_size,
             max_steps=16*room_size**2,
-            seed=seed
+            seed=seed,
+            agent_view_size=agent_view_size
         )
 
     def _gen_grid(self, width, height):
@@ -46,7 +47,17 @@ class BlockedUnlockPickup(RoomGrid):
 
         return obs, reward, done, info
 
+
+class BlockedUnlockPickup1(BlockedUnlockPickup):
+    def __init__(self):
+        super().__init__(agent_view_size=3)
+
 register(
-    id='MiniGrid-BlockedUnlockPickup-v0',
+    id='MiniGrid-BlockedUnlockPickup-VU7-v0',
     entry_point='gym_minigrid.envs:BlockedUnlockPickup'
+)
+
+register(
+    id='MiniGrid-BlockedUnlockPickup-VU3-v1',
+    entry_point='gym_minigrid.envs:BlockedUnlockPickup1'
 )

@@ -9,15 +9,24 @@ class CrossingEnv(MiniGridEnv):
     Environment with wall or lava obstacles, sparse reward.
     """
 
-    def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, seed=None):
+    def __init__(
+        self,
+        size=9,
+        num_crossings=1,
+        obstacle_type=Lava,
+        seed=None,
+        agent_view_size=7
+    ):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
+
         super().__init__(
             grid_size=size,
             max_steps=4*size*size,
             # Set this to True for maximum speed
             see_through_walls=False,
-            seed=None
+            seed=None,
+            agent_view_size=agent_view_size
         )
 
     def _gen_grid(self, width, height):
@@ -98,6 +107,10 @@ class LavaCrossingS11N5Env(CrossingEnv):
     def __init__(self):
         super().__init__(size=11, num_crossings=5)
 
+class LavaCrossingS11N5VU5Env(CrossingEnv):
+    def __init__(self):
+        super().__init__(size=11, num_crossings=5, agent_view_size=5)
+
 register(
     id='MiniGrid-LavaCrossingS9N1-v0',
     entry_point='gym_minigrid.envs:LavaCrossingEnv'
@@ -118,6 +131,11 @@ register(
     entry_point='gym_minigrid.envs:LavaCrossingS11N5Env'
 )
 
+register(
+    id='MiniGrid-LavaCrossingS11N5VU5-v0',
+    entry_point='gym_minigrid.envs:LavaCrossingS11N5VU5Env'
+)
+
 class SimpleCrossingEnv(CrossingEnv):
     def __init__(self):
         super().__init__(size=9, num_crossings=1, obstacle_type=Wall)
@@ -133,6 +151,10 @@ class SimpleCrossingS9N3Env(CrossingEnv):
 class SimpleCrossingS11N5Env(CrossingEnv):
     def __init__(self):
         super().__init__(size=11, num_crossings=5, obstacle_type=Wall)
+
+class SimpleCrossingS11N5VU5Env(CrossingEnv):
+    def __init__(self):
+        super().__init__(size=11, num_crossings=5, obstacle_type=Wall, agent_view_size=7)
 
 register(
     id='MiniGrid-SimpleCrossingS9N1-v0',
@@ -152,4 +174,9 @@ register(
 register(
     id='MiniGrid-SimpleCrossingS11N5-v0',
     entry_point='gym_minigrid.envs:SimpleCrossingS11N5Env'
+)
+
+register(
+    id='MiniGrid-SimpleCrossingS11N5VU5-v0',
+    entry_point='gym_minigrid.envs:SimpleCrossingS11N5VU5Env'
 )

@@ -12,7 +12,8 @@ class KeyCorridor(RoomGrid):
         num_rows=3,
         obj_type="ball",
         room_size=6,
-        seed=None
+        seed=None,
+        agent_view_size=7
     ):
         self.obj_type = obj_type
 
@@ -21,6 +22,7 @@ class KeyCorridor(RoomGrid):
             num_rows=num_rows,
             max_steps=30*room_size**2,
             seed=seed,
+            agent_view_size=agent_view_size
         )
 
     def _gen_grid(self, width, height):

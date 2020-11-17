@@ -6,10 +6,11 @@ class DoorKeyEnv(MiniGridEnv):
     Environment with a door and key, sparse reward
     """
 
-    def __init__(self, size=8):
+    def __init__(self, size=8, agent_view_size=7):
         super().__init__(
             grid_size=size,
-            max_steps=10*size*size
+            max_steps=10*size*size,
+            agent_view_size=agent_view_size
         )
 
     def _gen_grid(self, width, height):
@@ -55,6 +56,18 @@ class DoorKeyEnv16x16(DoorKeyEnv):
     def __init__(self):
         super().__init__(size=16)
 
+class DoorKeyEnv16x16VU5(DoorKeyEnv):
+    def __init__(self):
+        super().__init__(size=16, agent_view_size=5)
+
+class DoorKeyEnv16x16VU9(DoorKeyEnv):
+    def __init__(self):
+        super().__init__(size=16, agent_view_size=9)
+
+class DoorKeyEnv16x16VU11(DoorKeyEnv):
+    def __init__(self):
+        super().__init__(size=16, agent_view_size=11)
+
 register(
     id='MiniGrid-DoorKey-5x5-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv5x5'
@@ -73,4 +86,19 @@ register(
 register(
     id='MiniGrid-DoorKey-16x16-v0',
     entry_point='gym_minigrid.envs:DoorKeyEnv16x16'
+)
+
+register(
+    id='MiniGrid-DoorKey-16x16-VU5-v0',
+    entry_point='gym_minigrid.envs:DoorKeyEnv16x16VU5'
+)
+
+register(
+    id='MiniGrid-DoorKey-16x16-VU9-v0',
+    entry_point='gym_minigrid.envs:DoorKeyEnv16x16VU9'
+)
+
+register(
+    id='MiniGrid-DoorKey-16x16-VU11-v0',
+    entry_point='gym_minigrid.envs:DoorKeyEnv16x16VU11'
 )
