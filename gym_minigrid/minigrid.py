@@ -487,6 +487,60 @@ class Grid:
 
         return img
 
+    @classmethod
+    def render_tile_wo_agent_dir(
+        cls,
+        obj,
+        agent_dir=None,
+        highlight=False,
+        tile_size=TILE_PIXELS,
+        subdivs=3
+    ):
+        """
+        Render a tile and cache the result
+        """
+
+        # Hash map lookup key for the cache
+        key = (agent_dir, highlight, tile_size)
+        key = obj.encode() + key if obj else key
+
+        if key in cls.tile_cache:
+            return cls.tile_cache[key]
+
+        img = np.zeros(shape=(tile_size * subdivs, tile_size * subdivs, 3), dtype=np.uint8)
+
+        # Draw the grid lines (top and left edges)
+        fill_coords(img, point_in_rect(0, 0.031, 0, 1), (100, 100, 100))
+        fill_coords(img, point_in_rect(0, 1, 0, 0.031), (100, 100, 100))
+
+        if obj != None:
+            obj.render(img)
+
+        # Overlay the agent on top
+        if agent_dir is not None:
+            tri_fn = point_in_triangle(
+                (0.12, 0.19),
+                (0.87, 0.50),
+                (0.12, 0.81),
+            )
+
+            # agent is now a shape of red circle instead of red triangle
+            fill_coords(img, point_in_circle(0.5, 0.5, 0.31), (255, 0, 0))
+
+        # Highlight the cell if needed
+        if highlight:
+            highlight_img(img)
+
+        # Downsample the image to perform supersampling/anti-aliasing
+        img = downsample(img, subdivs)
+
+        # Cache the rendered tile
+        cls.tile_cache[key] = img
+
+        return img
+
+    
+
     def render(
         self,
         tile_size,
@@ -529,6 +583,51 @@ class Grid:
                 img[ymin:ymax, xmin:xmax, :] = tile_img
 
         return img
+
+    def render_wo_agent_dir(
+        self,
+        tile_size,
+        agent_pos=None,
+        agent_dir=None,
+        highlight_mask=None
+    ):
+        """
+        Render this grid at a given scale
+        :param r: target renderer object
+        :param tile_size: tile size in pixels
+        """
+
+        if highlight_mask is None:
+            highlight_mask = np.zeros(shape=(self.width, self.height), dtype=np.bool)
+
+        # Compute the total grid size
+        width_px = self.width * tile_size
+        height_px = self.height * tile_size
+
+        img = np.zeros(shape=(height_px, width_px, 3), dtype=np.uint8)
+
+        # Render the grid
+        for j in range(0, self.height):
+            for i in range(0, self.width):
+                cell = self.get(i, j)
+
+                agent_here = np.array_equal(agent_pos, (i, j))
+                tile_img = Grid.render_tile_wo_agent_dir(
+                    cell,
+                    agent_dir=agent_dir if agent_here else None,
+                    highlight=highlight_mask[i, j],
+                    tile_size=tile_size
+                )
+
+                ymin = j * tile_size
+                ymax = (j+1) * tile_size
+                xmin = i * tile_size
+                xmax = (i+1) * tile_size
+                img[ymin:ymax, xmin:xmax, :] = tile_img
+
+        return img
+
+    
 
     def encode(self, vis_mask=None):
         """
@@ -1003,6 +1102,39 @@ class MiniGridEnv(gym.Env):
 
         return self.agent_pos + self.dir_vec
 
+    @property
+    def left_pos(self):
+        """
+        Get the position of the cell that is left of the agent
+        """
+
+        return self.agent_pos + (-1, 0)
+
+    @property
+    def right_pos(self):
+        """
+        Get the position of the cell that is right of the agent
+        """
+
+        return self.agent_pos + (1, 0)
+
+
+    @property
+    def up_pos(self):
+        """
+        Get the position of the cell that is upwards of the agent
+        """
+
+        return self.agent_pos + (0, -1)
+
+    @property
+    def down_pos(self):
+        """
+        Get the position of the cell that is downwards of the agent
+        """
+
+        return self.agent_pos + (0, 1)
+
     def get_view_coords(self, i, j):
         """
         Translate and rotate absolute grid coordinates (i, j) into the
@@ -1255,7 +1387,7 @@ class MiniGridEnv(gym.Env):
 
         # Compute the world coordinates of the bottom-left corner
         # of the agent's view area
-        f_vec = self.dir_vec
+        f_vec =  self.dir_vec
         r_vec = self.right_vec
         top_left = self.agent_pos + f_vec * (self.agent_view_size-1) - r_vec * (self.agent_view_size // 2)
 
