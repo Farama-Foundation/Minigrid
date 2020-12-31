@@ -138,11 +138,9 @@ class ClassicGridWorldEnv(MiniGridEnv):
 
         obs = self.gen_obs()
 
-        print('agent pos: ', self.agent_pos)
-
         return obs, reward, done, {}
 
-    def render(self, mode='human', close=False, tile_size=TILE_PIXELS):
+    def render(self, mode='human', close=False, highlight=True, tile_size=TILE_PIXELS):
         """
         Render the whole-grid human view
         """
