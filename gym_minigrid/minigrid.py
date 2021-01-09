@@ -1289,8 +1289,8 @@ class MiniGridEnv(gym.Env):
         )
 
         if mode == 'human':
-            self.window.show_img(img)
             self.window.set_caption(self.mission)
+            self.window.show_img(img)
 
         return img
 
