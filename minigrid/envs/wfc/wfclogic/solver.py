@@ -293,18 +293,39 @@ def propagate(wave, adj, periodic=False, onPropagate=None):
                 wave, ((0, 0), (1, 1), (1, 1)), mode="constant", constant_values=True
             )
 
+        # adj is the list of adjacencies. For each direction d in adjacency, 
+        # check which patterns are still valid... 
         for d in adj:
             dx, dy = d
+            # padded[] is a version of the adjacency matrix with the values wrapped around
+            # shifted[] is the padded version with the values shifted over in one direction
+            # because my code stores the directions as relative (x,y) coordinates, we can find
+            # the adjacent cell for each direction by simply shifting the matrix in that direction,
+            # which allows for arbitrary adjacency directions. This is somewhat excessive, but elegant.
+
             shifted = padded[
                 :, 1 + dx : 1 + wave.shape[1] + dx, 1 + dy : 1 + wave.shape[2] + dy
             ]
             # print(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
             # raise StopEarly
             # supports[d] = numpy.einsum('pwh,pq->qwh', shifted, adj[d]) > 0
+
+            # The adjacency matrix is a boolean matrix, indexed by the direction and the two patterns.
+            # If the value for (direction, pattern1, pattern2) is True, then this is a valid adjacency.
+            # This gives us a rapid way to compare: True is 1, False is 0, so multiplying the matrices
+            # gives us the adjacency compatibility.
             supports[d] = (adj[d] @ shifted.reshape(shifted.shape[0], -1)).reshape(
                 shifted.shape
             ) > 0
+            # supports[d] = ( <- for each cell in the matrix
+            # adj[d]  <- the adjacency matrix [sliced by the direction d]
+            # @       <- Matrix multiplication
+            # shifted.reshape(shifted.shape[0], -1)) <- change the shape of the shifted matrix to 2-dimensions, to make the matrix multiplication easier
+            # .reshape(           <- reshape our matrix-multiplied result...
+            #   shifted.shape)   <- ...to match the original shape of the shifted matrix
+            # > 0    <- is not false
 
+        # multiply the wave matrix by the support matrix to find which patterns are still in the domain
         for d in adj:
             wave *= supports[d]
 
