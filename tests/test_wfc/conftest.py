@@ -8,6 +8,6 @@ class Resources:
         return os.path.join(PROJECT_ROOT, "images", image)
 
 
-@pytest.fixture("session")
+@pytest.fixture(scope="session")
 def resources():
     return Resources()
