@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 
 from gym_minigrid.minigrid import MiniGridEnv, Grid, Goal, Lava, Wall
 
@@ -120,7 +121,26 @@ class DynamicMiniGrid(MiniGridEnv):
         else:
             set_or_remove_obj(Lava())
 
+        def is_solvable():
+            # basic principle: let a random agent take max_steps and see if it visited the goal
+            max_steps = 10000
 
+            if self.height * self.width > 100:
+                warnings.warn(f"Solvability takes {max_steps} with a random agent, "
+                              f"thus might wrong in large grids ", UserWarning)
 
+            reachable_pos = [self.agent_start_pos]  # todo change this to a set
+            for _ in range(max_steps):
+                # take a (random) step
+                action = self.np_random.randint(low=0, high=3)  # 0 turn left, 1 turn right, 2 move
+                self.step(action)
+
+                reachable_pos.append(tuple(self.agent_pos))
+                if self.goal_pos in reachable_pos:
+                    return True
+
+            return False
+
+        return is_solvable()
 
 # Tests: 1000x alter -
