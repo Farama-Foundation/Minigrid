@@ -1,3 +1,5 @@
+import numpy as np
+
 from gym_minigrid.minigrid import MiniGridEnv, Grid, Goal, Lava, Wall
 
 
@@ -34,66 +36,91 @@ class DynamicMiniGrid(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
-    def alter(self):
-    # Todo: alternatively use place_obj function (pre-selection of obj)
-    # Todo: add int for multiple repetion
+    def alter(self, prob_array, visibility_check):
+        """
+        Changes the environment. With
 
-        def alter_start():
-            # Todo: use self.place_agent()
+        :param prob_array: numpy.Array. array of probabilties for each type of altering (change start or goal position, add wall/lava)
+            prob_array[0]: change start pos; prob_array[1]: change goal position; prob_array[2] add wall at random (allowed) location
+            prob_array[3]: add lava at random location
+        :param visibility_check: bool. If true, checks whether the agent can see the reward at the start and rejects such a solution
+        :return:
+        """
+    # Todo: Solvability check
+    # Todo: add int for multiple repetition
+
+        if np.sum(prob_array) != 1.0:
+            raise ValueError('Probabilities do not sum to 1')
+
+        if len(prob_array) != 4:
+            raise ValueError('Prob array must be of length 4: start, reward, wall, lava')
+
+        def alter_start_pos():
+
+            def goal_in_view(pos, new_pos):
+                self.agent_pos = new_pos
+                return_value = self.in_view(*self.goal_pos)
+                self.agent_pos = pos
+
+                return return_value
+
+            pos = self.agent_start_pos
+            while pos == self.agent_start_pos:
+                new_pos = (self.np_random.randint(1, self.height - 1), # 1, -1 to avoid boarders
+                           self.np_random.randint(1, self.width - 1))
+                if self.grid.get(*new_pos) is not None or new_pos == pos: # check field is empty and agent is not there
+                    continue
+                if visibility_check and goal_in_view(pos, new_pos):
+                    continue
+            self.agent_start_pos = new_pos
+            self.agent_pos = new_pos
+            # self.agent_start_dir = ? todo
+
+        def alter_goal_pos():
+            goal_pos = self.goal_pos
+            goal = Goal()
+            while goal_pos == self.goal_pos:
+                new_goal_pos = (self.np_random.randint(1, self.height-1),
+                            self.np_random.randint(1, self.width-1))
+                if self.grid.get(*new_goal_pos) is not None or new_goal_pos == self.agent_start_pos:
+                    continue
+                if visibility_check and self.in_view(*new_goal_pos):
+                    continue
+            self.grid.set(*new_goal_pos, Goal())
+            self.grid.set(*goal_pos, None)
+
+        def set_or_remove_obj(obj):
+
             while True:
-                new_pos = (self.np_random.randint(1,self.height-1),
-                           self.np_random.randint(1,self.width-1))
-                if new_pos != self.goal_pos and new_pos != self.agent_start_pos:
-                    self.agent_start_pos = new_pos
-                    return
+                rand_pos = (self.np_random.randint(1, self.height-1),
+                            self.np_random.randint(1, self.width-1))
 
-        def alter_goal_position():
-            while True:
-                new_pos = (self.np_random.randint(1,self.height-1),
-                           self.np_random.randint(1,self.width-1))
-                if new_pos != self.goal_pos and new_pos != self.agent_start_pos:
-                    self.put_obj(Goal(), *new_pos)
-                    self.grid.set(*self.goal_pos, None)
-                    return
+                if rand_pos == self.agent_start_pos or rand_pos == self.goal_pos:
+                    continue
 
-        def alter_single_grid(random_pile):
-            possible_obj = (Lava(), Wall(), None)
-            prob_obj = (0.2, 0.2, 0.6)  # Todo: make this dependent on a constructor variable difficulty
-            random_pile_idx = random_pile[0]*self.width + random_pile[1]
-            # Ugly way of getting the right index in self.grid.grid Todo: improve
-            while True:
-                new_obj = self.np_random.choice(possible_obj, p=prob_obj) # todo use array of possibilities
-                # can't do type checking on None
-                if new_obj == None:
-                    if self.grid.grid[random_pile_idx] != None:
-                        self.grid.grid[random_pile_idx] = None
-                        return
-                elif self.grid.grid[random_pile_idx] == None:
-                    self.put_obj(new_obj, *random_pile)
-                    return
-                elif new_obj.type != self.grid.grid[random_pile_idx].type:
-                    return
+                if self.grid.get(*rand_pos) == obj:
+                    # remove obj
+                    self.grid.set(*rand_pos, None)
+                else: # replace even if there is an object of the other type
+                    self.grid.set(*rand_pos, obj)
+                break
 
-        def grid_is_solvable(self):
-            return True
-            #raise NotImplementedError
 
-        while True:
-            # pick random tile
-            random_tile = (self.np_random.randint(1,self.height-1),
-                           self.np_random.randint(1,self.width-1)) # no manip of boarder -> 1, max-1
-            if random_tile == self.agent_start_pos:
-                alter_start()
-            elif random_tile == self.goal_pos:
-                alter_goal_position()
-            else:
-                alter_single_grid(random_tile)
-            breakpoint()
-            # sanity check
-            if grid_is_solvable(self):
-                return
-            else:
-                # reject change and do another way
-                raise NotImplementedError
+        random_float = self.np_random.uniform()
+
+        if random_float < prob_array[0]:
+            alter_start_pos()
+
+        elif random_float < np.sum(prob_array[0:1]):
+            alter_goal_pos()
+
+        elif random_float < np.sum(prob_array[0:2]):
+            set_or_remove_obj(Wall())
+
+        else:
+            set_or_remove_obj(Lava())
+
+
+
 
 # Tests: 1000x alter -
