@@ -37,17 +37,18 @@ class DynamicMiniGrid(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
-    def alter(self, prob_array, visibility_check):
+    def alter(self, prob_array, visibility_check=True):
         """
-        Changes the environment. With
+        Changes a single element of the environment.
 
-        :param prob_array: numpy.Array. array of probabilties for each type of altering (change start or goal position, add wall/lava)
-            prob_array[0]: change start pos; prob_array[1]: change goal position; prob_array[2] add wall at random (allowed) location
-            prob_array[3]: add lava at random location
-        :param visibility_check: bool. If true, checks whether the agent can see the reward at the start and rejects such a solution
-        :return:
+        :param prob_array: numpy.Array. array of probabilties for each type of altering
+            (change start or goal position, add wall/lava) prob_array[0]: change start pos;
+            prob_array[1]: change goal position; prob_array[2] add wall at random (allowed) location
+            prob_array[3]: add lava at random location.
+        :param visibility_check: bool. If true, checks whether the agent can see the reward
+            at the start and rejects such a solution.
+        :return: boolean. True if the environment can be solved empirically within 10'000 steps.
         """
-    # Todo: Solvability check
     # Todo: add int for multiple repetition
 
         if np.sum(prob_array) != 1.0:
@@ -73,13 +74,13 @@ class DynamicMiniGrid(MiniGridEnv):
                     continue
                 if visibility_check and goal_in_view(pos, new_pos):
                     continue
-            self.agent_start_pos = new_pos
-            self.agent_pos = new_pos
-            # self.agent_start_dir = ? todo
+
+                self.agent_start_pos = new_pos
+                self.agent_pos = new_pos
+                # self.agent_start_dir = ? todo
 
         def alter_goal_pos():
             goal_pos = self.goal_pos
-            goal = Goal()
             while goal_pos == self.goal_pos:
                 new_goal_pos = (self.np_random.randint(1, self.height-1),
                             self.np_random.randint(1, self.width-1))
@@ -87,8 +88,9 @@ class DynamicMiniGrid(MiniGridEnv):
                     continue
                 if visibility_check and self.in_view(*new_goal_pos):
                     continue
-            self.grid.set(*new_goal_pos, Goal())
-            self.grid.set(*goal_pos, None)
+                self.goal_pos = new_goal_pos  # change the attribute
+                self.grid.set(*new_goal_pos, Goal())  # change the actual element in the grid
+                self.grid.set(*goal_pos, None)  # remove the previous goal
 
         def set_or_remove_obj(obj):
 
@@ -106,23 +108,22 @@ class DynamicMiniGrid(MiniGridEnv):
                     self.grid.set(*rand_pos, obj)
                 break
 
-
         random_float = self.np_random.uniform()
 
         if random_float < prob_array[0]:
             alter_start_pos()
 
-        elif random_float < np.sum(prob_array[0:1]):
+        elif random_float < np.sum(prob_array[0:2]):
             alter_goal_pos()
 
-        elif random_float < np.sum(prob_array[0:2]):
+        elif random_float < np.sum(prob_array[0:3]):
             set_or_remove_obj(Wall())
 
         else:
             set_or_remove_obj(Lava())
 
         def is_solvable():
-            # basic principle: let a random agent take max_steps and see if it visited the goal
+            # empirical check: let a random agent take max_steps and see if it visited the goal
             max_steps = 10000
 
             if self.height * self.width > 100:
