@@ -135,8 +135,12 @@ class DynamicMiniGrid(MiniGridEnv):
                 # take a (random) step
                 action = self.np_random.randint(low=0, high=3)  # 0 turn left, 1 turn right, 2 move
                 self.step(action)
-
                 reachable_pos.append(tuple(self.agent_pos))
+                if self.grid.get(*self.agent_pos) is not None and \
+                        self.grid.get(*self.agent_pos).type == Lava().type:
+                    # if the agent walks on lava reset it to initial position and direction
+                    self.agent_pos = self.agent_start_pos
+                    self.agent_dir = self.agent_start_dir
                 if self.goal_pos in reachable_pos:
                     # reset the agent to its starting position
                     self.agent_pos = self.agent_start_pos
