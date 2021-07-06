@@ -138,10 +138,13 @@ class DynamicMiniGrid(MiniGridEnv):
 
                 reachable_pos.append(tuple(self.agent_pos))
                 if self.goal_pos in reachable_pos:
+                    # reset the agent to its starting position
+                    self.agent_pos = self.agent_start_pos
+                    self.agent_dir = self.agent_start_dir
                     return True
-
+            # reset the agent to its starting position
+            self.agent_pos = self.agent_start_pos
+            self.agent_dir = self.agent_start_dir
             return False
 
         return is_solvable()
-
-# Tests: 1000x alter -
