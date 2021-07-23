@@ -9,7 +9,7 @@ class DynamicMiniGrid(MiniGridEnv):
     DynamicMiniGrid: Mini Grid Environment, that can dynamically change, by altering a single tile
     """
 
-    def __init__(self, size=8, agent_start_pos=(1, 1),agent_start_dir=0, agent_view_size=7):
+    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, agent_view_size=7):
 
         # Copied from EmptyEnv Todo: Make this class a child of EmptyEnv?
         self.agent_start_pos = agent_start_pos
@@ -49,35 +49,39 @@ class DynamicMiniGrid(MiniGridEnv):
             at the start and rejects such a solution.
         :return: boolean. True if the environment can be solved empirically within 10'000 steps.
         """
-    # Todo: add int for multiple repetition
 
         if np.sum(prob_array) != 1.0:
             raise ValueError('Probabilities do not sum to 1')
 
         if len(prob_array) != 4:
-            raise ValueError('Prob array must be of length 4: start, reward, wall, lava')
+            raise ValueError('Prob array must be of length 4: start, goal, wall, lava')
 
         def alter_start_pos():
 
-            def goal_in_view(pos, new_pos):
+            def goal_in_view(pos, new_pos, dir, new_dir):
                 self.agent_pos = new_pos
+                self.agent_dir = new_dir
                 return_value = self.in_view(*self.goal_pos)
+                # reset the agent after check
                 self.agent_pos = pos
-
+                self.agent_dir = dir
                 return return_value
 
             pos = self.agent_start_pos
+            dir = self.agent_start_dir
             while pos == self.agent_start_pos:
                 new_pos = (self.np_random.randint(1, self.height - 1), # 1, -1 to avoid boarders
                            self.np_random.randint(1, self.width - 1))
+                new_dir = self.np_random.randint(0, 4)  # 4 possible directions
                 if self.grid.get(*new_pos) is not None or new_pos == pos: # check field is empty and agent is not there
                     continue
-                if visibility_check and goal_in_view(pos, new_pos):
+                if visibility_check and goal_in_view(pos, new_pos, dir, new_dir):
                     continue
-
+                # set the new pos & dir if accepted
                 self.agent_start_pos = new_pos
                 self.agent_pos = new_pos
-                # self.agent_start_dir = ? todo
+                self.agent_start_dir = new_dir
+                self.agent_dir = new_dir
 
         def alter_goal_pos():
             goal_pos = self.goal_pos
@@ -130,7 +134,7 @@ class DynamicMiniGrid(MiniGridEnv):
                 warnings.warn(f"Solvability takes {max_steps} with a random agent, "
                               f"thus might wrong in large grids ", UserWarning)
 
-            reachable_pos = [self.agent_start_pos]  # todo change this to a set
+            reachable_pos = [self.agent_start_pos]
             for _ in range(max_steps):
                 # take a (random) step
                 action = self.np_random.randint(low=0, high=3)  # 0 turn left, 1 turn right, 2 move
