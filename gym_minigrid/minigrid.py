@@ -7,6 +7,9 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 from .rendering import *
 
+# punishment when agent touches new type of object SAND
+SAND_PUNISHMENT = -0.1
+
 # Size in pixels of a tile in the full-scale human view
 TILE_PIXELS = 32
 
@@ -782,6 +785,7 @@ class MiniGridEnv(gym.Env):
             'box'           : 'B',
             'goal'          : 'G',
             'lava'          : 'V',
+            'sand'          : 'S',
         }
 
         # Short string for opened door
@@ -835,6 +839,13 @@ class MiniGridEnv(gym.Env):
         """
 
         return 1 - 0.9 * (self.step_count / self.max_steps)
+
+    def _sand_punishment(self):
+        """
+        Reward (resp. punishment) received when touching new type of object SAND
+        """
+        return SAND_PUNISHMENT
+
 
     def _rand_int(self, low, high):
         """
@@ -1140,6 +1151,8 @@ class MiniGridEnv(gym.Env):
                 reward = self._reward()
             if fwd_cell != None and fwd_cell.type == 'lava':
                 done = True
+            if fwd_cell != None and fwd_cell.type == 'sand':
+                reward = self._sand_punishment()
 
         # Pick up an object
         elif action == self.actions.pickup:
