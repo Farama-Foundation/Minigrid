@@ -9,13 +9,13 @@ class DynamicMiniGrid(MiniGridEnv):
     DynamicMiniGrid: Mini Grid Environment, that can dynamically change, by altering a single tile
     """
 
-    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, agent_view_size=7):
+    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, agent_view_size=7, seed=1337):
 
         # Copied from EmptyEnv Todo: Make this class a child of EmptyEnv?
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
         super().__init__( grid_size=size, max_steps=4 * size * size,
-                          see_through_walls=False, agent_view_size=agent_view_size)
+                          see_through_walls=False, agent_view_size=agent_view_size, seed=seed)
 
     def _gen_grid(self, width, height):
         # Create an empty grid
