@@ -245,7 +245,7 @@ class Door(WorldObj):
             state = 2
         elif not self.is_open:
             state = 1
-
+        print(str(self))
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
     def render(self, img):
