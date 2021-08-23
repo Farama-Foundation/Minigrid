@@ -4,7 +4,7 @@ import time
 from gym_minigrid.envs.dynamic_minigrid import DynamicMiniGrid
 
 dyn_grid=DynamicMiniGrid()
-prob_array = np.array([0.2, 0.2, 0.3, 0.3])
+prob_array = np.array([0.2, 0.2, 0.15, 0.15, 0.3])
 n_alterations = 100
 sleep_time = 0.5
 

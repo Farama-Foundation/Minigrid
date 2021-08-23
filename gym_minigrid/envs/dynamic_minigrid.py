@@ -1,7 +1,7 @@
 import numpy as np
 import warnings
 
-from gym_minigrid.minigrid import MiniGridEnv, Grid, Goal, Lava, Wall
+from gym_minigrid.minigrid import MiniGridEnv, Grid, Goal, Lava, Sand, Wall
 
 
 class DynamicMiniGrid(MiniGridEnv):
@@ -53,8 +53,8 @@ class DynamicMiniGrid(MiniGridEnv):
         if np.sum(prob_array) != 1.0:
             raise ValueError('Probabilities do not sum to 1')
 
-        if len(prob_array) != 4:
-            raise ValueError('Prob array must be of length 4: start, goal, wall, lava')
+        if len(prob_array) != 5:
+            raise ValueError('Prob array must be of length 4: start, goal, wall, sand, lava')
 
         def alter_start_pos():
 
@@ -122,7 +122,8 @@ class DynamicMiniGrid(MiniGridEnv):
 
         elif random_float < np.sum(prob_array[0:3]):
             set_or_remove_obj(Wall())
-
+        elif random_float < np.sum(prob_array[0:4]):
+            set_or_remove_obj(Sand())
         else:
             set_or_remove_obj(Lava())
 
