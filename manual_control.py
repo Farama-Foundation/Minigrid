@@ -9,6 +9,7 @@ from gym_minigrid.wrappers import *
 from gym_minigrid.window import Window
 
 def redraw(img):
+    print("!", type(img))
     if not args.agent_view:
         img = env.render('rgb_array', tile_size=args.tile_size)
 
@@ -19,6 +20,7 @@ def reset():
         env.seed(args.seed)
 
     obs = env.reset()
+    print("?", type(obs))
 
     if hasattr(env, 'mission'):
         print('Mission: %s' % env.mission)
@@ -28,7 +30,11 @@ def reset():
 
 def step(action):
     obs, reward, done, info = env.step(action)
-    print('step=%s, reward=%.2f' % (env.step_count, reward))
+    print("???",type(obs))
+    # print(obs["image"][:,:,0])
+    # print(obs["image"][:,:,1])
+    # print(obs["image"][:,:,2])
+    # print('step=%s, reward=%.2f' % (env.step_count, reward))
 
     if done:
         print('done!')
@@ -61,10 +67,10 @@ def key_handler(event):
     if event.key == ' ':
         step(env.actions.toggle)
         return
-    if event.key == 'pageup':
+    if event.key == 'p':
         step(env.actions.pickup)
         return
-    if event.key == 'pagedown':
+    if event.key == 'd':
         step(env.actions.drop)
         return
 
@@ -100,6 +106,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 env = gym.make(args.env)
+env = FullyObsWrapper(env)
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
