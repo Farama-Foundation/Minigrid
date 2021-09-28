@@ -29,6 +29,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 ```
 
 List of publications & submissions using MiniGrid or BabyAI (please open a pull request to add missing entries):
+- [MiniHack the Planet: A Sandbox for Open-Ended Reinforcement Learning Research](https://arxiv.org/abs/2109.13202) (FAIR, UCL, Oxford, NeurIPS 2021)
 - [A Consciousness-Inspired Planning Agent for Model-Based Reinforcement Learning](https://arxiv.org/abs/2106.02097) (Mila, McGill University, 2021)
 - [SPOTTER: Extending Symbolic Planning Operators through Targeted Reinforcement Learning](http://www.ifaamas.org/Proceedings/aamas2021/pdfs/p1118.pdf) (Tufts University, SIFT, AAMAS 2021)
 - [Grid-to-Graph: Flexible Spatial Relational Inductive Biases for Reinforcement Learning](https://arxiv.org/abs/2102.04220) (UCL, AAMAS 2021)
