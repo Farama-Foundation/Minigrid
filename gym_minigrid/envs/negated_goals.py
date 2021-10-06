@@ -19,8 +19,8 @@ class EmptyEnv(MiniGridEnv):
         self.agent_start_dir = agent_start_dir
         self.num_distractors = num_distractors
 
-        self.types = ('key', 'ball', 'box')
-        self.colors = ('red', 'green', 'blue', 'purple', 'yellow', 'grey')
+        self.types = types
+        self.colors = colors
 
         self.type_dict = {
             'key': Key,
@@ -37,6 +37,8 @@ class EmptyEnv(MiniGridEnv):
             "The object that is <not><desc> is the goal",
         ]
 
+        self.vocabulary = None
+
         super().__init__(
             grid_size=size,
             max_steps=4*size*size,
@@ -46,6 +48,17 @@ class EmptyEnv(MiniGridEnv):
 
     def get_oracle_goal(self):
         return self.target_cell
+
+    def get_vocabulary(self):
+        if self.vocabulary:
+            return self.vocabulary
+        self.vocabulary = set()
+        for template in self.base_templates:
+            template = template.replace("<not><desc>", "")
+            for word in template.split(" "):
+                if word:
+                    self.vocabulary.add(word)
+        return self.vocabulary
 
     def direct_mission(self):
         # 1. Choose a target type and color
