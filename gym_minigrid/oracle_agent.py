@@ -41,7 +41,7 @@ class OracleAgent:
 
     def step(self, action):
         obs, reward, done, info = self.env.step(action)
-        if done:
+        if done and self.visualize:
             print(f'step={self.env.step_count}, reward={reward:.2f}, done={done}')
 
         if self.visualize:
@@ -53,9 +53,10 @@ class OracleAgent:
         initial_states = [(*self.env.agent_pos, *self.env.dir_vec)]
         accept_fn = lambda i, j: [i, j] == list(goal)
         path, finish, previous_pos = self.breadth_first_search(self.env.grid, initial_states, accept_fn)
+        if path is None:
+            return None
         for cell in path:
             cell = np.array(cell)
-            print("curr_pos", self.env.agent_pos, cell)
             while not (self.env.agent_pos == cell).all():
                 yield self.next_action(cell, next_cell_is_goal= (cell == goal).all() )
 
@@ -153,6 +154,8 @@ class OracleAgent:
                 self.window.show(block=False)
 
             for action in self.get_sequence(target):
+                if action is None:
+                    break
                 actions.append(action)
                 obs, reward, done, info = self.step(action)
                 obss.append(obs)
@@ -161,6 +164,9 @@ class OracleAgent:
                     time.sleep(0.5)
                 if done:
                     break
+
+            if action is None:
+                continue
 
             actions.append(self.env.actions.done)
 
