@@ -48,11 +48,12 @@ def train(hyperparameters):
     env.close()
 
 
-hyperparameters = {
-    'env_name': 'MiniGrid-Empty-8x8-v0',
-    'discount_rate': 0.9,
-    'learning_rate': 0.1,
-    'epsilon': 0.3
-}
+if __name__ == '__main__':
+    hyperparameters = {
+        'env_name': 'MiniGrid-Empty-8x8-v0',
+        'discount_rate': 0.9,
+        'learning_rate': 0.1,
+        'epsilon': 0.3
+    }
 
-train(hyperparameters)
+    train(hyperparameters)
