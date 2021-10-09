@@ -1,4 +1,4 @@
-from project_RL.sarsa.sarsa_lambda_agent import SarsaLambdaAgent
+from project_RL.sarsa.sarsa_lambda_agent import SarsaLambda
 from gym_minigrid.wrappers import *
 
 
@@ -13,10 +13,10 @@ def train(hyperparameters):
             - epsilon
     """
     env = gym.make(hyperparameters['env_name'])
-    agent = SarsaLambdaAgent(env, hyperparameters['discount_rate'],
-                             hyperparameters['learning_rate'], hyperparameters['epsilon'])
+    agent = SarsaLambda(env, hyperparameters['discount_rate'],
+                        hyperparameters['learning_rate'], hyperparameters['epsilon'])
 
-    # initialize variables for plotting purpose
+    # initialise variables for plotting purpose
     step = 0
     total_reward = 0.0
 
@@ -35,7 +35,7 @@ def train(hyperparameters):
             total_reward += reward
             next_action = agent.get_new_action_e_greedly(next_state)
 
-            agent.train(state, action, reward, next_state, next_action, done)
+            agent.update(state, action, reward, next_state, next_action, done)
 
             state = next_state
             action = next_action
