@@ -18,11 +18,11 @@ def train(env, hyperparameters):
 
     # initialise variables for plotting purpose
     step = 0
-    total_reward = 0.0
-    prev_total_reward = 0.0
 
     for episode in range(int(1e4)):
         # reset environment before each episode
+        total_reward = 0.0
+
         agent.init_eligibility_table()
         observation = env.reset()
         state = observation  # TODO: change it after decision regarding state
@@ -46,10 +46,9 @@ def train(env, hyperparameters):
             # print("a:", action, "i:", step, "reward:", reward, "info:", info)
             if done:
                 # env.render()
-                if total_reward > prev_total_reward:
+                if total_reward > 0.0:
                     print("done?", done, "total reward:", total_reward, "info:", info)
                     play(env, agent)
-                    prev_total_reward = total_reward
             step += 1
     env.close()
     return agent
@@ -76,9 +75,14 @@ def play(env, agent, episodes=1):
 
 if __name__ == '__main__':
     hyperparameters = {
-        'env_name': 'MiniGrid-Empty-8x8-v0',
+        # 'env_name': 'MiniGrid-Empty-8x8-v0',
+        # 'env_name': 'MiniGrid-FourRooms-v0',
+        # 'env_name': 'MiniGrid-Empty-Random-6x6-v0',
+        # 'env_name': 'MiniGrid-Empty-16x16-v0',
+        # 'env_name': 'MiniGrid-DistShift1-v0',
+        'env_name': 'MiniGrid-LavaGapS5-v0',
         'discount_rate': 0.9,
-        'learning_rate': 0.1,
+        'learning_rate': 0.01,
         'epsilon': 0.3
     }
 
