@@ -47,6 +47,55 @@ OBJECT_TO_IDX = {
     'goal'          : 8,
     'lava'          : 9,
     'agent'         : 10,
+    'milk'          : 11,
+    'carrots'       : 12,
+    'steak'         : 13,
+    'yerba_mate'    : 14,
+    'dumplings'     : 15
+}
+
+# Map storing groceries & colors to weights
+GROC_COLOR_TO_WEIGHT = {
+    "milk": {
+        "red": 0.25,
+        "green": 0.5,
+        "blue": 0.75,
+        "purple": 1.0,
+        "yellow": 1.25,
+        "grey": 1.5
+    },
+    "carrots": {
+        "red": 0.5,
+        "green": 0.75,
+        "blue": 1.0,
+        "purple": 1.25,
+        "yellow": 1.5,
+        "grey": 0.25
+    },
+    "steak": {
+        "red": 0.75,
+        "green": 1.0,
+        "blue": 1.25,
+        "purple": 1.5,
+        "yellow": 1.75,
+        "grey": 2.0
+    },
+    "yerba_mate": {
+        "red": 1.5,
+        "green": 1.75,
+        "blue": 2,
+        "purple": 0.5,
+        "yellow": 0.75,
+        "grey": 1.25
+    },
+    "dumplings": {
+        "red": 2.0,
+        "green": 2.25,
+        "blue": 0.25,
+        "purple": 0.5,
+        "yellow": 0.75,
+        "grey": 1.0
+    }
 }
 
 IDX_TO_OBJECT = dict(zip(OBJECT_TO_IDX.values(), OBJECT_TO_IDX.keys()))
@@ -96,6 +145,10 @@ class WorldObj:
         """Can the agent pick this up?"""
         return False
 
+    def can_weigh(self):
+        """Can the agent weigh the item"""
+        return False
+
     def can_contain(self):
         """Can this contain another object?"""
         return False
@@ -142,6 +195,16 @@ class WorldObj:
             v = Goal()
         elif obj_type == 'lava':
             v = Lava()
+        elif obj_type == 'milk':
+            v = Milk(color)
+        elif obj_type == 'carrots':
+            v = Carrots(color)
+        elif obj_type == 'steak':
+            v = Steak(color)
+        elif obj_type == 'yerba_mate':
+            v = YerbaMate(color)
+        elif obj_type == 'dumplings':
+            v = Dumplings(color)
         else:
             assert False, "unknown object type in decode '%s'" % obj_type
 
@@ -302,6 +365,42 @@ class Ball(WorldObj):
 
     def render(self, img):
         fill_coords(img, point_in_circle(0.5, 0.5, 0.31), COLORS[self.color])
+
+class Grocery(WorldObj):
+    def __init__(self, grocery_type: str, color: str):
+        super(Grocery, self).__init__(grocery_type, color)
+
+    def can_weigh(self):
+        return True
+
+    def can_pickup(self):
+        return True
+
+    def get_weight(self):
+        return GROC_COLOR_TO_WEIGHT[self.type][self.color]
+
+    def render(self, img):
+        fill_coords(img, point_in_circle(0.5, 0.5, 0.31), COLORS[self.color])
+
+class Milk(Grocery):
+    def __init__(self, color='grey'):
+        super(Milk, self).__init__('milk', color)
+
+class Carrots(Grocery):
+    def __init__(self, color='yellow'):
+        super(Carrots, self).__init__('carrots', color)
+
+class Steak(Grocery):
+    def __init__(self, color='red'):
+        super(Steak, self).__init__('steak', color)
+
+class YerbaMate(Grocery):
+    def __init__(self, color='yellow'):
+        super(YerbaMate, self).__init__('yerba_mate', color)
+
+class Dumplings(Grocery):
+    def __init__(self, color='purple'):
+        super(Dumplings, self).__init__('dumplings', color)
 
 class Box(WorldObj):
     def __init__(self, color, contains=None):
@@ -642,6 +741,9 @@ class MiniGridEnv(gym.Env):
         # Done completing task
         done = 6
 
+        # Weigh grocery
+        weigh = 7
+
     def __init__(
         self,
         grid_size=None,
@@ -769,6 +871,11 @@ class MiniGridEnv(gym.Env):
             'box'           : 'B',
             'goal'          : 'G',
             'lava'          : 'V',
+            'milk'          : 'M',
+            'carrots'       : 'C',
+            'steak'         : 'S',
+            'yerba_mate'    : 'Y',
+            'dumplings'     : 'D'
         }
 
         # Short string for opened door
@@ -1108,6 +1215,9 @@ class MiniGridEnv(gym.Env):
         # Get the contents of the cell in front of the agent
         fwd_cell = self.grid.get(*fwd_pos)
 
+        # Save current weight to add to obs
+        cur_weight = 0
+
         # Rotate left
         if action == self.actions.left:
             self.agent_dir -= 1
@@ -1148,6 +1258,12 @@ class MiniGridEnv(gym.Env):
             if fwd_cell:
                 fwd_cell.toggle(self, fwd_pos)
 
+        # Weigh an object
+        elif action == self.actions.weigh:
+            if fwd_cell and fwd_cell.can_weigh():
+                if self.carrying is None:
+                    cur_weight = fwd_cell.get_weight()
+
         # Done action (not used by default)
         elif action == self.actions.done:
             pass
@@ -1160,7 +1276,7 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
-        return obs, reward, done, {}
+        return {**obs, "weight": cur_weight}, reward, done, {}
 
     def gen_obs_grid(self):
         """
