@@ -1,10 +1,12 @@
 """Breaks an image into consituant tiles."""
+from __future__ import annotations
 
-import imageio
+import imageio  # type: ignore
+from tests.conftest import Resources
 from wfc import wfc_tiles
 
 
-def test_image_to_tiles(resources):
+def test_image_to_tile(resources: Resources) -> None:
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     tiles = wfc_tiles.image_to_tiles(img, 1)
@@ -12,7 +14,7 @@ def test_image_to_tiles(resources):
     assert tiles[2][2][0][0][1] == 0
 
 
-def test_make_tile_catalog(resources):
+def test_make_tile_catalog(resources: Resources) -> None:
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     print(img)

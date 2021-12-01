@@ -1,13 +1,19 @@
 """Convert input data to adjacency information"""
-import numpy as np
+from __future__ import annotations
 
+from typing import Dict, List, Tuple
+import numpy as np
+from numpy.typing import NDArray
 
 def adjacency_extraction(
-    pattern_grid, pattern_catalog, direction_offsets, pattern_size=[2, 2]
-):
+    pattern_grid: NDArray[np.int64],
+    pattern_catalog: Dict[int, NDArray[np.int64]],
+    direction_offsets: List[Tuple[int, Tuple[int, int]]],
+    pattern_size: Tuple[int, int] = (2, 2),
+) -> List[Tuple[Tuple[int, int], int, int]]:
     """Takes a pattern grid and returns a list of all of the legal adjacencies found in it."""
 
-    def is_valid_overlap_xy(adjacency_direction, pattern_1, pattern_2):
+    def is_valid_overlap_xy(adjacency_direction: Tuple[int, int], pattern_1: int, pattern_2: int) -> bool:
         """Given a direction and two patterns, find the overlap of the two patterns 
         and return True if the intersection matches."""
         dimensions = (1, 0)

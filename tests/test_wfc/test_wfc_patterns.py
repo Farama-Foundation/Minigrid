@@ -1,10 +1,13 @@
-import imageio
+from __future__ import annotations
+
+import imageio  # type: ignore
 import numpy as np
+from tests.conftest import Resources
 from wfc import wfc_patterns
 from wfc import wfc_tiles
 
 
-def test_unique_patterns_2d(resources):
+def test_unique_patterns_2d(resources: Resources) -> None:
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     tile_size = 1
@@ -18,7 +21,7 @@ def test_unique_patterns_2d(resources):
     assert pattern_contents_list[7][1][1] == 8253868773529191888
 
 
-def test_make_pattern_catalog(resources):
+def test_make_pattern_catalog(resources: Resources) -> None:
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     tile_size = 1
@@ -33,7 +36,7 @@ def test_make_pattern_catalog(resources):
     assert pattern_catalog[5177878755649963747][0][1] == -8754995591521426669
 
 
-def test_pattern_to_tile(resources):
+def test_pattern_to_tile(resources: Resources) -> None:
     filename = resources.get_image("samples/Red Maze.png")
     img = imageio.imread(filename)
     tile_size = 1
