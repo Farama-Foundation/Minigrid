@@ -132,14 +132,14 @@ def spiral_coords(x: int, y: int) -> Iterator[Tuple[int, int]]:
         y += transform[1]
         yield x, y
 
-def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Tuple[int, int]]) -> NDArray[np.floating[T]]:
+def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[int]]) -> NDArray[np.floating[T]]:
     arr_len = numpy.prod(arr.shape)
     fill = 0
-    for _, coord in enumerate(curve_gen):
+    for coord in curve_gen:
         # print(fill, idx, coord)
         if fill < arr_len:
             try:
-                arr[coord[0], coord[1]] = fill / arr_len
+                arr[tuple(coord)] = fill / arr_len
                 fill += 1
             except IndexError:
                 pass
@@ -172,18 +172,8 @@ def makeHilbertLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Call
     print(curve_size)
     curve_size = 4
     h_curve = HilbertCurve(curve_size, 2)
-
-    def h_coords() -> Iterator[Tuple[int, int]]:
-        for i in range(100000):
-            # print(i)
-            try:
-                coords = h_curve.coordinates_from_distance(i)
-            except ValueError:
-                coords = (0, 0)
-            # print(coords)
-            yield coords
-
-    cell_order = fill_with_curve(preferences, h_coords())
+    h_coords = (h_curve.point_from_distance(i) for i in itertools.count())
+    cell_order = fill_with_curve(preferences, h_coords)
     # print(cell_order)
 
     def hilbertLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
