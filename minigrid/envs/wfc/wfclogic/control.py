@@ -396,7 +396,7 @@ def execute_wfc(
                 render_tiles_to_output(
                     solution_tile_grid,
                     tile_catalog,
-                    [tile_size, tile_size],
+                    (tile_size, tile_size),
                     output_destination + filename + "_" + timecode + ".png",
                 )
 

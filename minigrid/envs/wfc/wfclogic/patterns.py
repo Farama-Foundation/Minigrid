@@ -169,7 +169,9 @@ def make_pattern_catalog_with_rotations(
     )
 
 
-def pattern_grid_to_tiles(pattern_grid: NDArray[np.int64], pattern_catalog: Mapping[int, NDArray[np.int64]]):
+def pattern_grid_to_tiles(
+    pattern_grid: NDArray[np.int64], pattern_catalog: Mapping[int, NDArray[np.int64]]
+) -> NDArray[np.int64]:
     anchor_x = 0
     anchor_y = 0
 
