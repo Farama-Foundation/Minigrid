@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from typing import Any, Callable, Dict, List, Literal, Optional, Set, Tuple
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import (
@@ -94,8 +95,8 @@ def execute_wfc(
     global_constraints: None = None,
     log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
 ):
-    timecode = f"{time.time()}"
-    time_begin = time.time()
+    timecode = datetime.datetime.now().isoformat().replace(":", ".")
+    time_begin = time.perf_counter()
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
 
@@ -201,7 +202,7 @@ def execute_wfc(
 
     print(f"adjacency: {len(adjacency_list)}")
 
-    time_adjacency = time.time()
+    time_adjacency = time.perf_counter()
 
     ### Ground ###
 
@@ -361,7 +362,7 @@ def execute_wfc(
     while attempts < attempt_limit:
         attempts += 1
         end_early = False
-        time_solve_start = time.time()
+        time_solve_start = time.perf_counter()
         stats = {}
         # profiler = pprofile.Profile()
         if True:
@@ -400,7 +401,7 @@ def execute_wfc(
                     output_destination + filename + "_" + timecode + ".png",
                 )
 
-                time_solve_end = time.time()
+                time_solve_end = time.perf_counter()
                 stats.update({"outcome": "success"})
             except StopEarly:
                 print("Skipping...")
@@ -420,7 +421,7 @@ def execute_wfc(
 
         outstats = {}
         outstats.update(input_stats)
-        solve_duration = time.time() - time_solve_start
+        solve_duration = time.perf_counter() - time_solve_start
         if time_solve_end is not None:
             solve_duration = time_solve_end - time_solve_start
         adjacency_duration = time_solve_start - time_adjacency
