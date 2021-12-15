@@ -154,9 +154,8 @@ class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
 
 class RGBImgObsWrapper(gym.core.ObservationWrapper):
     """
-    Wrapper to use fully observable RGB image as the only observation output,
-    no language/mission. This can be used to have the agent to solve the
-    gridworld in pixel space.
+    Wrapper to use fully observable RGB image as observation,
+    This can be used to have the agent to solve the gridworld in pixel space.
     """
 
     def __init__(self, env, tile_size=8):
@@ -188,7 +187,7 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
 
 class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
     """
-    Wrapper to use partially observable RGB image as the only observation output
+    Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
     """
 

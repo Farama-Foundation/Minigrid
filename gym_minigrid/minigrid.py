@@ -742,7 +742,7 @@ class MiniGridEnv(gym.Env):
         """
         sample_hash = hashlib.sha256()
 
-        to_encode = [self.grid.encode(), self.agent_pos, self.agent_dir]
+        to_encode = [self.grid.encode().tolist(), self.agent_pos, self.agent_dir]
         for item in to_encode:
             sample_hash.update(str(item).encode('utf8'))
 
