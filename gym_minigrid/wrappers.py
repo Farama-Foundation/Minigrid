@@ -378,6 +378,6 @@ class SymbolicObsWrapper(gym.core.ObservationWrapper):
         w, h = self.width, self.height
         grid = np.mgrid[:w, :h]
         grid = np.concatenate([grid, objects.reshape(1, w, h)])
-        grid = np.transpose(grid, 0, -1)
+        grid = np.transpose(grid, (1, 2, 0))
         obs['image'] = grid
         return obs
