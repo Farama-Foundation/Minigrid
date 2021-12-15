@@ -357,9 +357,8 @@ class DirectionObsWrapper(gym.core.ObservationWrapper):
 class SymbolicObsWrapper(gym.core.ObservationWrapper):
     """
     Fully observable grid with a symbolic state representation.
-    The symbol is a triple of (X, Y, IDX), where
-    X and Y are the positions on the grid, and IDX is
-    the id of the object in the cell.
+    The symbol is a triple of (X, Y, IDX), where X and Y are
+    the coordinates on the grid, and IDX is the id of the object.
     """
 
     def __init__(self, env):
@@ -380,4 +379,5 @@ class SymbolicObsWrapper(gym.core.ObservationWrapper):
         )
         grid = np.concatenate([grid, objects.reshape(1, w, h)])
         grid = np.move_axis(grid, 0, -1)
-        return {"mission": obs["mission"], "image": grid}
+        obs['image'] = grid
+        return obs
