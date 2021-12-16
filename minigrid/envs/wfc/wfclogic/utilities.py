@@ -1,28 +1,31 @@
 """Utility data and functions for WFC"""
+from __future__ import annotations
 
 import collections
+from typing import Any
 import numpy as np
+from numpy.typing import NDArray
 
 
-CoordXY = collections.namedtuple("coords_xy", ["x", "y"])
-CoordRC = collections.namedtuple("coords_rc", ["row", "column"])
+CoordXY = collections.namedtuple("CoordXY", ["x", "y"])
+CoordRC = collections.namedtuple("CoordRC", ["row", "column"])
 
 
-def hash_downto(a, rank, seed=0):
+def hash_downto(a: NDArray[Any], rank: int, seed: Any=0) -> NDArray[np.int64]:
     state = np.random.RandomState(seed)
     assert rank < len(a.shape)
     # print((np.prod(a.shape[:rank]),-1))
     # print(np.array([np.prod(a.shape[:rank]),-1], dtype=np.int64).dtype)
-    u = a.reshape(
+    u: NDArray[np.int64] = a.reshape(
         np.array([np.prod(a.shape[:rank]), -1], dtype=np.int64)
     )  # change because lists are by default float64?
     # u = a.reshape((np.prod(a.shape[:rank]),-1))
-    v = state.randint(1 - (1 << 63), 1 << 63, np.prod(a.shape[rank:]), dtype="int64")
-    return np.inner(u, v).reshape(a.shape[:rank]).astype("int64")
+    v = state.randint(1 - (1 << 63), 1 << 63, np.prod(a.shape[rank:]), dtype=np.int64)
+    return np.asarray(np.inner(u, v).reshape(a.shape[:rank]), dtype=np.int64)
 
 
 try:
-    import google.colab
+    import google.colab  # type: ignore
 
     IN_COLAB = True
 except:
@@ -31,7 +34,7 @@ except:
 
 def load_visualizer(wfc_ns):
     if IN_COLAB:
-        from google.colab import files
+        from google.colab import files  # type: ignore
 
         uploaded = files.upload()
         for fn in uploaded.keys():
@@ -41,12 +44,9 @@ def load_visualizer(wfc_ns):
                 )
             )
     else:
-        import matplotlib
-        import matplotlib.pylab
-        from matplotlib.pyplot import figure
-        from matplotlib.pyplot import subplot
-        from matplotlib.pyplot import title
-        from matplotlib.pyplot import matshow
+        import matplotlib  # type: ignore
+        import matplotlib.pylab  # type: ignore
+        from matplotlib.pyplot import figure, subplot, title, matshow  # type: ignore
 
     wfc_ns.img_filename = f"images/{wfc_ns.img_filename}"
     return wfc_ns

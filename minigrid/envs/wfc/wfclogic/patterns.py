@@ -1,10 +1,14 @@
 "Extract patterns from grids of tiles."
+from __future__ import annotations
+
+from typing import Any, Dict, Mapping, Optional, Tuple
 from .wfc_utilities import hash_downto
 from collections import Counter
 import numpy as np
+from numpy.typing import NDArray
 
 
-def unique_patterns_2d(agrid, ksize, periodic_input):
+def unique_patterns_2d(agrid: NDArray[np.int64], ksize: int, periodic_input: bool) -> Tuple[NDArray[np.int64], NDArray[np.int64], NDArray[np.int64]]:
     assert ksize >= 1
     if periodic_input:
         agrid = np.pad(
@@ -21,7 +25,7 @@ def unique_patterns_2d(agrid, ksize, periodic_input):
             mode="wrap",
         )
 
-    patches = np.lib.stride_tricks.as_strided(
+    patches: NDArray[np.int64] = np.lib.stride_tricks.as_strided(
         agrid,
         (
             agrid.shape[0] - ksize + 1,
@@ -36,8 +40,8 @@ def unique_patterns_2d(agrid, ksize, periodic_input):
     patch_codes = hash_downto(patches, 2)
     uc, ui = np.unique(patch_codes, return_index=True)
     locs = np.unravel_index(ui, patch_codes.shape)
-    up = patches[locs[0], locs[1]]
-    ids = np.vectorize({code: ind for ind, code in enumerate(uc)}.get)(patch_codes)
+    up: NDArray[np.int64] = patches[locs[0], locs[1]]
+    ids: NDArray[np.int64] = np.vectorize({code: ind for ind, code in enumerate(uc)}.get)(patch_codes)
     return ids, up, patch_codes
 
 
@@ -64,13 +68,15 @@ def unique_patterns_brute_force(grid, size, periodic_input):
     return ids, up
 
 
-def make_pattern_catalog(tile_grid, pattern_width, input_is_periodic=True):
+def make_pattern_catalog(
+    tile_grid: NDArray[np.int64], pattern_width: int, input_is_periodic: bool = True
+) -> Tuple[Dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
     """Returns a pattern catalog (dictionary of pattern hashes to consituent tiles), 
 an ordered list of pattern weights, and an ordered list of pattern contents."""
     _patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(
         tile_grid, pattern_width, input_is_periodic
     )
-    dict_of_pattern_contents = {}
+    dict_of_pattern_contents: Dict[int, NDArray[np.int64]] = {}
     for pat_idx in range(pattern_contents_list.shape[0]):
         p_hash = hash_downto(pattern_contents_list[pat_idx], 0)
         dict_of_pattern_contents.update(
@@ -102,15 +108,15 @@ def rotate_grid(grid):
 
 
 def make_pattern_catalog_with_rotations(
-    tile_grid, pattern_width, rotations=7, input_is_periodic=True
-):
+    tile_grid: NDArray[np.int64], pattern_width: int, rotations: int = 7, input_is_periodic: bool = True
+) -> Tuple[Dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
     rotated_tile_grid = tile_grid.copy()
-    merged_dict_of_pattern_contents = {}
-    merged_pattern_frequency = Counter()
-    merged_pattern_contents_list = None
-    merged_patch_codes = None
+    merged_dict_of_pattern_contents: Dict[int, NDArray[np.int64]] = {}
+    merged_pattern_frequency: Counter = Counter()
+    merged_pattern_contents_list: Optional[NDArray[np.int64]] = None
+    merged_patch_codes: Optional[NDArray[np.int64]]  = None
 
-    def _make_catalog():
+    def _make_catalog() -> None:
         nonlocal rotated_tile_grid, merged_dict_of_pattern_contents, merged_pattern_contents_list, merged_pattern_frequency, merged_patch_codes
         (
             dict_of_pattern_contents,
@@ -153,6 +159,8 @@ def make_pattern_catalog_with_rotations(
         counter += 1
 
     # assert False
+    assert merged_pattern_contents_list is not None
+    assert merged_patch_codes is not None
     return (
         merged_dict_of_pattern_contents,
         merged_pattern_frequency,
@@ -161,11 +169,13 @@ def make_pattern_catalog_with_rotations(
     )
 
 
-def pattern_grid_to_tiles(pattern_grid, pattern_catalog):
+def pattern_grid_to_tiles(
+    pattern_grid: NDArray[np.int64], pattern_catalog: Mapping[int, NDArray[np.int64]]
+) -> NDArray[np.int64]:
     anchor_x = 0
     anchor_y = 0
 
-    def pattern_to_tile(pattern):
+    def pattern_to_tile(pattern: int) -> Any:
         # if isinstance(pattern, list):
         #     ptrns = []
         #     for p in pattern:

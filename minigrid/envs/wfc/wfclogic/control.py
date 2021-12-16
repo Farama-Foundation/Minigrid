@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import datetime
+from typing import Any, Callable, Dict, List, Literal, Optional, Set, Tuple
 from .wfc_tiles import make_tile_catalog
 from .wfc_patterns import (
     pattern_grid_to_tiles,
@@ -33,9 +37,10 @@ from .wfc_visualize import (
     make_solver_visualizers,
     make_solver_loggers,
 )
-import imageio
+import imageio  # type: ignore
 import numpy as np
 import time
+from numpy.typing import NDArray
 
 
 def visualize_tiles(unique_tiles, tile_catalog, tile_grid):
@@ -51,10 +56,10 @@ def visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_w
         )
 
 
-def make_log_stats():
+def make_log_stats() -> Callable[[Dict[str, Any], str], None]:
     log_line = 0
 
-    def log_stats(stats, filename):
+    def log_stats(stats: Dict[str, Any], filename: str) -> None:
         nonlocal log_line
         if stats:
             log_line += 1
@@ -71,27 +76,27 @@ def make_log_stats():
 
 
 def execute_wfc(
-    filename,
-    tile_size=0,
-    pattern_width=2,
-    rotations=8,
-    output_size=[48, 48],
-    ground=None,
-    attempt_limit=10,
-    output_periodic=True,
-    input_periodic=True,
-    loc_heuristic="lexical",
-    choice_heuristic="lexical",
-    visualize=True,
-    global_constraint=False,
-    backtracking=False,
-    log_filename="log",
-    logging=True,
-    global_constraints=None,
-    log_stats_to_output=None,
+    filename: str,
+    tile_size: int = 0,
+    pattern_width: int = 2,
+    rotations: int = 8,
+    output_size: Tuple[int, int] = (48, 48),
+    ground: Optional[int] = None,
+    attempt_limit: int = 10,
+    output_periodic: bool = True,
+    input_periodic: bool = True,
+    loc_heuristic: Literal["lexical", "hilbert", "spiral", "entropy", "anti-entropy", "simple", "random"] = "lexical",
+    choice_heuristic: Literal["lexical", "rarest", "weighted", "random"] = "lexical",
+    visualize: bool = True,
+    global_constraint: Literal[False, "allpatterns"] = False,
+    backtracking: bool = False,
+    log_filename: str = "log",
+    logging: bool = True,
+    global_constraints: None = None,
+    log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
 ):
-    timecode = f"{time.time()}"
-    time_begin = time.time()
+    timecode = datetime.datetime.now().isoformat().replace(":", ".")
+    time_begin = time.perf_counter()
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
 
@@ -114,7 +119,7 @@ def execute_wfc(
     }
 
     # Load the image
-    img = imageio.imread(input_folder + filename + ".png")
+    img: NDArray[np.uint8] = imageio.imread(input_folder + filename + ".png")
     img = img[:, :, :3]  # TODO: handle alpha channels
 
     # TODO: generalize this to more than the four cardinal directions
@@ -146,10 +151,8 @@ def execute_wfc(
         )
 
     print("profiling adjacency relations")
-    adjacency_relations = None
-
     if False:
-        import pprofile
+        import pprofile  # type: ignore
         profiler = pprofile.Profile()
         with profiler:
             adjacency_relations = adjacency_extraction(
@@ -164,7 +167,7 @@ def execute_wfc(
             pattern_grid,
             pattern_catalog,
             direction_offsets,
-            [pattern_width, pattern_width],
+            (pattern_width, pattern_width),
         )
 
     print("adjacency_relations")
@@ -188,30 +191,30 @@ def execute_wfc(
     encode_patterns = {x: i for i, x in enumerate(pattern_list)}
     _encode_directions = {j: i for i, j in direction_offsets}
 
-    adjacency_list = {}
-    for i, d in direction_offsets:
-        adjacency_list[d] = [set() for i in pattern_weights]
+    adjacency_list: Dict[Tuple[int, int], List[Set[int]]] = {}
+    for _, adjacency in direction_offsets:
+        adjacency_list[adjacency] = [set() for _ in pattern_weights]
     # print(adjacency_list)
-    for i in adjacency_relations:
-        # print(i)
-        # print(decode_patterns[i[1]])
-        adjacency_list[i[0]][encode_patterns[i[1]]].add(encode_patterns[i[2]])
+    for adjacency, pattern1, pattern2 in adjacency_relations:
+        # print(adjacency)
+        # print(decode_patterns[pattern1])
+        adjacency_list[adjacency][encode_patterns[pattern1]].add(encode_patterns[pattern2])
 
     print(f"adjacency: {len(adjacency_list)}")
 
-    time_adjacency = time.time()
+    time_adjacency = time.perf_counter()
 
     ### Ground ###
 
-    ground_list = []
-    if ground != 0:
+    ground_list: Optional[NDArray[np.int64]] = None
+    if ground:
         ground_list = np.vectorize(lambda x: encode_patterns[x])(
             pattern_grid.flat[(ground - 1) :]
         )
-    if len(ground_list) < 1:
+    if ground_list is None or ground_list.size == 0:
         ground_list = None
 
-    if not (ground_list is None):
+    if ground_list is not None:
         ground_catalog = {
             encode_patterns[k]: v
             for k, v in pattern_catalog.items()
@@ -233,12 +236,12 @@ def execute_wfc(
 
     ### Heuristics ###
 
-    encoded_weights = np.zeros((number_of_patterns), dtype=np.float64)
+    encoded_weights: NDArray[np.float64] = np.zeros((number_of_patterns), dtype=np.float64)
     for w_id, w_val in pattern_weights.items():
         encoded_weights[encode_patterns[w_id]] = w_val
-    choice_random_weighting = np.random.random(wave.shape[1:]) * 0.1
+    choice_random_weighting: NDArray[np.float64] = np.random.random_sample(wave.shape[1:]) * 0.1
 
-    pattern_heuristic = lexicalPatternHeuristic
+    pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int] = lexicalPatternHeuristic
     if choice_heuristic == "rarest":
         pattern_heuristic = makeRarestPatternHeuristic(encoded_weights)
     if choice_heuristic == "weighted":
@@ -247,7 +250,7 @@ def execute_wfc(
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights)
 
     print(loc_heuristic)
-    location_heuristic = lexicalLocationHeuristic
+    location_heuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]] = lexicalLocationHeuristic
     if loc_heuristic == "anti-entropy":
         location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "entropy":
@@ -307,7 +310,7 @@ def execute_wfc(
         )
         log = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
 
-        def visfunc(idx):
+        def visfunc(idx: int):
             def vf(*args, **kwargs):
                 if vis[idx]:
                     vis[idx](*args, **kwargs)
@@ -332,10 +335,10 @@ def execute_wfc(
     print(active_global_constraint)
 
     ### Search Depth Limit
-    def makeSearchLengthLimit(max_limit):
+    def makeSearchLengthLimit(max_limit: int) -> Callable[[NDArray[np.bool_]], bool]:
         search_length_counter = 0
 
-        def searchLengthLimit(wave):
+        def searchLengthLimit(wave: NDArray[np.bool_]) -> bool:
             nonlocal search_length_counter
             search_length_counter += 1
             return search_length_counter <= max_limit
@@ -344,9 +347,9 @@ def execute_wfc(
 
     combined_constraints = [active_global_constraint, makeSearchLengthLimit(1200)]
 
-    def combinedConstraints(wave):
+    def combinedConstraints(wave: NDArray[np.bool_]) -> bool:
         print
-        return all([fn(wave) for fn in combined_constraints])
+        return all(fn(wave) for fn in combined_constraints)
 
     ### Solving ###
 
@@ -359,7 +362,7 @@ def execute_wfc(
     while attempts < attempt_limit:
         attempts += 1
         end_early = False
-        time_solve_start = time.time()
+        time_solve_start = time.perf_counter()
         stats = {}
         # profiler = pprofile.Profile()
         if True:
@@ -394,11 +397,11 @@ def execute_wfc(
                 render_tiles_to_output(
                     solution_tile_grid,
                     tile_catalog,
-                    [tile_size, tile_size],
+                    (tile_size, tile_size),
                     output_destination + filename + "_" + timecode + ".png",
                 )
 
-                time_solve_end = time.time()
+                time_solve_end = time.perf_counter()
                 stats.update({"outcome": "success"})
             except StopEarly:
                 print("Skipping...")
@@ -418,16 +421,10 @@ def execute_wfc(
 
         outstats = {}
         outstats.update(input_stats)
-        solve_duration = time.time() - time_solve_start
-        try:
+        solve_duration = time.perf_counter() - time_solve_start
+        if time_solve_end is not None:
             solve_duration = time_solve_end - time_solve_start
-        except TypeError:
-            pass
-        adjacency_duration = 0
-        try:
-            adjacency_duration = time_solve_start - time_adjacency
-        except TypeError:
-            pass
+        adjacency_duration = time_solve_start - time_adjacency
         outstats.update(
             {
                 "attempts": attempts,
@@ -441,9 +438,9 @@ def execute_wfc(
             }
         )
         outstats.update(stats)
-        if not log_stats_to_output is None:
+        if log_stats_to_output is not None:
             log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
-        if not solution_tile_grid is None:
+        if solution_tile_grid is not None:
             return solution_tile_grid
         if end_early:
             return None

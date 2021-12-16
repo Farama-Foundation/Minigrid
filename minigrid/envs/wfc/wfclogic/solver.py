@@ -1,8 +1,17 @@
-from scipy import sparse
+from __future__ import annotations
+
+from typing import Any, Callable, Collection, Dict, Iterable, Iterator, Mapping, Optional, Tuple, TypeVar
+from scipy import sparse  # type: ignore
 import numpy
+import numpy as np
 import sys
 import math
 import itertools
+from numpy.typing import NBitBase, NDArray
+from hilbertcurve.hilbertcurve import HilbertCurve  # type: ignore
+
+
+T = TypeVar("T", bound=NBitBase)
 
 # By default Python has a very low recursion limit.
 # Might still be better to rewrite te recursion as a loop, of course
@@ -27,20 +36,22 @@ class StopEarly(Exception):
     pass
 
 
-def makeWave(n, w, h, ground=None):
-    wave = numpy.ones((n, w, h), dtype=bool)
+def makeWave(n: int, w: int, h: int, ground: Optional[Iterable[int]] = None) -> NDArray[numpy.bool_]:
+    wave: NDArray[numpy.bool_] = numpy.ones((n, w, h), dtype=numpy.bool_)
     if ground is not None:
-        wave[:, :, h - 1] = 0
+        wave[:, :, h - 1] = False
         for g in ground:
-            wave[g, :,] = 0
-            wave[g, :, h - 1] = 1
+            wave[g, :,] = False
+            wave[g, :, h - 1] = True
     # print(wave)
     # for i in range(wave.shape[0]):
     #  print(wave[i])
     return wave
 
 
-def makeAdj(adjLists):
+def makeAdj(
+    adjLists: Mapping[Tuple[int, int], Collection[Iterable[int]]]
+) -> Dict[Tuple[int, int], NDArray[numpy.bool_]]:
     adjMatrices = {}
     # print(adjLists)
     num_patterns = len(list(adjLists.values())[0])
@@ -58,18 +69,18 @@ def makeAdj(adjLists):
 # Location Heuristics
 
 
-def makeRandomLocationHeuristic(preferences):
-    def randomLocationHeuristic(wave):
+def makeRandomLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
+    def randomLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
         cell_weights = numpy.where(unresolved_cell_mask, preferences, numpy.inf)
         row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-        return [row, col]
+        return row.item(), col.item()
 
     return randomLocationHeuristic
 
 
-def makeEntropyLocationHeuristic(preferences):
-    def entropyLocationHeuristic(wave):
+def makeEntropyLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
+    def entropyLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
         cell_weights = numpy.where(
             unresolved_cell_mask,
@@ -77,13 +88,15 @@ def makeEntropyLocationHeuristic(preferences):
             numpy.inf,
         )
         row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-        return [row, col]
+        return row.item(), col.item()
 
     return entropyLocationHeuristic
 
 
-def makeAntiEntropyLocationHeuristic(preferences):
-    def antiEntropyLocationHeuristic(wave):
+def makeAntiEntropyLocationHeuristic(
+    preferences: NDArray[np.floating[Any]]
+) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
+    def antiEntropyLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
         cell_weights = numpy.where(
             unresolved_cell_mask,
@@ -91,12 +104,12 @@ def makeAntiEntropyLocationHeuristic(preferences):
             -numpy.inf,
         )
         row, col = numpy.unravel_index(numpy.argmax(cell_weights), cell_weights.shape)
-        return [row, col]
+        return row.item(), col.item()
 
     return antiEntropyLocationHeuristic
 
 
-def spiral_transforms():
+def spiral_transforms() -> Iterator[Tuple[int, int]]:
     for N in itertools.count(start=1):
         if N % 2 == 0:
             yield (0, 1)  # right
@@ -112,22 +125,21 @@ def spiral_transforms():
                 yield (0, 1)  # right
 
 
-def spiral_coords(x, y):
+def spiral_coords(x: int, y: int) -> Iterator[Tuple[int, int]]:
     yield x, y
     for transform in spiral_transforms():
         x += transform[0]
         y += transform[1]
         yield x, y
 
-
-def fill_with_curve(arr, curve_gen):
+def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[int]]) -> NDArray[np.floating[T]]:
     arr_len = numpy.prod(arr.shape)
     fill = 0
-    for _, coord in enumerate(curve_gen):
+    for coord in curve_gen:
         # print(fill, idx, coord)
         if fill < arr_len:
             try:
-                arr[coord[0], coord[1]] = fill / arr_len
+                arr[tuple(coord)] = fill / arr_len
                 fill += 1
             except IndexError:
                 pass
@@ -137,7 +149,7 @@ def fill_with_curve(arr, curve_gen):
     return arr
 
 
-def makeSpiralLocationHeuristic(preferences):
+def makeSpiralLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
     # https://stackoverflow.com/a/23707273/5562922
 
     spiral_gen = (
@@ -146,76 +158,63 @@ def makeSpiralLocationHeuristic(preferences):
 
     cell_order = fill_with_curve(preferences, spiral_gen)
 
-    def spiralLocationHeuristic(wave):
+    def spiralLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
         cell_weights = numpy.where(unresolved_cell_mask, cell_order, numpy.inf)
         row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-        return [row, col]
+        return row.item(), col.item()
 
     return spiralLocationHeuristic
 
 
-from hilbertcurve.hilbertcurve import HilbertCurve
-
-
-def makeHilbertLocationHeuristic(preferences):
+def makeHilbertLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
     curve_size = math.ceil(math.sqrt(max(preferences.shape[0], preferences.shape[1])))
     print(curve_size)
     curve_size = 4
     h_curve = HilbertCurve(curve_size, 2)
-
-    def h_coords():
-        for i in range(100000):
-            # print(i)
-            try:
-                coords = h_curve.coordinates_from_distance(i)
-            except ValueError:
-                coords = [0, 0]
-            # print(coords)
-            yield coords
-
-    cell_order = fill_with_curve(preferences, h_coords())
+    h_coords = (h_curve.point_from_distance(i) for i in itertools.count())
+    cell_order = fill_with_curve(preferences, h_coords)
     # print(cell_order)
 
-    def hilbertLocationHeuristic(wave):
+    def hilbertLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
         cell_weights = numpy.where(unresolved_cell_mask, cell_order, numpy.inf)
         row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-        return [row, col]
+        return row.item(), col.item()
 
     return hilbertLocationHeuristic
 
 
-def simpleLocationHeuristic(wave):
+def simpleLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
     unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
     cell_weights = numpy.where(
         unresolved_cell_mask, numpy.count_nonzero(wave, axis=0), numpy.inf
     )
     row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-    return [row, col]
+    return row.item(), col.item()
 
 
-def lexicalLocationHeuristic(wave):
+def lexicalLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
     unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
     cell_weights = numpy.where(unresolved_cell_mask, 1.0, numpy.inf)
     row, col = numpy.unravel_index(numpy.argmin(cell_weights), cell_weights.shape)
-    return [row, col]
+    return row.item(), col.item()
 
 
 #####################################
 # Pattern Heuristics
 
 
-def lexicalPatternHeuristic(weights, wave):
-    return numpy.nonzero(weights)[0][0]
+def lexicalPatternHeuristic(weights: NDArray[np.bool_], wave: NDArray[np.bool_]) -> int:
+    return numpy.nonzero(weights)[0][0].item()
 
 
-def makeWeightedPatternHeuristic(weights):
+def makeWeightedPatternHeuristic(weights: NDArray[np.floating[Any]]):
     num_of_patterns = len(weights)
 
-    def weightedPatternHeuristic(wave, _):
+    def weightedPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
-        weighted_wave = weights * wave
+        weighted_wave: NDArray[np.floating[Any]] = weights * wave
         weighted_wave /= weighted_wave.sum()
         result = numpy.random.choice(num_of_patterns, p=weighted_wave)
         return result
@@ -223,9 +222,9 @@ def makeWeightedPatternHeuristic(weights):
     return weightedPatternHeuristic
 
 
-def makeRarestPatternHeuristic(weights):
+def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the rarest (currently least-used) pattern."""
-    def weightedPatternHeuristic(wave, total_wave):
+    def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
         print(total_wave.shape)
         # [print(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
@@ -238,9 +237,11 @@ def makeRarestPatternHeuristic(weights):
     return weightedPatternHeuristic
 
 
-def makeMostCommonPatternHeuristic(weights):
+def makeMostCommonPatternHeuristic(
+    weights: NDArray[np.floating[Any]]
+) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the most common (currently most-used) pattern."""
-    def weightedPatternHeuristic(wave, total_wave):
+    def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
         print(total_wave.shape)
         # [print(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
@@ -252,10 +253,10 @@ def makeMostCommonPatternHeuristic(weights):
     return weightedPatternHeuristic
 
 
-def makeRandomPatternHeuristic(weights):
+def makeRandomPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     num_of_patterns = len(weights)
 
-    def randomPatternHeuristic(wave, _):
+    def randomPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
         weighted_wave = 1.0 * wave
         weighted_wave /= weighted_wave.sum()
@@ -269,10 +270,10 @@ def makeRandomPatternHeuristic(weights):
 # Global Constraints
 
 
-def make_global_use_all_patterns():
-    def global_use_all_patterns(wave):
+def make_global_use_all_patterns() -> Callable[[NDArray[np.bool_]], bool]:
+    def global_use_all_patterns(wave: NDArray[np.bool_]) -> bool:
         """Returns true if at least one instance of each pattern is still possible."""
-        return numpy.all(numpy.any(wave, axis=(1, 2)))
+        return numpy.all(numpy.any(wave, axis=(1, 2))).item()
 
     return global_use_all_patterns
 
@@ -281,7 +282,12 @@ def make_global_use_all_patterns():
 # Solver
 
 
-def propagate(wave, adj, periodic=False, onPropagate=None):
+def propagate(
+    wave: NDArray[np.bool_],
+    adj: Mapping[Tuple[int, int], NDArray[numpy.bool_]],
+    periodic: bool = False,
+    onPropagate: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+) -> None:
     last_count = wave.sum()
 
     while True:
@@ -341,7 +347,11 @@ def propagate(wave, adj, periodic=False, onPropagate=None):
         raise Contradiction
 
 
-def observe(wave, locationHeuristic, patternHeuristic):
+def observe(
+    wave: NDArray[np.bool_],
+    locationHeuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]],
+    patternHeuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int],
+) -> Tuple[int, int, int]:
     i, j = locationHeuristic(wave)
     pattern = patternHeuristic(wave[:, i, j], wave)
     return pattern, i, j
@@ -377,21 +387,21 @@ def observe(wave, locationHeuristic, patternHeuristic):
 
 
 def run(
-    wave,
-    adj,
-    locationHeuristic,
-    patternHeuristic,
-    periodic=False,
-    backtracking=False,
-    onBacktrack=None,
-    onChoice=None,
-    onObserve=None,
-    onPropagate=None,
-    checkFeasible=None,
-    onFinal=None,
-    depth=0,
-    depth_limit=None,
-):
+    wave: NDArray[np.bool_],
+    adj: Mapping[Tuple[int, int], NDArray[numpy.bool_]],
+    locationHeuristic: Callable[[NDArray[numpy.bool_]], Tuple[int, int]],
+    patternHeuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int],
+    periodic: bool = False,
+    backtracking: bool = False,
+    onBacktrack: Optional[Callable[[], None]] = None,
+    onChoice: Optional[Callable[[int, int, int], None]] = None,
+    onObserve: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+    onPropagate: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+    checkFeasible: Optional[Callable[[NDArray[numpy.bool_]], bool]] = None,
+    onFinal: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+    depth: int = 0,
+    depth_limit: Optional[int] = None,
+) -> NDArray[numpy.int64]:
     # print("run.")
     if checkFeasible:
         if not checkFeasible(wave):
