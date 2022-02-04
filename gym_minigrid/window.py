@@ -44,15 +44,19 @@ class Window:
         Show an image or update the image being shown
         """
 
-        # Show the first image of the environment
+        # If no image has been shown yet,
+        # show the first image of the environment
         if self.imshow_obj is None:
             self.imshow_obj = self.ax.imshow(img, interpolation='bilinear')
 
+        # Update the image data
         self.imshow_obj.set_data(img)
-        self.fig.canvas.draw()
+
+        # Request the window be redrawn
+        self.fig.canvas.draw_idle()
+        self.fig.canvas.flush_events()
 
         # Let matplotlib process UI events
-        # This is needed for interactive mode to work properly
         plt.pause(0.001)
 
     def set_caption(self, text):
