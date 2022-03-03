@@ -264,8 +264,8 @@ Registered configurations:
 
 This environment has multiple objects of assorted types and colors. The
 agent receives a textual string as part of its observation telling it
-which object to pick up. Picking up the wrong object produces a negative
-reward.
+which object to pick up. Picking up the wrong object terminates the
+episode with zero reward.
 
 ### Go-to-door environment
 
