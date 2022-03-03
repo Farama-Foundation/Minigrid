@@ -40,7 +40,10 @@ from .wfc_visualize import (
 import imageio  # type: ignore
 import numpy as np
 import time
+import logging
 from numpy.typing import NDArray
+
+logger = logging.getLogger(__name__)
 
 
 def visualize_tiles(unique_tiles, tile_catalog, tile_grid):
@@ -135,7 +138,7 @@ def execute_wfc(
         tile_grid, pattern_width, input_is_periodic=input_periodic, rotations=rotations
     )
 
-    print("pattern catalog")
+    logger.debug("pattern catalog")
 
     # visualize_tiles(unique_tiles, tile_catalog, tile_grid)
     # visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
@@ -150,7 +153,7 @@ def execute_wfc(
             output_filename=f"visualization/pattern_catalog_{filename}_{timecode}",
         )
 
-    print("profiling adjacency relations")
+    logger.debug("profiling adjacency relations")
     if False:
         import pprofile  # type: ignore
         profiler = pprofile.Profile()
@@ -170,7 +173,7 @@ def execute_wfc(
             (pattern_width, pattern_width),
         )
 
-    print("adjacency_relations")
+    logger.debug("adjacency_relations")
 
     if visualize:
         figure_adjacencies(
@@ -184,9 +187,9 @@ def execute_wfc(
         )
         # figure_adjacencies(adjacency_relations, direction_offsets, tile_catalog, pattern_catalog, pattern_width, [tile_size, tile_size], output_filename=f"visualization/adjacency_{filename}_{timecode}_B", render_b_first=True)
 
-    print(f"output size: {output_size}\noutput periodic: {output_periodic}")
+    logger.debug(f"output size: {output_size}\noutput periodic: {output_periodic}")
     number_of_patterns = len(pattern_weights)
-    print(f"# patterns: {number_of_patterns}")
+    logger.debug(f"# patterns: {number_of_patterns}")
     decode_patterns = dict(enumerate(pattern_list))
     encode_patterns = {x: i for i, x in enumerate(pattern_list)}
     _encode_directions = {j: i for i, j in direction_offsets}
@@ -194,13 +197,13 @@ def execute_wfc(
     adjacency_list: Dict[Tuple[int, int], List[Set[int]]] = {}
     for _, adjacency in direction_offsets:
         adjacency_list[adjacency] = [set() for _ in pattern_weights]
-    # print(adjacency_list)
+    # logger.debug(adjacency_list)
     for adjacency, pattern1, pattern2 in adjacency_relations:
-        # print(adjacency)
-        # print(decode_patterns[pattern1])
+        # logger.debug(adjacency)
+        # logger.debug(decode_patterns[pattern1])
         adjacency_list[adjacency][encode_patterns[pattern1]].add(encode_patterns[pattern2])
 
-    print(f"adjacency: {len(adjacency_list)}")
+    logger.debug(f"adjacency: {len(adjacency_list)}")
 
     time_adjacency = time.perf_counter()
 
@@ -249,7 +252,7 @@ def execute_wfc(
     if choice_heuristic == "random":
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights)
 
-    print(loc_heuristic)
+    logger.debug(loc_heuristic)
     location_heuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]] = lexicalLocationHeuristic
     if loc_heuristic == "anti-entropy":
         location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
@@ -332,7 +335,7 @@ def execute_wfc(
     active_global_constraint = lambda wave: True
     if global_constraint == "allpatterns":
         active_global_constraint = make_global_use_all_patterns()
-    print(active_global_constraint)
+    logger.debug(active_global_constraint)
 
     ### Search Depth Limit
     def makeSearchLengthLimit(max_limit: int) -> Callable[[NDArray[np.bool_]], bool]:
@@ -348,7 +351,6 @@ def execute_wfc(
     combined_constraints = [active_global_constraint, makeSearchLengthLimit(1200)]
 
     def combinedConstraints(wave: NDArray[np.bool_]) -> bool:
-        print
         return all(fn(wave) for fn in combined_constraints)
 
     ### Solving ###
@@ -357,7 +359,7 @@ def execute_wfc(
     time_solve_end = None
 
     solution_tile_grid = None
-    print("solving...")
+    logger.debug("solving...")
     attempts = 0
     while attempts < attempt_limit:
         attempts += 1
@@ -385,15 +387,15 @@ def execute_wfc(
                 )
                 if visualize_after:
                     stats = visualize_after()
-                # print(solution)
-                # print(stats)
+                # logger.debug(solution)
+                # logger.debug(stats)
                 solution_as_ids = np.vectorize(lambda x: decode_patterns[x])(solution)
                 solution_tile_grid = pattern_grid_to_tiles(
                     solution_as_ids, pattern_catalog
                 )
 
-                print("Solution:")
-                # print(solution_tile_grid)
+                logger.debug("Solution:")
+                # logger.debug(solution_tile_grid)
                 render_tiles_to_output(
                     solution_tile_grid,
                     tile_catalog,
@@ -404,16 +406,16 @@ def execute_wfc(
                 time_solve_end = time.perf_counter()
                 stats.update({"outcome": "success"})
             except StopEarly:
-                print("Skipping...")
+                logger.debug("Skipping...")
                 end_early = True
                 stats.update({"outcome": "skipped"})
             except TimedOut:
-                print("Timed Out")
+                logger.debug("Timed Out")
                 if visualize_after:
                     stats = visualize_after()
                 stats.update({"outcome": "timed_out"})
             except Contradiction:
-                print("Contradiction")
+                logger.debug("Contradiction")
                 if visualize_after:
                     stats = visualize_after()
                 stats.update({"outcome": "contradiction"})

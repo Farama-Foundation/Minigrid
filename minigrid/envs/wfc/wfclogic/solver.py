@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any, Callable, Collection, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, TypeVar
 from scipy import sparse  # type: ignore
 import numpy
@@ -10,6 +11,7 @@ import itertools
 from numpy.typing import NBitBase, NDArray
 from hilbertcurve.hilbertcurve import HilbertCurve  # type: ignore
 
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=NBitBase)
 
@@ -116,9 +118,9 @@ def makeWave(n: int, w: int, h: int, ground: Optional[Iterable[int]] = None) -> 
         for g in ground:
             wave[g, :,] = False
             wave[g, :, h - 1] = True
-    # print(wave)
+    # logger.debug(wave)
     # for i in range(wave.shape[0]):
-    #  print(wave[i])
+    #  logger.debug(wave[i])
     return wave
 
 
@@ -126,12 +128,12 @@ def makeAdj(
     adjLists: Mapping[Tuple[int, int], Collection[Iterable[int]]]
 ) -> Dict[Tuple[int, int], NDArray[numpy.bool_]]:
     adjMatrices = {}
-    # print(adjLists)
+    # logger.debug(adjLists)
     num_patterns = len(list(adjLists.values())[0])
     for d in adjLists:
         m = numpy.zeros((num_patterns, num_patterns), dtype=bool)
         for i, js in enumerate(adjLists[d]):
-            # print(js)
+            # logger.debug(js)
             for j in js:
                 m[i, j] = 1
         adjMatrices[d] = sparse.csr_matrix(m)
@@ -209,7 +211,7 @@ def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[i
     arr_len = numpy.prod(arr.shape)
     fill = 0
     for coord in curve_gen:
-        # print(fill, idx, coord)
+        # logger.debug(fill, idx, coord)
         if fill < arr_len:
             try:
                 arr[tuple(coord)] = fill / arr_len
@@ -218,7 +220,7 @@ def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[i
                 pass
         else:
             break
-    # print(arr)
+    # logger.debug(arr)
     return arr
 
 
@@ -242,12 +244,12 @@ def makeSpiralLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Calla
 
 def makeHilbertLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
     curve_size = math.ceil(math.sqrt(max(preferences.shape[0], preferences.shape[1])))
-    print(curve_size)
+    logger.debug(curve_size)
     curve_size = 4
     h_curve = HilbertCurve(curve_size, 2)
     h_coords = (h_curve.point_from_distance(i) for i in itertools.count())
     cell_order = fill_with_curve(preferences, h_coords)
-    # print(cell_order)
+    # logger.debug(cell_order)
 
     def hilbertLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
@@ -298,10 +300,10 @@ def makeWeightedPatternHeuristic(weights: NDArray[np.floating[Any]]):
 def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the rarest (currently least-used) pattern."""
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
-        print(total_wave.shape)
-        # [print(e) for e in wave]
+        logger.debug(total_wave.shape)
+        # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
-        # print(wave_sums)
+        # logger.debug(wave_sums)
         selected_pattern = numpy.random.choice(
             numpy.where(wave_sums == wave_sums.max())[0]
         )
@@ -315,8 +317,8 @@ def makeMostCommonPatternHeuristic(
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the most common (currently most-used) pattern."""
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
-        print(total_wave.shape)
-        # [print(e) for e in wave]
+        logger.debug(total_wave.shape)
+        # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
         selected_pattern = numpy.random.choice(
             numpy.where(wave_sums == wave_sums.min())[0]
@@ -386,7 +388,7 @@ def propagate(
             shifted = padded[
                 :, 1 + dx : 1 + wave.shape[1] + dx, 1 + dy : 1 + wave.shape[2] + dy
             ]
-            # print(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
+            # logger.debug(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
             # raise StopEarly
             # supports[d] = numpy.einsum('pwh,pq->qwh', shifted, adj[d]) > 0
 

@@ -1,11 +1,14 @@
 "Extract patterns from grids of tiles."
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict, Mapping, Optional, Tuple
 from .wfc_utilities import hash_downto
 from collections import Counter
 import numpy as np
 from numpy.typing import NDArray
+
+logger = logging.getLogger(__name__)
 
 
 def unique_patterns_2d(agrid: NDArray[np.int64], ksize: int, periodic_input: bool) -> Tuple[NDArray[np.int64], NDArray[np.int64], NDArray[np.int64]]:
@@ -147,14 +150,14 @@ def make_pattern_catalog_with_rotations(
         reflect_grid,
     ]
     while counter <= (rotations):
-        # print(rotated_tile_grid.shape)
-        # print(np.array_equiv(reflect_grid(rotated_tile_grid.copy()), rotate_grid(rotated_tile_grid.copy())))
+        # logger.debug(rotated_tile_grid.shape)
+        # logger.debug(np.array_equiv(reflect_grid(rotated_tile_grid.copy()), rotate_grid(rotated_tile_grid.copy())))
 
-        # print(counter)
-        # print(grid_ops[counter].__name__)
+        # logger.debug(counter)
+        # logger.debug(grid_ops[counter].__name__)
         rotated_tile_grid = grid_ops[counter](rotated_tile_grid.copy())
-        # print(rotated_tile_grid)
-        # print("---")
+        # logger.debug(rotated_tile_grid)
+        # logger.debug("---")
         _make_catalog()
         counter += 1
 
@@ -179,9 +182,9 @@ def pattern_grid_to_tiles(
         # if isinstance(pattern, list):
         #     ptrns = []
         #     for p in pattern:
-        #         print(p)
+        #         logger.debug(p)
         #         ptrns.push(pattern_to_tile(p))
-        #     print(ptrns)
+        #     logger.debug(ptrns)
         #     assert False
         #     return ptrns
         return pattern_catalog[pattern][anchor_x][anchor_y]

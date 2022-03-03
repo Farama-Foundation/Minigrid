@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import collections
+import logging
 from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+logger = logging.getLogger(__name__)
 
 CoordXY = collections.namedtuple("CoordXY", ["x", "y"])
 CoordRC = collections.namedtuple("CoordRC", ["row", "column"])
@@ -14,8 +16,8 @@ CoordRC = collections.namedtuple("CoordRC", ["row", "column"])
 def hash_downto(a: NDArray[Any], rank: int, seed: Any=0) -> NDArray[np.int64]:
     state = np.random.RandomState(seed)
     assert rank < len(a.shape)
-    # print((np.prod(a.shape[:rank]),-1))
-    # print(np.array([np.prod(a.shape[:rank]),-1], dtype=np.int64).dtype)
+    # logger.debug((np.prod(a.shape[:rank]),-1))
+    # logger.debug(np.array([np.prod(a.shape[:rank]),-1], dtype=np.int64).dtype)
     u: NDArray[np.int64] = a.reshape(
         np.array([np.prod(a.shape[:rank]), -1], dtype=np.int64)
     )  # change because lists are by default float64?
@@ -38,7 +40,7 @@ def load_visualizer(wfc_ns):
 
         uploaded = files.upload()
         for fn in uploaded.keys():
-            print(
+            logger.debug(
                 'User uploaded file "{name}" with length {length} bytes'.format(
                     name=fn, length=len(uploaded[fn])
                 )
