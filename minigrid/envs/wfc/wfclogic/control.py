@@ -36,6 +36,7 @@ from .wfc_visualize import (
     figure_adjacencies,
     make_solver_visualizers,
     make_solver_loggers,
+    tile_grid_to_image,
 )
 import imageio  # type: ignore
 import numpy as np
@@ -79,7 +80,7 @@ def make_log_stats() -> Callable[[Dict[str, Any], str], None]:
 
 
 def execute_wfc(
-    filename: str,
+    filename: Optional[str] = None,
     tile_size: int = 0,
     pattern_width: int = 2,
     rotations: int = 8,
@@ -97,7 +98,9 @@ def execute_wfc(
     logging: bool = True,
     global_constraints: None = None,
     log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
-):
+    *,
+    image: Optional[NDArray[np.uint8]] = None,
+) -> NDArray[np.int64]:
     timecode = datetime.datetime.now().isoformat().replace(":", ".")
     time_begin = time.perf_counter()
     output_destination = r"./output/"
@@ -106,7 +109,7 @@ def execute_wfc(
     rotations -= 1  # change to zero-based
 
     input_stats = {
-        "filename": filename,
+        "filename": str(filename),
         "tile_size": tile_size,
         "pattern_width": pattern_width,
         "rotations": rotations,
@@ -122,13 +125,18 @@ def execute_wfc(
     }
 
     # Load the image
-    img: NDArray[np.uint8] = imageio.imread(input_folder + filename + ".png")
-    img = img[:, :, :3]  # TODO: handle alpha channels
+    if filename:
+        if image is not None:
+            raise TypeError("Only filename or image can be provided, not both.")
+        image = imageio.imread(input_folder + filename + ".png")[:, :, :3]  # TODO: handle alpha channels
+
+    if image is None:
+        raise TypeError("An image must be given.")
 
     # TODO: generalize this to more than the four cardinal directions
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
-    tile_catalog, tile_grid, _code_list, _unique_tiles = make_tile_catalog(img, tile_size)
+    tile_catalog, tile_grid, _code_list, _unique_tiles = make_tile_catalog(image, tile_size)
     (
         pattern_catalog,
         pattern_weights,
@@ -144,7 +152,7 @@ def execute_wfc(
     # visualize_patterns(pattern_catalog, tile_catalog, pattern_weights, pattern_width)
     # figure_list_of_tiles(unique_tiles, tile_catalog, output_filename=f"visualization/tilelist_{filename}_{timecode}")
     # figure_false_color_tile_grid(tile_grid, output_filename=f"visualization/tile_falsecolor_{filename}_{timecode}")
-    if visualize:
+    if visualize and filename:
         figure_pattern_catalog(
             pattern_catalog,
             tile_catalog,
@@ -277,7 +285,7 @@ def execute_wfc(
         visualize_final,
         visualize_after,
     ) = (None, None, None, None, None, None)
-    if visualize:
+    if filename and visualize:
         (
             visualize_choice,
             visualize_wave,
@@ -293,7 +301,7 @@ def execute_wfc(
             tile_catalog=tile_catalog,
             tile_size=[tile_size, tile_size],
         )
-    if logging:
+    if filename and logging:
         (
             visualize_choice,
             visualize_wave,
@@ -302,7 +310,7 @@ def execute_wfc(
             visualize_final,
             visualize_after,
         ) = make_solver_loggers(f"{filename}_{timecode}", input_stats.copy())
-    if logging and visualize:
+    if filename and logging and visualize:
         vis = make_solver_visualizers(
             f"{filename}_{timecode}",
             wave,
@@ -363,39 +371,38 @@ def execute_wfc(
     attempts = 0
     while attempts < attempt_limit:
         attempts += 1
-        end_early = False
         time_solve_start = time.perf_counter()
         stats = {}
         # profiler = pprofile.Profile()
-        if True:
-            # with profiler:
-            # with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
-            try:
-                solution = run(
-                    wave.copy(),
-                    adjacency_matrix,
-                    locationHeuristic=location_heuristic,
-                    patternHeuristic=pattern_heuristic,
-                    periodic=output_periodic,
-                    backtracking=backtracking,
-                    onChoice=visualize_choice,
-                    onBacktrack=visualize_backtracking,
-                    onObserve=visualize_wave,
-                    onPropagate=visualize_propagate,
-                    onFinal=visualize_final,
-                    checkFeasible=combinedConstraints,
-                )
-                if visualize_after:
-                    stats = visualize_after()
-                # logger.debug(solution)
-                # logger.debug(stats)
-                solution_as_ids = np.vectorize(lambda x: decode_patterns[x])(solution)
-                solution_tile_grid = pattern_grid_to_tiles(
-                    solution_as_ids, pattern_catalog
-                )
+        # with profiler:
+        # with PyCallGraph(output=GraphvizOutput(output_file=f"visualization/pycallgraph_{filename}_{timecode}.png")):
+        try:
+            solution = run(
+                wave.copy(),
+                adjacency_matrix,
+                locationHeuristic=location_heuristic,
+                patternHeuristic=pattern_heuristic,
+                periodic=output_periodic,
+                backtracking=backtracking,
+                onChoice=visualize_choice,
+                onBacktrack=visualize_backtracking,
+                onObserve=visualize_wave,
+                onPropagate=visualize_propagate,
+                onFinal=visualize_final,
+                checkFeasible=combinedConstraints,
+            )
+            if visualize_after:
+                stats = visualize_after()
+            # logger.debug(solution)
+            # logger.debug(stats)
+            solution_as_ids = np.vectorize(lambda x: decode_patterns[x])(solution)
+            solution_tile_grid = pattern_grid_to_tiles(
+                solution_as_ids, pattern_catalog
+            )
 
-                logger.debug("Solution:")
-                # logger.debug(solution_tile_grid)
+            logger.debug("Solution:")
+            # logger.debug(solution_tile_grid)
+            if filename:
                 render_tiles_to_output(
                     solution_tile_grid,
                     tile_catalog,
@@ -403,48 +410,46 @@ def execute_wfc(
                     output_destination + filename + "_" + timecode + ".png",
                 )
 
-                time_solve_end = time.perf_counter()
-                stats.update({"outcome": "success"})
-            except StopEarly:
-                logger.debug("Skipping...")
-                end_early = True
-                stats.update({"outcome": "skipped"})
-            except TimedOut:
-                logger.debug("Timed Out")
-                if visualize_after:
-                    stats = visualize_after()
-                stats.update({"outcome": "timed_out"})
-            except Contradiction:
-                logger.debug("Contradiction")
-                if visualize_after:
-                    stats = visualize_after()
-                stats.update({"outcome": "contradiction"})
-        # profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
-
-        outstats = {}
-        outstats.update(input_stats)
-        solve_duration = time.perf_counter() - time_solve_start
-        if time_solve_end is not None:
-            solve_duration = time_solve_end - time_solve_start
-        adjacency_duration = time_solve_start - time_adjacency
-        outstats.update(
-            {
-                "attempts": attempts,
-                "time_start": time_begin,
-                "time_adjacency": time_adjacency,
-                "adjacency_duration": adjacency_duration,
-                "time solve start": time_solve_start,
-                "time solve end": time_solve_end,
-                "solve duration": solve_duration,
-                "pattern count": number_of_patterns,
-            }
-        )
-        outstats.update(stats)
-        if log_stats_to_output is not None:
-            log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
+            time_solve_end = time.perf_counter()
+            stats.update({"outcome": "success"})
+        except StopEarly:
+            logger.debug("Skipping...")
+            stats.update({"outcome": "skipped"})
+            raise
+        except TimedOut:
+            logger.debug("Timed Out")
+            if visualize_after:
+                stats = visualize_after()
+            stats.update({"outcome": "timed_out"})
+        except Contradiction:
+            logger.debug("Contradiction")
+            if visualize_after:
+                stats = visualize_after()
+            stats.update({"outcome": "contradiction"})
+        finally:
+            # profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
+            outstats = {}
+            outstats.update(input_stats)
+            solve_duration = time.perf_counter() - time_solve_start
+            if time_solve_end is not None:
+                solve_duration = time_solve_end - time_solve_start
+            adjacency_duration = time_solve_start - time_adjacency
+            outstats.update(
+                {
+                    "attempts": attempts,
+                    "time_start": time_begin,
+                    "time_adjacency": time_adjacency,
+                    "adjacency_duration": adjacency_duration,
+                    "time solve start": time_solve_start,
+                    "time solve end": time_solve_end,
+                    "solve duration": solve_duration,
+                    "pattern count": number_of_patterns,
+                }
+            )
+            outstats.update(stats)
+            if log_stats_to_output is not None:
+                log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
         if solution_tile_grid is not None:
-            return solution_tile_grid
-        if end_early:
-            return None
+            return tile_grid_to_image(solution_tile_grid, tile_catalog, (tile_size, tile_size))
 
-    return None
+    raise TimedOut("Attempt limit exceeded.")
