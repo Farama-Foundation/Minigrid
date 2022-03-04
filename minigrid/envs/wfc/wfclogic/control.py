@@ -344,19 +344,7 @@ def execute_wfc(
     if global_constraint == "allpatterns":
         active_global_constraint = make_global_use_all_patterns()
     logger.debug(active_global_constraint)
-
-    ### Search Depth Limit
-    def makeSearchLengthLimit(max_limit: int) -> Callable[[NDArray[np.bool_]], bool]:
-        search_length_counter = 0
-
-        def searchLengthLimit(wave: NDArray[np.bool_]) -> bool:
-            nonlocal search_length_counter
-            search_length_counter += 1
-            return search_length_counter <= max_limit
-
-        return searchLengthLimit
-
-    combined_constraints = [active_global_constraint, makeSearchLengthLimit(1200)]
+    combined_constraints = [active_global_constraint]
 
     def combinedConstraints(wave: NDArray[np.bool_]) -> bool:
         return all(fn(wave) for fn in combined_constraints)
