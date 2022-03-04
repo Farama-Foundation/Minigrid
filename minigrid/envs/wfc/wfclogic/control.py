@@ -421,8 +421,8 @@ def execute_wfc(
             if visualize_after:
                 stats = visualize_after()
             stats.update({"outcome": "timed_out"})
-        except Contradiction:
-            logger.debug("Contradiction")
+        except Contradiction as exc:
+            logger.warning(f"Contradiction: {exc}")
             if visualize_after:
                 stats = visualize_after()
             stats.update({"outcome": "contradiction"})
