@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 from .wfc_utilities import hash_downto
 
 
-def image_to_tiles(img: NDArray[np.uint8], tile_size: int) -> NDArray[np.uint8]:
+def image_to_tiles(img: NDArray[np.integer], tile_size: int) -> NDArray[np.integer]:
     """
     Takes an images, divides it into tiles, return an array of tiles.
     """
@@ -31,27 +31,23 @@ def image_to_tiles(img: NDArray[np.uint8], tile_size: int) -> NDArray[np.uint8]:
 
 
 def make_tile_catalog(
-    image_data: NDArray[np.uint8], tile_size: int
-) -> Tuple[Dict[int, NDArray[np.int64]], NDArray[np.int64], NDArray[np.int64], Tuple[NDArray[np.int64], NDArray[np.int64]]]:
+    image_data: NDArray[np.integer], tile_size: int
+) -> Tuple[Dict[int, NDArray[np.integer]], NDArray[np.int64], NDArray[np.int64], Tuple[NDArray[np.int64], NDArray[np.int64]]]:
     """
     Takes an image and tile size and returns the following:
     tile_catalog is a dictionary tiles, with the hashed ID as the key
     tile_grid is the original image, expressed in terms of hashed tile IDs
     code_list is the original image, expressed in terms of hashed tile IDs and reduced to one dimension
-    unique_tiles is the set of tiles, plus the frequency of occurance
+    unique_tiles is the set of tiles, plus the frequency of their occurrence
     """
     channels = image_data.shape[2]  # Number of color channels in the image
     tiles = image_to_tiles(image_data, tile_size)
-    tile_list: NDArray[np.int64] = np.array(tiles, dtype=np.int64).reshape(
-        (tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels)
-    )
-    code_list: NDArray[np.int64] = np.array(hash_downto(tiles, 2), dtype=np.int64).reshape(
-        (tiles.shape[0] * tiles.shape[1])
-    )
-    tile_grid: NDArray[np.int64] = np.array(hash_downto(tiles, 2), dtype=np.int64)
+    tile_list: NDArray[np.integer] = tiles.reshape((tiles.shape[0] * tiles.shape[1], tile_size, tile_size, channels))
+    code_list: NDArray[np.int64] = hash_downto(tiles, 2).reshape((tiles.shape[0] * tiles.shape[1]))
+    tile_grid: NDArray[np.int64] = hash_downto(tiles, 2)
     unique_tiles: Tuple[NDArray[np.int64], NDArray[np.int64]] = np.unique(tile_grid, return_counts=True)
 
-    tile_catalog: Dict[int, NDArray[np.int64]] = {}
+    tile_catalog: Dict[int, NDArray[np.integer]] = {}
     for i, j in enumerate(code_list):
         tile_catalog[j] = tile_list[i]
     return tile_catalog, tile_grid, code_list, unique_tiles

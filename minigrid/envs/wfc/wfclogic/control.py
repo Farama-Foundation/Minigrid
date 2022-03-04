@@ -99,8 +99,8 @@ def execute_wfc(
     global_constraints: None = None,
     log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
     *,
-    image: Optional[NDArray[np.uint8]] = None,
-) -> NDArray[np.int64]:
+    image: Optional[NDArray[np.integer]] = None,
+) -> NDArray[np.integer]:
     timecode = datetime.datetime.now().isoformat().replace(":", ".")
     time_begin = time.perf_counter()
     output_destination = r"./output/"

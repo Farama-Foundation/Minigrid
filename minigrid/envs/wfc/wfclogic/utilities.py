@@ -13,14 +13,12 @@ CoordXY = collections.namedtuple("CoordXY", ["x", "y"])
 CoordRC = collections.namedtuple("CoordRC", ["row", "column"])
 
 
-def hash_downto(a: NDArray[Any], rank: int, seed: Any=0) -> NDArray[np.int64]:
+def hash_downto(a: NDArray[np.integer], rank: int, seed: Any=0) -> NDArray[np.int64]:
     state = np.random.RandomState(seed)
     assert rank < len(a.shape)
     # logger.debug((np.prod(a.shape[:rank]),-1))
     # logger.debug(np.array([np.prod(a.shape[:rank]),-1], dtype=np.int64).dtype)
-    u: NDArray[np.int64] = a.reshape(
-        np.array([np.prod(a.shape[:rank]), -1], dtype=np.int64)
-    )  # change because lists are by default float64?
+    u: NDArray[np.integer] = a.reshape((np.prod(a.shape[:rank], dtype=np.int64), -1))
     # u = a.reshape((np.prod(a.shape[:rank]),-1))
     v = state.randint(1 - (1 << 63), 1 << 63, np.prod(a.shape[rank:]), dtype=np.int64)
     return np.asarray(np.inner(u, v).reshape(a.shape[:rank]), dtype=np.int64)
