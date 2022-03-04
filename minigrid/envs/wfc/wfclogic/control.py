@@ -81,7 +81,7 @@ def make_log_stats() -> Callable[[Dict[str, Any], str], None]:
 
 def execute_wfc(
     filename: Optional[str] = None,
-    tile_size: int = 0,
+    tile_size: int = 1,
     pattern_width: int = 2,
     rotations: int = 8,
     output_size: Tuple[int, int] = (48, 48),
