@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Collection, Dict, Iterable, Iterator, Mapping, Optional, Tuple, TypeVar
+import logging
+from typing import Any, Callable, Collection, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, TypeVar
 from scipy import sparse  # type: ignore
 import numpy
 import numpy as np
@@ -10,12 +11,9 @@ import itertools
 from numpy.typing import NBitBase, NDArray
 from hilbertcurve.hilbertcurve import HilbertCurve  # type: ignore
 
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=NBitBase)
-
-# By default Python has a very low recursion limit.
-# Might still be better to rewrite te recursion as a loop, of course
-sys.setrecursionlimit(5500)
 
 
 class Contradiction(Exception):
@@ -36,6 +34,83 @@ class StopEarly(Exception):
     pass
 
 
+class Solver:
+    """WFC Solver which can hold wave and backtracking state."""
+
+    def __init__(
+        self,
+        *,
+        wave: NDArray[np.bool_],
+        adj: Mapping[Tuple[int, int], NDArray[numpy.bool_]],
+        periodic: bool = False,
+        backtracking: bool = False,
+        on_backtrack: Optional[Callable[[], None]] = None,
+        on_choice: Optional[Callable[[int, int, int], None]] = None,
+        on_observe: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+        on_propagate: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
+        check_feasible: Optional[Callable[[NDArray[numpy.bool_]], bool]] = None
+    ) -> None:
+        self.wave = wave
+        self.adj = adj
+        self.periodic = periodic
+        self.backtracking = backtracking
+        self.history: List[NDArray[np.bool_]] = []  # An undo history for backtracking.
+        self.on_backtrack = on_backtrack
+        self.on_choice = on_choice
+        self.on_observe = on_observe
+        self.on_propagate = on_propagate
+        self.check_feasible = check_feasible
+
+    @property
+    def is_solved(self) -> bool:
+        """Is True if the wave has been fully resolved."""
+        return self.wave.sum() == self.wave.shape[1] * self.wave.shape[2] and (self.wave.sum(axis=0) == 1).all()
+
+    def solve_next(
+        self,
+        location_heuristic: Callable[[NDArray[numpy.bool_]], Tuple[int, int]],
+        pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int],
+    ) -> bool:
+        """Attempt to collapse one wave.  Returns True if no more steps remain."""
+        if self.is_solved:
+            return True
+        if self.check_feasible and not self.check_feasible(self.wave):
+            raise Contradiction("Not feasible.")
+        if self.backtracking:
+            self.history.append(self.wave.copy())
+        propagate(self.wave, self.adj, periodic=self.periodic, onPropagate=self.on_propagate)
+        try:
+            pattern, i, j = observe(self.wave, location_heuristic, pattern_heuristic)
+            if self.on_choice:
+                self.on_choice(pattern, i, j)
+            self.wave[:, i, j] = False
+            self.wave[pattern, i, j] = True
+            if self.on_observe:
+                self.on_observe(self.wave)
+            propagate(self.wave, self.adj, periodic=self.periodic, onPropagate=self.on_propagate)
+            return False  # Assume there is remaining steps, if not then the next call will return True.
+        except Contradiction:
+            if not self.backtracking:
+                raise
+            if not self.history:
+                raise Contradiction("Every permutation has been attempted.")
+            if self.on_backtrack:
+                self.on_backtrack()
+            self.wave = self.history.pop()
+            self.wave[pattern, i, j] = False
+            return False
+
+    def solve(
+        self,
+        location_heuristic: Callable[[NDArray[numpy.bool_]], Tuple[int, int]],
+        pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int],
+    ) -> NDArray[np.int64]:
+        """Attempts to solve all waves and returns the solution."""
+        while not self.solve_next(location_heuristic=location_heuristic, pattern_heuristic=pattern_heuristic):
+            pass
+        return numpy.argmax(self.wave, axis=0)
+
+
 def makeWave(n: int, w: int, h: int, ground: Optional[Iterable[int]] = None) -> NDArray[numpy.bool_]:
     wave: NDArray[numpy.bool_] = numpy.ones((n, w, h), dtype=numpy.bool_)
     if ground is not None:
@@ -43,9 +118,9 @@ def makeWave(n: int, w: int, h: int, ground: Optional[Iterable[int]] = None) -> 
         for g in ground:
             wave[g, :,] = False
             wave[g, :, h - 1] = True
-    # print(wave)
+    # logger.debug(wave)
     # for i in range(wave.shape[0]):
-    #  print(wave[i])
+    #  logger.debug(wave[i])
     return wave
 
 
@@ -53,12 +128,12 @@ def makeAdj(
     adjLists: Mapping[Tuple[int, int], Collection[Iterable[int]]]
 ) -> Dict[Tuple[int, int], NDArray[numpy.bool_]]:
     adjMatrices = {}
-    # print(adjLists)
+    # logger.debug(adjLists)
     num_patterns = len(list(adjLists.values())[0])
     for d in adjLists:
         m = numpy.zeros((num_patterns, num_patterns), dtype=bool)
         for i, js in enumerate(adjLists[d]):
-            # print(js)
+            # logger.debug(js)
             for j in js:
                 m[i, j] = 1
         adjMatrices[d] = sparse.csr_matrix(m)
@@ -136,7 +211,7 @@ def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[i
     arr_len = numpy.prod(arr.shape)
     fill = 0
     for coord in curve_gen:
-        # print(fill, idx, coord)
+        # logger.debug(fill, idx, coord)
         if fill < arr_len:
             try:
                 arr[tuple(coord)] = fill / arr_len
@@ -145,7 +220,7 @@ def fill_with_curve(arr: NDArray[np.floating[T]], curve_gen: Iterable[Iterable[i
                 pass
         else:
             break
-    # print(arr)
+    # logger.debug(arr)
     return arr
 
 
@@ -169,12 +244,12 @@ def makeSpiralLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Calla
 
 def makeHilbertLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
     curve_size = math.ceil(math.sqrt(max(preferences.shape[0], preferences.shape[1])))
-    print(curve_size)
+    logger.debug(curve_size)
     curve_size = 4
     h_curve = HilbertCurve(curve_size, 2)
     h_coords = (h_curve.point_from_distance(i) for i in itertools.count())
     cell_order = fill_with_curve(preferences, h_coords)
-    # print(cell_order)
+    # logger.debug(cell_order)
 
     def hilbertLocationHeuristic(wave: NDArray[np.bool_]) -> Tuple[int, int]:
         unresolved_cell_mask = numpy.count_nonzero(wave, axis=0) > 1
@@ -225,10 +300,10 @@ def makeWeightedPatternHeuristic(weights: NDArray[np.floating[Any]]):
 def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the rarest (currently least-used) pattern."""
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
-        print(total_wave.shape)
-        # [print(e) for e in wave]
+        logger.debug(total_wave.shape)
+        # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
-        # print(wave_sums)
+        # logger.debug(wave_sums)
         selected_pattern = numpy.random.choice(
             numpy.where(wave_sums == wave_sums.max())[0]
         )
@@ -242,8 +317,8 @@ def makeMostCommonPatternHeuristic(
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the most common (currently most-used) pattern."""
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
-        print(total_wave.shape)
-        # [print(e) for e in wave]
+        logger.debug(total_wave.shape)
+        # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
         selected_pattern = numpy.random.choice(
             numpy.where(wave_sums == wave_sums.min())[0]
@@ -288,6 +363,7 @@ def propagate(
     periodic: bool = False,
     onPropagate: Optional[Callable[[NDArray[numpy.bool_]], None]] = None,
 ) -> None:
+    """Completely probagate any newly collapsed waves to all areas."""
     last_count = wave.sum()
 
     while True:
@@ -312,7 +388,7 @@ def propagate(
             shifted = padded[
                 :, 1 + dx : 1 + wave.shape[1] + dx, 1 + dy : 1 + wave.shape[2] + dy
             ]
-            # print(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
+            # logger.debug(f"shifted: {shifted.shape} | adj[d]: {adj[d].shape} | d: {d}")
             # raise StopEarly
             # supports[d] = numpy.einsum('pwh,pq->qwh', shifted, adj[d]) > 0
 
@@ -336,15 +412,14 @@ def propagate(
             wave *= supports[d]
 
         if wave.sum() == last_count:
-            break
-        else:
-            last_count = wave.sum()
+            break  # No changes since the last loop, changed waves have been fully propagated.
+        last_count = wave.sum()
 
     if onPropagate:
         onPropagate(wave)
 
     if (wave.sum(axis=0) == 0).any():
-        raise Contradiction
+        raise Contradiction("Wave is in a contradictory state and can not be solved.")
 
 
 def observe(
@@ -352,38 +427,10 @@ def observe(
     locationHeuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]],
     patternHeuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int],
 ) -> Tuple[int, int, int]:
+    """Return the next best wave to collapse based on the provided heuristics."""
     i, j = locationHeuristic(wave)
     pattern = patternHeuristic(wave[:, i, j], wave)
     return pattern, i, j
-
-
-# def run_loop(wave, adj, locationHeuristic, patternHeuristic, periodic=False, backtracking=False, onBacktrack=None, onChoice=None, checkFeasible=None):
-#   stack = []
-#   while True:
-#     if checkFeasible:
-#       if not checkFeasible(wave):
-#         raise Contradiction
-#     stack.append(wave.copy())
-#     propagate(wave, adj, periodic=periodic)
-#     try:
-#       pattern, i, j = observe(wave, locationHeuristic, patternHeuristic)
-#       if onChoice:
-#         onChoice(pattern, i, j)
-#       wave[:, i, j] = False
-#       wave[pattern, i, j] = True
-#       propagate(wave, adj, periodic=periodic)
-#       if wave.sum() > wave.shape[1] * wave.shape[2]:
-#         pass
-#       else:
-#         return numpy.argmax(wave, 0)
-#     except Contradiction:
-#       if backtracking:
-#         if onBacktrack:
-#           onBacktrack()
-#         wave = stack.pop()
-#         wave[pattern, i, j] = False
-#       else:
-#         raise
 
 
 def run(
@@ -402,69 +449,19 @@ def run(
     depth: int = 0,
     depth_limit: Optional[int] = None,
 ) -> NDArray[numpy.int64]:
-    # print("run.")
-    if checkFeasible:
-        if not checkFeasible(wave):
-            raise Contradiction
-        if depth_limit:
-            if depth > depth_limit:
-                raise TimedOut
-    if depth % 50 == 0:
-        print(depth)
-    original = wave.copy()
-    propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
-    try:
-        pattern, i, j = observe(wave, locationHeuristic, patternHeuristic)
-        if onChoice:
-            onChoice(pattern, i, j)
-        wave[:, i, j] = False
-        wave[pattern, i, j] = True
-        if onObserve:
-            onObserve(wave)
-        propagate(wave, adj, periodic=periodic, onPropagate=onPropagate)
-        if wave.sum() > wave.shape[1] * wave.shape[2]:
-            # return run(wave, adj, locationHeuristic, patternHeuristic, periodic, backtracking, onBacktrack)
-            return run(
-                wave,
-                adj,
-                locationHeuristic,
-                patternHeuristic,
-                periodic=periodic,
-                backtracking=backtracking,
-                onBacktrack=onBacktrack,
-                onChoice=onChoice,
-                onObserve=onObserve,
-                onPropagate=onPropagate,
-                checkFeasible=checkFeasible,
-                depth=depth + 1,
-                depth_limit=depth_limit,
-            )
-        else:
-            if onFinal:
-                onFinal(wave)
-            return numpy.argmax(wave, 0)
-    except Contradiction:
-        if backtracking:
-            if onBacktrack:
-                onBacktrack()
-            wave = original
-            wave[pattern, i, j] = False
-            return run(
-                wave,
-                adj,
-                locationHeuristic,
-                patternHeuristic,
-                periodic=periodic,
-                backtracking=backtracking,
-                onBacktrack=onBacktrack,
-                onChoice=onChoice,
-                onObserve=onObserve,
-                onPropagate=onPropagate,
-                checkFeasible=checkFeasible,
-                depth=depth + 1,
-                depth_limit=depth_limit,
-            )
-        else:
-            if onFinal:
-                onFinal(wave)
-            raise
+    solver = Solver(
+        wave=wave,
+        adj=adj,
+        periodic=periodic,
+        backtracking=backtracking,
+        on_backtrack=onBacktrack,
+        on_choice=onChoice,
+        on_observe=onObserve,
+        on_propagate=onPropagate,
+        check_feasible=checkFeasible
+    )
+    while not solver.solve_next(location_heuristic=locationHeuristic, pattern_heuristic=patternHeuristic):
+        pass
+    if onFinal:
+        onFinal(solver.wave)
+    return numpy.argmax(solver.wave, axis=0)
