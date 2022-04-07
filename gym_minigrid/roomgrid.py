@@ -299,7 +299,7 @@ class RoomGrid(MiniGridEnv):
         while True:
             super().place_agent(room.top, room.size, rand_dir, max_tries=1000)
             front_cell = self.grid.get(*self.front_pos)
-            if front_cell is None or front_cell.type is 'wall':
+            if front_cell is None or front_cell.type == 'wall':
                 break
 
         return self.agent_pos
