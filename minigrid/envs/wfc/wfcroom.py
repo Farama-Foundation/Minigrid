@@ -70,6 +70,7 @@ class MazeDatasetGenerator:
 
         batch_labels, batch_label_contents = self.generate_labels(solutions, batch_meta)
         batch_features = np.squeeze(batch_features)
+        batch_features = batch_features[..., 0] #TODO: remove
         return batch_features, batch_labels, batch_label_contents
 
     def generate_labels(self, solutions: List[List[Tuple]], batch_meta: Dict[str, Any]) -> Tuple[
@@ -163,7 +164,7 @@ class MazeDatasetGenerator:
 if __name__ == '__main__':
     dataset_meta = {
         'output_file': 'dataset.meta',
-        'maze_size': (27, 27),  # TODO: assert odd
+        'maze_size': (11, 11),  # TODO: assert odd
         'task_type': 'find_goal',
         'label_descriptors': [
             'difficulty_metrics',
@@ -198,7 +199,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 10,
+            'batch_size': 10000,
             'batch_id': 0,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -212,6 +213,6 @@ if __name__ == '__main__':
         },
     ]
 
-    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir='test_dataset')
+    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir='only_grid_10000x11')
     MazeGenerator.generate_data()
     print("Done")
