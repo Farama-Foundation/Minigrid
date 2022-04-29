@@ -32,7 +32,7 @@ List of publications & submissions using MiniGrid or BabyAI (please open a pull 
 - [In a Nutshell, the Human Asked for This: Latent Goals for Following Temporal Specifications](https://openreview.net/pdf?id=rUwm9wCjURV) (Imperial College London, ICLR 2022)
 - [Interesting Object, Curious Agent: Learning Task-Agnostic Exploration](https://arxiv.org/abs/2111.13119) (Meta AI Research, NeurIPS 2021)
 - [Safe Policy Optimization with Local Generalized Linear Function Approximations](https://arxiv.org/abs/2111.04894) (IBM Research, Tsinghua University, NeurIPS 2021)
-- [A Consciousness-Inspired Planning Agent for Model-Based Reinforcement Learning](https://arxiv.org/abs/2106.02097) (Mila, McGill University, 2021)
+- [A Consciousness-Inspired Planning Agent for Model-Based Reinforcement Learning](https://arxiv.org/abs/2106.02097) (Mila, McGill University, NeurIPS 2021)
 - [SPOTTER: Extending Symbolic Planning Operators through Targeted Reinforcement Learning](http://www.ifaamas.org/Proceedings/aamas2021/pdfs/p1118.pdf) (Tufts University, SIFT, AAMAS 2021)
 - [Grid-to-Graph: Flexible Spatial Relational Inductive Biases for Reinforcement Learning](https://arxiv.org/abs/2102.04220) (UCL, AAMAS 2021)
 - [Rank the Episodes: A Simple Approach for Exploration in Procedurally-Generated Environments](https://openreview.net/forum?id=MtEE0CktZht) (Texas A&M University, Kuai Inc., ICLR 2021)
