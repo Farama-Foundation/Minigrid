@@ -148,7 +148,7 @@ class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
                 out[i, j, len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + state] = 1
 
         return {
-            'mission': obs['mission'],
+            **obs,
             'image': out
         }
 
@@ -180,7 +180,7 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
         )
 
         return {
-            'mission': obs['mission'],
+            **obs,
             'image': rgb_img
         }
 
@@ -213,7 +213,7 @@ class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
         )
 
         return {
-            'mission': obs['mission'],
+            **obs,
             'image': rgb_img_partial
         }
 
@@ -242,7 +242,7 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
         ])
 
         return {
-            'mission': obs['mission'],
+            **obs,
             'image': full_grid
         }
 
