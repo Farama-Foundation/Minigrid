@@ -2,6 +2,7 @@ from typing import List, Tuple, Dict, Any, Union
 import numpy as np
 import pickle
 from pathlib import Path
+import os
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
@@ -31,6 +32,10 @@ class MazeDatasetGenerator:
             self.generated_label_contents.append(batch_label_contents)
 
         if normalise_difficulty: self.normalise_difficulty()
+
+        # creates folder if it does not exist.
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
 
         for i in range(len(self.generated_batches)):
             self.save_batch(self.generated_batches[i], self.generated_labels[i],
