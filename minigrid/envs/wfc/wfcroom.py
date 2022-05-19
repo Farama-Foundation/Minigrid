@@ -169,7 +169,7 @@ class MazeDatasetGenerator:
 if __name__ == '__main__':
     dataset_meta = {
         'output_file': 'dataset.meta',
-        'maze_size': (11, 11),  # TODO: assert odd
+        'maze_size': (27, 27),  # TODO: assert odd
         'task_type': 'find_goal',
         'label_descriptors': [
             'difficulty_metrics',
@@ -218,6 +218,6 @@ if __name__ == '__main__':
         },
     ]
 
-    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir='only_grid_10000x11')
+    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir='only_grid_10000x27')
     MazeGenerator.generate_data()
     print("Done")
