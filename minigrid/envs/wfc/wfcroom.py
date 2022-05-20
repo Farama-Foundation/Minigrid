@@ -75,7 +75,6 @@ class MazeDatasetGenerator:
 
         batch_labels, batch_label_contents = self.generate_labels(solutions, batch_meta)
         batch_features = np.squeeze(batch_features)
-        batch_features = batch_features[..., 0] #TODO: remove
         return batch_features, batch_labels, batch_label_contents
 
     def generate_labels(self, solutions: List[List[Tuple]], batch_meta: Dict[str, Any]) -> Tuple[
@@ -149,11 +148,13 @@ class MazeDatasetGenerator:
         start_position_channels[tuple(start_positions_indices.T)] = 1
         goal_position_channels[tuple(goal_positions_indices.T)] = 1
 
-        # flatten and merge
-        grids = grids.reshape(grids.shape[0], -1)
-        start_position_channels = start_position_channels.reshape(start_position_channels.shape[0], -1)
-        goal_position_channels = goal_position_channels.reshape(goal_position_channels.shape[0], -1)
-        features = np.stack((grids, start_position_channels, goal_position_channels), axis=2)
+        # flatten
+        # grids = grids.reshape(grids.shape[0], -1)
+        # start_position_channels = start_position_channels.reshape(start_position_channels.shape[0], -1)
+        # goal_position_channels = goal_position_channels.reshape(goal_position_channels.shape[0], -1)
+
+        # merge
+        features = np.stack((grids, start_position_channels, goal_position_channels), axis=-1)
 
         return features
 
@@ -204,7 +205,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 10000,
+            'batch_size': 128,
             'batch_id': 0,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -218,6 +219,7 @@ if __name__ == '__main__':
         },
     ]
 
-    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir='only_grid_10000x27')
+    dataset_directory = 'only_grid_' + str(batches_meta[0]['batch_size']) + 'x' + str(dataset_meta['maze_size'][0])
+    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
     MazeGenerator.generate_data()
     print("Done")
