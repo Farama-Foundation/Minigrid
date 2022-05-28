@@ -305,7 +305,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 128,
+            'batch_size': 10000,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
