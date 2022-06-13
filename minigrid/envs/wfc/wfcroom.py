@@ -304,7 +304,49 @@ if __name__ == '__main__':
 
     batches_meta = [
         {
-            'output_file': 'batch_0.data',
+            'output_file': 'batch_1.data',
+            'batch_size': 10000,
+            'batch_id': 0,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_2.data',
+            'batch_size': 10000,
+            'batch_id': 0,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_3.data',
+            'batch_size': 10000,
+            'batch_id': 0,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'test_batch.data',
             'batch_size': 10000,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
