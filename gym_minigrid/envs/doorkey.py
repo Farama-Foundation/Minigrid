@@ -6,10 +6,10 @@ class DoorKeyEnv(MiniGridEnv):
     Environment with a door and key, sparse reward
     """
 
-    def __init__(self, size=8):
+    def __init__(self, size=8, max_steps=None):
         super().__init__(
             grid_size=size,
-            max_steps=10*size*size
+            max_steps=10*size*size if max_steps is None else max_steps
         )
 
     def _gen_grid(self, width, height):
