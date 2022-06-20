@@ -29,7 +29,7 @@ OBJECT_TO_CHANNEL_AND_IDX = {
 }
 
 
-class MazeDatasetGenerator:
+class GridNavDatasetGenerator:
 
     def __init__(self, dataset_meta: Dict[str, Any], batches_meta: List[Dict[str, Any]], save_dir: str):
         self.dataset_meta = dataset_meta
@@ -40,14 +40,15 @@ class MazeDatasetGenerator:
         self.generated_labels = []
         self.generated_label_contents = []
 
-        self.feature_shape = (self.dataset_meta['maze_size'][0], self.dataset_meta['maze_size'][1], 3)
+        self.feature_shape = (self.dataset_meta['data_dim'][0], self.dataset_meta['data_dim'][1], 3)
 
-    def generate_data(self, normalise_difficulty: bool = True):
+    def generate_dataset(self, normalise_difficulty: bool = True):
 
         for i, batch_meta in enumerate(self.batches_meta):
-            batch_features, batch_labels, batch_label_contents = self.generate_batch(batch_meta)
+            batch_g = BatchGenerator(batch_meta, self.dataset_meta)
+            batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
             self.generated_batches.append(batch_features)
-            self.generated_labels.append(batch_labels)
+            self.generated_labels.append(batch_label_ids)
             self.generated_label_contents.append(batch_label_contents)
 
         if normalise_difficulty: self.normalise_difficulty()
@@ -61,43 +62,6 @@ class MazeDatasetGenerator:
                             self.generated_label_contents[i], self.batches_meta[i])
 
         self.save_dataset_meta()
-
-    #TODO: this should be a class
-    def generate_batch(self, batch_meta: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
-
-        # Set up maze generator
-        if batch_meta['task_structure'] == 'maze':
-            batch_features, batch_labels, batch_label_contents = self.generate_maze_batch(batch_meta)
-        elif batch_meta['task_structure'] == 'rooms_unstructured_layout':
-            batch_features, batch_labels, batch_label_contents = self.generate_multiroom_batch(batch_meta)
-        else:
-            raise KeyError("Task Structure was not recognised")
-
-        return batch_features, batch_labels, batch_label_contents
-
-    def generate_labels(self, solutions: List[List[Tuple]], batch_meta: Dict[str, Any]) -> Tuple[
-        np.ndarray, Dict[int, Any]]:
-        # call a specific quantity with
-        # labels[dataset_meta['label_descriptors'].index('wanted_label_descriptor')][label_id]
-
-        batch_id = [batch_meta['batch_id']] * batch_meta['batch_size']  # from batch_meta
-
-        task_difficulty = self.maze_difficulty(solutions, self.dataset_meta['difficulty_descriptors'])
-
-        seed = [0] * batch_meta['batch_size']  # TODO: implement
-
-        # task structure one-hot vector [0,1]
-        task_structure = np.zeros((batch_meta['batch_size'], len(self.dataset_meta['task_structure_descriptors'])),
-                                  dtype=int)
-        batch_task_structure_idx = self.dataset_meta['task_structure_descriptors'].index(batch_meta['task_structure'])
-        task_structure[:, batch_task_structure_idx] = 1
-
-        # TODO: make robust against change of label descriptors (or declare label descriptors as a class var)
-        # TODO: assert checks that they are all the right dimensions
-        label_ids = np.arange(batch_meta['batch_size'])
-        label_contents = {0: task_difficulty, 1: task_structure, 2: batch_id, 3: seed, 4: solutions}
-
-        return label_ids, label_contents
 
     def save_batch(self, batch_data: np.ndarray, batch_labels: np.ndarray,
                    batch_label_contents: Dict[int, Any], batch_meta: Dict[str, Any]):
@@ -117,40 +81,72 @@ class MazeDatasetGenerator:
         with open(filename, 'wb') as f:
             pickle.dump(entry, f)
 
-    def generate_maze_batch(self, batch_meta: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
-        # Set up maze generator
-        maze_generator = Maze()  # TODO: here add seed argument later
-        maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['maze_size']]
+    def normalise_difficulty(self):
+        pass  # TODO: implement
 
-        # Set up generating algorithm
-        if batch_meta['generating_algorithm'] == 'Prims':
-            maze_generator.generator = Prims(*maze_size_arg)
+
+class BatchGenerator:
+
+    def __new__(cls, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+
+        if batch_meta['task_structure'] == 'maze':
+            instance = super().__new__(MazeBatch)
+        elif batch_meta['task_structure'] == 'rooms_unstructured_layout':
+            instance = super().__new__(RoomsUnstructuredBatch)
         else:
-            raise KeyError("Maze generating algorithm was not recognised")
+            raise KeyError("Task Structure was not recognised")
 
-        # Set up solving algorithm
-        if batch_meta['solving_algorithm'] == 'ShortestPaths':
-            maze_generator.solver = ShortestPaths()
-        else:
-            raise KeyError("Maze solving algorithm was not recognised")
+        instance.__init__(batch_meta, dataset_meta)
 
-        batch_features = []
-        solutions = []
-        for i in range(batch_meta['batch_size']):
-            # maze_generator.set_seed(self.batch_seeds[i]) #TODO
-            maze_generator.generate()
-            maze_generator.generate_entrances(False, False)
-            maze_generator.solve()
-            features = self.encode_mazes(maze_generator)
-            optimal_trajectory = maze_generator.solutions[0]  # TODO Check this is the right one.
-            batch_features.append(features)
-            solutions.append(optimal_trajectory)
+        return instance
 
-        batch_labels, batch_label_contents = self.generate_labels(solutions, batch_meta)
-        batch_features = np.squeeze(batch_features)
-        return batch_features, batch_labels, batch_label_contents
+    def __init__(self):
+        raise RuntimeError(f"{type(self)} is a Class Factory. Assign it to a variable. ")
 
-    def maze_difficulty(self, solutions: List[List[Tuple]], difficulty_descriptors: List[str]) -> np.ndarray:
+
+class Batch:
+
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+        self.batch_meta = batch_meta
+        self.dataset_meta = dataset_meta
+
+    def generate_batch(self):
+
+        features = self.generate_data()
+        solutions = self.generate_solutions(features)
+        label_ids, label_content = self.generate_labels(solutions)
+
+        return features, label_ids, label_content
+
+    def generate_data(self):
+        raise NotImplementedError
+
+    def generate_labels(self, solutions: List[List[Tuple]]) -> Tuple[
+        np.ndarray, Dict[int, Any]]:
+        # call a specific quantity with
+        # labels[dataset_meta['label_descriptors'].index('wanted_label_descriptor')][label_id]
+
+        batch_id = [self.batch_meta['batch_id']] * self.batch_meta['batch_size']  # from batch_meta
+
+        task_difficulty = self.task_difficulty(solutions, self.dataset_meta['difficulty_descriptors'])
+
+        seed = [0] * self.batch_meta['batch_size']  # TODO: implement
+
+        # task structure one-hot vector [0,1]
+        task_structure = np.zeros((self.batch_meta['batch_size'], len(self.dataset_meta['task_structure_descriptors'])),
+                                  dtype=int)
+        batch_task_structure_idx = self.dataset_meta['task_structure_descriptors'].index(self.batch_meta['task_structure'])
+        task_structure[:, batch_task_structure_idx] = 1
+
+        # TODO: make robust against change of label descriptors (or declare label descriptors as a class var)
+        # TODO: assert checks that they are all the right dimensions
+        label_ids = np.arange(self.batch_meta['batch_size'])
+        label_contents = {0: task_difficulty, 1: task_structure, 2: batch_id, 3: seed, 4: solutions}
+
+        return label_ids, label_contents
+
+    @staticmethod
+    def task_difficulty(self, solutions: List[List[Tuple]], difficulty_descriptors: List[str]) -> np.ndarray:
 
         difficulty_metrics = np.zeros((len(solutions), len(difficulty_descriptors)))
 
@@ -163,10 +159,8 @@ class MazeDatasetGenerator:
 
         return difficulty_metrics
 
-    def normalise_difficulty(self):
-        pass  # TODO: implement
-
-    def encode_mazes(self, mazes: Union[Maze, List[Maze]]) -> np.ndarray:
+    @staticmethod
+    def encode_maze_to_gridworld(self, mazes: Union[Maze, List[Maze]]) -> np.ndarray:
 
         if isinstance(mazes, Maze):
             mazes = [mazes]
@@ -184,7 +178,8 @@ class MazeDatasetGenerator:
 
         return features
 
-    def minigrid_to_features(self, envs: List[MiniGridEnv]):
+    @staticmethod
+    def encode_minigrid_to_gridworld(self, envs: List[MiniGridEnv]) -> np.ndarray:
         minigrid_grid_arrays = [env.grid.encode()[:, :, 0] for env in envs]
 
         for i in range(len(envs)):
@@ -206,7 +201,8 @@ class MazeDatasetGenerator:
 
         return features
 
-    def features_to_mazes(self, grids: np.ndarray) -> List[Maze]:
+    @staticmethod
+    def encode_gridworld_to_maze(self, grids: np.ndarray) -> List[Maze]:
         # Set up maze generator
         mazes = [Maze() for i in range(grids.shape[0])]  # TODO: here add seed argument later
         for (maze, grid) in zip(mazes, grids):
@@ -216,44 +212,84 @@ class MazeDatasetGenerator:
 
         return mazes
 
-
-    def decode_minigrid(self, mazes: np.ndarray, config: Dict) -> List[Any]:
+    def encode_gridworld_to_minigrid(self, mazes: np.ndarray, config: Dict) -> List[Any]:
         raise NotImplementedError
 
-    def generate_multiroom_batch(self, batch_meta: Dict[str, Any]) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
+
+class MazeBatch(Batch):
+
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+        super().__init__(batch_meta, dataset_meta)
+
+    def generate_data(self):
+        # Set up maze generator
+        maze_generator = Maze()  # TODO: here add seed argument later
+        maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['data_dim']] #TODO! change
+
+        # Set up generating algorithm
+        if self.batch_meta['generating_algorithm'] == 'Prims':
+            maze_generator.generator = Prims(*maze_size_arg)
+        else:
+            raise KeyError("Maze generating algorithm was not recognised")
+
+        batch_features = []
+        for i in range(self.batch_meta['batch_size']):
+            # maze_generator.set_seed(self.batch_seeds[i]) #TODO
+            maze_generator.generate()
+            maze_generator.generate_entrances(False, False)
+            features = self.encode_maze_to_gridworld(maze_generator)
+            batch_features.append(features)
+
+        batch_features = np.squeeze(batch_features)
+        return batch_features
+
+    # def generate_solutions(self, features) -> List[List[Tuple]]:
+    #
+    #     solutions = []
+    #     # Set up solving algorithm
+    #     if self.batch_meta['solving_algorithm'] == 'ShortestPaths':
+    #         maze_generator.solver = ShortestPaths()
+    #     else:
+    #         raise KeyError("Maze solving algorithm was not recognised")
+    #
+    #     for i in range(self.batch_meta['batch_size']):
+    #         maze_generator.solve()
+    #         optimal_trajectory = maze_generator.solutions[0]  # TODO Check this is the right one.
+    #         solutions.append(optimal_trajectory)
+
+
+class RoomsUnstructuredBatch(Batch):
+
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+        super().__init__(batch_meta, dataset_meta)
+
+    def generate_data(self) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
         # Set up generator
         #TODO do seed properly
-        envs = [MultiRoomEnv(minNumRooms=4, maxNumRooms=12, maxRoomSize=10, grid_size=self.dataset_meta['maze_size'][0],
-                             seed=np.random.randint(100000)) for i in range(batch_meta['batch_size'])]
+        envs = [MultiRoomEnv(minNumRooms=4, maxNumRooms=12, maxRoomSize=10, grid_size=self.dataset_meta['data_dim'][0],
+                             seed=np.random.randint(100000)) for i in range(self.batch_meta['batch_size'])]
 
-        batch_features = self.minigrid_to_features(envs)
-        mazes = self.features_to_mazes(batch_features)
+        batch_features = self.encode_minigrid_to_gridworld(envs)
+        mazes = self.encode_gridworld_to_maze(batch_features)
 
-        solutions = []
-        for maze in mazes:
-            # Set up solving algorithm
-            if batch_meta['solving_algorithm'] == 'ShortestPaths':
-                maze.solver = ShortestPaths()
-                #maze.solver = BacktrackingSolver()
-                #maze.solver = RandomMouse()
-                #maze.solver = ShortestPath()
-            else:
-                raise KeyError("Maze solving algorithm was not recognised")
+        return batch_features
 
-            #maze.solve()
-            maze.solutions = [(0,0)] #TODO: fix
-            optimal_trajectory = maze.solutions[0]  # TODO Check this is the right one.
-            solutions.append(optimal_trajectory)
+    #TODO: Fix
+    # def generate_solutions(self, features) -> List[List[Tuple]]:
+    #
+    #     solutions = []
+    #     for layout in features:
+    #         optimal_trajectory = (0,0)  # TODO Check this is the right one.
+    #         solutions.append(optimal_trajectory)
+    #
+    #     return solutions
 
-        batch_labels, batch_label_contents = self.generate_labels(solutions, batch_meta)
-        return batch_features, batch_labels, batch_label_contents
-
-        print('Done')
 
 if __name__ == '__main__':
     dataset_meta = {
         'output_file': 'dataset.meta',
-        'maze_size': (27, 27),  # TODO: assert odd
+        'data_type': 'grid', #types: gridworld, grid, graph
+        'data_dim': (27, 27),  # TODO: assert odd if data_type is 'gridworld'
         'task_type': 'find_goal',
         'label_descriptors': [
             'difficulty_metrics',
@@ -305,7 +341,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_1.data',
-            'batch_size': 10000,
+            'batch_size': 10,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -319,7 +355,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_2.data',
-            'batch_size': 10000,
+            'batch_size': 10,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -333,7 +369,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_3.data',
-            'batch_size': 10000,
+            'batch_size': 10,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -347,7 +383,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'test_batch.data',
-            'batch_size': 10000,
+            'batch_size': 10,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -361,7 +397,8 @@ if __name__ == '__main__':
         },
     ]
 
-    dataset_directory = 'multi_room' + str(batches_meta[0]['batch_size']) + 'x' + str(dataset_meta['maze_size'][0])
-    MazeGenerator = MazeDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
-    MazeGenerator.generate_data()
+    dataset_directory = 'test' + str(batches_meta[0]['batch_size']) + 'x' + str(dataset_meta['data_dim'][0])
+    MazeGenerator = GridNavDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
+    MazeGenerator.generate_dataset()
+
     print("Done")
