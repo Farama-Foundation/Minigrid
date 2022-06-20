@@ -3,7 +3,7 @@ import numpy as np
 import pickle
 from pathlib import Path
 import os
-from copy import deepcopy
+from copy import deepcopy, copy
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
@@ -109,10 +109,17 @@ class Batch:
     def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
         self.batch_meta = batch_meta
         self.dataset_meta = dataset_meta
+        self.data_type = dataset_meta['data_type']
 
     def generate_batch(self):
 
         features = self.generate_data()
+        if self.data_type == 'gridworld':
+            pass
+        elif self.data_type == 'grid':
+            features = self.encode_gridworld_to_grid(features)
+        else:
+            raise KeyError(f"Data Type '{self.data_type}' not recognised")
         solutions = self.generate_solutions(features)
         label_ids, label_content = self.generate_labels(solutions)
 
@@ -145,8 +152,19 @@ class Batch:
 
         return label_ids, label_contents
 
+    #TODO implement
     @staticmethod
-    def task_difficulty(self, solutions: List[List[Tuple]], difficulty_descriptors: List[str]) -> np.ndarray:
+    def generate_solutions(features) -> List[List[Tuple]]:
+
+        solutions = []
+        for layout in features:
+            optimal_trajectory = (0,0)
+            solutions.append(optimal_trajectory)
+
+        return solutions
+
+    @staticmethod
+    def task_difficulty(solutions: List[List[Tuple]], difficulty_descriptors: List[str]) -> np.ndarray:
 
         difficulty_metrics = np.zeros((len(solutions), len(difficulty_descriptors)))
 
@@ -160,7 +178,7 @@ class Batch:
         return difficulty_metrics
 
     @staticmethod
-    def encode_maze_to_gridworld(self, mazes: Union[Maze, List[Maze]]) -> np.ndarray:
+    def encode_maze_to_gridworld(mazes: Union[Maze, List[Maze]]) -> np.ndarray:
 
         if isinstance(mazes, Maze):
             mazes = [mazes]
@@ -179,7 +197,7 @@ class Batch:
         return features
 
     @staticmethod
-    def encode_minigrid_to_gridworld(self, envs: List[MiniGridEnv]) -> np.ndarray:
+    def encode_minigrid_to_gridworld(envs: List[MiniGridEnv]) -> np.ndarray:
         minigrid_grid_arrays = [env.grid.encode()[:, :, 0] for env in envs]
 
         for i in range(len(envs)):
@@ -202,7 +220,7 @@ class Batch:
         return features
 
     @staticmethod
-    def encode_gridworld_to_maze(self, grids: np.ndarray) -> List[Maze]:
+    def encode_gridworld_to_maze(grids: np.ndarray) -> List[Maze]:
         # Set up maze generator
         mazes = [Maze() for i in range(grids.shape[0])]  # TODO: here add seed argument later
         for (maze, grid) in zip(mazes, grids):
@@ -212,7 +230,63 @@ class Batch:
 
         return mazes
 
-    def encode_gridworld_to_minigrid(self, mazes: np.ndarray, config: Dict) -> List[Any]:
+    @staticmethod
+    def encode_gridworld_to_minigrid(mazes: np.ndarray, config: Dict) -> List[Any]:
+        raise NotImplementedError
+
+    @staticmethod
+    def encode_gridworld_to_grid(gridworlds: np.ndarray):
+        # gridworls shape: [m, odd, odd, 3]
+        assert gridworlds.shape[1] % 2 == 1 and gridworlds.shape[2] % 2 == 1
+        grid_layout_dim = (gridworlds.shape[0], int(np.floor(gridworlds.shape[1]/2)), int(np.floor(gridworlds.shape[2]/2)), 2)
+        grid_layouts = np.zeros(grid_layout_dim)
+
+        layout_channel = OBJECT_TO_CHANNEL_AND_IDX['empty'][0]
+        empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
+
+        for m in range(grid_layouts.shape[0]):
+            for i in range(grid_layouts.shape[1]):
+                for j in range(grid_layouts.shape[2]):
+                    ind_gridworld = (m, int(i*2+1), int(j*2+1), layout_channel)
+                    ind_gridworld_right = list(ind_gridworld)
+                    ind_gridworld_right[2] += 1
+                    ind_gridworld_bot = list(ind_gridworld)
+                    ind_gridworld_bot[1] += 1
+                    if gridworlds[ind_gridworld] == empty_idx:
+                        if gridworlds[tuple(ind_gridworld_right)] == empty_idx:
+                            grid_layouts[m,i,j,0] = 1
+                        if gridworlds[tuple(ind_gridworld_bot)] == empty_idx:
+                            grid_layouts[m, i, j, 1] = 1
+
+        #TODO: use object dictionary
+        start_channels, goal_channels = (np.zeros(grid_layout_dim[:-1]) for i in range(2))
+        start_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['start'][0]]
+                                        == OBJECT_TO_CHANNEL_AND_IDX['start'][1])
+        start_inds_grid = (start_inds_gridworld[0], np.floor(start_inds_gridworld[1] / 2).astype(int),
+                           np.floor(start_inds_gridworld[2] / 2).astype(int))
+        goal_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['goal'][0]])
+        goal_inds_grid = (goal_inds_gridworld[0], np.floor(goal_inds_gridworld[1] / 2).astype(int),
+                           np.floor(goal_inds_gridworld[2] / 2).astype(int))
+
+        #TODO use object dictionary
+        start_channels[start_inds_grid] = 1
+        goal_channels[goal_inds_grid] = 1
+
+        # merge
+        grids = np.stack((grid_layouts[...,0], grid_layouts[...,1], start_channels, goal_channels), axis=-1)
+        return grids
+
+    @staticmethod
+    def encode_grid_to_gridworld():
+        raise NotImplementedError
+
+    @staticmethod
+    def encode_grid_to_graph():
+        raise NotImplementedError
+
+    #Note: will need extra args for a deterministic transformation
+    @staticmethod
+    def encode_graph_to_grid():
         raise NotImplementedError
 
 
@@ -321,72 +395,13 @@ if __name__ == '__main__':
         ],
     }
 
-    # batches_meta = [
-    #     {
-    #         'output_file': 'batch_0.data',
-    #         'batch_size': 10000,
-    #         'batch_id': 0,
-    #         'task_structure': 'maze',
-    #         'generating_algorithm': 'Prims',
-    #         'generating_algorithm_options': [
-    #
-    #         ],
-    #         'solving_algorithm': 'ShortestPaths',
-    #         'solving_algorithm_options': [
-    #
-    #         ],
-    #     },
-    # ]
-
     batches_meta = [
         {
-            'output_file': 'batch_1.data',
+            'output_file': 'batch_0.data',
             'batch_size': 10,
             'batch_id': 0,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_2.data',
-            'batch_size': 10,
-            'batch_id': 0,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_3.data',
-            'batch_size': 10,
-            'batch_id': 0,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'test_batch.data',
-            'batch_size': 10,
-            'batch_id': 0,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
             'generating_algorithm_options': [
 
             ],
@@ -396,6 +411,65 @@ if __name__ == '__main__':
             ],
         },
     ]
+
+    # batches_meta = [
+    #     {
+    #         'output_file': 'batch_1.data',
+    #         'batch_size': 10,
+    #         'batch_id': 0,
+    #         'task_structure': 'rooms_unstructured_layout',
+    #         'generating_algorithm': 'Minigrid_MultiRoom',
+    #         'generating_algorithm_options': [
+    #
+    #         ],
+    #         'solving_algorithm': 'ShortestPaths',
+    #         'solving_algorithm_options': [
+    #
+    #         ],
+    #     },
+    #     {
+    #         'output_file': 'batch_2.data',
+    #         'batch_size': 10,
+    #         'batch_id': 0,
+    #         'task_structure': 'rooms_unstructured_layout',
+    #         'generating_algorithm': 'Minigrid_MultiRoom',
+    #         'generating_algorithm_options': [
+    #
+    #         ],
+    #         'solving_algorithm': 'ShortestPaths',
+    #         'solving_algorithm_options': [
+    #
+    #         ],
+    #     },
+    #     {
+    #         'output_file': 'batch_3.data',
+    #         'batch_size': 10,
+    #         'batch_id': 0,
+    #         'task_structure': 'rooms_unstructured_layout',
+    #         'generating_algorithm': 'Minigrid_MultiRoom',
+    #         'generating_algorithm_options': [
+    #
+    #         ],
+    #         'solving_algorithm': 'ShortestPaths',
+    #         'solving_algorithm_options': [
+    #
+    #         ],
+    #     },
+    #     {
+    #         'output_file': 'test_batch.data',
+    #         'batch_size': 10,
+    #         'batch_id': 0,
+    #         'task_structure': 'rooms_unstructured_layout',
+    #         'generating_algorithm': 'Minigrid_MultiRoom',
+    #         'generating_algorithm_options': [
+    #
+    #         ],
+    #         'solving_algorithm': 'ShortestPaths',
+    #         'solving_algorithm_options': [
+    #
+    #         ],
+    #     },
+    # ]
 
     dataset_directory = 'test' + str(batches_meta[0]['batch_size']) + 'x' + str(dataset_meta['data_dim'][0])
     MazeGenerator = GridNavDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
