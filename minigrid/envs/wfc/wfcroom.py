@@ -1,5 +1,7 @@
 from typing import List, Tuple, Dict, Any, Union
 import numpy as np
+import torch
+from torchvision import transforms
 import pickle
 from pathlib import Path
 import os
@@ -290,8 +292,23 @@ class Batch:
         return grids
 
     @staticmethod
-    def encode_grid_to_gridworld(grids: np.ndarray):
-        assert grids.shape[-1] == 4, "Inputted Grids do not have 4 channels"
+    def encode_grid_to_gridworld(grids: np.ndarray, layout_only=False):
+
+        if layout_only: expected_channels = 2
+        else: expected_channels = 4
+
+        #TODO: perf remodel to handle GPU
+        tensor = False
+        if torch.is_tensor(grids):
+            tensor = True
+            device = grids.device
+            assert len(grids.shape) == 4, f"Grids Tensor has {len(grids.shape)} dimensions. Expected {4}"
+            if grids.shape[-1] != expected_channels and grids.shape[1] == expected_channels:
+                grids = torch.permute(grids, (0, 2, 3, 1)) # (B, C, H, W) -> (B, H, W, C)
+            grids = grids.detach().cpu().numpy()
+
+        assert grids.shape[-1] == expected_channels, f"Inputted Grids have {grids.shape[-1]} channels. Expected {expected_channels}"
+
         gridworlds_layout_dim = (
         grids.shape[0], int(2 * grids.shape[1] + 1), int(2 * grids.shape[2] + 1))
         gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
@@ -316,21 +333,29 @@ class Batch:
                         if grids[m,i,j,0] == grids[m,i,j,1] == grids[m,i+1,j,0] == grids[m,i,j+1,1] == 1:
                             gridworlds_layouts[m, i_gridworld + 1, j_gridworld + 1] = gridworlds_empty_idx
 
+        if layout_only:
+            gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape,1))
         #TODO: use object dictionary
-        start_channels, goal_channels = (np.zeros(gridworlds_layout_dim) for i in range(2))
+        else:
+            start_channels, goal_channels = (np.zeros(gridworlds_layout_dim) for i in range(2))
 
-        start_inds_grids = np.where(grids[..., 2] == 1)
-        start_inds_gridworlds = (start_inds_grids[0], (2*start_inds_grids[1] + 1).astype(int),
-                           (2*start_inds_grids[2] + 1).astype(int))
-        goal_inds_grids = np.where(grids[..., 3] == 1)
-        goal_inds_gridworlds = (goal_inds_grids[0], (2*goal_inds_grids[1] + 1).astype(int),
-                           (2*goal_inds_grids[2] + 1).astype(int))
+            start_inds_grids = np.where(grids[..., 2] == 1)
+            start_inds_gridworlds = (start_inds_grids[0], (2*start_inds_grids[1] + 1).astype(int),
+                               (2*start_inds_grids[2] + 1).astype(int))
+            goal_inds_grids = np.where(grids[..., 3] == 1)
+            goal_inds_gridworlds = (goal_inds_grids[0], (2*goal_inds_grids[1] + 1).astype(int),
+                               (2*goal_inds_grids[2] + 1).astype(int))
 
-        start_channels[start_inds_gridworlds] = OBJECT_TO_CHANNEL_AND_IDX['start'][1]
-        goal_channels[goal_inds_gridworlds] = OBJECT_TO_CHANNEL_AND_IDX['goal'][1]
+            start_channels[start_inds_gridworlds] = OBJECT_TO_CHANNEL_AND_IDX['start'][1]
+            goal_channels[goal_inds_gridworlds] = OBJECT_TO_CHANNEL_AND_IDX['goal'][1]
 
-        # merge
-        gridworlds = np.stack((gridworlds_layouts, start_channels, goal_channels), axis=-1)
+            # merge
+            gridworlds = np.stack((gridworlds_layouts, start_channels, goal_channels), axis=-1)
+
+        if tensor:
+            gridworlds = torch.tensor(gridworlds, dtype=torch.float, device=device)
+            gridworlds = torch.permute(gridworlds, (0, 3, 1, 2)) # (B, H, W, C) -> (B, C, H, W)
+
         return gridworlds
 
     @staticmethod
@@ -395,7 +420,7 @@ class RoomsUnstructuredBatch(Batch):
         #TODO do seed properly
         envs = [MultiRoomEnv(minNumRooms=4, maxNumRooms=12, minRoomSize=5, maxRoomSize=9,
                              grid_size=self.dataset_meta['data_dim'][0], odd=True,
-                             seed=np.random.randint(100000)) for i in range(self.batch_meta['batch_size'])]
+                             seed=np.random.randint(1e6)) for i in range(self.batch_meta['batch_size'])]
 
         batch_features = self.encode_minigrid_to_gridworld(envs)
 
