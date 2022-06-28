@@ -495,6 +495,76 @@ if __name__ == '__main__':
             'output_file': 'batch_0.data',
             'batch_size': 10000,
             'batch_id': 0,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_1.data',
+            'batch_size': 10000,
+            'batch_id': 1,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_2.data',
+            'batch_size': 10000,
+            'batch_id': 2,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_3.data',
+            'batch_size': 10000,
+            'batch_id': 3,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_4.data',
+            'batch_size': 10000,
+            'batch_id': 4,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_5.data',
+            'batch_size': 10000,
+            'batch_id': 5,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
             'generating_algorithm_options': [
@@ -505,38 +575,80 @@ if __name__ == '__main__':
 
             ],
         },
-        # {
-        #     'output_file': 'batch_2.data',
-        #     'batch_size': 10,
-        #     'batch_id': 0,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_3.data',
-        #     'batch_size': 10,
-        #     'batch_id': 0,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
         {
-            'output_file': 'test_batch.data',
+            'output_file': 'batch_6.data',
             'batch_size': 10000,
-            'batch_id': 99,
+            'batch_id': 6,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_7.data',
+            'batch_size': 10000,
+            'batch_id': 7,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_8.data',
+            'batch_size': 10000,
+            'batch_id': 8,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_9.data',
+            'batch_size': 10000,
+            'batch_id': 9,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'test_batch_0.data',
+            'batch_size': 10000,
+            'batch_id': 90,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'test_batch_1.data',
+            'batch_size': 10000,
+            'batch_id': 91,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
             'generating_algorithm_options': [
@@ -549,10 +661,11 @@ if __name__ == '__main__':
         },
     ]
 
-    task_structures = set()
+    task_structures = []
     dataset_size = 0
     for batch_meta in batches_meta:
-        task_structures.add(batch_meta['task_structure'])
+        if batch_meta['task_structure'] not in task_structures:
+            task_structures.append(batch_meta['task_structure'])
         dataset_size += batch_meta['batch_size']
     task_structures = '-'.join(task_structures)
     dataset_directory = f"ts={task_structures}-x={dataset_meta['data_type']}-s={dataset_size}-d={dataset_meta['data_dim'][0]}"
