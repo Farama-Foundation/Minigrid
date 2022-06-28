@@ -376,7 +376,7 @@ class MazeBatch(Batch):
     def generate_data(self):
         # Set up maze generator
         maze_generator = Maze()  # TODO: here add seed argument later
-        maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['data_dim']] #TODO! change
+        maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['data_dim']]
 
         # Set up generating algorithm
         if self.batch_meta['generating_algorithm'] == 'Prims':
