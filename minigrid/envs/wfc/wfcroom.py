@@ -5,6 +5,7 @@ from torchvision import transforms
 import pickle
 from pathlib import Path
 import os
+import dgl
 from copy import deepcopy, copy
 
 from mazelib import Maze
@@ -279,7 +280,8 @@ class Batch:
                                         == OBJECT_TO_CHANNEL_AND_IDX['start'][1])
         start_inds_grid = (start_inds_gridworld[0], np.floor(start_inds_gridworld[1] / 2).astype(int),
                            np.floor(start_inds_gridworld[2] / 2).astype(int))
-        goal_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['goal'][0]])
+        goal_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['goal'][0]]
+                                       == OBJECT_TO_CHANNEL_AND_IDX['goal'][1])
         goal_inds_grid = (goal_inds_gridworld[0], np.floor(goal_inds_gridworld[1] / 2).astype(int),
                            np.floor(goal_inds_gridworld[2] / 2).astype(int))
 
@@ -292,7 +294,7 @@ class Batch:
         return grids
 
     @staticmethod
-    def encode_grid_to_gridworld(grids: np.ndarray, layout_only=False):
+    def encode_grid_to_gridworld(grids: Union[np.ndarray, torch.Tensor], layout_only=False):
 
         if layout_only: expected_channels = 2
         else: expected_channels = 4
@@ -359,13 +361,77 @@ class Batch:
         return gridworlds
 
     @staticmethod
-    def encode_grid_to_graph():
-        raise NotImplementedError
+    def encode_gridworld_to_graph(gridworlds: np.ndarray):
+        # gridworls shape: [m, odd, odd, 3]
+        assert gridworlds.shape[1] % 2 == 1 and gridworlds.shape[2] % 2 == 1, \
+            "Inputted Gridworlds do not have a layout of odd dimensions"
+        assert gridworlds.shape[-1] == 3, "Inputted Gridworlds do not have 3 channels"
+
+        dim_grid = (int((gridworlds.shape[1] - 1) / 2), int((gridworlds.shape[2] - 1) / 2))
+
+        layout_channel = OBJECT_TO_CHANNEL_AND_IDX['empty'][0]
+        empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
+
+        adj = Batch.gridworld_layout_to_adj(gridworlds[...,0], empty_idx) # M, N, N
+
+        start_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['start'][0]]
+                                        == OBJECT_TO_CHANNEL_AND_IDX['start'][1])
+        goal_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['goal'][0]]
+                                       == OBJECT_TO_CHANNEL_AND_IDX['goal'][1])
+
+        start_nodes_graph = (start_inds_gridworld[0],
+                             ((start_inds_gridworld[1] - 1)/2 * dim_grid[0] + (start_inds_gridworld[2] - 1)/2).astype(int))
+        goal_nodes_graph = (goal_inds_gridworld[0],
+                             ((goal_inds_gridworld[1] - 1)/2 * dim_grid[0] + (goal_inds_gridworld[2] - 1)/2).astype(int))
+        active_nodes_graph = np.where(adj.sum(axis=1)!=0)
+
+        feats = np.zeros((adj.shape[0], adj.shape[1], 2)) # M, N, D
+        feats[(*start_nodes_graph, np.array([1]*len(start_nodes_graph[0])))] = 1
+        feats[(*goal_nodes_graph, np.array([1]*len(goal_nodes_graph[0])))] = 1
+        feats[(*active_nodes_graph, np.array([0]*len(active_nodes_graph[0])))] = 1
+        feats = torch.tensor(feats)
+        # Remove start and goal info for now - TODO: remove this
+        feats = feats[...,0]
+        feats = torch.reshape(feats, (*feats.shape, 1))
+
+        graphs = []
+        for m in range(adj.shape[0]):
+            src, dst = np.nonzero(adj[m])
+            g = dgl.graph((src, dst))
+            g.ndata['feat'] = feats[m]
+            graphs.append(g)
+
+        return graphs
 
     #Note: will need extra args for a deterministic transformation
     @staticmethod
-    def encode_graph_to_grid():
+    def encode_graph_to_gridworld():
         raise NotImplementedError
+
+    @staticmethod
+    def gridworld_layout_to_adj(layouts: np.ndarray, empty_idx=0):
+        #layouts shape: [m, odd, odd]
+        assert layouts.shape[1] % 2 == 1 and layouts.shape[2] % 2 == 1, \
+            "Inputted Gridworlds Layouts do not have odd number of elements"
+        assert len(layouts.shape) == 3, "Layout not inputted correctly. Input layouts as (m, row, col)"
+        node_inds_i, node_inds_j = [i for i in range(1, layouts.shape[1], 2)], [i for i in range(1, layouts.shape[2], 2)]
+        A = np.zeros((layouts.shape[0], len(node_inds_i) * len(node_inds_j), len(node_inds_i) * len(node_inds_j)))
+
+        for m in range(A.shape[0]):
+            for i_A, i_gw in enumerate(node_inds_i):
+                for j_A, j_gw in enumerate(node_inds_j):
+                    if layouts[m, i_gw, j_gw] == empty_idx:
+                        ind_gw_right = (m, i_gw, j_gw + 1)
+                        ind_gw_bot = (m, i_gw + 1, j_gw)
+                        if layouts[ind_gw_right] == empty_idx:
+                            ind_A_right = (m, i_A*len(node_inds_i)+j_A, i_A*len(node_inds_i)+j_A+1)
+                            A[ind_A_right] = 1
+                        if layouts[ind_gw_bot] == empty_idx:
+                            ind_A_bot = (m, i_A*len(node_inds_i)+j_A, (i_A+1)*len(node_inds_i)+j_A)
+                            A[ind_A_bot] = 1
+            A[m] = np.triu(A[m]) + np.tril(A[m].T, 1)
+
+        return A
 
 
 class MazeBatch(Batch):
