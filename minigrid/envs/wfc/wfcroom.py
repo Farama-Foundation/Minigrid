@@ -49,6 +49,8 @@ class GridNavDatasetGenerator:
             self.feature_shape = (dim0, dim1, 4)
         elif self.data_type == 'gridworld':
             self.feature_shape = (self.dataset_meta['data_dim'][0], self.dataset_meta['data_dim'][1], 3)
+        elif self.data_type == 'graph':
+            self.feature_shape = None #TODO: decide if used later
         else:
             raise KeyError(f"Data Type '{self.data_type}' not recognised")
 
@@ -131,9 +133,8 @@ class Batch:
             #TODO: cleanup and put as unit test
             # features3 = self.encode_grid_to_gridworld(features2)
             # assert np.array_equal(features, features3)
-
-        else:
-            raise KeyError(f"Data Type '{self.data_type}' not recognised")
+        elif self.data_type == 'graph':
+            features = self.encode_gridworld_to_graph(features)
         solutions = self.generate_solutions(features)
         label_ids, label_content = self.generate_labels(solutions)
 
@@ -397,7 +398,7 @@ class Batch:
         graphs = []
         for m in range(adj.shape[0]):
             src, dst = np.nonzero(adj[m])
-            g = dgl.graph((src, dst))
+            g = dgl.graph((src, dst), num_nodes=len(feats[m]))
             g.ndata['feat'] = feats[m]
             graphs.append(g)
 
@@ -405,7 +406,18 @@ class Batch:
 
     #Note: will need extra args for a deterministic transformation
     @staticmethod
-    def encode_graph_to_gridworld():
+    def encode_graph_to_gridworld(graphs: List[dgl.DGLGraph], layout_only = True):
+        # assume square layout
+        n_nodes = graphs[0].num_nodes
+        gridworlds_layout_dim = (graphs.shape[0], int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
+        gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
+
+        for m in range(len(graphs)):
+            A = graphs[m].adj().cpu().to_dense().numpy() #stick with numpy for now but check with a tensor
+            A = Batch.encode_adj_to_reduced_adj(A)
+
+
+
         raise NotImplementedError
 
     @staticmethod
@@ -529,7 +541,7 @@ class RoomsUnstructuredBatch(Batch):
 if __name__ == '__main__':
     dataset_meta = {
         'output_file': 'dataset.meta',
-        'data_type': 'grid', #types: gridworld, grid, graph
+        'data_type': 'graph', #types: gridworld, grid, graph
         'data_dim': (27, 27),  # TODO: assert odd. Note: always in "gridworld" type
         'task_type': 'find_goal',
         'label_descriptors': [
@@ -582,7 +594,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -596,7 +608,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_1.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 1,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -610,7 +622,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_2.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 2,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -624,7 +636,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_3.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 3,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -638,7 +650,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_4.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 4,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -652,7 +664,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_5.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 5,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -666,7 +678,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_6.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 6,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -680,7 +692,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_7.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 7,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -694,7 +706,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_8.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 8,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -708,7 +720,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_9.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 9,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
@@ -722,7 +734,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'test_batch_0.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 90,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -736,7 +748,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'test_batch_1.data',
-            'batch_size': 10000,
+            'batch_size': 1000,
             'batch_id': 91,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
