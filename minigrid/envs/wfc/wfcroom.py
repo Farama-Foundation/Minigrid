@@ -372,7 +372,7 @@ class Batch:
         layout_channel = OBJECT_TO_CHANNEL_AND_IDX['empty'][0]
         empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
 
-        adj = Batch.gridworld_layout_to_adj(gridworlds[...,0], empty_idx) # M, N, N
+        adj = Batch.encode_gridworld_layout_to_adj(gridworlds[...,layout_channel], empty_idx) # M, N, N
 
         start_inds_gridworld = np.where(gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['start'][0]]
                                         == OBJECT_TO_CHANNEL_AND_IDX['start'][1])
@@ -409,7 +409,7 @@ class Batch:
         raise NotImplementedError
 
     @staticmethod
-    def gridworld_layout_to_adj(layouts: np.ndarray, empty_idx=0):
+    def encode_gridworld_layout_to_adj(layouts: np.ndarray, empty_idx=0):
         #layouts shape: [m, odd, odd]
         assert layouts.shape[1] % 2 == 1 and layouts.shape[2] % 2 == 1, \
             "Inputted Gridworlds Layouts do not have odd number of elements"
@@ -433,6 +433,29 @@ class Batch:
 
         return A
 
+    @staticmethod
+    def encode_adj_to_reduced_adj(adj: np.ndarray):
+        # the last sqrt(n)-1 col edges will always be 0.
+        #adj shape (m, n, n)
+        A = np.zeros((adj.shape[0], adj.shape[1] - 1, 2))
+        dim_grid = int(np.sqrt(adj.shape[1])) #only for square grids
+        A[:,:,0] = adj.diagonal(1,1,2) # row edges
+        A[:,:-dim_grid+1,1] = adj.diagonal(dim_grid, 1, 2) # col edges
+
+        return A # (m, n-1, 2)
+
+    @staticmethod
+    def encode_reduced_adj_to_adj(adj_r: np.ndarray):
+        # only for square grids
+        #adj shape (m, n-1, 2)
+        A = np.empty((adj_r.shape[0], adj_r.shape[1] + 1, adj_r.shape[1] + 1))
+        dim_grid = int(np.sqrt(A.shape[1]))
+        for m in range(A.shape[0]):
+            A[m] = np.diag(adj_r[m,:,0], k = 1)
+            A[m] += np.diag(adj_r[m,:-dim_grid+1,1], k = dim_grid)
+            A[m] = np.triu(A[m]) + np.tril(A[m].T, 1)
+
+        return A # (m, n, n)
 
 class MazeBatch(Batch):
 
