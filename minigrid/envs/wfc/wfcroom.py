@@ -420,33 +420,13 @@ class Batch:
         n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
         if output_dtype == 'tensor':
             device = graphs[0].device
-        gridworlds_layout_dim = (len(graphs), int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
-        gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
-        gridworlds_empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
 
         A = np.empty((len(graphs), n_nodes, n_nodes))
         for m in range(len(graphs)):
             A[m] = graphs[m].adj().cpu().to_dense().numpy()
         A = Batch.encode_adj_to_reduced_adj(A)
 
-
-        for m in range(A.shape[0]):
-            for n in range(A[m].shape[0]):
-                # horizontal edge:
-                if (A[m,n,:] == 1).any():
-                    i_n = n // int(np.sqrt(n_nodes))
-                    j_n = n % int(np.sqrt(n_nodes))
-                    i, j = 2 * i_n + 1, 2 * j_n + 1
-                    gridworlds_layouts[m, i, j] = gridworlds_empty_idx
-                    if A[m,n,0] == 1: #row edge is present
-                        gridworlds_layouts[m, i, j + 1] = gridworlds_empty_idx
-                        gridworlds_layouts[m, i, j + 2] = gridworlds_empty_idx
-                    if A[m,n,1] == 1: #col edge is present
-                        gridworlds_layouts[m, i + 1, j] = gridworlds_empty_idx
-                        gridworlds_layouts[m, i + 2, j] = gridworlds_empty_idx
-                    # clique rule
-                    if A[m,n,0] == A[m,n,1] == A[m,n+1,1] == A[m,n+int(np.sqrt(n_nodes)),0] == 1:
-                        gridworlds_layouts[m, i + 1, j + 1] = gridworlds_empty_idx
+        gridworlds_layouts = Batch.encode_reduced_adj_to_gridworld_layout(A)
 
         if layout_only:
             gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape,1))
@@ -458,6 +438,40 @@ class Batch:
             gridworlds = torch.permute(gridworlds, (0, 3, 1, 2)) # (B, H, W, C) -> (B, C, H, W)
 
         return gridworlds
+
+    @staticmethod
+    def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor]):
+
+        n_nodes = A.shape[1] + 1
+        gridworlds_layout_dim = (A.shape[0], int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
+        gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
+        gridworlds_empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
+
+
+        for m in range(A.shape[0]):
+            for n in range(A[m].shape[0]):
+                # horizontal edge:
+                if (A[m,n,:] == 1).any():
+                    i_n = n // int(np.sqrt(n_nodes))
+                    j_n = n % int(np.sqrt(n_nodes))
+                    i, j = 2 * i_n + 1, 2 * j_n + 1
+                    gridworlds_layouts[m, i, j] = gridworlds_empty_idx
+                    # TODO: is this cheating?
+                    if A[m,n,0] == 1 and (j+2)<gridworlds_layouts.shape[2]: #row edge is present
+                        gridworlds_layouts[m, i, j + 1] = gridworlds_empty_idx
+                        gridworlds_layouts[m, i, j + 2] = gridworlds_empty_idx
+                    if A[m,n,1] == 1 and (i+2)<gridworlds_layouts.shape[1]: #col edge is present
+                        gridworlds_layouts[m, i + 1, j] = gridworlds_empty_idx
+                        gridworlds_layouts[m, i + 2, j] = gridworlds_empty_idx
+                    # clique rule
+                    if i + 1 < gridworlds_layouts.shape[1] and j + 1 < gridworlds_layouts.shape[2]:
+                        if n+int(np.sqrt(n_nodes)) < A[m].shape[0]:
+                            if A[m,n,0] == A[m,n,1] == A[m,n+1,1] == A[m,n+int(np.sqrt(n_nodes)),0] == 1:
+                                gridworlds_layouts[m, i + 1, j + 1] = gridworlds_empty_idx
+
+        if torch.is_tensor(A):
+            gridworlds_layouts = torch.tensor(gridworlds_layouts).to(A.device)
+        return gridworlds_layouts
 
     @staticmethod
     def encode_gridworld_layout_to_adj(layouts: np.ndarray, empty_idx=0):
@@ -485,12 +499,15 @@ class Batch:
         return A
 
     @staticmethod
-    def encode_adj_to_reduced_adj(adj: np.ndarray):
+    def encode_adj_to_reduced_adj(adj: Union[np.ndarray, torch.tensor]):
         # the last sqrt(n)-1 col edges will always be 0.
         #adj shape (m, n, n)
-        A = np.zeros((adj.shape[0], adj.shape[1] - 1, 2))
+        if torch.is_tensor(adj):
+            A = torch.zeros((adj.shape[0], adj.shape[1] - 1, 2)).to(adj.device)
+        elif isinstance(adj, np.ndarray):
+            A = np.zeros((adj.shape[0], adj.shape[1] - 1, 2))
         dim_grid = int(np.sqrt(adj.shape[1])) #only for square grids
-        A[:,:,0] = adj.diagonal(1,1,2) # row edges
+        A[...,0] = adj.diagonal(1,1,2) # row edges
         A[:,:-dim_grid+1,1] = adj.diagonal(dim_grid, 1, 2) # col edges
 
         return A # (m, n-1, 2)
@@ -580,7 +597,7 @@ class RoomsUnstructuredBatch(Batch):
 if __name__ == '__main__':
     dataset_meta = {
         'output_file': 'dataset.meta',
-        'data_type': 'gridworld', #types: gridworld, grid, graph
+        'data_type': 'graph', #types: gridworld, grid, graph
         'data_dim': (27, 27),  # TODO: assert odd. Note: always in "gridworld" type
         'task_type': 'find_goal',
         'label_descriptors': [
@@ -633,7 +650,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 10,
+            'batch_size': 1000,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -647,7 +664,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'batch_1.data',
-            'batch_size': 10,
+            'batch_size': 1000,
             'batch_id': 1,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -659,135 +676,135 @@ if __name__ == '__main__':
 
             ],
         },
-        # {
-        #     'output_file': 'batch_2.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 2,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_3.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 3,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_4.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 4,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_5.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 5,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_6.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 6,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_7.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 7,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_8.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 8,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'batch_9.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 9,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
-        # {
-        #     'output_file': 'test_batch_0.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 90,
-        #     'task_structure': 'rooms_unstructured_layout',
-        #     'generating_algorithm': 'Minigrid_MultiRoom',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
+        {
+            'output_file': 'batch_2.data',
+            'batch_size': 1000,
+            'batch_id': 2,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_3.data',
+            'batch_size': 1000,
+            'batch_id': 3,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_4.data',
+            'batch_size': 1000,
+            'batch_id': 4,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_5.data',
+            'batch_size': 1000,
+            'batch_id': 5,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_6.data',
+            'batch_size': 1000,
+            'batch_id': 6,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_7.data',
+            'batch_size': 1000,
+            'batch_id': 7,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_8.data',
+            'batch_size': 1000,
+            'batch_id': 8,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'batch_9.data',
+            'batch_size': 1000,
+            'batch_id': 9,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
+        {
+            'output_file': 'test_batch_0.data',
+            'batch_size': 500,
+            'batch_id': 90,
+            'task_structure': 'rooms_unstructured_layout',
+            'generating_algorithm': 'Minigrid_MultiRoom',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
         {
             'output_file': 'test_batch_1.data',
-            'batch_size': 10,
+            'batch_size': 500,
             'batch_id': 91,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
