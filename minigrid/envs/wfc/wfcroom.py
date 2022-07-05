@@ -1,6 +1,7 @@
 from typing import List, Tuple, Dict, Any, Union
 import numpy as np
 import torch
+import einops
 from torchvision import transforms
 import pickle
 from pathlib import Path
@@ -525,6 +526,26 @@ class Batch:
 
         return A # (m, n, n)
 
+    @staticmethod
+    def augment_adj(n: int, transforms: torch.tensor):
+        # transforms represent all allowable permutations in a 2D grid
+        nodes_inds = torch.arange(0, n, dtype=torch.int) # node indices in adjacency matrix
+        i_n, j_n = nodes_inds.div(int(n**.5), rounding_mode='floor'), nodes_inds % int(n**.5) #corresponding indices in grid space, top left corner origin
+        ij_n = torch.stack([i_n, j_n], dim=0) # D N
+        ij_n = einops.repeat(ij_n, 'd n ->  p d n', p=transforms.shape[0]) # P D N
+        c = torch.tensor([int((n ** .5 - 1) / 2), int((n ** .5 - 1) / 2)], dtype=torch.int).unsqueeze(1) # D 1
+        c = einops.repeat(c, 'd n -> p d n', p=transforms.shape[0]) # P D 1
+        ij_c = (ij_n - c) # P D=2 N. Corresponding indices with origin in the middle of the grid
+        # coordinate transform 1 done: origin in grid space
+        ij_t = torch.matmul(transforms, ij_c) # P 2 2 @ P D=2 N -> P D=2 N # rotate the coordinate axis
+        # coordinate transform 2 done: axis rotated
+        ij_f = (ij_t + c) # add the centroid to come back to a top left corner coordinate system
+        ij2n = torch.tensor([int(n**0.5), 1], dtype=torch.int).unsqueeze(1) # D 1 #transformation matrix to get node ordering, left to right, top to bottom in graph space
+        ij2n = einops.repeat(ij2n, 'd n -> p n d', p=transforms.shape[0]) # P 1 D
+        nodes_inds_t = torch.matmul(ij2n, ij_f).squeeze() # P 1 D @ P D N = P D N #recover the transformed indices
+        return nodes_inds_t
+
+
 class MazeBatch(Batch):
 
     def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
@@ -817,6 +838,51 @@ if __name__ == '__main__':
             ],
         },
     ]
+
+    transforms = torch.tensor([[[1, 0], [0, 1]],
+                               [[1, 0], [0, -1]],
+                               [[0, 1], [1, 0]],
+                               [[0, 1], [-1, 0]],
+                               [[-1, 0], [0, 1]],
+                               [[-1, 0], [0, -1]],
+                               [[0, -1], [1, 0]],
+                               [[0, -1], [-1, 0]]], dtype=torch.int)
+    grid = np.zeros((1, 3, 3, 4))
+    grid[0, 0, 1, 0] = 1
+    grid[0, 1, 0, 0] = 1
+    grid[0, 1, 1, 0] = 1
+    grid[0, 2, 1, 0] = 1
+    grid[0, 0, 0, 1] = 1
+    grid[0, 0, 1, 1] = 1
+    grid[0, 1, 1, 1] = 1
+    grid[0, 1, 2, 1] = 1
+
+    gridworld = Batch.encode_grid_to_gridworld(grid)
+    gridworld[0, 1, 3, 1] = 1
+    gridworld[0, 3, 5, 2] = 1
+    gridworld = np.tile(gridworld, (10, 1, 1, 1))
+
+    graphs = Batch.encode_gridworld_to_graph(gridworld)
+    A = []
+    for g in graphs:
+        A.append(g.adj().cpu().to_dense().numpy())
+    A = torch.tensor(A) # M x N x N
+    num_nodes = A.shape[-1]
+    permutations = Batch.augment_adj(num_nodes, transforms)
+
+    permuted_A = [A[:,permutations[i].long()][:,:, permutations[i].long()] for i in range(permutations.shape[0])]
+    permuted_A = torch.stack(permuted_A, dim=1) # Mx P x Nx N
+    permuted_A_f = permuted_A.reshape(permuted_A.shape[0]*permuted_A.shape[1],*permuted_A.shape[2:])
+
+
+    reduced_adj = Batch.encode_adj_to_reduced_adj(permuted_A_f)
+    gridworld_layouts = Batch.encode_reduced_adj_to_gridworld_layout(reduced_adj)
+    gridworld_layouts = gridworld_layouts.reshape(10, 8, 7, 7)
+
+    for i in range(gridworld_layouts.shape[1]):
+        for j in range(gridworld_layouts.shape[1]):
+            if i != j:
+                assert not (gridworld_layouts[0][i] == gridworld_layouts[0][j]).all()
 
     task_structures = []
     dataset_size = 0
