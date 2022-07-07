@@ -174,9 +174,9 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
 
     def observation(self, obs):
         env = self.unwrapped
+        assert env.render_mode == 'rgb_array', env.render_mode
 
         rgb_img = env.render(
-            mode='rgb_array',
             highlight=False,
             tile_size=self.tile_size
         )
