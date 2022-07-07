@@ -392,17 +392,15 @@ class ViewSizeWrapper(gym.core.Wrapper):
         env.unwrapped.agent_view_size = agent_view_size
 
         # Compute observation space with specified view size
-        observation_space = gym.spaces.Box(
+        new_image_space = gym.spaces.Box(
             low=0,
             high=255,
             shape=(agent_view_size, agent_view_size, 3),
             dtype='uint8'
         )
 
-        # Override the environment's observation space
-        self.observation_space = spaces.Dict({
-            'image': observation_space
-        })
+        # Override the environment's observation spaceexit
+        self.observation_space = spaces.Dict({**self.observation_space, 'image':new_image_space})
 
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
