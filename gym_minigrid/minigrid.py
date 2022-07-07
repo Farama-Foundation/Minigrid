@@ -628,7 +628,7 @@ class StringGymSpace(gym.spaces.space.Space):
 
     def sample(self):
         length = np.random.randint(self.min_length, self.max_length)
-        string = ''.join(np.random.choice(self.letters, size=length))
+        string = ''.join(np.random.choice(list(self.letters), size=length))
         return string
 
     def contains(self, x):
