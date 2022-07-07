@@ -119,20 +119,20 @@ register(
 )
 
 class SimpleCrossingEnv(CrossingEnv):
-    def __init__(self):
-        super().__init__(size=9, num_crossings=1, obstacle_type=Wall)
+    def __init__(self, **kwargs):
+        super().__init__(size=9, num_crossings=1, obstacle_type=Wall, **kwargs)
 
 class SimpleCrossingS9N2Env(CrossingEnv):
-    def __init__(self):
-        super().__init__(size=9, num_crossings=2, obstacle_type=Wall)
+    def __init__(self, **kwargs):
+        super().__init__(size=9, num_crossings=2, obstacle_type=Wall, **kwargs)
 
 class SimpleCrossingS9N3Env(CrossingEnv):
-    def __init__(self):
-        super().__init__(size=9, num_crossings=3, obstacle_type=Wall)
+    def __init__(self, **kwargs):
+        super().__init__(size=9, num_crossings=3, obstacle_type=Wall, **kwargs)
 
 class SimpleCrossingS11N5Env(CrossingEnv):
-    def __init__(self):
-        super().__init__(size=11, num_crossings=5, obstacle_type=Wall)
+    def __init__(self, **kwargs):
+        super().__init__(size=11, num_crossings=5, obstacle_type=Wall, **kwargs)
 
 register(
     id='MiniGrid-SimpleCrossingS9N1-v0',
