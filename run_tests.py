@@ -21,10 +21,10 @@ for env_idx, env_name in enumerate(env_list):
     print('testing {} ({}/{})'.format(env_name, env_idx+1, len(env_list)))
 
     # Load the gym environment
-    env = gym.make(env_name)
+    env = gym.make(env_name, render_mode='rgb_array')
     env.max_steps = min(env.max_steps, 200)
     env.reset()
-    env.render('rgb_array')
+    env.render()
 
     # Verify that the same seed always produces the same environment
     for i in range(0, 5):
@@ -66,7 +66,7 @@ for env_idx, env_name in enumerate(env_list):
             num_episodes += 1
             env.reset()
 
-        env.render('rgb_array')
+        env.render()
 
     # Test the close method
     env.close()
@@ -128,7 +128,7 @@ for env_idx, env_name in enumerate(env_list):
         OneHotPartialObsWrapper
     ]
     for wrapper in wrappers:
-        env = wrapper(gym.make(env_name))
+        env = wrapper(gym.make(env_name, render_mode='rgb_array'))
         obs_space, wrapper_name = env.observation_space, wrapper.__name__
         assert isinstance(
             obs_space, spaces.Dict
