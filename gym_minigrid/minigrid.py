@@ -705,6 +705,9 @@ class MiniGridEnv(gym.Env):
             'mission': StringGymSpace(min_length=0, max_length=200),
         })
 
+        # render mode
+        self.render_mode = render_mode
+
         # Range of possible rewards
         self.reward_range = (0, 1)
 
@@ -1255,7 +1258,8 @@ class MiniGridEnv(gym.Env):
         """
         Render the whole-grid human view
         """
-
+        if mode is None:
+            mode = self.render_mode
         if close:
             if self.window:
                 self.window.close()
