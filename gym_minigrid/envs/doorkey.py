@@ -6,10 +6,11 @@ class DoorKeyEnv(MiniGridEnv):
     Environment with a door and key, sparse reward
     """
 
-    def __init__(self, size=8):
+    def __init__(self, size=8, **kwargs):
         super().__init__(
             grid_size=size,
-            max_steps=10*size*size
+            max_steps=10*size*size,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -44,16 +45,16 @@ class DoorKeyEnv(MiniGridEnv):
         self.mission = "use the key to open the door and then get to the goal"
 
 class DoorKeyEnv5x5(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=5)
+    def __init__(self, **kwargs):
+        super().__init__(size=5, **kwargs)
 
 class DoorKeyEnv6x6(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=6)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, **kwargs)
 
 class DoorKeyEnv16x16(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=16)
+    def __init__(self, **kwargs):
+        super().__init__(size=16, **kwargs)
 
 register(
     id='MiniGrid-DoorKey-5x5-v0',

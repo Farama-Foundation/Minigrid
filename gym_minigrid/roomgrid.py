@@ -73,7 +73,8 @@ class RoomGrid(MiniGridEnv):
         num_cols=3,
         max_steps=100,
         seed=0,
-        agent_view_size=7
+        agent_view_size=7,
+        **kwargs
     ):
         assert room_size > 0
         assert room_size >= 3
@@ -95,7 +96,8 @@ class RoomGrid(MiniGridEnv):
             max_steps=max_steps,
             see_through_walls=False,
             seed=seed,
-            agent_view_size=agent_view_size
+            agent_view_size=agent_view_size,
+            **kwargs
         )
 
     def room_from_pos(self, x, y):
