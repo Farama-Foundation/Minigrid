@@ -12,7 +12,6 @@ class ObstructedMazeEnv(RoomGrid):
         num_rows,
         num_cols,
         num_rooms_visited,
-        seed=None, 
         **kwargs
     ):
         room_size = 6
@@ -22,8 +21,7 @@ class ObstructedMazeEnv(RoomGrid):
             room_size=room_size,
             num_rows=num_rows,
             num_cols=num_cols,
-            max_steps=max_steps,
-            seed=seed, 
+            max_steps=max_steps,        
             **kwargs
         )
 
@@ -81,7 +79,7 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
     rooms. Doors are obstructed by a ball and keys are hidden in boxes.
     """
 
-    def __init__(self, key_in_box=True, blocked=True, seed=None, **kwargs):
+    def __init__(self, key_in_box=True, blocked=True, **kwargs):
         self.key_in_box = key_in_box
         self.blocked = blocked
 
@@ -89,7 +87,6 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
             num_rows=1,
             num_cols=2,
             num_rooms_visited=2,
-            seed=seed, 
             **kwargs
         )
 
@@ -105,12 +102,12 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
         self.place_agent(0, 0)
 
 class ObstructedMaze_1Dl(ObstructedMaze_1Dlhb):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__(False, False, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(False, False, **kwargs)
 
 class ObstructedMaze_1Dlh(ObstructedMaze_1Dlhb):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__(True, False, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(True, False, **kwargs)
 
 class ObstructedMaze_Full(ObstructedMazeEnv):
     """
@@ -120,7 +117,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
     """
 
     def __init__(self, agent_room=(1, 1), key_in_box=True, blocked=True,
-                 num_quarters=4, num_rooms_visited=25, seed=None, **kwargs):
+                 num_quarters=4, num_rooms_visited=25, **kwargs):
         self.agent_room = agent_room
         self.key_in_box = key_in_box
         self.blocked = blocked
@@ -130,7 +127,6 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
             num_rows=3,
             num_cols=3,
             num_rooms_visited=num_rooms_visited,
-            seed=seed, 
             **kwargs
         )
 
@@ -162,25 +158,25 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         self.place_agent(*self.agent_room)
 
 class ObstructedMaze_2Dl(ObstructedMaze_Full):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__((2, 1), False, False, 1, 4, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__((2, 1), False, False, 1, 4, **kwargs)
 
 class ObstructedMaze_2Dlh(ObstructedMaze_Full):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__((2, 1), True, False, 1, 4, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__((2, 1), True, False, 1, 4, **kwargs)
 
 
 class ObstructedMaze_2Dlhb(ObstructedMaze_Full):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__((2, 1), True, True, 1, 4, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__((2, 1), True, True, 1, 4, **kwargs)
 
 class ObstructedMaze_1Q(ObstructedMaze_Full):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__((1, 1), True, True, 1, 5, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__((1, 1), True, True, 1, 5, **kwargs)
 
 class ObstructedMaze_2Q(ObstructedMaze_Full):
-    def __init__(self, seed=None, **kwargs):
-        super().__init__((1, 1), True, True, 2, 11, seed, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__((1, 1), True, True, 2, 11, **kwargs)
 
 register(
     id="MiniGrid-ObstructedMaze-1Dl-v0",

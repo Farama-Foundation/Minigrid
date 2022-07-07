@@ -5,7 +5,6 @@ import gym
 from enum import IntEnum
 import numpy as np
 from gym import error, spaces, utils
-from gym.utils import seeding
 from .rendering import *
 
 # Size in pixels of a tile in the full-scale human view
@@ -672,8 +671,8 @@ class MiniGridEnv(gym.Env):
         height=None,
         max_steps=100,
         see_through_walls=False,
-        seed=1337,
-        agent_view_size=7
+        agent_view_size=7,
+        render_mode=None
     ):
         # Can't set both grid_size and width/height
         if grid_size:
@@ -722,8 +721,6 @@ class MiniGridEnv(gym.Env):
         self.agent_pos = None
         self.agent_dir = None
 
-        # Initialize the RNG
-        self.seed(seed=seed)
 
         # Initialize the state
         self.reset()
@@ -734,8 +731,6 @@ class MiniGridEnv(gym.Env):
         self.agent_dir = None
 
         # Generate a new random grid at the start of each episode
-        # To keep the same grid for each episode, call env.seed() with
-        # the same seed before calling env.reset()
         self._gen_grid(self.width, self.height)
 
         # These fields should be defined by _gen_grid
@@ -756,10 +751,6 @@ class MiniGridEnv(gym.Env):
         obs = self.gen_obs()
         return obs
 
-    def seed(self, seed=1337):
-        # Seed the random number generator
-        self.np_random, _ = seeding.np_random(seed)
-        return [seed]
 
     def hash(self, size=16):
         """Compute a hash that uniquely identifies the current state of the environment.

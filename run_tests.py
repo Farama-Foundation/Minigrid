@@ -29,9 +29,9 @@ for env_idx, env_name in enumerate(env_list):
     # Verify that the same seed always produces the same environment
     for i in range(0, 5):
         seed = 1337 + i
-        env.seed(seed)
+        _ = env.reset(seed=seed)
         grid1 = env.grid
-        env.seed(seed)
+        _ = env.reset(seed=seed)
         grid2 = env.grid
         assert grid1 == grid2
 

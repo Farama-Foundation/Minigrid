@@ -8,14 +8,13 @@ class BlockedUnlockPickup(RoomGrid):
     in another room
     """
 
-    def __init__(self, seed=None, **kwargs):
+    def __init__(self, **kwargs):
         room_size = 6
         super().__init__(
             num_rows=1,
             num_cols=2,
             room_size=room_size,
             max_steps=16*room_size**2,
-            seed=seed,
             **kwargs
         )
 

@@ -22,8 +22,7 @@ class ReseedWrapper(gym.core.Wrapper):
     def reset(self, **kwargs):
         seed = self.seeds[self.seed_idx]
         self.seed_idx = (self.seed_idx + 1) % len(self.seeds)
-        self.env.seed(seed)
-        return self.env.reset(**kwargs)
+        return self.env.reset(seed=seed, **kwargs)
 
     def step(self, action):
         obs, reward, done, info = self.env.step(action)
