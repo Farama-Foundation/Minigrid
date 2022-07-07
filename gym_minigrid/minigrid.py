@@ -643,8 +643,8 @@ class MiniGridEnv(gym.Env):
     """
 
     metadata = {
-        'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second' : 10
+        'render_modes': ['human', 'rgb_array'],
+        'render_fps' : 10
     }
 
     # Enumeration of possible actions
