@@ -728,7 +728,8 @@ class MiniGridEnv(gym.Env):
         # Initialize the state
         self.reset()
 
-    def reset(self):
+    def reset(self, *, seed=None, return_info=False, options=None):
+        super().reset(seed=seed)
         # Current position and direction of the agent
         self.agent_pos = None
         self.agent_dir = None
