@@ -112,6 +112,15 @@ for env_idx, env_name in enumerate(env_list):
     env.step(0)
     env.close()
 
+    # Test the DictObservationSpaceWrapper
+    env = gym.make(env_name)
+    env = DictObservationSpaceWrapper(env)
+    env.reset()
+    mission = env.mission
+    obs, _, _, _ = env.step(0)
+    assert env.string_to_indices(mission) == [value for value in obs['mission'] if value != 0]
+    env.close()
+
     # Test the wrappers return proper observation spaces.
     wrappers = [
         RGBImgObsWrapper,
