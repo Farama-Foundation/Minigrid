@@ -387,8 +387,7 @@ class ViewSizeWrapper(gym.core.Wrapper):
         assert agent_view_size % 2 == 1
         assert agent_view_size >= 3
 
-        # Override default view size
-        env.unwrapped.agent_view_size = agent_view_size
+        self.agent_view_size = agent_view_size
 
         # Compute observation space with specified view size
         new_image_space = gym.spaces.Box(
@@ -401,11 +400,19 @@ class ViewSizeWrapper(gym.core.Wrapper):
         # Override the environment's observation spaceexit
         self.observation_space = spaces.Dict({**self.observation_space, 'image':new_image_space})
 
-    def reset(self, **kwargs):
-        return self.env.reset(**kwargs)
+    def observation(self, obs):
+        env = self.unwrapped
 
-    def step(self, action):
-        return self.env.step(action)
+        grid, vis_mask = env.gen_obs_grid(self.agent_view_size)
+
+        # Encode the partially observable view into a numpy array
+        image = grid.encode(vis_mask)
+
+
+        return {
+            **obs,
+            'image': image
+        }
 
 class DirectionObsWrapper(gym.core.ObservationWrapper):
     """
