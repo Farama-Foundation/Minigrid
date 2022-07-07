@@ -157,8 +157,8 @@ class EmptyEnvWithExtraObs(gym_minigrid.envs.EmptyEnv5x5):
             dtype=np.uint
         )
 
-    def reset(self):
-        obs = super().reset()
+    def reset(self, **kwargs):
+        obs = super().reset(**kwargs)
         obs['size'] = np.array([self.width, self.height])
         return obs
 
