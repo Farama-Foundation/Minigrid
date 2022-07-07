@@ -1265,7 +1265,7 @@ class MiniGridEnv(gym.Env):
         """
         Render the whole-grid human view
         """
-        if mode is None:
+        if self.render_mode is not None:
             mode = self.render_mode
         if close:
             if self.window:
