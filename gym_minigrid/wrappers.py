@@ -156,6 +156,7 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
+    To use it, make the unwrapped environment with render_mode='rgb_array'.
     """
 
     def __init__(self, env, tile_size=8):
