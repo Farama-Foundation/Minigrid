@@ -17,7 +17,7 @@ def redraw(img):
 def reset():
     if args.seed == -1:
         seed = None
-    obs = env.reset(seed=seed)
+    obs = env.reset(seed=args.seed)
 
     if hasattr(env, 'mission'):
         print('Mission: %s' % env.mission)
