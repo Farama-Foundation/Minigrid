@@ -144,28 +144,6 @@ for env_idx, env_name in enumerate(env_list):
 ##############################################################################
 
 print('testing extra observations')
-class EmptyEnvWithExtraObs(gym_minigrid.envs.EmptyEnv5x5):
-    """
-    Custom environment with an extra observation
-    """
-    def __init__(self) -> None:
-        super().__init__()
-        self.observation_space['size'] = spaces.Box(
-            low=0,
-            high=np.iinfo(np.uint).max,
-            shape=(2,),
-            dtype=np.uint
-        )
-
-    def reset(self, **kwargs):
-        obs = super().reset(**kwargs)
-        obs['size'] = np.array([self.width, self.height])
-        return obs
-
-    def step(self, action):
-        obs, reward, done, info = super().step(action)
-        obs['size'] = np.array([self.width, self.height])
-        return obs, reward, done, info
 
 wrappers = [
     OneHotPartialObsWrapper,

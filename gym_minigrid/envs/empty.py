@@ -63,6 +63,29 @@ class EmptyEnv16x16(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=16, **kwargs)
 
+class EmptyEnvWithExtraObs(EmptyEnv5x5):
+    """
+    Custom environment with an extra observation
+    """
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.observation_space['size'] = spaces.Box(
+            low=0,
+            high=1000,  #gym does not like np.iinfo(np.uint).max,  
+            shape=(2,),
+            dtype=np.uint
+        )
+
+    def reset(self, **kwargs):
+        obs = super().reset(**kwargs)
+        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        return obs
+
+    def step(self, action):
+        obs, reward, done, info = super().step(action)
+        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        return obs, reward, done, info
+
 register(
     id='MiniGrid-Empty-5x5-v0',
     entry_point='gym_minigrid.envs:EmptyEnv5x5'
@@ -91,4 +114,9 @@ register(
 register(
     id='MiniGrid-Empty-16x16-v0',
     entry_point='gym_minigrid.envs:EmptyEnv16x16'
+)
+
+register(
+    id='MiniGrid-EmptyWithExtraObs-v0',
+    entry_point='gym_minigrid.envs:EmptyEnvWithExtraObs',
 )
