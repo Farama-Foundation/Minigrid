@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from pydoc import render_doc
 import random
 import numpy as np
 import gym
@@ -152,14 +153,11 @@ wrappers = [
     FullyObsWrapper,
 ]
 for wrapper in wrappers:
-    env1 = wrapper(EmptyEnvWithExtraObs())
-    env2 = wrapper(gym.make('MiniGrid-Empty-5x5-v0'))
+    env1 = wrapper(gym.make('MiniGrid-EmptyWithExtraObs-v0', render_mode='rgb_array'))
+    env2 = wrapper(gym.make('MiniGrid-Empty-5x5-v0', render_mode='rgb_array'))
 
-    env1.seed(0)
-    env2.seed(0)
-
-    obs1 = env1.reset()
-    obs2 = env2.reset()
+    obs1 = env1.reset(seed=0)
+    obs2 = env2.reset(seed=0)
     assert 'size' in obs1
     assert obs1['size'].shape == (2,)
     assert (obs1['size'] == [5,5]).all()
