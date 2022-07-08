@@ -6,7 +6,7 @@ python:
 install:
   - pip3 install -e .
   - pip3 install git+https://github.com/pseudo-rnd-thoughts/gym.git@fixed-env-checker
-  - pip3 install gym[others]
+  - pip3 install gym[other]
 
 # command to run tests
 script: ./run_tests.py
