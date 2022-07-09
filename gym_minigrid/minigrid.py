@@ -620,11 +620,10 @@ class StringGymSpace(gym.spaces.space.Space):
     A gym space that represents a string of characters of bounded length
     """
     def __init__(self, min_length=0, max_length=1000):
+        super().__init__(shape=(), dtype='U')
         self.min_length = min_length
         self.max_length = max_length
         self.letters = string.ascii_letters + string.digits + ' .,!- '
-        self._shape = ()
-        self.dtype = np.dtype('U')
 
     def sample(self):
         length = np.random.randint(self.min_length, self.max_length)
