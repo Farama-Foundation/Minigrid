@@ -636,6 +636,13 @@ class StringGymSpace(gym.spaces.space.Space):
     def __repr__(self):
         return "StringGymSpace(min_length={}, max_length={})".format(self.min_length, self.max_length)
 
+    def __eq__(self, other):
+        return (isinstance(other, StringGymSpace) 
+                and self.min_length == other.min_length 
+                and self.max_length == other.max_length 
+                and self.letters == other.letters
+               )
+
 class MiniGridEnv(gym.Env):
     """
     2D grid world game environment
