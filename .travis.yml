@@ -5,8 +5,7 @@ python:
 # command to install dependencies
 install:
   - pip3 install -e .
-  - pip3 install git+https://github.com/pseudo-rnd-thoughts/gym.git@fixed-env-checker
-  - pip3 install gym[other]
+  - pip3 install git+https://github.com/openai/gym.git@0.25.0
 
 # command to run tests
 script: ./run_tests.py
