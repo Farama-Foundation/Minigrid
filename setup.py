@@ -26,7 +26,7 @@ setup(
     install_requires=[
         'gym>=0.24.0',
         "numpy>=1.18.0"
-    ]
+    ],
     classifiers=[
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
