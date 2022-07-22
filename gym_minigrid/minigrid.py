@@ -650,7 +650,8 @@ class MiniGridEnv(gym.Env):
         max_steps=100,
         see_through_walls=False,
         agent_view_size=7,
-        render_mode=None
+        render_mode=None,
+        **kwargs
     ):
         # Can't set both grid_size and width/height
         if grid_size:
