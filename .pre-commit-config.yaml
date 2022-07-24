@@ -1,0 +1,53 @@
+---
+repos:
+  - repo: https://github.com/python/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
+    hooks:
+      - id: codespell
+#        args:
+#          - --ignore-words-list=
+  - repo: https://gitlab.com/PyCQA/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        args:
+          - '--per-file-ignores=*/__init__.py:F401'
+#          - --ignore=
+          - --max-complexity=30
+          - --max-line-length=456
+          - --show-source
+          - --statistics
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+#  - repo: https://github.com/pycqa/pydocstyle
+#    rev: 6.1.1
+#    hooks:
+#      - id: pydocstyle
+#        args:
+#          - --source
+#          - --explain
+#          - --convention=google
+#        additional_dependencies: ["toml"]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.32.0
+    hooks:
+      - id: pyupgrade
+        args: ["--py37-plus"]
+#  - repo: local
+#    hooks:
+#      - id: pyright
+#        name: pyright
+#        entry: pyright
+#        language: node
+#        pass_filenames: false
+#        types: [python]
+#        additional_dependencies: ["pyright"]
+#        args:
+#          - --project=pyproject.toml

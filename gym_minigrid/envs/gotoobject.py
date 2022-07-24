@@ -1,5 +1,6 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class GoToObjectEnv(MiniGridEnv):
     """
@@ -7,18 +8,14 @@ class GoToObjectEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self,
-        size=6,
-        numObjs=2
-    ):
+    def __init__(self, size=6, numObjs=2):
         self.numObjs = numObjs
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size**2,
+            max_steps=5 * size**2,
             # Set this to True for maximum speed
-            see_through_walls=True
+            see_through_walls=True,
         )
 
     def _gen_grid(self, width, height):
@@ -28,7 +25,7 @@ class GoToObjectEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Types and colors of objects we can generate
-        types = ['key', 'ball', 'box']
+        types = ["key", "ball", "box"]
 
         objs = []
         objPos = []
@@ -42,11 +39,11 @@ class GoToObjectEnv(MiniGridEnv):
             if (objType, objColor) in objs:
                 continue
 
-            if objType == 'key':
+            if objType == "key":
                 obj = Key(objColor)
-            elif objType == 'ball':
+            elif objType == "ball":
                 obj = Ball(objColor)
-            elif objType == 'box':
+            elif objType == "box":
                 obj = Box(objColor)
 
             pos = self.place_obj(obj)
@@ -61,12 +58,12 @@ class GoToObjectEnv(MiniGridEnv):
         self.targetType, self.target_color = objs[objIdx]
         self.target_pos = objPos[objIdx]
 
-        descStr = '%s %s' % (self.target_color, self.targetType)
-        self.mission = 'go to the %s' % descStr
-        #print(self.mission)
+        descStr = f"{self.target_color} {self.targetType}"
+        self.mission = "go to the %s" % descStr
+        # print(self.mission)
 
     def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
 
         ax, ay = self.agent_pos
         tx, ty = self.target_pos
@@ -83,16 +80,16 @@ class GoToObjectEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+
 class GotoEnv8x8N2(GoToObjectEnv):
     def __init__(self):
         super().__init__(size=8, numObjs=2)
 
+
 register(
-    id='MiniGrid-GoToObject-6x6-N2-v0',
-    entry_point='gym_minigrid.envs:GoToObjectEnv'
+    id="MiniGrid-GoToObject-6x6-N2-v0", entry_point="gym_minigrid.envs:GoToObjectEnv"
 )
 
 register(
-    id='MiniGrid-GoToObject-8x8-N2-v0',
-    entry_point='gym_minigrid.envs:GotoEnv8x8N2'
+    id="MiniGrid-GoToObject-8x8-N2-v0", entry_point="gym_minigrid.envs:GotoEnv8x8N2"
 )
