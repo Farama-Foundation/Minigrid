@@ -1,0 +1,37 @@
+[tool.pyright]
+
+include = [
+    "gym_minigrid/**",
+    "tests/**"
+]
+
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+
+   "gym_minigrid/**",
+    "tests/**"
+]
+
+strict = [
+
+]
+
+typeCheckingMode = "basic"
+pythonVersion = "3.7"
+typeshedPath = "typeshed"
+enableTypeIgnoreComments = true
+
+# This is required as the CI pre-commit does not download the module (i.e. numpy)
+#   Therefore, we have to ignore missing imports
+reportMissingImports = "none"
+
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownVariableType = "none"
+reportUnknownArgumentType = "none"
+reportPrivateUsage = "warning"
+reportUntypedFunctionDecorator = "none"
+reportMissingTypeStubs = false
+reportUnboundVariable = "warning"
+reportGeneralTypeIssues ="none"
