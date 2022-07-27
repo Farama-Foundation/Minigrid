@@ -1,0 +1,15 @@
+# TODO: Add pre-commit hooks
+#         - black []
+#         - codespell [x]
+#         - flake8 [] 
+#         - isort []
+#         - pydocstyle []
+#         - pyupgrade []
+#         - pyright []
+
+---
+repos:
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
+    hooks:
+      - id: codespell

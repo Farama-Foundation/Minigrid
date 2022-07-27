@@ -323,7 +323,7 @@ object at split.
 
 ### Locked room environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-LockedRoom-v0`
 
 The environment has six rooms, one of which is locked. The agent receives
@@ -334,7 +334,7 @@ to solve with vanilla reinforcement learning alone.
 
 ### Key corridor environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-KeyCorridorS3R1-v0`
 - `MiniGrid-KeyCorridorS3R2-v0`
 - `MiniGrid-KeyCorridorS3R3-v0`
@@ -361,7 +361,7 @@ key is placed. This environment can be solved without relying on language.
 
 ### Unlock environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-Unlock-v0`
 
 <p align="center">
@@ -373,7 +373,7 @@ relying on language.
 
 ### Unlock pickup environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-UnlockPickup-v0`
 
 <p align="center">
@@ -385,7 +385,7 @@ locked door. This environment can be solved without relying on language.
 
 ### Blocked unlock pickup environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-BlockedUnlockPickup-v0`
 
 <p align="center">
