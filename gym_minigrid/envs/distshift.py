@@ -51,20 +51,15 @@ class DistShiftEnv(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
-class DistShift1(DistShiftEnv):
-    def __init__(self):
-        super().__init__(strip2_row=2)
-
-class DistShift2(DistShiftEnv):
-    def __init__(self):
-        super().__init__(strip2_row=5)
 
 register(
     id='MiniGrid-DistShift1-v0',
-    entry_point='gym_minigrid.envs:DistShift1'
+    entry_point='gym_minigrid.envs.distshift:DistShiftEnv',
+strip2_row=2
 )
 
 register(
     id='MiniGrid-DistShift2-v0',
-    entry_point='gym_minigrid.envs:DistShift2'
+    entry_point='gym_minigrid.envs.distshift:DistShiftEnv',
+strip2_row=5
 )

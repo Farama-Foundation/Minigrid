@@ -83,16 +83,14 @@ class GoToObjectEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
-class GotoEnv8x8N2(GoToObjectEnv):
-    def __init__(self):
-        super().__init__(size=8, numObjs=2)
 
 register(
     id='MiniGrid-GoToObject-6x6-N2-v0',
-    entry_point='gym_minigrid.envs:GoToObjectEnv'
+    entry_point='gym_minigrid.envs.gotoobject:GoToObjectEnv'
 )
 
 register(
     id='MiniGrid-GoToObject-8x8-N2-v0',
-    entry_point='gym_minigrid.envs:GotoEnv8x8N2'
+    entry_point='gym_minigrid.envs.gotoobject:GoToObjectEnv',
+    size=8, numObjs=2
 )

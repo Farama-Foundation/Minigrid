@@ -88,52 +88,38 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
-class DynamicObstaclesEnv5x5(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=5, n_obstacles=2)
-
-class DynamicObstaclesRandomEnv5x5(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=5, agent_start_pos=None, n_obstacles=2)
-
-class DynamicObstaclesEnv6x6(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=6, n_obstacles=3)
-
-class DynamicObstaclesRandomEnv6x6(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=6, agent_start_pos=None, n_obstacles=3)
-
-class DynamicObstaclesEnv16x16(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=16, n_obstacles=8)
 
 register(
     id='MiniGrid-Dynamic-Obstacles-5x5-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv5x5'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
+    size=5, n_obstacles=2
 )
 
 register(
     id='MiniGrid-Dynamic-Obstacles-Random-5x5-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesRandomEnv5x5'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
+    size=5, agent_start_pos=None, n_obstacles=2
 )
 
 register(
     id='MiniGrid-Dynamic-Obstacles-6x6-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv6x6'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
+    size=6, n_obstacles=3
 )
 
 register(
     id='MiniGrid-Dynamic-Obstacles-Random-6x6-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesRandomEnv6x6'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
+    size=6, agent_start_pos=None, n_obstacles=3
 )
 
 register(
     id='MiniGrid-Dynamic-Obstacles-8x8-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
 )
 
 register(
     id='MiniGrid-Dynamic-Obstacles-16x16-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv16x16'
+    entry_point='gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv',
+    size=16, n_obstacles=8
 )

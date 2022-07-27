@@ -2,7 +2,7 @@ from gym import spaces
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
-class Room:
+class LockedRoom:
     def __init__(self,
         top,
         size,
@@ -22,7 +22,7 @@ class Room:
             topY + 1, topY + sizeY - 1
         )
 
-class LockedRoom(MiniGridEnv):
+class LockedRoomEnv(MiniGridEnv):
     """
     Environment in which the agent is instructed to go to a given object
     named using an English text string
@@ -65,12 +65,12 @@ class LockedRoom(MiniGridEnv):
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
-            self.rooms.append(Room(
+            self.rooms.append(LockedRoom(
                 (0, j),
                 (roomW, roomH),
                 (lWallIdx, j + 3)
             ))
-            self.rooms.append(Room(
+            self.rooms.append(LockedRoom(
                 (rWallIdx, j),
                 (roomW, roomH),
                 (rWallIdx, j + 3)
@@ -120,5 +120,5 @@ class LockedRoom(MiniGridEnv):
 
 register(
     id='MiniGrid-LockedRoom-v0',
-    entry_point='gym_minigrid.envs:LockedRoom'
+    entry_point='gym_minigrid.envs.lockedroom:LockedRoomEnv'
 )

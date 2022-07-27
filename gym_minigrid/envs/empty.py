@@ -41,52 +41,38 @@ class EmptyEnv(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
-class EmptyEnv5x5(EmptyEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=5, **kwargs)
-
-class EmptyRandomEnv5x5(EmptyEnv):
-    def __init__(self):
-        super().__init__(size=5, agent_start_pos=None)
-
-class EmptyEnv6x6(EmptyEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=6, **kwargs)
-
-class EmptyRandomEnv6x6(EmptyEnv):
-    def __init__(self):
-        super().__init__(size=6, agent_start_pos=None)
-
-class EmptyEnv16x16(EmptyEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=16, **kwargs)
 
 register(
     id='MiniGrid-Empty-5x5-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv5x5'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+    size=5
 )
 
 register(
     id='MiniGrid-Empty-Random-5x5-v0',
-    entry_point='gym_minigrid.envs:EmptyRandomEnv5x5'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+    size=5, agent_start_pos=None
 )
 
 register(
     id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv6x6'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+size=6,
 )
 
 register(
     id='MiniGrid-Empty-Random-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyRandomEnv6x6'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+size=6, agent_start_pos=None
 )
 
 register(
     id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
 )
 
 register(
     id='MiniGrid-Empty-16x16-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv16x16'
+    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+size=16,
 )

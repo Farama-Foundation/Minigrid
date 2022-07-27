@@ -72,7 +72,8 @@ class FourRoomsEnv(MiniGridEnv):
         obs, reward, done, info = MiniGridEnv.step(self, action)
         return obs, reward, done, info
 
+
 register(
     id='MiniGrid-FourRooms-v0',
-    entry_point='gym_minigrid.envs:FourRoomsEnv'
+    entry_point='gym_minigrid.envs.fourrooms:FourRoomsEnv'
 )

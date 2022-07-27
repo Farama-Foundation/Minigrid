@@ -2,7 +2,7 @@ from gym_minigrid.minigrid import Ball
 from gym_minigrid.roomgrid import RoomGrid
 from gym_minigrid.register import register
 
-class BlockedUnlockPickup(RoomGrid):
+class BlockedUnlockPickupEnv(RoomGrid):
     """
     Unlock a door blocked by a ball, then pick up a box
     in another room
@@ -48,5 +48,5 @@ class BlockedUnlockPickup(RoomGrid):
 
 register(
     id='MiniGrid-BlockedUnlockPickup-v0',
-    entry_point='gym_minigrid.envs:BlockedUnlockPickup'
+    entry_point='gym_minigrid.envs.blockedunlockpickup:BlockedUnlockPickupEnv'
 )

@@ -101,13 +101,6 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
         self.obj, _ = self.add_object(1, 0, "ball", color=self.ball_to_find_color)
         self.place_agent(0, 0)
 
-class ObstructedMaze_1Dl(ObstructedMaze_1Dlhb):
-    def __init__(self, seed=None):
-        super().__init__(False, False, seed)
-
-class ObstructedMaze_1Dlh(ObstructedMaze_1Dlhb):
-    def __init__(self, seed=None):
-        super().__init__(True, False, seed)
 
 class ObstructedMaze_Full(ObstructedMazeEnv):
     """
@@ -157,68 +150,61 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         self.obj, _ = self.add_object(*ball_room, "ball", color=self.ball_to_find_color)
         self.place_agent(*self.agent_room)
 
-class ObstructedMaze_2Dl(ObstructedMaze_Full):
-    def __init__(self, seed=None):
-        super().__init__((2, 1), False, False, 1, 4, seed)
 
-class ObstructedMaze_2Dlh(ObstructedMaze_Full):
-    def __init__(self, seed=None):
-        super().__init__((2, 1), True, False, 1, 4, seed)
-
-
-class ObstructedMaze_2Dlhb(ObstructedMaze_Full):
-    def __init__(self, seed=None):
-        super().__init__((2, 1), True, True, 1, 4, seed)
-
-class ObstructedMaze_1Q(ObstructedMaze_Full):
-    def __init__(self, seed=None):
-        super().__init__((1, 1), True, True, 1, 5, seed)
-
-class ObstructedMaze_2Q(ObstructedMaze_Full):
-    def __init__(self, seed=None):
-        super().__init__((1, 1), True, True, 2, 11, seed)
 
 register(
     id="MiniGrid-ObstructedMaze-1Dl-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dl"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
+    key_in_box=False, blocked=False
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Dlh-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dlh"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
+    key_in_box=True, blocked=False
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Dlhb-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Dlhb"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb"
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dl-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dl"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
+    agent_room=(2, 1), key_in_box=False, blocked=False,
+    num_quarters=1, num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dlh-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dlh"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
+    agent_room=(2, 1), key_in_box=True, blocked=False,
+    num_quarters=1, num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dlhb-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Dlhb"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
+    agent_room=(2, 1), key_in_box=True, blocked=True,
+    num_quarters=1, num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Q-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_1Q"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
+    agent_room=(1, 1), key_in_box=True, blocked=True,
+    num_quarters=1, num_rooms_visited=5,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Q-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_2Q"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
+    agent_room=(2, 1), key_in_box=True, blocked=True,
+    num_quarters=2, num_rooms_visited=11,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-Full-v0",
-    entry_point="gym_minigrid.envs:ObstructedMaze_Full"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full"
 )

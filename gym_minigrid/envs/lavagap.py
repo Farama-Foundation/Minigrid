@@ -7,7 +7,7 @@ class LavaGapEnv(MiniGridEnv):
     This environment is similar to LavaCrossing but simpler in structure.
     """
 
-    def __init__(self, size, obstacle_type=Lava, seed=None):
+    def __init__(self, size, obstacle_type=Lava):
         self.obstacle_type = obstacle_type
         super().__init__(
             grid_size=size,
@@ -52,29 +52,21 @@ class LavaGapEnv(MiniGridEnv):
             else "find the opening and get to the green goal square"
         )
 
-class LavaGapS5Env(LavaGapEnv):
-    def __init__(self):
-        super().__init__(size=5)
-
-class LavaGapS6Env(LavaGapEnv):
-    def __init__(self):
-        super().__init__(size=6)
-
-class LavaGapS7Env(LavaGapEnv):
-    def __init__(self):
-        super().__init__(size=7)
 
 register(
     id='MiniGrid-LavaGapS5-v0',
-    entry_point='gym_minigrid.envs:LavaGapS5Env'
+    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
+    size=5
 )
 
 register(
     id='MiniGrid-LavaGapS6-v0',
-    entry_point='gym_minigrid.envs:LavaGapS6Env'
+    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
+    size=6
 )
 
 register(
     id='MiniGrid-LavaGapS7-v0',
-    entry_point='gym_minigrid.envs:LavaGapS7Env'
+    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
+    size=7
 )

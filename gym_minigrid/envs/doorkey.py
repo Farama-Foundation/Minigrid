@@ -43,34 +43,27 @@ class DoorKeyEnv(MiniGridEnv):
 
         self.mission = "use the key to open the door and then get to the goal"
 
-class DoorKeyEnv5x5(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=5)
-
-class DoorKeyEnv6x6(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=6)
-
-class DoorKeyEnv16x16(DoorKeyEnv):
-    def __init__(self):
-        super().__init__(size=16)
 
 register(
     id='MiniGrid-DoorKey-5x5-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv5x5'
+    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
+    size=5
 )
 
 register(
     id='MiniGrid-DoorKey-6x6-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv6x6'
+    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
+    size=6
 )
 
 register(
     id='MiniGrid-DoorKey-8x8-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv'
+    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
+    size=8
 )
 
 register(
     id='MiniGrid-DoorKey-16x16-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv16x16'
+    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
+    size=16
 )

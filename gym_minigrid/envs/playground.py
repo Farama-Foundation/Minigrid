@@ -1,7 +1,7 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
-class PlaygroundV0(MiniGridEnv):
+class PlaygroundEnv(MiniGridEnv):
     """
     Environment with multiple rooms and random objects.
     This environment has no specific goals or rewards.
@@ -72,5 +72,5 @@ class PlaygroundV0(MiniGridEnv):
 
 register(
     id='MiniGrid-Playground-v0',
-    entry_point='gym_minigrid.envs:PlaygroundV0'
+    entry_point='gym_minigrid.envs.playground:PlaygroundEnv'
 )

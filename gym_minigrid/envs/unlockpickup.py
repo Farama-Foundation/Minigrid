@@ -2,7 +2,7 @@ from gym_minigrid.minigrid import Ball
 from gym_minigrid.roomgrid import RoomGrid
 from gym_minigrid.register import register
 
-class UnlockPickup(RoomGrid):
+class UnlockPickupEnv(RoomGrid):
     """
     Unlock a door, then pick up a box in another room
     """
@@ -44,5 +44,5 @@ class UnlockPickup(RoomGrid):
 
 register(
     id='MiniGrid-UnlockPickup-v0',
-    entry_point='gym_minigrid.envs:UnlockPickup'
+    entry_point='gym_minigrid.envs.unlockpickup:UnlockPickupEnv'
 )
