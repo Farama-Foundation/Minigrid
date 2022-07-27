@@ -269,6 +269,8 @@ class FullyObsWrapper(gym.ObservationWrapper):
 class DictObservationSpaceWrapper(gym.ObservationWrapper):
     """
     Use a Dict Obsevation Space encoding images, missions, and directions
+    Transforms the observation space (that has a textual component) to a fully numerical observation space,
+    where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
     """
 
     def __init__(self, env, max_words_in_mission=50, word_dict=None):
@@ -280,7 +282,7 @@ class DictObservationSpaceWrapper(gym.ObservationWrapper):
         super().__init__(env)
 
         if word_dict is None:
-            word_dict = DictObservationSpaceWrapper.get_minigrid_words()
+            word_dict = self.get_minigrid_words()
 
         self.max_words_in_mission = max_words_in_mission
         self.word_dict = word_dict
