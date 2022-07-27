@@ -24,8 +24,8 @@ setup(
     python_requires=">=3.7, <3.11",
     long_description_content_type="text/markdown",
     install_requires=[
-        'gym @ git+https://github.com/openai/gym.git@0.25.0',
-        "numpy>=1.18.0"
+        "numpy>=1.18.0",
+        'gym>=0.25.0'
     ],
     classifiers=[
     "Development Status :: 5 - Production/Stable",
