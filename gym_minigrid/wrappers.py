@@ -268,7 +268,6 @@ class FullyObsWrapper(gym.ObservationWrapper):
 
 class DictObservationSpaceWrapper(gym.ObservationWrapper):
     """
-    Use a Dict Obsevation Space encoding images, missions, and directions
     Transforms the observation space (that has a textual component) to a fully numerical observation space,
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
     """
