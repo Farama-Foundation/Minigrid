@@ -137,7 +137,7 @@ class OneHotPartialObsWrapper(gym.ObservationWrapper):
             dtype='uint8'
         )
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         img = obs['image']
@@ -180,7 +180,7 @@ class RGBImgObsWrapper(gym.ObservationWrapper):
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         env = self.unwrapped
@@ -217,7 +217,7 @@ class RGBImgPartialObsWrapper(gym.ObservationWrapper):
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         env = self.unwrapped
@@ -249,7 +249,7 @@ class FullyObsWrapper(gym.ObservationWrapper):
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         env = self.unwrapped
@@ -419,7 +419,7 @@ class ViewSizeWrapper(gym.Wrapper):
 
         # Override the environment's observation spaceexit
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         env = self.unwrapped
@@ -482,7 +482,7 @@ class SymbolicObsWrapper(gym.ObservationWrapper):
             dtype="uint8",
         )
         self.observation_space = spaces.Dict(
-            {**self.observation_space, 'image': new_image_space})
+            {**self.observation_space.spaces, 'image': new_image_space})
 
     def observation(self, obs):
         objects = np.array(
