@@ -8,17 +8,16 @@ import gym_minigrid
 from gym_minigrid.wrappers import *
 from gym_minigrid.window import Window
 
+
 def redraw(img):
     if not args.agent_view:
         img = env.render(tile_size=args.tile_size)
 
     window.show_img(img)
 
+
 def reset():
-    if args.seed == -1:
-        seed = None
-    else:
-        seed = args.seed
+    seed = None if args.seed == -1 else args.seed
     obs = env.reset(seed=seed)
 
     if hasattr(env, 'mission'):
@@ -26,6 +25,7 @@ def reset():
         window.set_caption(env.mission)
 
     redraw(obs)
+
 
 def step(action):
     obs, reward, done, info = env.step(action)
@@ -36,6 +36,7 @@ def step(action):
         reset()
     else:
         redraw(obs)
+
 
 def key_handler(event):
     print('pressed', event.key)
@@ -72,6 +73,7 @@ def key_handler(event):
     if event.key == 'enter':
         step(env.actions.done)
         return
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
