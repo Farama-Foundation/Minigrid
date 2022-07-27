@@ -7,10 +7,11 @@ class DoorKeyEnv(MiniGridEnv):
     Environment with a door and key, sparse reward
     """
 
-    def __init__(self, size=8, max_steps=None, **kwargs):
+    def __init__(self, size=8, **kwargs):
+        if 'max_steps' not in kwargs:
+            kwargs['max_steps'] = 10 * size * size
         super().__init__(
             grid_size=size,
-            max_steps=10*size*size if max_steps is None else max_steps,
             **kwargs
         )
 
@@ -47,13 +48,8 @@ class DoorKeyEnv(MiniGridEnv):
 
 
 class DoorKeyEnv5x5(DoorKeyEnv):
-
-
-<< << << < HEAD
-
-
-def __init__(self, **kwargs):
-    super().__init__(size=5, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(size=5, **kwargs)
 
 
 class DoorKeyEnv6x6(DoorKeyEnv):
@@ -65,25 +61,6 @@ class DoorKeyEnv16x16(DoorKeyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=16, **kwargs)
 
-
-== == == =
-
-
-def __init__(self, max_steps=None):
-    super().__init__(size=5, max_steps=max_steps)
-
-
-class DoorKeyEnv6x6(DoorKeyEnv):
-    def __init__(self, max_steps=None):
-        super().__init__(size=6, max_steps=max_steps)
-
-
-class DoorKeyEnv16x16(DoorKeyEnv):
-    def __init__(self, max_steps=None):
-        super().__init__(size=16, max_steps=max_steps)
-
-
->>>>>> > master-upstream
 
 register(
     id='MiniGrid-DoorKey-5x5-v0',
