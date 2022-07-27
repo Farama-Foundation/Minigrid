@@ -6,7 +6,7 @@ import gym
 import numpy as np
 from gym import spaces
 
-from .minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
+from gym_minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
 
 class ReseedWrapper(gym.core.Wrapper):
@@ -334,7 +334,7 @@ class DirectionObsWrapper(gym.core.ObservationWrapper):
         obs = self.env.reset()
         if not self.goal_position:
             self.goal_position = [
-                x for x, y in enumerate(self.grid.grid) if isinstance(y, (Goal))
+                x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
             ]
             if (
                 len(self.goal_position) >= 1
