@@ -702,7 +702,7 @@ class MiniGridEnv(gym.Env):
             'image': self.observation_space,
             'direction': spaces.Discrete(4),
             'mission': spaces.Text(max_length=200,
-                                   charset=string.ascii_letters + string.digits + ' .,!- '
+                                   charset=string.ascii_letters + string.digits + ' .,!-'
                                    )
         })
 
