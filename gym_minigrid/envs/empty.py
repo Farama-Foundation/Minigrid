@@ -1,6 +1,7 @@
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 
+
 class EmptyEnv(MiniGridEnv):
     """
     Empty grid environment, no obstacles, sparse reward
@@ -9,7 +10,7 @@ class EmptyEnv(MiniGridEnv):
     def __init__(
         self,
         size=8,
-        agent_start_pos=(1,1),
+        agent_start_pos=(1, 1),
         agent_start_dir=0,
         **kwargs
     ):
@@ -43,48 +44,31 @@ class EmptyEnv(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
+
 class EmptyEnv5x5(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=5, **kwargs)
+
 
 class EmptyRandomEnv5x5(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=5, agent_start_pos=None, **kwargs)
 
+
 class EmptyEnv6x6(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, **kwargs)
+
 
 class EmptyRandomEnv6x6(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, agent_start_pos=None, **kwargs)
 
+
 class EmptyEnv16x16(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=16, **kwargs)
 
-class EmptyEnvWithExtraObs(EmptyEnv5x5):
-    """
-    Custom environment with an extra observation
-    """
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.observation_space['size'] = spaces.Box(
-            low=0,
-            high=1000,  #gym does not like np.iinfo(np.uint).max,  
-            shape=(2,),
-            dtype=np.uint
-        )
-
-    def reset(self, **kwargs):
-        obs = super().reset(**kwargs)
-        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
-        return obs
-
-    def step(self, action):
-        obs, reward, done, info = super().step(action)
-        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
-        return obs, reward, done, info
 
 register(
     id='MiniGrid-Empty-5x5-v0',
@@ -114,9 +98,4 @@ register(
 register(
     id='MiniGrid-Empty-16x16-v0',
     entry_point='gym_minigrid.envs:EmptyEnv16x16'
-)
-
-register(
-    id='MiniGrid-EmptyWithExtraObs-v0',
-    entry_point='gym_minigrid.envs:EmptyEnvWithExtraObs',
 )

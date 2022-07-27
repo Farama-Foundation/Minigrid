@@ -119,7 +119,8 @@ for env_idx, env_name in enumerate(env_list):
     env.reset()
     mission = env.mission
     obs, _, _, _ = env.step(0)
-    assert env.string_to_indices(mission) == [value for value in obs['mission'] if value != 0]
+    assert env.string_to_indices(mission) == [
+        value for value in obs['mission'] if value != 0]
     env.close()
 
     # Test the wrappers return proper observation spaces.
@@ -146,6 +147,32 @@ for env_idx, env_name in enumerate(env_list):
 
 print('testing extra observations')
 
+
+class EmptyEnvWithExtraObs(gym_minigrid.envs.EmptyEnv5x5):
+    """
+    Custom environment with an extra observation
+    """
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.observation_space['size'] = spaces.Box(
+            low=0,
+            high=1000,  # gym does not like np.iinfo(np.uint).max,
+            shape=(2,),
+            dtype=np.uint
+        )
+
+    def reset(self, **kwargs):
+        obs = super().reset(**kwargs)
+        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        return obs
+
+    def step(self, action):
+        obs, reward, done, info = super().step(action)
+        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        return obs, reward, done, info
+
+
 wrappers = [
     OneHotPartialObsWrapper,
     RGBImgObsWrapper,
@@ -153,14 +180,14 @@ wrappers = [
     FullyObsWrapper,
 ]
 for wrapper in wrappers:
-    env1 = wrapper(gym.make('MiniGrid-EmptyWithExtraObs-v0', render_mode='rgb_array'))
+    env1 = wrapper(EmptyEnvWithExtraObs(render_mode='rgb_array'))
     env2 = wrapper(gym.make('MiniGrid-Empty-5x5-v0', render_mode='rgb_array'))
 
     obs1 = env1.reset(seed=0)
     obs2 = env2.reset(seed=0)
     assert 'size' in obs1
     assert obs1['size'].shape == (2,)
-    assert (obs1['size'] == [5,5]).all()
+    assert (obs1['size'] == [5, 5]).all()
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
 
@@ -168,7 +195,7 @@ for wrapper in wrappers:
     obs2, reward2, done2, _ = env2.step(0)
     assert 'size' in obs1
     assert obs1['size'].shape == (2,)
-    assert (obs1['size'] == [5,5]).all()
+    assert (obs1['size'] == [5, 5]).all()
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
 
