@@ -28,7 +28,11 @@ def reset():
 
 def step(action):
     obs, reward, done, info = env.step(action)
+<<<<<<< HEAD
     print(f"step={env.step_count}, reward={reward:.2f}")
+=======
+    print("step={}, reward={:.2f}".format(env.step_count, reward))
+>>>>>>> Add pyright to pre-commit
 
     if done:
         print("done!")

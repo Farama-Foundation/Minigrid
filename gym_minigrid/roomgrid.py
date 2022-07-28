@@ -1,6 +1,7 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
 
 
+
 def reject_next_to(env, pos):
     """
     Function to filter out object positions that are right next to
@@ -203,6 +204,8 @@ class RoomGrid(MiniGridEnv):
             obj = Ball(color)
         elif kind == "box":
             obj = Box(color)
+        else:
+            raise "{} object kind is not available in this environment.".format(kind)
 
         return self.place_in_room(i, j, obj)
 

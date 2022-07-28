@@ -252,8 +252,9 @@ class Door(WorldObj):
             state = 0
         elif self.is_locked:
             state = 2
-        elif not self.is_open:
-            state = 1
+        # if door is closed and unlocked
+        else:
+            state = 1 
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
@@ -580,8 +581,8 @@ class Grid:
 
         return grid, vis_mask
 
-    def process_vis(grid, agent_pos):
-        mask = np.zeros(shape=(grid.width, grid.height), dtype=bool)
+    def process_vis(self, agent_pos):
+        mask = np.zeros(shape=(self.width, self.height), dtype=bool)
 
         mask[agent_pos[0], agent_pos[1]] = True
 
@@ -590,7 +591,7 @@ class Grid:
                 if not mask[i, j]:
                     continue
 
-                cell = grid.get(i, j)
+                cell = self.get(i, j)
                 if cell and not cell.see_behind():
                     continue
 
@@ -599,11 +600,11 @@ class Grid:
                     mask[i + 1, j - 1] = True
                     mask[i, j - 1] = True
 
-            for i in reversed(range(1, grid.width)):
+            for i in reversed(range(1, self.width)):
                 if not mask[i, j]:
                     continue
 
-                cell = grid.get(i, j)
+                cell = self.get(i, j)
                 if cell and not cell.see_behind():
                     continue
 
@@ -612,10 +613,10 @@ class Grid:
                     mask[i - 1, j - 1] = True
                     mask[i, j - 1] = True
 
-        for j in range(0, grid.height):
-            for i in range(0, grid.width):
+        for j in range(0, self.height):
+            for i in range(0, self.width):
                 if not mask[i, j]:
-                    grid.set(i, j, None)
+                    self.set(i, j, None)
 
         return mask
 
@@ -703,9 +704,6 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
-        # Window to use for human rendering mode
-        self.window = None
-
         # Environment configuration
         self.width = width
         self.height = height
@@ -722,8 +720,9 @@ class MiniGridEnv(gym.Env):
     def reset(self, *, seed=None, return_info=False, options=None):
         super().reset(seed=seed)
         # Current position and direction of the agent
-        self.agent_pos = None
-        self.agent_dir = None
+        NDArrayInt = npt.NDArray[np.int_]
+        self.agent_pos: NDArrayInt = None
+        self.agent_dir: int = None
 
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)

@@ -139,7 +139,11 @@ for env_idx, env_name in enumerate(env_list):
         obs_space, wrapper_name = env.observation_space, wrapper.__name__
         assert isinstance(
             obs_space, spaces.Dict
+<<<<<<< HEAD
         ), f"Observation space for {wrapper_name} is not a Dict: {obs_space}."
+=======
+        ), "Observation space for {} is not a Dict: {}.".format(wrapper_name, obs_space)
+>>>>>>> Add pyright to pre-commit
         # This should not fail either
         ImgObsWrapper(env)
         env.reset()

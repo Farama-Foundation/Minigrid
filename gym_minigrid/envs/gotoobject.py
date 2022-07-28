@@ -46,6 +46,10 @@ class GoToObjectEnv(MiniGridEnv):
                 obj = Ball(objColor)
             elif objType == "box":
                 obj = Box(objColor)
+            else:
+                raise ValueError(
+                    "{} object type given. Object type can only be of values key, ball and box.".format(objType)
+                )
 
             pos = self.place_obj(obj)
             objs.append((objType, objColor))

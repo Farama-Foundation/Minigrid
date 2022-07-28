@@ -65,7 +65,10 @@ class FourRoomsEnv(MiniGridEnv):
             self.place_obj(Goal())
 
         self.mission = "reach the goal"
+<<<<<<< HEAD
         self.mission = "Reach the goal"
+=======
+>>>>>>> Add pyright to pre-commit
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)

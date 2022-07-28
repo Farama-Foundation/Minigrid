@@ -40,14 +40,14 @@ repos:
     hooks:
       - id: pyupgrade
         args: ["--py37-plus"]
-#  - repo: local
-#    hooks:
-#      - id: pyright
-#        name: pyright
-#        entry: pyright
-#        language: node
-#        pass_filenames: false
-#        types: [python]
-#        additional_dependencies: ["pyright"]
-#        args:
-#          - --project=pyproject.toml
+ - repo: local
+   hooks:
+     - id: pyright
+       name: pyright
+       entry: pyright
+       language: node
+       pass_filenames: false
+       types: [python]
+       additional_dependencies: ["pyright"]
+       args:
+         - --project=pyproject.toml

@@ -7,15 +7,14 @@ except ImportError:
     )
 
 
+
 class Window:
     """
     Window to draw a gridworld instance using Matplotlib
     """
 
     def __init__(self, title):
-        self.fig = None
-
-        self.imshow_obj = None
+        self.no_image_shown = True
 
         # Create the figure and axes
         self.fig, self.ax = plt.subplots()

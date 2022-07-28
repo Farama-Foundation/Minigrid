@@ -62,6 +62,10 @@ class PlaygroundEnv(MiniGridEnv):
                 obj = Ball(objColor)
             elif objType == "box":
                 obj = Box(objColor)
+            else:
+                raise ValueError(
+                    "{} object type given. Object type can only be of values key, ball and box.".format(objType)
+                )
             self.place_obj(obj)
 
         # No explicit mission in this environment

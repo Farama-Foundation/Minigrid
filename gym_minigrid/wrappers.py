@@ -8,8 +8,10 @@ from gym import spaces
 
 from gym_minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
+from gym_minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
-class ReseedWrapper(gym.Wrapper):
+
+class ReseedWrapper(Wrapper):
     """
     Wrapper to always regenerate an environment with the same set of seeds.
     This can be used to force an environment to always keep the same
@@ -31,7 +33,7 @@ class ReseedWrapper(gym.Wrapper):
         return obs, reward, done, info
 
 
-class ActionBonus(gym.Wrapper):
+class ActionBonus(Wrapper):
     """
     Wrapper which adds an exploration bonus.
     This is a reward to encourage exploration of less
@@ -66,7 +68,7 @@ class ActionBonus(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 
-class StateBonus(gym.Wrapper):
+class StateBonus(Wrapper):
     """
     Adds an exploration bonus based on which positions
     are visited on the grid.
@@ -102,7 +104,7 @@ class StateBonus(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 
-class ImgObsWrapper(gym.ObservationWrapper):
+class ImgObsWrapper(ObservationWrapper):
     """
     Use the image as the only observation output, no language/mission.
     """
@@ -115,7 +117,7 @@ class ImgObsWrapper(gym.ObservationWrapper):
         return obs["image"]
 
 
-class OneHotPartialObsWrapper(gym.ObservationWrapper):
+class OneHotPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to get a one-hot encoding of a partially observable
     agent view as observation.
@@ -155,7 +157,7 @@ class OneHotPartialObsWrapper(gym.ObservationWrapper):
         return {**obs, "image": out}
 
 
-class RGBImgObsWrapper(gym.ObservationWrapper):
+class RGBImgObsWrapper(ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
@@ -187,7 +189,7 @@ class RGBImgObsWrapper(gym.ObservationWrapper):
         return {**obs, "image": rgb_img}
 
 
-class RGBImgPartialObsWrapper(gym.ObservationWrapper):
+class RGBImgPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
@@ -218,7 +220,7 @@ class RGBImgPartialObsWrapper(gym.ObservationWrapper):
         return {**obs, "image": rgb_img_partial}
 
 
-class FullyObsWrapper(gym.ObservationWrapper):
+class FullyObsWrapper(ObservationWrapper):
     """
     Fully observable gridworld using a compact grid encoding
     """
@@ -247,7 +249,7 @@ class FullyObsWrapper(gym.ObservationWrapper):
         return {**obs, "image": full_grid}
 
 
-class DictObservationSpaceWrapper(gym.ObservationWrapper):
+class DictObservationSpaceWrapper(ObservationWrapper):
     """
     Transforms the observation space (that has a textual component) to a fully numerical observation space,
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
@@ -365,7 +367,7 @@ class DictObservationSpaceWrapper(gym.ObservationWrapper):
         return obs
 
 
-class FlatObsWrapper(gym.ObservationWrapper):
+class FlatObsWrapper(ObservationWrapper):
     """
     Encode mission strings using a one-hot scheme,
     and combine these with observed images into one flat array
@@ -387,8 +389,7 @@ class FlatObsWrapper(gym.ObservationWrapper):
             dtype="uint8",
         )
 
-        self.cachedStr = None
-        self.cachedArray = None
+        self.cachedStr: str = None
 
     def observation(self, obs):
         image = obs["image"]
@@ -421,7 +422,7 @@ class FlatObsWrapper(gym.ObservationWrapper):
         return obs
 
 
-class ViewSizeWrapper(gym.Wrapper):
+class ViewSizeWrapper(Wrapper):
     """
     Wrapper to customize the agent field of view size.
     This cannot be used with fully observable wrappers.
@@ -456,7 +457,7 @@ class ViewSizeWrapper(gym.Wrapper):
         return {**obs, "image": image}
 
 
-class DirectionObsWrapper(gym.ObservationWrapper):
+class DirectionObsWrapper(ObservationWrapper):
     """
     Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
     type = {slope , angle}
@@ -464,7 +465,7 @@ class DirectionObsWrapper(gym.ObservationWrapper):
 
     def __init__(self, env, type="slope"):
         super().__init__(env)
-        self.goal_position = None
+        self.goal_position: tuple = None
         self.type = type
 
     def reset(self):
@@ -490,7 +491,7 @@ class DirectionObsWrapper(gym.ObservationWrapper):
         return obs
 
 
-class SymbolicObsWrapper(gym.ObservationWrapper):
+class SymbolicObsWrapper(ObservationWrapper):
     """
     Fully observable grid with a symbolic state representation.
     The symbol is a triple of (X, Y, IDX), where X and Y are
