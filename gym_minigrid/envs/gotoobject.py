@@ -10,7 +10,8 @@ class GoToObjectEnv(MiniGridEnv):
     def __init__(
         self,
         size=6,
-        numObjs=2
+        numObjs=2,
+        **kwargs
     ):
         self.numObjs = numObjs
 
@@ -18,7 +19,8 @@ class GoToObjectEnv(MiniGridEnv):
             grid_size=size,
             max_steps=5*size**2,
             # Set this to True for maximum speed
-            see_through_walls=True
+            see_through_walls=True,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -84,8 +86,8 @@ class GoToObjectEnv(MiniGridEnv):
         return obs, reward, done, info
 
 class GotoEnv8x8N2(GoToObjectEnv):
-    def __init__(self):
-        super().__init__(size=8, numObjs=2)
+    def __init__(self, **kwargs):
+        super().__init__(size=8, numObjs=2, **kwargs)
 
 register(
     id='MiniGrid-GoToObject-6x6-N2-v0',

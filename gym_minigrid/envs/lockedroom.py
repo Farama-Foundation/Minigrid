@@ -30,9 +30,10 @@ class LockedRoom(MiniGridEnv):
 
     def __init__(
         self,
-        size=19
+        size=19, 
+        **kwargs
     ):
-        super().__init__(grid_size=size, max_steps=10*size)
+        super().__init__(grid_size=size, max_steps=10*size, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create the grid

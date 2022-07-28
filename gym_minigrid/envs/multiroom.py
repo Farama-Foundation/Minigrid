@@ -21,7 +21,8 @@ class MultiRoomEnv(MiniGridEnv):
     def __init__(self,
         minNumRooms,
         maxNumRooms,
-        maxRoomSize=10
+        maxRoomSize=10,
+        **kwargs
     ):
         assert minNumRooms > 0
         assert maxNumRooms >= minNumRooms
@@ -35,7 +36,8 @@ class MultiRoomEnv(MiniGridEnv):
 
         super(MultiRoomEnv, self).__init__(
             grid_size=25,
-            max_steps=self.maxNumRooms * 20
+            max_steps=self.maxNumRooms * 20,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -237,26 +239,29 @@ class MultiRoomEnv(MiniGridEnv):
         return True
 
 class MultiRoomEnvN2S4(MultiRoomEnv):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(
             minNumRooms=2,
             maxNumRooms=2,
-            maxRoomSize=4
+            maxRoomSize=4,
+            **kwargs
         )
 
 class MultiRoomEnvN4S5(MultiRoomEnv):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(
             minNumRooms=4,
             maxNumRooms=4,
-            maxRoomSize=5
+            maxRoomSize=5,
+            **kwargs
         )
 
 class MultiRoomEnvN6(MultiRoomEnv):
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(
             minNumRooms=6,
-            maxNumRooms=6
+            maxNumRooms=6,
+            **kwargs
         )
 
 register(

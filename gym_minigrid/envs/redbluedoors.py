@@ -8,13 +8,14 @@ class RedBlueDoorEnv(MiniGridEnv):
     obtain a reward.
     """
 
-    def __init__(self, size=8):
+    def __init__(self, size=8, **kwargs):
         self.size = size
 
         super().__init__(
             width=2*size,
             height=size,
-            max_steps=20*size*size
+            max_steps=20*size*size,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -66,8 +67,8 @@ class RedBlueDoorEnv(MiniGridEnv):
         return obs, reward, done, info
 
 class RedBlueDoorEnv6x6(RedBlueDoorEnv):
-    def __init__(self):
-        super().__init__(size=6)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, **kwargs)
 
 register(
     id='MiniGrid-RedBlueDoors-6x6-v0',

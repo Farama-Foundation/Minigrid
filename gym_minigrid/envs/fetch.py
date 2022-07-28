@@ -10,7 +10,8 @@ class FetchEnv(MiniGridEnv):
     def __init__(
         self,
         size=8,
-        numObjs=3
+        numObjs=3,
+        **kwargs
     ):
         self.numObjs = numObjs
 
@@ -18,7 +19,8 @@ class FetchEnv(MiniGridEnv):
             grid_size=size,
             max_steps=5*size**2,
             # Set this to True for maximum speed
-            see_through_walls=True
+            see_through_walls=True,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -86,12 +88,12 @@ class FetchEnv(MiniGridEnv):
         return obs, reward, done, info
 
 class FetchEnv5x5N2(FetchEnv):
-    def __init__(self):
-        super().__init__(size=5, numObjs=2)
+    def __init__(self, **kwargs):
+        super().__init__(size=5, numObjs=2, **kwargs)
 
 class FetchEnv6x6N2(FetchEnv):
-    def __init__(self):
-        super().__init__(size=6, numObjs=2)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, numObjs=2, **kwargs)
 
 register(
     id='MiniGrid-Fetch-5x5-N2-v0',

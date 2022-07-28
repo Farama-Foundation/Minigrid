@@ -10,8 +10,8 @@ laptop, which means you can run your experiments faster. A known-working RL
 implementation can be found [in this repository](https://github.com/lcswillems/torch-rl).
 
 Requirements:
-- Python 3.5+
-- OpenAI Gym
+- Python 3.7+
+- OpenAI Gym 0.25+
 - NumPy
 - Matplotlib (optional, only needed for display)
 

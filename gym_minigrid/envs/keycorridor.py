@@ -12,7 +12,7 @@ class KeyCorridor(RoomGrid):
         num_rows=3,
         obj_type="ball",
         room_size=6,
-        seed=None
+        **kwargs
     ):
         self.obj_type = obj_type
 
@@ -20,7 +20,7 @@ class KeyCorridor(RoomGrid):
             room_size=room_size,
             num_rows=num_rows,
             max_steps=30*room_size**2,
-            seed=seed,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -59,51 +59,51 @@ class KeyCorridor(RoomGrid):
         return obs, reward, done, info
 
 class KeyCorridorS3R1(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self, **kwargs):
         super().__init__(
             room_size=3,
             num_rows=1,
-            seed=seed
+            **kwargs
         )
 
 class KeyCorridorS3R2(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self, **kwargs):
         super().__init__(
             room_size=3,
             num_rows=2,
-            seed=seed
+            **kwargs
         )
 
 class KeyCorridorS3R3(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self, **kwargs):
         super().__init__(
             room_size=3,
             num_rows=3,
-            seed=seed
+            **kwargs
         )
 
 class KeyCorridorS4R3(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self,  **kwargs):
         super().__init__(
             room_size=4,
             num_rows=3,
-            seed=seed
+            **kwargs
         )
 
 class KeyCorridorS5R3(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self, **kwargs):
         super().__init__(
             room_size=5,
             num_rows=3,
-            seed=seed
+            **kwargs
         )
 
 class KeyCorridorS6R3(KeyCorridor):
-    def __init__(self, seed=None):
+    def __init__(self,  **kwargs):
         super().__init__(
             room_size=6,
             num_rows=3,
-            seed=seed
+            **kwargs
         )
 
 register(
