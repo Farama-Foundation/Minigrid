@@ -1,0 +1,3 @@
+numpy>=1.18.0
+gym>=0.25
+matplotlib>=3.0
