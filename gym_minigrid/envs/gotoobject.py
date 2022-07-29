@@ -8,12 +8,7 @@ class GoToObjectEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self,
-        size=6,
-        numObjs=2,
-        **kwargs
-    ):
+    def __init__(self, size=6, numObjs=2, **kwargs):
         self.numObjs = numObjs
 
         super().__init__(
@@ -21,7 +16,7 @@ class GoToObjectEnv(MiniGridEnv):
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
-            **kwargs
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):

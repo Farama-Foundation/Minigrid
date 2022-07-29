@@ -8,20 +8,14 @@ class KeyCorridor(RoomGrid):
     random room.
     """
 
-    def __init__(
-        self,
-        num_rows=3,
-        obj_type="ball",
-        room_size=6,
-        **kwargs
-    ):
+    def __init__(self, num_rows=3, obj_type="ball", room_size=6, **kwargs):
         self.obj_type = obj_type
 
         super().__init__(
             room_size=room_size,
             num_rows=num_rows,
-            max_steps=30*room_size**2,
-            **kwargs
+            max_steps=30 * room_size**2,
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):
@@ -62,51 +56,33 @@ class KeyCorridor(RoomGrid):
 
 class KeyCorridorS3R1(KeyCorridor):
     def __init__(self, **kwargs):
-        super().__init__(
-            room_size=3,
-            num_rows=1,
-            **kwargs
-        )
+        super().__init__(room_size=3, num_rows=1, **kwargs)
+
 
 class KeyCorridorS3R2(KeyCorridor):
     def __init__(self, **kwargs):
-        super().__init__(
-            room_size=3,
-            num_rows=2,
-            **kwargs
-        )
+        super().__init__(room_size=3, num_rows=2, **kwargs)
+
 
 class KeyCorridorS3R3(KeyCorridor):
     def __init__(self, **kwargs):
-        super().__init__(
-            room_size=3,
-            num_rows=3,
-            **kwargs
-        )
+        super().__init__(room_size=3, num_rows=3, **kwargs)
+
 
 class KeyCorridorS4R3(KeyCorridor):
-    def __init__(self,  **kwargs):
-        super().__init__(
-            room_size=4,
-            num_rows=3,
-            **kwargs
-        )
+    def __init__(self, **kwargs):
+        super().__init__(room_size=4, num_rows=3, **kwargs)
+
 
 class KeyCorridorS5R3(KeyCorridor):
     def __init__(self, **kwargs):
-        super().__init__(
-            room_size=5,
-            num_rows=3,
-            **kwargs
-        )
+        super().__init__(room_size=5, num_rows=3, **kwargs)
+
 
 class KeyCorridorS6R3(KeyCorridor):
-    def __init__(self,  **kwargs):
-        super().__init__(
-            room_size=6,
-            num_rows=3,
-            **kwargs
-        )
+    def __init__(self, **kwargs):
+        super().__init__(room_size=6, num_rows=3, **kwargs)
+
 
 register(
     id="MiniGrid-KeyCorridorS3R1-v0", entry_point="gym_minigrid.envs:KeyCorridorS3R1"

@@ -15,8 +15,8 @@ class BlockedUnlockPickup(RoomGrid):
             num_rows=1,
             num_cols=2,
             room_size=room_size,
-            max_steps=16*room_size**2,
-            **kwargs
+            max_steps=16 * room_size**2,
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):

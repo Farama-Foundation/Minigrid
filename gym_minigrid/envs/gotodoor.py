@@ -8,11 +8,7 @@ class GoToDoorEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self,
-        size=5,
-        **kwargs
-    ):
+    def __init__(self, size=5, **kwargs):
         assert size >= 5
 
         super().__init__(

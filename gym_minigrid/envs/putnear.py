@@ -1,5 +1,6 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class PutNearEnv(MiniGridEnv):
     """
@@ -7,19 +8,14 @@ class PutNearEnv(MiniGridEnv):
     another object through a natural language string.
     """
 
-    def __init__(
-        self,
-        size=6,
-        numObjs=2, 
-        **kwargs
-    ):
+    def __init__(self, size=6, numObjs=2, **kwargs):
         self.numObjs = numObjs
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size,
+            max_steps=5 * size,
             # Set this to True for maximum speed
-            see_through_walls=True, 
+            see_through_walls=True,
             **kwargs
         )
 
@@ -28,12 +24,12 @@ class PutNearEnv(MiniGridEnv):
 
         # Generate the surrounding walls
         self.grid.horz_wall(0, 0)
-        self.grid.horz_wall(0, height-1)
+        self.grid.horz_wall(0, height - 1)
         self.grid.vert_wall(0, 0)
-        self.grid.vert_wall(width-1, 0)
+        self.grid.vert_wall(width - 1, 0)
 
         # Types and colors of objects we can generate
-        types = ['key', 'ball', 'box']
+        types = ["key", "ball", "box"]
 
         objs = []
         objPos = []
@@ -55,11 +51,11 @@ class PutNearEnv(MiniGridEnv):
             if (objType, objColor) in objs:
                 continue
 
-            if objType == 'key':
+            if objType == "key":
                 obj = Key(objColor)
-            elif objType == 'ball':
+            elif objType == "ball":
                 obj = Ball(objColor)
-            elif objType == 'box':
+            elif objType == "box":
                 obj = Box(objColor)
 
             pos = self.place_obj(obj, reject_fn=near_obj)
@@ -83,11 +79,11 @@ class PutNearEnv(MiniGridEnv):
         self.target_type, self.target_color = objs[targetIdx]
         self.target_pos = objPos[targetIdx]
 
-        self.mission = 'put the %s %s near the %s %s' % (
+        self.mission = "put the {} {} near the {} {}".format(
             self.moveColor,
             self.move_type,
             self.target_color,
-            self.target_type
+            self.target_type,
         )
 
     def step(self, action):
@@ -101,7 +97,10 @@ class PutNearEnv(MiniGridEnv):
 
         # If we picked up the wrong object, terminate the episode
         if action == self.actions.pickup and self.carrying:
-            if self.carrying.type != self.move_type or self.carrying.color != self.moveColor:
+            if (
+                self.carrying.type != self.move_type
+                or self.carrying.color != self.moveColor
+            ):
                 done = True
 
         # If successfully dropping an object near the target
@@ -113,16 +112,12 @@ class PutNearEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+
 class PutNear8x8N3(PutNearEnv):
     def __init__(self, **kwargs):
         super().__init__(size=8, numObjs=3, **kwargs)
 
-register(
-    id='MiniGrid-PutNear-6x6-N2-v0',
-    entry_point='gym_minigrid.envs:PutNearEnv'
-)
 
-register(
-    id='MiniGrid-PutNear-8x8-N3-v0',
-    entry_point='gym_minigrid.envs:PutNear8x8N3'
-)
+register(id="MiniGrid-PutNear-6x6-N2-v0", entry_point="gym_minigrid.envs:PutNearEnv")
+
+register(id="MiniGrid-PutNear-8x8-N3-v0", entry_point="gym_minigrid.envs:PutNear8x8N3")

@@ -7,13 +7,7 @@ class EmptyEnv(MiniGridEnv):
     Empty grid environment, no obstacles, sparse reward
     """
 
-    def __init__(
-        self,
-        size=8,
-        agent_start_pos=(1, 1),
-        agent_start_dir=0,
-        **kwargs
-    ):
+    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, **kwargs):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
@@ -55,7 +49,6 @@ class EmptyRandomEnv5x5(EmptyEnv):
         super().__init__(size=5, agent_start_pos=None, **kwargs)
 
 
-
 class EmptyEnv6x6(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, **kwargs)
@@ -66,16 +59,12 @@ class EmptyRandomEnv6x6(EmptyEnv):
         super().__init__(size=6, agent_start_pos=None, **kwargs)
 
 
-
 class EmptyEnv16x16(EmptyEnv):
     def __init__(self, **kwargs):
         super().__init__(size=16, **kwargs)
 
 
-register(
-    id='MiniGrid-Empty-5x5-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv5x5'
-)
+register(id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs:EmptyEnv5x5")
 
 register(id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs:EmptyEnv5x5")
 

@@ -8,12 +8,7 @@ class FetchEnv(MiniGridEnv):
     named using English text strings
     """
 
-    def __init__(
-        self,
-        size=8,
-        numObjs=3,
-        **kwargs
-    ):
+    def __init__(self, size=8, numObjs=3, **kwargs):
         self.numObjs = numObjs
 
         super().__init__(
@@ -21,7 +16,7 @@ class FetchEnv(MiniGridEnv):
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
-            **kwargs
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):

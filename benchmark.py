@@ -18,7 +18,7 @@ parser.add_argument("--num_resets", default=200)
 parser.add_argument("--num_frames", default=5000)
 args = parser.parse_args()
 
-env = gym.make(args.env_name, render_mode='rgb_array')
+env = gym.make(args.env_name, render_mode="rgb_array")
 
 # Benchmark env.reset
 t0 = time.time()

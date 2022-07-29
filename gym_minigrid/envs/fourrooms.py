@@ -64,7 +64,7 @@ class FourRoomsEnv(MiniGridEnv):
         else:
             self.place_obj(Goal())
 
-        self.mission = 'reach the goal'
+        self.mission = "reach the goal"
         self.mission = "Reach the goal"
 
     def step(self, action):

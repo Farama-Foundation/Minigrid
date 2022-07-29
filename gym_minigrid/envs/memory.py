@@ -12,18 +12,13 @@ class MemoryEnv(MiniGridEnv):
     object at split.
     """
 
-    def __init__(
-        self,
-        size=8,
-        random_length=False, 
-        **kwargs
-    ):
+    def __init__(self, size=8, random_length=False, **kwargs):
         self.random_length = random_length
         super().__init__(
             grid_size=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
-            see_through_walls=False, 
+            see_through_walls=False,
             **kwargs
         )
 

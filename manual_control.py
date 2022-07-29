@@ -8,7 +8,6 @@ from gym_minigrid.window import Window
 from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
-
 def redraw(img):
     if not args.agent_view:
         img = env.render(tile_size=args.tile_size)
@@ -94,7 +93,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-env = gym.make(args.env, render_mode='rgb_array')
+env = gym.make(args.env, render_mode="rgb_array")
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
