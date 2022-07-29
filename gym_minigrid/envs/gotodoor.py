@@ -8,7 +8,11 @@ class GoToDoorEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(self, size=5):
+    def __init__(
+        self,
+        size=5,
+        **kwargs
+    ):
         assert size >= 5
 
         super().__init__(
@@ -16,6 +20,7 @@ class GoToDoorEnv(MiniGridEnv):
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -80,13 +85,13 @@ class GoToDoorEnv(MiniGridEnv):
 
 
 class GoToDoor8x8Env(GoToDoorEnv):
-    def __init__(self):
-        super().__init__(size=8)
+    def __init__(self, **kwargs):
+        super().__init__(size=8, **kwargs)
 
 
 class GoToDoor6x6Env(GoToDoorEnv):
-    def __init__(self):
-        super().__init__(size=6)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, **kwargs)
 
 
 register(id="MiniGrid-GoToDoor-5x5-v0", entry_point="gym_minigrid.envs:GoToDoorEnv")

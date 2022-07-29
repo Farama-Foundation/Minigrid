@@ -11,7 +11,7 @@ implementation can be found [in this repository](https://github.com/lcswillems/t
 
 Requirements:
 - Python 3.7+
-- OpenAI Gym
+- OpenAI Gym 0.25
 - NumPy
 - Matplotlib (optional, only needed for display)
 

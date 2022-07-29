@@ -8,8 +8,8 @@ class PlaygroundV0(MiniGridEnv):
     This environment has no specific goals or rewards.
     """
 
-    def __init__(self):
-        super().__init__(grid_size=19, max_steps=100)
+    def __init__(self, **kwargs):
+        super().__init__(grid_size=19, max_steps=100, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create the grid

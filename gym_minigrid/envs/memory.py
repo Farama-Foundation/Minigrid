@@ -14,17 +14,17 @@ class MemoryEnv(MiniGridEnv):
 
     def __init__(
         self,
-        seed,
         size=8,
-        random_length=False,
+        random_length=False, 
+        **kwargs
     ):
         self.random_length = random_length
         super().__init__(
-            seed=seed,
             grid_size=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
-            see_through_walls=False,
+            see_through_walls=False, 
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -102,8 +102,8 @@ class MemoryEnv(MiniGridEnv):
 
 
 class MemoryS17Random(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=17, random_length=True)
+    def __init__(self, **kwargs):
+        super().__init__(size=17, random_length=True, **kwargs)
 
 
 register(
@@ -113,8 +113,8 @@ register(
 
 
 class MemoryS13Random(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=13, random_length=True)
+    def __init__(self, **kwargs):
+        super().__init__(size=13, random_length=True, **kwargs)
 
 
 register(
@@ -124,8 +124,8 @@ register(
 
 
 class MemoryS13(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=13)
+    def __init__(self, **kwargs):
+        super().__init__(size=13, **kwargs)
 
 
 register(
@@ -135,8 +135,8 @@ register(
 
 
 class MemoryS11(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=11)
+    def __init__(self, **kwargs):
+        super().__init__(size=11, **kwargs)
 
 
 register(
@@ -146,8 +146,8 @@ register(
 
 
 class MemoryS9(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=9)
+    def __init__(self, **kwargs):
+        super().__init__(size=9, **kwargs)
 
 
 register(
@@ -157,8 +157,8 @@ register(
 
 
 class MemoryS7(MemoryEnv):
-    def __init__(self, seed=None):
-        super().__init__(seed=seed, size=7)
+    def __init__(self, **kwargs):
+        super().__init__(size=7, **kwargs)
 
 
 register(

@@ -8,7 +8,13 @@ class DistShiftEnv(MiniGridEnv):
     """
 
     def __init__(
-        self, width=9, height=7, agent_start_pos=(1, 1), agent_start_dir=0, strip2_row=2
+        self,
+        width=9,
+        height=7,
+        agent_start_pos=(1,1),
+        agent_start_dir=0,
+        strip2_row=2,
+        **kwargs
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
@@ -21,6 +27,8 @@ class DistShiftEnv(MiniGridEnv):
             max_steps=4 * width * height,
             # Set this to True for maximum speed
             see_through_walls=True,
+            see_through_walls=True,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -49,13 +57,13 @@ class DistShiftEnv(MiniGridEnv):
 
 
 class DistShift1(DistShiftEnv):
-    def __init__(self):
-        super().__init__(strip2_row=2)
+    def __init__(self, **kwargs):
+        super().__init__(strip2_row=2, **kwargs)
 
 
 class DistShift2(DistShiftEnv):
-    def __init__(self):
-        super().__init__(strip2_row=5)
+    def __init__(self, **kwargs):
+        super().__init__(strip2_row=5, **kwargs)
 
 
 register(id="MiniGrid-DistShift1-v0", entry_point="gym_minigrid.envs:DistShift1")

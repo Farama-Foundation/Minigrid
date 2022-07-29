@@ -12,7 +12,12 @@ class DynamicObstaclesEnv(MiniGridEnv):
     """
 
     def __init__(
-        self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, n_obstacles=4
+            self,
+            size=8,
+            agent_start_pos=(1, 1),
+            agent_start_dir=0,
+            n_obstacles=4,
+            **kwargs
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
@@ -27,6 +32,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
             max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            **kwargs
         )
         # Allow only 3 actions permitted: left, right, forward
         self.action_space = gym.spaces.Discrete(self.actions.forward + 1)
@@ -92,28 +98,28 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
 
 class DynamicObstaclesEnv5x5(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=5, n_obstacles=2)
+    def __init__(self, **kwargs):
+        super().__init__(size=5, n_obstacles=2, **kwargs)
 
 
 class DynamicObstaclesRandomEnv5x5(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=5, agent_start_pos=None, n_obstacles=2)
+    def __init__(self, **kwargs):
+        super().__init__(size=5, agent_start_pos=None, n_obstacles=2, **kwargs)
 
 
 class DynamicObstaclesEnv6x6(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=6, n_obstacles=3)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, n_obstacles=3, **kwargs)
 
 
 class DynamicObstaclesRandomEnv6x6(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=6, agent_start_pos=None, n_obstacles=3)
+    def __init__(self, **kwargs):
+        super().__init__(size=6, agent_start_pos=None, n_obstacles=3, **kwargs)
 
 
 class DynamicObstaclesEnv16x16(DynamicObstaclesEnv):
-    def __init__(self):
-        super().__init__(size=16, n_obstacles=8)
+    def __init__(self, **kwargs):
+        super().__init__(size=16, n_obstacles=8, **kwargs)
 
 
 register(
