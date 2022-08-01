@@ -81,18 +81,17 @@ class GoToDoorEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-GoToDoor-5x5-v0',
-    entry_point='gym_minigrid.envs.gotodoor:GoToDoorEnv'
+    id="MiniGrid-GoToDoor-5x5-v0", entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv"
 )
 
 register(
-    id='MiniGrid-GoToDoor-6x6-v0',
-    entry_point='gym_minigrid.envs.gotodoor:GoToDoorEnv',
-    size=6
+    id="MiniGrid-GoToDoor-6x6-v0",
+    entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv",
+    size=6,
 )
 
 register(
-    id='MiniGrid-GoToDoor-8x8-v0',
-    entry_point='gym_minigrid.envs.gotodoor:GoToDoorEnv',
-    size=8
+    id="MiniGrid-GoToDoor-8x8-v0",
+    entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv",
+    size=8,
 )

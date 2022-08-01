@@ -59,19 +59,19 @@ class LavaGapEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-LavaGapS5-v0',
-    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
-    size=5
+    id="MiniGrid-LavaGapS5-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=5,
 )
 
 register(
-    id='MiniGrid-LavaGapS6-v0',
-    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
-    size=6
+    id="MiniGrid-LavaGapS6-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=6,
 )
 
 register(
-    id='MiniGrid-LavaGapS7-v0',
-    entry_point='gym_minigrid.envs.lavagap:LavaGapEnv',
-    size=7
+    id="MiniGrid-LavaGapS7-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=7,
 )

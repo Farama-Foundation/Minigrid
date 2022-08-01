@@ -66,12 +66,12 @@ class RedBlueDoorEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-RedBlueDoors-6x6-v0',
-    entry_point='gym_minigrid.envs.redbluedoors:RedBlueDoorEnv',
-    size=6
+    id="MiniGrid-RedBlueDoors-6x6-v0",
+    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
+    size=6,
 )
 
 register(
-    id='MiniGrid-RedBlueDoors-8x8-v0',
-    entry_point='gym_minigrid.envs.redbluedoors:RedBlueDoorEnv'
+    id="MiniGrid-RedBlueDoors-8x8-v0",
+    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
 )

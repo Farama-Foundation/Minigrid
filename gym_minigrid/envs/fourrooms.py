@@ -73,6 +73,5 @@ class FourRoomsEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-FourRooms-v0',
-    entry_point='gym_minigrid.envs.fourrooms:FourRoomsEnv'
+    id="MiniGrid-FourRooms-v0", entry_point="gym_minigrid.envs.fourrooms:FourRoomsEnv"
 )

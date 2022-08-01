@@ -87,18 +87,17 @@ class FetchEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-Fetch-5x5-N2-v0',
-    entry_point='gym_minigrid.envs.fetch:FetchEnv',
-    size=5, numObjs=2
+    id="MiniGrid-Fetch-5x5-N2-v0",
+    entry_point="gym_minigrid.envs.fetch:FetchEnv",
+    size=5,
+    numObjs=2,
 )
 
 register(
-    id='MiniGrid-Fetch-6x6-N2-v0',
-    entry_point='gym_minigrid.envs.fetch:FetchEnv',
-    size=6, numObjs=2
+    id="MiniGrid-Fetch-6x6-N2-v0",
+    entry_point="gym_minigrid.envs.fetch:FetchEnv",
+    size=6,
+    numObjs=2,
 )
 
-register(
-    id='MiniGrid-Fetch-8x8-N3-v0',
-    entry_point='gym_minigrid.envs.fetch:FetchEnv'
-)
+register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="gym_minigrid.envs.fetch:FetchEnv")

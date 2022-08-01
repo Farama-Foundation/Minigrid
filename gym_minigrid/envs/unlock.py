@@ -40,7 +40,5 @@ class UnlockEnv(RoomGrid):
 
         return obs, reward, done, info
 
-register(
-    id='MiniGrid-Unlock-v0',
-    entry_point='gym_minigrid.envs.unlock:UnlockEnv'
-)
+
+register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs.unlock:UnlockEnv")

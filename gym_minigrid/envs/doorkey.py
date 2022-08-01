@@ -41,25 +41,25 @@ class DoorKeyEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-DoorKey-5x5-v0',
-    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
-    size=5
+    id="MiniGrid-DoorKey-5x5-v0",
+    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
+    size=5,
 )
 
 register(
-    id='MiniGrid-DoorKey-6x6-v0',
-    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
-    size=6
+    id="MiniGrid-DoorKey-6x6-v0",
+    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
+    size=6,
 )
 
 register(
-    id='MiniGrid-DoorKey-8x8-v0',
-    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
-    size=8
+    id="MiniGrid-DoorKey-8x8-v0",
+    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
+    size=8,
 )
 
 register(
-    id='MiniGrid-DoorKey-16x16-v0',
-    entry_point='gym_minigrid.envs.doorkey:DoorKeyEnv',
-    size=16
+    id="MiniGrid-DoorKey-16x16-v0",
+    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
+    size=16,
 )

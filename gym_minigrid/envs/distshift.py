@@ -56,13 +56,13 @@ class DistShiftEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-DistShift1-v0',
-    entry_point='gym_minigrid.envs.distshift:DistShiftEnv',
-strip2_row=2
+    id="MiniGrid-DistShift1-v0",
+    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
+    strip2_row=2,
 )
 
 register(
-    id='MiniGrid-DistShift2-v0',
-    entry_point='gym_minigrid.envs.distshift:DistShiftEnv',
-strip2_row=5
+    id="MiniGrid-DistShift2-v0",
+    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
+    strip2_row=5,
 )

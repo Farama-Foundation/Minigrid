@@ -42,7 +42,8 @@ class UnlockPickupEnv(RoomGrid):
 
         return obs, reward, done, info
 
+
 register(
-    id='MiniGrid-UnlockPickup-v0',
-    entry_point='gym_minigrid.envs.unlockpickup:UnlockPickupEnv'
+    id="MiniGrid-UnlockPickup-v0",
+    entry_point="gym_minigrid.envs.unlockpickup:UnlockPickupEnv",
 )

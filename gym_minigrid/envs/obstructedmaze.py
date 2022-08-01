@@ -181,60 +181,76 @@ class ObstructedMaze_2Dlhb(ObstructedMaze_Full):
         super().__init__((2, 1), True, True, 1, 4, **kwargs)
 
 
-
 register(
     id="MiniGrid-ObstructedMaze-1Dl-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
-    key_in_box=False, blocked=False
+    key_in_box=False,
+    blocked=False,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Dlh-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
-    key_in_box=True, blocked=False
+    key_in_box=True,
+    blocked=False,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Dlhb-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dl-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1), key_in_box=False, blocked=False,
-    num_quarters=1, num_rooms_visited=4,
+    agent_room=(2, 1),
+    key_in_box=False,
+    blocked=False,
+    num_quarters=1,
+    num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dlh-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1), key_in_box=True, blocked=False,
-    num_quarters=1, num_rooms_visited=4,
+    agent_room=(2, 1),
+    key_in_box=True,
+    blocked=False,
+    num_quarters=1,
+    num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Dlhb-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1), key_in_box=True, blocked=True,
-    num_quarters=1, num_rooms_visited=4,
+    agent_room=(2, 1),
+    key_in_box=True,
+    blocked=True,
+    num_quarters=1,
+    num_rooms_visited=4,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-1Q-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(1, 1), key_in_box=True, blocked=True,
-    num_quarters=1, num_rooms_visited=5,
+    agent_room=(1, 1),
+    key_in_box=True,
+    blocked=True,
+    num_quarters=1,
+    num_rooms_visited=5,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-2Q-v0",
     entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1), key_in_box=True, blocked=True,
-    num_quarters=2, num_rooms_visited=11,
+    agent_room=(2, 1),
+    key_in_box=True,
+    blocked=True,
+    num_quarters=2,
+    num_rooms_visited=11,
 )
 
 register(
     id="MiniGrid-ObstructedMaze-Full-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full"
+    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
 )

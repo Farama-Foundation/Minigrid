@@ -1,6 +1,7 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
 from gym_minigrid.register import register
 
+
 class PlaygroundEnv(MiniGridEnv):
     """
     Environment with multiple rooms and random objects.
@@ -70,7 +71,8 @@ class PlaygroundEnv(MiniGridEnv):
         obs, reward, done, info = super().step(action)
         return obs, reward, done, info
 
+
 register(
-    id='MiniGrid-Playground-v0',
-    entry_point='gym_minigrid.envs.playground:PlaygroundEnv'
+    id="MiniGrid-Playground-v0",
+    entry_point="gym_minigrid.envs.playground:PlaygroundEnv",
 )

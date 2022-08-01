@@ -55,43 +55,43 @@ class KeyCorridorEnv(RoomGrid):
 
 
 register(
-    id='MiniGrid-KeyCorridorS3R1-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS3R1-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=3,
     num_rows=1,
 )
 
 register(
-    id='MiniGrid-KeyCorridorS3R2-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS3R2-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=3,
     num_rows=2,
 )
 
 register(
-    id='MiniGrid-KeyCorridorS3R3-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS3R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=3,
     num_rows=3,
 )
 
 register(
-    id='MiniGrid-KeyCorridorS4R3-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS4R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=4,
     num_rows=3,
 )
 
 register(
-    id='MiniGrid-KeyCorridorS5R3-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS5R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=5,
     num_rows=3,
 )
 
 register(
-    id='MiniGrid-KeyCorridorS6R3-v0',
-    entry_point='gym_minigrid.envs.keycorridor:KeyCorridorEnv',
+    id="MiniGrid-KeyCorridorS6R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
     room_size=6,
     num_rows=3,
 )

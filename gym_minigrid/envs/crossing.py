@@ -86,49 +86,61 @@ class CrossingEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-LavaCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=1
+    id="MiniGrid-LavaCrossingS9N1-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=1,
 )
 
 register(
-    id='MiniGrid-LavaCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=2
+    id="MiniGrid-LavaCrossingS9N2-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=2,
 )
 
 register(
-    id='MiniGrid-LavaCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=3
+    id="MiniGrid-LavaCrossingS9N3-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=3,
 )
 
 register(
-    id='MiniGrid-LavaCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=11, num_crossings=5
+    id="MiniGrid-LavaCrossingS11N5-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=11,
+    num_crossings=5,
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=1, obstacle_type=Wall
+    id="MiniGrid-SimpleCrossingS9N1-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=1,
+    obstacle_type=Wall,
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=2, obstacle_type=Wall
+    id="MiniGrid-SimpleCrossingS9N2-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=2,
+    obstacle_type=Wall,
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=9, num_crossings=3, obstacle_type=Wall
+    id="MiniGrid-SimpleCrossingS9N3-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=3,
+    obstacle_type=Wall,
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs.crossing:CrossingEnv',
-    size=11, num_crossings=5, obstacle_type=Wall
+    id="MiniGrid-SimpleCrossingS11N5-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=11,
+    num_crossings=5,
+    obstacle_type=Wall,
 )

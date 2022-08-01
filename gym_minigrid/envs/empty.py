@@ -40,36 +40,36 @@ class EmptyEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-Empty-5x5-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
-    size=5
+    id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs.empty:EmptyEnv", size=5
 )
 
 register(
-    id='MiniGrid-Empty-Random-5x5-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
-    size=5, agent_start_pos=None
+    id="MiniGrid-Empty-Random-5x5-v0",
+    entry_point="gym_minigrid.envs.empty:EmptyEnv",
+    size=5,
+    agent_start_pos=None,
 )
 
 register(
-    id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
-size=6,
+    id="MiniGrid-Empty-6x6-v0",
+    entry_point="gym_minigrid.envs.empty:EmptyEnv",
+    size=6,
 )
 
 register(
-    id='MiniGrid-Empty-Random-6x6-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
-size=6, agent_start_pos=None
+    id="MiniGrid-Empty-Random-6x6-v0",
+    entry_point="gym_minigrid.envs.empty:EmptyEnv",
+    size=6,
+    agent_start_pos=None,
 )
 
 register(
-    id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
+    id="MiniGrid-Empty-8x8-v0",
+    entry_point="gym_minigrid.envs.empty:EmptyEnv",
 )
 
 register(
-    id='MiniGrid-Empty-16x16-v0',
-    entry_point='gym_minigrid.envs.empty:EmptyEnv',
-size=16,
+    id="MiniGrid-Empty-16x16-v0",
+    entry_point="gym_minigrid.envs.empty:EmptyEnv",
+    size=16,
 )

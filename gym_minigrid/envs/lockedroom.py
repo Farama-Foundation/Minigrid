@@ -1,12 +1,9 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, Key, MiniGridEnv, Wall
 from gym_minigrid.register import register
 
+
 class LockedRoom:
-    def __init__(self,
-        top,
-        size,
-        doorPos
-    ):
+    def __init__(self, top, size, doorPos):
         self.top = top
         self.size = size
         self.doorPos = doorPos
@@ -59,16 +56,10 @@ class LockedRoomEnv(MiniGridEnv):
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
-            self.rooms.append(LockedRoom(
-                (0, j),
-                (roomW, roomH),
-                (lWallIdx, j + 3)
-            ))
-            self.rooms.append(LockedRoom(
-                (rWallIdx, j),
-                (roomW, roomH),
-                (rWallIdx, j + 3)
-            ))
+            self.rooms.append(LockedRoom((0, j), (roomW, roomH), (lWallIdx, j + 3)))
+            self.rooms.append(
+                LockedRoom((rWallIdx, j), (roomW, roomH), (rWallIdx, j + 3))
+            )
 
         # Choose one random room to be locked
         lockedRoom = self._rand_elem(self.rooms)
@@ -111,7 +102,8 @@ class LockedRoomEnv(MiniGridEnv):
         obs, reward, done, info = MiniGridEnv.step(self, action)
         return obs, reward, done, info
 
+
 register(
-    id='MiniGrid-LockedRoom-v0',
-    entry_point='gym_minigrid.envs.lockedroom:LockedRoomEnv'
+    id="MiniGrid-LockedRoom-v0",
+    entry_point="gym_minigrid.envs.lockedroom:LockedRoomEnv",
 )

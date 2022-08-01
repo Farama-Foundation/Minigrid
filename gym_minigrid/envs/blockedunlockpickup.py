@@ -49,6 +49,6 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
 
 register(
-    id='MiniGrid-BlockedUnlockPickup-v0',
-    entry_point='gym_minigrid.envs.blockedunlockpickup:BlockedUnlockPickupEnv'
+    id="MiniGrid-BlockedUnlockPickup-v0",
+    entry_point="gym_minigrid.envs.blockedunlockpickup:BlockedUnlockPickupEnv",
 )

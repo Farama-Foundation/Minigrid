@@ -114,12 +114,12 @@ class PutNearEnv(MiniGridEnv):
 
 
 register(
-    id='MiniGrid-PutNear-6x6-N2-v0',
-    entry_point='gym_minigrid.envs.putnear:PutNearEnv'
+    id="MiniGrid-PutNear-6x6-N2-v0", entry_point="gym_minigrid.envs.putnear:PutNearEnv"
 )
 
 register(
-    id='MiniGrid-PutNear-8x8-N3-v0',
-    entry_point='gym_minigrid.envs.putnear:PutNearEnv',
-    size=8, numObjs=3
+    id="MiniGrid-PutNear-8x8-N3-v0",
+    entry_point="gym_minigrid.envs.putnear:PutNearEnv",
+    size=8,
+    numObjs=3,
 )
