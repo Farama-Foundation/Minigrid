@@ -41,6 +41,14 @@ class PedestrianEnv(MiniGridEnv):
 
         self.mission = "get to the green goal square"
 
+    def gen_obs(self):
+        """
+        Generate the agent's view (partially observable, low-resolution encoding)
+        """
+
+        obs = super().gen_obs()
+        obs['position'] = self.agent_pos
+        return obs
 
 class PedestrianEnv9x16(PedestrianEnv):
     def __init__(self):

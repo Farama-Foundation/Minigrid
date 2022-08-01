@@ -671,14 +671,14 @@ class MiniGridEnv(gym.Env):
 
         # Observations are dictionaries containing an
         # encoding of the grid and a textual 'mission' string
-        self.observation_space = spaces.Box(
+        image_space = spaces.Box(
             low=0,
             high=255,
             shape=(self.agent_view_size, self.agent_view_size, 3),
             dtype='uint8'
         )
         self.observation_space = spaces.Dict({
-            'image': self.observation_space
+            'image': image_space
         })
 
         # Range of possible rewards
