@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
 from gym_minigrid.register import register
 
 class PlaygroundEnv(MiniGridEnv):
@@ -7,8 +7,8 @@ class PlaygroundEnv(MiniGridEnv):
     This environment has no specific goals or rewards.
     """
 
-    def __init__(self):
-        super().__init__(grid_size=19, max_steps=100)
+    def __init__(self, **kwargs):
+        super().__init__(grid_size=19, max_steps=100, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -16,9 +16,9 @@ class PlaygroundEnv(MiniGridEnv):
 
         # Generate the surrounding walls
         self.grid.horz_wall(0, 0)
-        self.grid.horz_wall(0, height-1)
+        self.grid.horz_wall(0, height - 1)
         self.grid.vert_wall(0, 0)
-        self.grid.vert_wall(width-1, 0)
+        self.grid.vert_wall(width - 1, 0)
 
         roomW = width // 3
         roomH = height // 3
@@ -34,16 +34,16 @@ class PlaygroundEnv(MiniGridEnv):
                 yB = yT + roomH
 
                 # Bottom wall and door
-                if i+1 < 3:
+                if i + 1 < 3:
                     self.grid.vert_wall(xR, yT, roomH)
-                    pos = (xR, self._rand_int(yT+1, yB-1))
+                    pos = (xR, self._rand_int(yT + 1, yB - 1))
                     color = self._rand_elem(COLOR_NAMES)
                     self.grid.set(*pos, Door(color))
 
                 # Bottom wall and door
-                if j+1 < 3:
+                if j + 1 < 3:
                     self.grid.horz_wall(xL, yB, roomW)
-                    pos = (self._rand_int(xL+1, xR-1), yB)
+                    pos = (self._rand_int(xL + 1, xR - 1), yB)
                     color = self._rand_elem(COLOR_NAMES)
                     self.grid.set(*pos, Door(color))
 
@@ -51,23 +51,23 @@ class PlaygroundEnv(MiniGridEnv):
         self.place_agent()
 
         # Place random objects in the world
-        types = ['key', 'ball', 'box']
+        types = ["key", "ball", "box"]
         for i in range(0, 12):
             objType = self._rand_elem(types)
             objColor = self._rand_elem(COLOR_NAMES)
-            if objType == 'key':
+            if objType == "key":
                 obj = Key(objColor)
-            elif objType == 'ball':
+            elif objType == "ball":
                 obj = Ball(objColor)
-            elif objType == 'box':
+            elif objType == "box":
                 obj = Box(objColor)
             self.place_obj(obj)
 
         # No explicit mission in this environment
-        self.mission = ''
+        self.mission = ""
 
     def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
         return obs, reward, done, info
 
 register(

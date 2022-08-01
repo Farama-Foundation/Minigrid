@@ -1,6 +1,10 @@
-from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 from operator import add
+
+import gym
+
+from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
+from gym_minigrid.register import register
+
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
@@ -8,28 +12,25 @@ class DynamicObstaclesEnv(MiniGridEnv):
     """
 
     def __init__(
-            self,
-            size=8,
-            agent_start_pos=(1, 1),
-            agent_start_dir=0,
-            n_obstacles=4
+        self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, n_obstacles=4, **kwargs
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
         # Reduce obstacles if there are too many
-        if n_obstacles <= size/2 + 1:
+        if n_obstacles <= size / 2 + 1:
             self.n_obstacles = int(n_obstacles)
         else:
-            self.n_obstacles = int(size/2)
+            self.n_obstacles = int(size / 2)
         super().__init__(
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            **kwargs
         )
         # Allow only 3 actions permitted: left, right, forward
-        self.action_space = spaces.Discrete(self.actions.forward + 1)
+        self.action_space = gym.spaces.Discrete(self.actions.forward + 1)
         self.reward_range = (-1, 1)
 
     def _gen_grid(self, width, height):
@@ -64,7 +65,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
         # Check if there is an obstacle in front of the agent
         front_cell = self.grid.get(*self.front_pos)
-        not_clear = front_cell and front_cell.type != 'goal'
+        not_clear = front_cell and front_cell.type != "goal"
 
         # Update obstacle positions
         for i_obst in range(len(self.obstacles)):
@@ -72,13 +73,15 @@ class DynamicObstaclesEnv(MiniGridEnv):
             top = tuple(map(add, old_pos, (-1, -1)))
 
             try:
-                self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
+                self.place_obj(
+                    self.obstacles[i_obst], top=top, size=(3, 3), max_tries=100
+                )
                 self.grid.set(*old_pos, None)
-            except:
+            except Exception:
                 pass
 
         # Update the agent's position/direction
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
 
         # If the agent tried to walk over an obstacle or wall
         if action == self.actions.forward and not_clear:

@@ -1,7 +1,7 @@
-from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
-
 import itertools as itt
+
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, Wall
+from gym_minigrid.register import register
 
 
 class CrossingEnv(MiniGridEnv):
@@ -9,15 +9,15 @@ class CrossingEnv(MiniGridEnv):
     Environment with wall or lava obstacles, sparse reward.
     """
 
-    def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, seed=None):
+    def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, **kwargs):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
         super().__init__(
             grid_size=size,
-            max_steps=4*size*size,
+            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
-            seed=None
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -43,9 +43,9 @@ class CrossingEnv(MiniGridEnv):
         rivers = [(v, i) for i in range(2, height - 2, 2)]
         rivers += [(h, j) for j in range(2, width - 2, 2)]
         self.np_random.shuffle(rivers)
-        rivers = rivers[:self.num_crossings]  # sample random rivers
-        rivers_v = sorted([pos for direction, pos in rivers if direction is v])
-        rivers_h = sorted([pos for direction, pos in rivers if direction is h])
+        rivers = rivers[: self.num_crossings]  # sample random rivers
+        rivers_v = sorted(pos for direction, pos in rivers if direction is v)
+        rivers_h = sorted(pos for direction, pos in rivers if direction is h)
         obstacle_pos = itt.chain(
             itt.product(range(1, width - 1), rivers_h),
             itt.product(rivers_v, range(1, height - 1)),
@@ -65,11 +65,13 @@ class CrossingEnv(MiniGridEnv):
             if direction is h:
                 i = limits_v[room_i + 1]
                 j = self.np_random.choice(
-                    range(limits_h[room_j] + 1, limits_h[room_j + 1]))
+                    range(limits_h[room_j] + 1, limits_h[room_j + 1])
+                )
                 room_i += 1
             elif direction is v:
                 i = self.np_random.choice(
-                    range(limits_v[room_i] + 1, limits_v[room_i + 1]))
+                    range(limits_v[room_i] + 1, limits_v[room_i + 1])
+                )
                 j = limits_h[room_j + 1]
                 room_j += 1
             else:

@@ -1,5 +1,4 @@
-from gym import spaces
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, Key, MiniGridEnv, Wall
 from gym_minigrid.register import register
 
 class LockedRoom:
@@ -17,10 +16,8 @@ class LockedRoom:
     def rand_pos(self, env):
         topX, topY = self.top
         sizeX, sizeY = self.size
-        return env._rand_pos(
-            topX + 1, topX + sizeX - 1,
-            topY + 1, topY + sizeY - 1
-        )
+        return env._rand_pos(topX + 1, topX + sizeX - 1, topY + 1, topY + sizeY - 1)
+
 
 class LockedRoomEnv(MiniGridEnv):
     """
@@ -28,11 +25,8 @@ class LockedRoomEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self,
-        size=19
-    ):
-        super().__init__(grid_size=size, max_steps=10*size)
+    def __init__(self, size=19, **kwargs):
+        super().__init__(grid_size=size, max_steps=10 * size, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -41,10 +35,10 @@ class LockedRoomEnv(MiniGridEnv):
         # Generate the surrounding walls
         for i in range(0, width):
             self.grid.set(i, 0, Wall())
-            self.grid.set(i, height-1, Wall())
+            self.grid.set(i, height - 1, Wall())
         for j in range(0, height):
             self.grid.set(0, j, Wall())
-            self.grid.set(width-1, j, Wall())
+            self.grid.set(width - 1, j, Wall())
 
         # Hallway walls
         lWallIdx = width // 2 - 2
@@ -103,15 +97,14 @@ class LockedRoomEnv(MiniGridEnv):
 
         # Randomize the player start position and orientation
         self.agent_pos = self.place_agent(
-            top=(lWallIdx, 0),
-            size=(rWallIdx-lWallIdx, height)
+            top=(lWallIdx, 0), size=(rWallIdx - lWallIdx, height)
         )
 
         # Generate the mission string
         self.mission = (
-            'get the %s key from the %s room, '
-            'unlock the %s door and '
-            'go to the goal'
+            "get the %s key from the %s room, "
+            "unlock the %s door and "
+            "go to the goal"
         ) % (lockedRoom.color, keyRoom.color, lockedRoom.color)
 
     def step(self, action):

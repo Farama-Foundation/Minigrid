@@ -1,5 +1,6 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import Door, Grid, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class RedBlueDoorEnv(MiniGridEnv):
     """
@@ -8,13 +9,11 @@ class RedBlueDoorEnv(MiniGridEnv):
     obtain a reward.
     """
 
-    def __init__(self, size=8):
+    def __init__(self, size=8, **kwargs):
         self.size = size
 
         super().__init__(
-            width=2*size,
-            height=size,
-            max_steps=20*size*size
+            width=2 * size, height=size, max_steps=20 * size * size, **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -22,21 +21,21 @@ class RedBlueDoorEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Generate the grid walls
-        self.grid.wall_rect(0, 0, 2*self.size, self.size)
-        self.grid.wall_rect(self.size//2, 0, self.size, self.size)
+        self.grid.wall_rect(0, 0, 2 * self.size, self.size)
+        self.grid.wall_rect(self.size // 2, 0, self.size, self.size)
 
         # Place the agent in the top-left corner
-        self.place_agent(top=(self.size//2, 0), size=(self.size, self.size))
+        self.place_agent(top=(self.size // 2, 0), size=(self.size, self.size))
 
         # Add a red door at a random position in the left wall
         pos = self._rand_int(1, self.size - 1)
         self.red_door = Door("red")
-        self.grid.set(self.size//2, pos, self.red_door)
+        self.grid.set(self.size // 2, pos, self.red_door)
 
         # Add a blue door at a random position in the right wall
         pos = self._rand_int(1, self.size - 1)
         self.blue_door = Door("blue")
-        self.grid.set(self.size//2 + self.size - 1, pos, self.blue_door)
+        self.grid.set(self.size // 2 + self.size - 1, pos, self.blue_door)
 
         # Generate the mission string
         self.mission = "open the red door then the blue door"

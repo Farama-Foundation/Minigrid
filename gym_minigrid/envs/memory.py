@@ -1,5 +1,6 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, Wall
 from gym_minigrid.register import register
+
 
 class MemoryEnv(MiniGridEnv):
     """
@@ -11,19 +12,14 @@ class MemoryEnv(MiniGridEnv):
     object at split.
     """
 
-    def __init__(
-        self,
-        seed=None,
-        size=8,
-        random_length=False,
-    ):
+    def __init__(self, size=8, random_length=False, **kwargs):
         self.random_length = random_length
         super().__init__(
-            seed=seed,
             grid_size=size,
-            max_steps=5*size**2,
+            max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=False,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -31,7 +27,7 @@ class MemoryEnv(MiniGridEnv):
 
         # Generate the surrounding walls
         self.grid.horz_wall(0, 0)
-        self.grid.horz_wall(0, height-1)
+        self.grid.horz_wall(0, height - 1)
         self.grid.vert_wall(0, 0)
         self.grid.vert_wall(width - 1, 0)
 
@@ -67,13 +63,13 @@ class MemoryEnv(MiniGridEnv):
 
         # Place objects
         start_room_obj = self._rand_elem([Key, Ball])
-        self.grid.set(1, height // 2 - 1, start_room_obj('green'))
+        self.grid.set(1, height // 2 - 1, start_room_obj("green"))
 
         other_objs = self._rand_elem([[Ball, Key], [Key, Ball]])
         pos0 = (hallway_end + 1, height // 2 - 2)
         pos1 = (hallway_end + 1, height // 2 + 2)
-        self.grid.set(*pos0, other_objs[0]('green'))
-        self.grid.set(*pos1, other_objs[1]('green'))
+        self.grid.set(*pos0, other_objs[0]("green"))
+        self.grid.set(*pos1, other_objs[1]("green"))
 
         # Choose the target objects
         if start_room_obj == other_objs[0]:
@@ -83,7 +79,7 @@ class MemoryEnv(MiniGridEnv):
             self.success_pos = (pos1[0], pos1[1] - 1)
             self.failure_pos = (pos0[0], pos0[1] + 1)
 
-        self.mission = 'go to the matching object at the end of the hallway'
+        self.mission = "go to the matching object at the end of the hallway"
 
     def step(self, action):
         if action == MiniGridEnv.Actions.pickup:

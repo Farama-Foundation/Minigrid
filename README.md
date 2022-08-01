@@ -10,8 +10,8 @@ laptop, which means you can run your experiments faster. A known-working RL
 implementation can be found [in this repository](https://github.com/lcswillems/torch-rl).
 
 Requirements:
-- Python 3.5+
-- OpenAI Gym
+- Python 3.7+
+- OpenAI Gym 0.25
 - NumPy
 - Matplotlib (optional, only needed for display)
 
@@ -132,8 +132,10 @@ compact and efficient encoding, with 3 input values per visible grid cell, 7x7x3
 These values are **not pixels**. If you want to obtain an array of RGB pixels as observations instead,
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
-```
-from gym_minigrid.wrappers import *
+```python
+import gym
+from gym_minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
+
 env = gym.make('MiniGrid-Empty-8x8-v0')
 env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field
@@ -323,7 +325,7 @@ object at split.
 
 ### Locked room environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-LockedRoom-v0`
 
 The environment has six rooms, one of which is locked. The agent receives
@@ -334,7 +336,7 @@ to solve with vanilla reinforcement learning alone.
 
 ### Key corridor environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-KeyCorridorS3R1-v0`
 - `MiniGrid-KeyCorridorS3R2-v0`
 - `MiniGrid-KeyCorridorS3R3-v0`
@@ -361,7 +363,7 @@ key is placed. This environment can be solved without relying on language.
 
 ### Unlock environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-Unlock-v0`
 
 <p align="center">
@@ -373,7 +375,7 @@ relying on language.
 
 ### Unlock pickup environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-UnlockPickup-v0`
 
 <p align="center">
@@ -385,7 +387,7 @@ locked door. This environment can be solved without relying on language.
 
 ### Blocked unlock pickup environment
 
-Registed configurations:
+Registered configurations:
 - `MiniGrid-BlockedUnlockPickup-v0`
 
 <p align="center">

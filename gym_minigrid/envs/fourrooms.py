@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
 from gym_minigrid.register import register
 
 
@@ -11,10 +9,10 @@ class FourRoomsEnv(MiniGridEnv):
     Can specify agent and goal position, if not it set at random.
     """
 
-    def __init__(self, agent_pos=None, goal_pos=None):
+    def __init__(self, agent_pos=None, goal_pos=None, **kwargs):
         self._agent_default_pos = agent_pos
         self._goal_default_pos = goal_pos
-        super().__init__(grid_size=19, max_steps=100)
+        super().__init__(grid_size=19, max_steps=100, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -66,7 +64,8 @@ class FourRoomsEnv(MiniGridEnv):
         else:
             self.place_obj(Goal())
 
-        self.mission = 'Reach the goal'
+        self.mission = "reach the goal"
+        self.mission = "Reach the goal"
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)

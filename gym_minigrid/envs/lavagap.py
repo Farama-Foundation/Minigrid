@@ -1,5 +1,8 @@
-from gym_minigrid.minigrid import *
+import numpy as np
+
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class LavaGapEnv(MiniGridEnv):
     """
@@ -7,14 +10,14 @@ class LavaGapEnv(MiniGridEnv):
     This environment is similar to LavaCrossing but simpler in structure.
     """
 
-    def __init__(self, size, obstacle_type=Lava):
+    def __init__(self, size, obstacle_type=Lava, **kwargs):
         self.obstacle_type = obstacle_type
         super().__init__(
             grid_size=size,
-            max_steps=4*size*size,
+            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
-            seed=None
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -35,10 +38,12 @@ class LavaGapEnv(MiniGridEnv):
         self.put_obj(Goal(), *self.goal_pos)
 
         # Generate and store random gap position
-        self.gap_pos = np.array((
-            self._rand_int(2, width - 2),
-            self._rand_int(1, height - 1),
-        ))
+        self.gap_pos = np.array(
+            (
+                self._rand_int(2, width - 2),
+                self._rand_int(1, height - 1),
+            )
+        )
 
         # Place the obstacle wall
         self.grid.vert_wall(self.gap_pos[0], 1, height - 2, self.obstacle_type)
