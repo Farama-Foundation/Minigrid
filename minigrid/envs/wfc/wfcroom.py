@@ -412,7 +412,8 @@ class Batch:
         feats = np.zeros((adj.shape[0], adj.shape[1], 4)) # M, N, D
         feats[(*start_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['start']]*len(start_nodes_graph[0])))] = 1
         feats[(*goal_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['goal']]*len(goal_nodes_graph[0])))] = 1
-        feats[(*wall_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['wall']]*len(wall_nodes_graph[0])))] = 1
+        if wall_nodes_graph[0].size != 0: #only if array not empty.
+            feats[(*wall_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['wall']]*len(wall_nodes_graph[0])))] = 1
         # empty features are the active nodes, removing the nodes having goal or start feature
         feats[(*active_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['empty']]*len(active_nodes_graph[0])))] = 1
         feats[(*goal_nodes_graph, np.array([OBJECT_TO_FEATURE_DIM['empty']] * len(goal_nodes_graph[0])))] = 0
@@ -432,7 +433,7 @@ class Batch:
 
     #Note: Returns the gridworld in one given permutation
     @staticmethod
-    def encode_graph_to_gridworld(graphs: List[dgl.DGLGraph], layout_only = True, output_dtype: str = 'tensor'):
+    def encode_graph_to_gridworld(graphs: List[dgl.DGLGraph], layout_only = False, output_dtype: str = 'tensor'):
         n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
         feat_dim = graphs[0].ndata['feat'].shape
         assert n_nodes % np.sqrt(n_nodes) == 0 # we are assuming square layout
@@ -704,7 +705,7 @@ if __name__ == '__main__':
     batches_meta = [
         {
             'output_file': 'batch_0.data',
-            'batch_size': 10,
+            'batch_size': 200,
             'batch_id': 0,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -772,20 +773,20 @@ if __name__ == '__main__':
         #
         #     ],
         # },
-        # {
-        #     'output_file': 'batch_5.data',
-        #     'batch_size': 1000,
-        #     'batch_id': 5,
-        #     'task_structure': 'maze',
-        #     'generating_algorithm': 'Prims',
-        #     'generating_algorithm_options': [
-        #
-        #     ],
-        #     'solving_algorithm': 'ShortestPaths',
-        #     'solving_algorithm_options': [
-        #
-        #     ],
-        # },
+        {
+            'output_file': 'batch_5.data',
+            'batch_size': 200,
+            'batch_id': 5,
+            'task_structure': 'maze',
+            'generating_algorithm': 'Prims',
+            'generating_algorithm_options': [
+
+            ],
+            'solving_algorithm': 'ShortestPaths',
+            'solving_algorithm_options': [
+
+            ],
+        },
         # {
         #     'output_file': 'batch_6.data',
         #     'batch_size': 1000,
@@ -844,7 +845,7 @@ if __name__ == '__main__':
         # },
         {
             'output_file': 'test_batch_0.data',
-            'batch_size': 500,
+            'batch_size': 200,
             'batch_id': 10,
             'task_structure': 'rooms_unstructured_layout',
             'generating_algorithm': 'Minigrid_MultiRoom',
@@ -858,7 +859,7 @@ if __name__ == '__main__':
         },
         {
             'output_file': 'test_batch_1.data',
-            'batch_size': 10,
+            'batch_size': 200,
             'batch_id': 91,
             'task_structure': 'maze',
             'generating_algorithm': 'Prims',
