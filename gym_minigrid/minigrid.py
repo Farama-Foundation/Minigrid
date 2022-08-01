@@ -653,13 +653,13 @@ class MiniGridEnv(gym.Env):
 
     def __init__(
         self,
-        grid_size=None,
-        width=None,
-        height=None,
-        max_steps=100,
-        see_through_walls=False,
-        agent_view_size=7,
-        render_mode=None,
+        grid_size: int=None,
+        width: int=None,
+        height: int=None,
+        max_steps: int=100,
+        see_through_walls: bool=False,
+        agent_view_size: int=7,
+        render_mode: str=None,
         **kwargs
     ):
         # Can't set both grid_size and width/height
