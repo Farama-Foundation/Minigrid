@@ -1,6 +1,10 @@
-from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
 from operator import add
+
+import gym
+
+from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
+from gym_minigrid.register import register
+
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
@@ -8,21 +12,16 @@ class DynamicObstaclesEnv(MiniGridEnv):
     """
 
     def __init__(
-            self,
-            size=8,
-            agent_start_pos=(1, 1),
-            agent_start_dir=0,
-            n_obstacles=4,
-            **kwargs
+        self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, n_obstacles=4, **kwargs
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
         # Reduce obstacles if there are too many
-        if n_obstacles <= size/2 + 1:
+        if n_obstacles <= size / 2 + 1:
             self.n_obstacles = int(n_obstacles)
         else:
-            self.n_obstacles = int(size/2)
+            self.n_obstacles = int(size / 2)
         super().__init__(
             grid_size=size,
             max_steps=4 * size * size,
@@ -31,7 +30,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
             **kwargs
         )
         # Allow only 3 actions permitted: left, right, forward
-        self.action_space = spaces.Discrete(self.actions.forward + 1)
+        self.action_space = gym.spaces.Discrete(self.actions.forward + 1)
         self.reward_range = (-1, 1)
 
     def _gen_grid(self, width, height):
@@ -66,7 +65,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
         # Check if there is an obstacle in front of the agent
         front_cell = self.grid.get(*self.front_pos)
-        not_clear = front_cell and front_cell.type != 'goal'
+        not_clear = front_cell and front_cell.type != "goal"
 
         # Update obstacle positions
         for i_obst in range(len(self.obstacles)):
@@ -74,13 +73,15 @@ class DynamicObstaclesEnv(MiniGridEnv):
             top = tuple(map(add, old_pos, (-1, -1)))
 
             try:
-                self.place_obj(self.obstacles[i_obst], top=top, size=(3,3), max_tries=100)
+                self.place_obj(
+                    self.obstacles[i_obst], top=top, size=(3, 3), max_tries=100
+                )
                 self.grid.set(*old_pos, None)
-            except:
+            except Exception:
                 pass
 
         # Update the agent's position/direction
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
 
         # If the agent tried to walk over an obstacle or wall
         if action == self.actions.forward and not_clear:
@@ -90,52 +91,58 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+
 class DynamicObstaclesEnv5x5(DynamicObstaclesEnv):
     def __init__(self, **kwargs):
         super().__init__(size=5, n_obstacles=2, **kwargs)
+
 
 class DynamicObstaclesRandomEnv5x5(DynamicObstaclesEnv):
     def __init__(self, **kwargs):
         super().__init__(size=5, agent_start_pos=None, n_obstacles=2, **kwargs)
 
+
 class DynamicObstaclesEnv6x6(DynamicObstaclesEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, n_obstacles=3, **kwargs)
+
 
 class DynamicObstaclesRandomEnv6x6(DynamicObstaclesEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, agent_start_pos=None, n_obstacles=3, **kwargs)
 
+
 class DynamicObstaclesEnv16x16(DynamicObstaclesEnv):
     def __init__(self, **kwargs):
         super().__init__(size=16, n_obstacles=8, **kwargs)
 
+
 register(
-    id='MiniGrid-Dynamic-Obstacles-5x5-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv5x5'
+    id="MiniGrid-Dynamic-Obstacles-5x5-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesEnv5x5",
 )
 
 register(
-    id='MiniGrid-Dynamic-Obstacles-Random-5x5-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesRandomEnv5x5'
+    id="MiniGrid-Dynamic-Obstacles-Random-5x5-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesRandomEnv5x5",
 )
 
 register(
-    id='MiniGrid-Dynamic-Obstacles-6x6-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv6x6'
+    id="MiniGrid-Dynamic-Obstacles-6x6-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesEnv6x6",
 )
 
 register(
-    id='MiniGrid-Dynamic-Obstacles-Random-6x6-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesRandomEnv6x6'
+    id="MiniGrid-Dynamic-Obstacles-Random-6x6-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesRandomEnv6x6",
 )
 
 register(
-    id='MiniGrid-Dynamic-Obstacles-8x8-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv'
+    id="MiniGrid-Dynamic-Obstacles-8x8-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
 )
 
 register(
-    id='MiniGrid-Dynamic-Obstacles-16x16-v0',
-    entry_point='gym_minigrid.envs:DynamicObstaclesEnv16x16'
+    id="MiniGrid-Dynamic-Obstacles-16x16-v0",
+    entry_point="gym_minigrid.envs:DynamicObstaclesEnv16x16",
 )

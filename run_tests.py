@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
 
-from pydoc import render_doc
 import random
-import numpy as np
-import gym
-import gym_minigrid
-from gym_minigrid.register import env_list
-from gym_minigrid.minigrid import Grid, OBJECT_TO_IDX
 
-# Test specifically importing a specific environment
-from gym_minigrid.envs import DoorKeyEnv
+import gym
+import numpy as np
+from gym import spaces
+
+from gym_minigrid.envs.empty import EmptyEnv5x5
+from gym_minigrid.minigrid import Grid
+from gym_minigrid.register import env_list
+from gym_minigrid.wrappers import (
+    DictObservationSpaceWrapper,
+    FlatObsWrapper,
+    FullyObsWrapper,
+    ImgObsWrapper,
+    OneHotPartialObsWrapper,
+    ReseedWrapper,
+    RGBImgObsWrapper,
+    RGBImgPartialObsWrapper,
+    ViewSizeWrapper,
+)
 
 # Test importing wrappers
-from gym_minigrid.wrappers import *
 
-##############################################################################
 
-print('%d environments registered' % len(env_list))
+print("%d environments registered" % len(env_list))
 
 for env_idx, env_name in enumerate(env_list):
-    print('testing {} ({}/{})'.format(env_name, env_idx+1, len(env_list)))
+    print(f"testing {env_name} ({env_idx + 1}/{len(env_list)})")
 
     # Load the gym environment
-    env = gym.make(env_name, render_mode='rgb_array')
+    env = gym.make(env_name, render_mode="rgb_array")
     env.max_steps = min(env.max_steps, 200)
     env.reset()
     env.render()
@@ -51,7 +59,7 @@ for env_idx, env_name in enumerate(env_list):
         assert env.agent_pos[1] < env.height
 
         # Test observation encode/decode roundtrip
-        img = obs['image']
+        img = obs["image"]
         grid, vis_mask = Grid.decode(img)
         img2 = grid.encode(vis_mask=vis_mask)
         assert np.array_equal(img, img2)
@@ -90,7 +98,7 @@ for env_idx, env_name in enumerate(env_list):
     env = FullyObsWrapper(env)
     env.reset()
     obs, _, _, _ = env.step(0)
-    assert obs['image'].shape == env.observation_space.spaces['image'].shape
+    assert obs["image"].shape == env.observation_space.spaces["image"].shape
     env.close()
 
     # RGB image observation wrapper
@@ -98,7 +106,7 @@ for env_idx, env_name in enumerate(env_list):
     env = RGBImgPartialObsWrapper(env)
     env.reset()
     obs, _, _, _ = env.step(0)
-    assert obs['image'].mean() > 0
+    assert obs["image"].mean() > 0
     env.close()
 
     env = gym.make(env_name)
@@ -120,23 +128,18 @@ for env_idx, env_name in enumerate(env_list):
     mission = env.mission
     obs, _, _, _ = env.step(0)
     assert env.string_to_indices(mission) == [
-        value for value in obs['mission'] if value != 0]
+        value for value in obs["mission"] if value != 0
+    ]
     env.close()
 
     # Test the wrappers return proper observation spaces.
-    wrappers = [
-        RGBImgObsWrapper,
-        RGBImgPartialObsWrapper,
-        OneHotPartialObsWrapper
-    ]
+    wrappers = [RGBImgObsWrapper, RGBImgPartialObsWrapper, OneHotPartialObsWrapper]
     for wrapper in wrappers:
-        env = wrapper(gym.make(env_name, render_mode='rgb_array'))
+        env = wrapper(gym.make(env_name, render_mode="rgb_array"))
         obs_space, wrapper_name = env.observation_space, wrapper.__name__
         assert isinstance(
             obs_space, spaces.Dict
-        ), "Observation space for {0} is not a Dict: {1}.".format(
-            wrapper_name, obs_space
-        )
+        ), f"Observation space for {wrapper_name} is not a Dict: {obs_space}."
         # This should not fail either
         ImgObsWrapper(env)
         env.reset()
@@ -145,31 +148,31 @@ for env_idx, env_name in enumerate(env_list):
 
 ##############################################################################
 
-print('testing extra observations')
+print("testing extra observations")
 
 
-class EmptyEnvWithExtraObs(gym_minigrid.envs.EmptyEnv5x5):
+class EmptyEnvWithExtraObs(EmptyEnv5x5):
     """
     Custom environment with an extra observation
     """
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.observation_space['size'] = spaces.Box(
+        self.observation_space["size"] = spaces.Box(
             low=0,
             high=1000,  # gym does not like np.iinfo(np.uint).max,
             shape=(2,),
-            dtype=np.uint
+            dtype=np.uint,
         )
 
     def reset(self, **kwargs):
         obs = super().reset(**kwargs)
-        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        obs["size"] = np.array([self.width, self.height], dtype=np.uint)
         return obs
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
-        obs['size'] = np.array([self.width, self.height], dtype=np.uint)
+        obs["size"] = np.array([self.width, self.height], dtype=np.uint)
         return obs, reward, done, info
 
 
@@ -180,34 +183,34 @@ wrappers = [
     FullyObsWrapper,
 ]
 for wrapper in wrappers:
-    env1 = wrapper(EmptyEnvWithExtraObs(render_mode='rgb_array'))
-    env2 = wrapper(gym.make('MiniGrid-Empty-5x5-v0', render_mode='rgb_array'))
+    env1 = wrapper(EmptyEnvWithExtraObs(render_mode="rgb_array"))
+    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0", render_mode="rgb_array"))
 
     obs1 = env1.reset(seed=0)
     obs2 = env2.reset(seed=0)
-    assert 'size' in obs1
-    assert obs1['size'].shape == (2,)
-    assert (obs1['size'] == [5, 5]).all()
+    assert "size" in obs1
+    assert obs1["size"].shape == (2,)
+    assert (obs1["size"] == [5, 5]).all()
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
 
     obs1, reward1, done1, _ = env1.step(0)
     obs2, reward2, done2, _ = env2.step(0)
-    assert 'size' in obs1
-    assert obs1['size'].shape == (2,)
-    assert (obs1['size'] == [5, 5]).all()
+    assert "size" in obs1
+    assert obs1["size"].shape == (2,)
+    assert (obs1["size"] == [5, 5]).all()
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
 
 ##############################################################################
 
-print('testing agent_sees method')
-env = gym.make('MiniGrid-DoorKey-6x6-v0')
+print("testing agent_sees method")
+env = gym.make("MiniGrid-DoorKey-6x6-v0")
 goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
 # Test the "in" operator on grid objects
-assert ('green', 'goal') in env.grid
-assert ('blue', 'key') not in env.grid
+assert ("green", "goal") in env.grid
+assert ("blue", "key") not in env.grid
 
 # Test the env.agent_sees() function
 env.reset()
@@ -215,8 +218,8 @@ for i in range(0, 500):
     action = random.randint(0, env.action_space.n - 1)
     obs, reward, done, info = env.step(action)
 
-    grid, _ = Grid.decode(obs['image'])
-    goal_visible = ('green', 'goal') in grid
+    grid, _ = Grid.decode(obs["image"])
+    goal_visible = ("green", "goal") in grid
 
     agent_sees_goal = env.agent_sees(*goal_pos)
     assert agent_sees_goal == goal_visible

@@ -1,5 +1,6 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import COLOR_NAMES, Door, Grid, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class GoToDoorEnv(MiniGridEnv):
     """
@@ -7,16 +8,12 @@ class GoToDoorEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self,
-        size=5,
-        **kwargs
-    ):
+    def __init__(self, size=5, **kwargs):
         assert size >= 5
 
         super().__init__(
             grid_size=size,
-            max_steps=5*size**2,
+            max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs
@@ -27,18 +24,18 @@ class GoToDoorEnv(MiniGridEnv):
         self.grid = Grid(width, height)
 
         # Randomly vary the room width and height
-        width = self._rand_int(5, width+1)
-        height = self._rand_int(5, height+1)
+        width = self._rand_int(5, width + 1)
+        height = self._rand_int(5, height + 1)
 
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
         # Generate the 4 doors at random positions
         doorPos = []
-        doorPos.append((self._rand_int(2, width-2), 0))
-        doorPos.append((self._rand_int(2, width-2), height-1))
-        doorPos.append((0, self._rand_int(2, height-2)))
-        doorPos.append((width-1, self._rand_int(2, height-2)))
+        doorPos.append((self._rand_int(2, width - 2), 0))
+        doorPos.append((self._rand_int(2, width - 2), height - 1))
+        doorPos.append((0, self._rand_int(2, height - 2)))
+        doorPos.append((width - 1, self._rand_int(2, height - 2)))
 
         # Generate the door colors
         doorColors = []
@@ -62,7 +59,7 @@ class GoToDoorEnv(MiniGridEnv):
         self.target_color = doorColors[doorIdx]
 
         # Generate the mission string
-        self.mission = 'go to the %s door' % self.target_color
+        self.mission = "go to the %s door" % self.target_color
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
@@ -82,25 +79,19 @@ class GoToDoorEnv(MiniGridEnv):
 
         return obs, reward, done, info
 
+
 class GoToDoor8x8Env(GoToDoorEnv):
     def __init__(self, **kwargs):
         super().__init__(size=8, **kwargs)
+
 
 class GoToDoor6x6Env(GoToDoorEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, **kwargs)
 
-register(
-    id='MiniGrid-GoToDoor-5x5-v0',
-    entry_point='gym_minigrid.envs:GoToDoorEnv'
-)
 
-register(
-    id='MiniGrid-GoToDoor-6x6-v0',
-    entry_point='gym_minigrid.envs:GoToDoor6x6Env'
-)
+register(id="MiniGrid-GoToDoor-5x5-v0", entry_point="gym_minigrid.envs:GoToDoorEnv")
 
-register(
-    id='MiniGrid-GoToDoor-8x8-v0',
-    entry_point='gym_minigrid.envs:GoToDoor8x8Env'
-)
+register(id="MiniGrid-GoToDoor-6x6-v0", entry_point="gym_minigrid.envs:GoToDoor6x6Env")
+
+register(id="MiniGrid-GoToDoor-8x8-v0", entry_point="gym_minigrid.envs:GoToDoor8x8Env")

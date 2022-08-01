@@ -1,7 +1,7 @@
-from gym_minigrid.minigrid import *
-from gym_minigrid.register import register
-
 import itertools as itt
+
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, Wall
+from gym_minigrid.register import register
 
 
 class CrossingEnv(MiniGridEnv):
@@ -14,7 +14,7 @@ class CrossingEnv(MiniGridEnv):
         self.obstacle_type = obstacle_type
         super().__init__(
             grid_size=size,
-            max_steps=4*size*size,
+            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
             **kwargs
@@ -43,9 +43,9 @@ class CrossingEnv(MiniGridEnv):
         rivers = [(v, i) for i in range(2, height - 2, 2)]
         rivers += [(h, j) for j in range(2, width - 2, 2)]
         self.np_random.shuffle(rivers)
-        rivers = rivers[:self.num_crossings]  # sample random rivers
-        rivers_v = sorted([pos for direction, pos in rivers if direction is v])
-        rivers_h = sorted([pos for direction, pos in rivers if direction is h])
+        rivers = rivers[: self.num_crossings]  # sample random rivers
+        rivers_v = sorted(pos for direction, pos in rivers if direction is v)
+        rivers_h = sorted(pos for direction, pos in rivers if direction is h)
         obstacle_pos = itt.chain(
             itt.product(range(1, width - 1), rivers_h),
             itt.product(rivers_v, range(1, height - 1)),
@@ -65,11 +65,13 @@ class CrossingEnv(MiniGridEnv):
             if direction is h:
                 i = limits_v[room_i + 1]
                 j = self.np_random.choice(
-                    range(limits_h[room_j] + 1, limits_h[room_j + 1]))
+                    range(limits_h[room_j] + 1, limits_h[room_j + 1])
+                )
                 room_i += 1
             elif direction is v:
                 i = self.np_random.choice(
-                    range(limits_v[room_i] + 1, limits_v[room_i + 1]))
+                    range(limits_v[room_i] + 1, limits_v[room_i + 1])
+                )
                 j = limits_h[room_j + 1]
                 room_j += 1
             else:
@@ -82,74 +84,83 @@ class CrossingEnv(MiniGridEnv):
             else "find the opening and get to the green goal square"
         )
 
+
 class LavaCrossingEnv(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=1, **kwargs)
+
 
 class LavaCrossingS9N2Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=2, **kwargs)
 
+
 class LavaCrossingS9N3Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=3, **kwargs)
+
 
 class LavaCrossingS11N5Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=11, num_crossings=5, **kwargs)
 
+
 register(
-    id='MiniGrid-LavaCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingEnv'
+    id="MiniGrid-LavaCrossingS9N1-v0", entry_point="gym_minigrid.envs:LavaCrossingEnv"
 )
 
 register(
-    id='MiniGrid-LavaCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS9N2Env'
+    id="MiniGrid-LavaCrossingS9N2-v0",
+    entry_point="gym_minigrid.envs:LavaCrossingS9N2Env",
 )
 
 register(
-    id='MiniGrid-LavaCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS9N3Env'
+    id="MiniGrid-LavaCrossingS9N3-v0",
+    entry_point="gym_minigrid.envs:LavaCrossingS9N3Env",
 )
 
 register(
-    id='MiniGrid-LavaCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs:LavaCrossingS11N5Env'
+    id="MiniGrid-LavaCrossingS11N5-v0",
+    entry_point="gym_minigrid.envs:LavaCrossingS11N5Env",
 )
+
 
 class SimpleCrossingEnv(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=1, obstacle_type=Wall, **kwargs)
 
+
 class SimpleCrossingS9N2Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=2, obstacle_type=Wall, **kwargs)
+
 
 class SimpleCrossingS9N3Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=9, num_crossings=3, obstacle_type=Wall, **kwargs)
 
+
 class SimpleCrossingS11N5Env(CrossingEnv):
     def __init__(self, **kwargs):
         super().__init__(size=11, num_crossings=5, obstacle_type=Wall, **kwargs)
 
+
 register(
-    id='MiniGrid-SimpleCrossingS9N1-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingEnv'
+    id="MiniGrid-SimpleCrossingS9N1-v0",
+    entry_point="gym_minigrid.envs:SimpleCrossingEnv",
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS9N2-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS9N2Env'
+    id="MiniGrid-SimpleCrossingS9N2-v0",
+    entry_point="gym_minigrid.envs:SimpleCrossingS9N2Env",
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS9N3-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS9N3Env'
+    id="MiniGrid-SimpleCrossingS9N3-v0",
+    entry_point="gym_minigrid.envs:SimpleCrossingS9N3Env",
 )
 
 register(
-    id='MiniGrid-SimpleCrossingS11N5-v0',
-    entry_point='gym_minigrid.envs:SimpleCrossingS11N5Env'
+    id="MiniGrid-SimpleCrossingS11N5-v0",
+    entry_point="gym_minigrid.envs:SimpleCrossingS11N5Env",
 )

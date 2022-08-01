@@ -11,10 +11,8 @@ with open("README.md") as fh:
         else:
             break
 
-# pytest is pinned to 7.0.1 as this is last version for python 3.6 
-extras = {
-    "testing": ["pytest==7.0.1"]
-}
+# pytest is pinned to 7.0.1 as this is last version for python 3.6
+extras = {"testing": ["pytest==7.0.1"]}
 
 setup(
     name="gym_minigrid",
@@ -45,5 +43,4 @@ setup(
     ],
     python_requires=">=3.6",
     tests_require=extras["testing"],
-    
 )

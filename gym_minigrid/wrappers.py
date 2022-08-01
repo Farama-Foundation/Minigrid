@@ -2,10 +2,11 @@ import math
 import operator
 from functools import reduce
 
-import numpy as np
 import gym
-from gym import error, spaces, utils
-from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX, STATE_TO_IDX, Goal
+import numpy as np
+from gym import spaces
+
+from gym_minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
 
 class ReseedWrapper(gym.Wrapper):
@@ -81,7 +82,7 @@ class StateBonus(gym.Wrapper):
         # Tuple based on which we index the counts
         # We use the position after an update
         env = self.unwrapped
-        tup = (tuple(env.agent_pos))
+        tup = tuple(env.agent_pos)
 
         # Get the count for this key
         pre_count = 0
@@ -108,10 +109,10 @@ class ImgObsWrapper(gym.ObservationWrapper):
 
     def __init__(self, env):
         super().__init__(env)
-        self.observation_space = env.observation_space.spaces['image']
+        self.observation_space = env.observation_space.spaces["image"]
 
     def observation(self, obs):
-        return obs['image']
+        return obs["image"]
 
 
 class OneHotPartialObsWrapper(gym.ObservationWrapper):
@@ -125,24 +126,21 @@ class OneHotPartialObsWrapper(gym.ObservationWrapper):
 
         self.tile_size = tile_size
 
-        obs_shape = env.observation_space['image'].shape
+        obs_shape = env.observation_space["image"].shape
 
         # Number of bits per cell
         num_bits = len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + len(STATE_TO_IDX)
 
         new_image_space = spaces.Box(
-            low=0,
-            high=255,
-            shape=(obs_shape[0], obs_shape[1], num_bits),
-            dtype='uint8'
+            low=0, high=255, shape=(obs_shape[0], obs_shape[1], num_bits), dtype="uint8"
         )
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
-        img = obs['image']
-        out = np.zeros(
-            self.observation_space.spaces['image'].shape, dtype='uint8')
+        img = obs["image"]
+        out = np.zeros(self.observation_space.spaces["image"].shape, dtype="uint8")
 
         for i in range(img.shape[0]):
             for j in range(img.shape[1]):
@@ -154,10 +152,7 @@ class OneHotPartialObsWrapper(gym.ObservationWrapper):
                 out[i, j, len(OBJECT_TO_IDX) + color] = 1
                 out[i, j, len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + state] = 1
 
-        return {
-            **obs,
-            'image': out
-        }
+        return {**obs, "image": out}
 
 
 class RGBImgObsWrapper(gym.ObservationWrapper):
@@ -176,25 +171,20 @@ class RGBImgObsWrapper(gym.ObservationWrapper):
             low=0,
             high=255,
             shape=(self.env.width * tile_size, self.env.height * tile_size, 3),
-            dtype='uint8'
+            dtype="uint8",
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
         env = self.unwrapped
-        assert env.render_mode == 'rgb_array', env.render_mode
+        assert env.render_mode == "rgb_array", env.render_mode
 
-        rgb_img = env.render(
-            highlight=False,
-            tile_size=self.tile_size
-        )
+        rgb_img = env.render(highlight=False, tile_size=self.tile_size)
 
-        return {
-            **obs,
-            'image': rgb_img
-        }
+        return {**obs, "image": rgb_img}
 
 
 class RGBImgPartialObsWrapper(gym.ObservationWrapper):
@@ -208,29 +198,24 @@ class RGBImgPartialObsWrapper(gym.ObservationWrapper):
 
         self.tile_size = tile_size
 
-        obs_shape = env.observation_space.spaces['image'].shape
+        obs_shape = env.observation_space.spaces["image"].shape
         new_image_space = spaces.Box(
             low=0,
             high=255,
             shape=(obs_shape[0] * tile_size, obs_shape[1] * tile_size, 3),
-            dtype='uint8'
+            dtype="uint8",
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
         env = self.unwrapped
 
-        rgb_img_partial = env.get_obs_render(
-            obs['image'],
-            tile_size=self.tile_size
-        )
+        rgb_img_partial = env.get_obs_render(obs["image"], tile_size=self.tile_size)
 
-        return {
-            **obs,
-            'image': rgb_img_partial
-        }
+        return {**obs, "image": rgb_img_partial}
 
 
 class FullyObsWrapper(gym.ObservationWrapper):
@@ -245,25 +230,21 @@ class FullyObsWrapper(gym.ObservationWrapper):
             low=0,
             high=255,
             shape=(self.env.width, self.env.height, 3),  # number of cells
-            dtype='uint8'
+            dtype="uint8",
         )
 
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
         env = self.unwrapped
         full_grid = env.grid.encode()
-        full_grid[env.agent_pos[0]][env.agent_pos[1]] = np.array([
-            OBJECT_TO_IDX['agent'],
-            COLOR_TO_IDX['red'],
-            env.agent_dir
-        ])
+        full_grid[env.agent_pos[0]][env.agent_pos[1]] = np.array(
+            [OBJECT_TO_IDX["agent"], COLOR_TO_IDX["red"], env.agent_dir]
+        )
 
-        return {
-            **obs,
-            'image': full_grid
-        }
+        return {**obs, "image": full_grid}
 
 
 class DictObservationSpaceWrapper(gym.ObservationWrapper):
@@ -290,29 +271,73 @@ class DictObservationSpaceWrapper(gym.ObservationWrapper):
             low=0,
             high=255,
             shape=(self.agent_view_size, self.agent_view_size, 3),
-            dtype='uint8'
+            dtype="uint8",
         )
-        self.observation_space = spaces.Dict({
-            'image': image_observation_space,
-            'direction': spaces.Discrete(4),
-            'mission': spaces.MultiDiscrete([len(self.word_dict.keys())]
-                                            * max_words_in_mission)
-        })
+        self.observation_space = spaces.Dict(
+            {
+                "image": image_observation_space,
+                "direction": spaces.Discrete(4),
+                "mission": spaces.MultiDiscrete(
+                    [len(self.word_dict.keys())] * max_words_in_mission
+                ),
+            }
+        )
 
     @staticmethod
     def get_minigrid_words():
-        colors = ['red', 'green', 'blue', 'yellow', 'purple', 'grey']
-        objects = ['unseen', 'empty', 'wall', 'floor', 'box', 'key', 'ball',
-                   'door', 'goal', 'agent', 'lava']
+        colors = ["red", "green", "blue", "yellow", "purple", "grey"]
+        objects = [
+            "unseen",
+            "empty",
+            "wall",
+            "floor",
+            "box",
+            "key",
+            "ball",
+            "door",
+            "goal",
+            "agent",
+            "lava",
+        ]
 
-        verbs = ['pick', 'avoid', 'get', 'find', 'put',
-                 'use', 'open', 'go', 'fetch',
-                 'reach', 'unlock', 'traverse']
+        verbs = [
+            "pick",
+            "avoid",
+            "get",
+            "find",
+            "put",
+            "use",
+            "open",
+            "go",
+            "fetch",
+            "reach",
+            "unlock",
+            "traverse",
+        ]
 
-        extra_words = ['up', 'the', 'a', 'at', ',', 'square',
-                       'and', 'then', 'to', 'of', 'rooms', 'near',
-                       'opening', 'must', 'you', 'matching', 'end',
-                       'hallway', 'object', 'from', 'room']
+        extra_words = [
+            "up",
+            "the",
+            "a",
+            "at",
+            ",",
+            "square",
+            "and",
+            "then",
+            "to",
+            "of",
+            "rooms",
+            "near",
+            "opening",
+            "must",
+            "you",
+            "matching",
+            "end",
+            "hallway",
+            "object",
+            "from",
+            "room",
+        ]
 
         all_words = colors + objects + verbs + extra_words
         assert len(all_words) == len(set(all_words))
@@ -324,19 +349,18 @@ class DictObservationSpaceWrapper(gym.ObservationWrapper):
         """
         indices = []
         # adding space before and after commas
-        string = string.replace(',', ' , ')
+        string = string.replace(",", " , ")
         for word in string.split():
             if word in self.word_dict.keys():
                 indices.append(self.word_dict[word] + offset)
             else:
-                raise ValueError('Unknown word: {}'.format(word))
+                raise ValueError(f"Unknown word: {word}")
         return indices
 
     def observation(self, obs):
-        obs['mission'] = self.string_to_indices(obs['mission'])
-        assert len(obs['mission']) < self.max_words_in_mission
-        obs['mission'] += [0] * \
-            (self.max_words_in_mission - len(obs['mission']))
+        obs["mission"] = self.string_to_indices(obs["mission"])
+        assert len(obs["mission"]) < self.max_words_in_mission
+        obs["mission"] += [0] * (self.max_words_in_mission - len(obs["mission"]))
 
         return obs
 
@@ -353,38 +377,40 @@ class FlatObsWrapper(gym.ObservationWrapper):
         self.maxStrLen = maxStrLen
         self.numCharCodes = 27
 
-        imgSpace = env.observation_space.spaces['image']
+        imgSpace = env.observation_space.spaces["image"]
         imgSize = reduce(operator.mul, imgSpace.shape, 1)
 
         self.observation_space = spaces.Box(
             low=0,
             high=255,
             shape=(imgSize + self.numCharCodes * self.maxStrLen,),
-            dtype='uint8'
+            dtype="uint8",
         )
 
         self.cachedStr = None
         self.cachedArray = None
 
     def observation(self, obs):
-        image = obs['image']
-        mission = obs['mission']
+        image = obs["image"]
+        mission = obs["mission"]
 
         # Cache the last-encoded mission string
         if mission != self.cachedStr:
-            assert len(mission) <= self.maxStrLen, 'mission string too long ({} chars)'.format(
-                len(mission))
+            assert (
+                len(mission) <= self.maxStrLen
+            ), f"mission string too long ({len(mission)} chars)"
             mission = mission.lower()
 
             strArray = np.zeros(
-                shape=(self.maxStrLen, self.numCharCodes), dtype='float32')
+                shape=(self.maxStrLen, self.numCharCodes), dtype="float32"
+            )
 
             for idx, ch in enumerate(mission):
-                if ch >= 'a' and ch <= 'z':
-                    chNo = ord(ch) - ord('a')
-                elif ch == ' ':
-                    chNo = ord('z') - ord('a') + 1
-                assert chNo < self.numCharCodes, '%s : %d' % (ch, chNo)
+                if ch >= "a" and ch <= "z":
+                    chNo = ord(ch) - ord("a")
+                elif ch == " ":
+                    chNo = ord("z") - ord("a") + 1
+                assert chNo < self.numCharCodes, "%s : %d" % (ch, chNo)
                 strArray[idx, chNo] = 1
 
             self.cachedStr = mission
@@ -411,15 +437,13 @@ class ViewSizeWrapper(gym.Wrapper):
 
         # Compute observation space with specified view size
         new_image_space = gym.spaces.Box(
-            low=0,
-            high=255,
-            shape=(agent_view_size, agent_view_size, 3),
-            dtype='uint8'
+            low=0, high=255, shape=(agent_view_size, agent_view_size, 3), dtype="uint8"
         )
 
         # Override the environment's observation spaceexit
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
         env = self.unwrapped
@@ -429,10 +453,7 @@ class ViewSizeWrapper(gym.Wrapper):
         # Encode the partially observable view into a numpy array
         image = grid.encode(vis_mask)
 
-        return {
-            **obs,
-            'image': image
-        }
+        return {**obs, "image": image}
 
 
 class DirectionObsWrapper(gym.ObservationWrapper):
@@ -441,7 +462,7 @@ class DirectionObsWrapper(gym.ObservationWrapper):
     type = {slope , angle}
     """
 
-    def __init__(self, env, type='slope'):
+    def __init__(self, env, type="slope"):
         super().__init__(env)
         self.goal_position = None
         self.type = type
@@ -449,19 +470,23 @@ class DirectionObsWrapper(gym.ObservationWrapper):
     def reset(self):
         obs = self.env.reset()
         if not self.goal_position:
-            self.goal_position = [x for x, y in enumerate(
-                self.grid.grid) if isinstance(y, (Goal))]
+            self.goal_position = [
+                x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
+            ]
             # in case there are multiple goals , needs to be handled for other env types
             if len(self.goal_position) >= 1:
                 self.goal_position = (
-                    int(self.goal_position[0]/self.height), self.goal_position[0] % self.width)
+                    int(self.goal_position[0] / self.height),
+                    self.goal_position[0] % self.width,
+                )
         return obs
 
     def observation(self, obs):
         slope = np.divide(
-            self.goal_position[1] - self.agent_pos[1],  self.goal_position[0] - self.agent_pos[0])
-        obs['goal_direction'] = np.arctan(
-            slope) if self.type == 'angle' else slope
+            self.goal_position[1] - self.agent_pos[1],
+            self.goal_position[0] - self.agent_pos[0],
+        )
+        obs["goal_direction"] = np.arctan(slope) if self.type == "angle" else slope
         return obs
 
 
@@ -482,7 +507,8 @@ class SymbolicObsWrapper(gym.ObservationWrapper):
             dtype="uint8",
         )
         self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, 'image': new_image_space})
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
 
     def observation(self, obs):
         objects = np.array(
@@ -492,5 +518,5 @@ class SymbolicObsWrapper(gym.ObservationWrapper):
         grid = np.mgrid[:w, :h]
         grid = np.concatenate([grid, objects.reshape(1, w, h)])
         grid = np.transpose(grid, (1, 2, 0))
-        obs['image'] = grid
+        obs["image"] = grid
         return obs

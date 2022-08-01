@@ -1,5 +1,8 @@
-from gym_minigrid.minigrid import *
+import numpy as np
+
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
 from gym_minigrid.register import register
+
 
 class LavaGapEnv(MiniGridEnv):
     """
@@ -11,7 +14,7 @@ class LavaGapEnv(MiniGridEnv):
         self.obstacle_type = obstacle_type
         super().__init__(
             grid_size=size,
-            max_steps=4*size*size,
+            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
             **kwargs
@@ -35,10 +38,12 @@ class LavaGapEnv(MiniGridEnv):
         self.put_obj(Goal(), *self.goal_pos)
 
         # Generate and store random gap position
-        self.gap_pos = np.array((
-            self._rand_int(2, width - 2),
-            self._rand_int(1, height - 1),
-        ))
+        self.gap_pos = np.array(
+            (
+                self._rand_int(2, width - 2),
+                self._rand_int(1, height - 1),
+            )
+        )
 
         # Place the obstacle wall
         self.grid.vert_wall(self.gap_pos[0], 1, height - 2, self.obstacle_type)
@@ -52,29 +57,24 @@ class LavaGapEnv(MiniGridEnv):
             else "find the opening and get to the green goal square"
         )
 
+
 class LavaGapS5Env(LavaGapEnv):
     def __init__(self, **kwargs):
         super().__init__(size=5, **kwargs)
+
 
 class LavaGapS6Env(LavaGapEnv):
     def __init__(self, **kwargs):
         super().__init__(size=6, **kwargs)
 
+
 class LavaGapS7Env(LavaGapEnv):
     def __init__(self, **kwargs):
         super().__init__(size=7, **kwargs)
 
-register(
-    id='MiniGrid-LavaGapS5-v0',
-    entry_point='gym_minigrid.envs:LavaGapS5Env'
-)
 
-register(
-    id='MiniGrid-LavaGapS6-v0',
-    entry_point='gym_minigrid.envs:LavaGapS6Env'
-)
+register(id="MiniGrid-LavaGapS5-v0", entry_point="gym_minigrid.envs:LavaGapS5Env")
 
-register(
-    id='MiniGrid-LavaGapS7-v0',
-    entry_point='gym_minigrid.envs:LavaGapS7Env'
-)
+register(id="MiniGrid-LavaGapS6-v0", entry_point="gym_minigrid.envs:LavaGapS6Env")
+
+register(id="MiniGrid-LavaGapS7-v0", entry_point="gym_minigrid.envs:LavaGapS7Env")

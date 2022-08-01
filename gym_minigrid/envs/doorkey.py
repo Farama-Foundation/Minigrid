@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import Door, Goal, Grid, Key, MiniGridEnv
 from gym_minigrid.register import register
 
 
@@ -8,12 +8,9 @@ class DoorKeyEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8, **kwargs):
-        if 'max_steps' not in kwargs:
-            kwargs['max_steps'] = 10 * size * size
-        super().__init__(
-            grid_size=size,
-            **kwargs
-        )
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 10 * size * size
+        super().__init__(grid_size=size, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create an empty grid
@@ -26,7 +23,7 @@ class DoorKeyEnv(MiniGridEnv):
         self.put_obj(Goal(), width - 2, height - 2)
 
         # Create a vertical splitting wall
-        splitIdx = self._rand_int(2, width-2)
+        splitIdx = self._rand_int(2, width - 2)
         self.grid.vert_wall(splitIdx, 0)
 
         # Place the agent at a random position and orientation
@@ -34,15 +31,11 @@ class DoorKeyEnv(MiniGridEnv):
         self.place_agent(size=(splitIdx, height))
 
         # Place a door in the wall
-        doorIdx = self._rand_int(1, width-2)
-        self.put_obj(Door('yellow', is_locked=True), splitIdx, doorIdx)
+        doorIdx = self._rand_int(1, width - 2)
+        self.put_obj(Door("yellow", is_locked=True), splitIdx, doorIdx)
 
         # Place a yellow key on the left side
-        self.place_obj(
-            obj=Key('yellow'),
-            top=(0, 0),
-            size=(splitIdx, height)
-        )
+        self.place_obj(obj=Key("yellow"), top=(0, 0), size=(splitIdx, height))
 
         self.mission = "use the key to open the door and then get to the goal"
 
@@ -62,22 +55,12 @@ class DoorKeyEnv16x16(DoorKeyEnv):
         super().__init__(size=16, **kwargs)
 
 
-register(
-    id='MiniGrid-DoorKey-5x5-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv5x5'
-)
+register(id="MiniGrid-DoorKey-5x5-v0", entry_point="gym_minigrid.envs:DoorKeyEnv5x5")
+
+register(id="MiniGrid-DoorKey-6x6-v0", entry_point="gym_minigrid.envs:DoorKeyEnv6x6")
+
+register(id="MiniGrid-DoorKey-8x8-v0", entry_point="gym_minigrid.envs:DoorKeyEnv")
 
 register(
-    id='MiniGrid-DoorKey-6x6-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv6x6'
-)
-
-register(
-    id='MiniGrid-DoorKey-8x8-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv'
-)
-
-register(
-    id='MiniGrid-DoorKey-16x16-v0',
-    entry_point='gym_minigrid.envs:DoorKeyEnv16x16'
+    id="MiniGrid-DoorKey-16x16-v0", entry_point="gym_minigrid.envs:DoorKeyEnv16x16"
 )

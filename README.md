@@ -11,7 +11,7 @@ implementation can be found [in this repository](https://github.com/lcswillems/t
 
 Requirements:
 - Python 3.7+
-- OpenAI Gym 0.25+
+- OpenAI Gym 0.25
 - NumPy
 - Matplotlib (optional, only needed for display)
 
@@ -132,8 +132,10 @@ compact and efficient encoding, with 3 input values per visible grid cell, 7x7x3
 These values are **not pixels**. If you want to obtain an array of RGB pixels as observations instead,
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
-```
-from gym_minigrid.wrappers import *
+```python
+import gym
+from gym_minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
+
 env = gym.make('MiniGrid-Empty-8x8-v0')
 env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field

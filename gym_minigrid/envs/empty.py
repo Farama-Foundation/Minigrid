@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import *
+from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
 from gym_minigrid.register import register
 
 
@@ -7,19 +7,13 @@ class EmptyEnv(MiniGridEnv):
     Empty grid environment, no obstacles, sparse reward
     """
 
-    def __init__(
-        self,
-        size=8,
-        agent_start_pos=(1, 1),
-        agent_start_dir=0,
-        **kwargs
-    ):
+    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, **kwargs):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
         super().__init__(
             grid_size=size,
-            max_steps=4*size*size,
+            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs
@@ -70,32 +64,20 @@ class EmptyEnv16x16(EmptyEnv):
         super().__init__(size=16, **kwargs)
 
 
-register(
-    id='MiniGrid-Empty-5x5-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv5x5'
-)
+register(id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs:EmptyEnv5x5")
+
+register(id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs:EmptyEnv5x5")
 
 register(
-    id='MiniGrid-Empty-Random-5x5-v0',
-    entry_point='gym_minigrid.envs:EmptyRandomEnv5x5'
+    id="MiniGrid-Empty-Random-5x5-v0", entry_point="gym_minigrid.envs:EmptyRandomEnv5x5"
 )
 
-register(
-    id='MiniGrid-Empty-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv6x6'
-)
+register(id="MiniGrid-Empty-6x6-v0", entry_point="gym_minigrid.envs:EmptyEnv6x6")
 
 register(
-    id='MiniGrid-Empty-Random-6x6-v0',
-    entry_point='gym_minigrid.envs:EmptyRandomEnv6x6'
+    id="MiniGrid-Empty-Random-6x6-v0", entry_point="gym_minigrid.envs:EmptyRandomEnv6x6"
 )
 
-register(
-    id='MiniGrid-Empty-8x8-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv'
-)
+register(id="MiniGrid-Empty-8x8-v0", entry_point="gym_minigrid.envs:EmptyEnv")
 
-register(
-    id='MiniGrid-Empty-16x16-v0',
-    entry_point='gym_minigrid.envs:EmptyEnv16x16'
-)
+register(id="MiniGrid-Empty-16x16-v0", entry_point="gym_minigrid.envs:EmptyEnv16x16")
