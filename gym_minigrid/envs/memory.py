@@ -96,67 +96,38 @@ class MemoryEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-class MemoryS17Random(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=17, random_length=True, **kwargs)
-
-
 register(
     id="MiniGrid-MemoryS17Random-v0",
-    entry_point="gym_minigrid.envs:MemoryS17Random",
+    entry_point="gym_minigrid.envs.memory:MemoryEnv",
+    size=17,
+    random_length=True,
 )
-
-
-class MemoryS13Random(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=13, random_length=True, **kwargs)
-
 
 register(
     id="MiniGrid-MemoryS13Random-v0",
-    entry_point="gym_minigrid.envs:MemoryS13Random",
+    entry_point="gym_minigrid.envs.memory:MemoryEnv",
+    size=13,
+    random_length=True,
 )
-
-
-class MemoryS13(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=13, **kwargs)
 
 
 register(
     id="MiniGrid-MemoryS13-v0",
-    entry_point="gym_minigrid.envs:MemoryS13",
+    entry_point="gym_minigrid.envs.memory:MemoryEnv",
+    size=13,
 )
-
-
-class MemoryS11(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=11, **kwargs)
 
 
 register(
     id="MiniGrid-MemoryS11-v0",
-    entry_point="gym_minigrid.envs:MemoryS11",
+    entry_point="gym_minigrid.envs.memory:MemoryEnv",
+    size=11,
 )
 
-
-class MemoryS9(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, **kwargs)
-
-
 register(
-    id="MiniGrid-MemoryS9-v0",
-    entry_point="gym_minigrid.envs:MemoryS9",
+    id="MiniGrid-MemoryS9-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=9
 )
 
-
-class MemoryS7(MemoryEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=7, **kwargs)
-
-
 register(
-    id="MiniGrid-MemoryS7-v0",
-    entry_point="gym_minigrid.envs:MemoryS7",
+    id="MiniGrid-MemoryS7-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=7
 )

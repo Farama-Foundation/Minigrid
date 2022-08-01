@@ -72,4 +72,6 @@ class FourRoomsEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-register(id="MiniGrid-FourRooms-v0", entry_point="gym_minigrid.envs:FourRoomsEnv")
+register(
+    id="MiniGrid-FourRooms-v0", entry_point="gym_minigrid.envs.fourrooms:FourRoomsEnv"
+)

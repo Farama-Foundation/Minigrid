@@ -2,7 +2,7 @@ from gym_minigrid.register import register
 from gym_minigrid.roomgrid import RoomGrid
 
 
-class KeyCorridor(RoomGrid):
+class KeyCorridorEnv(RoomGrid):
     """
     A ball is behind a locked door, the key is placed in a
     random room.
@@ -54,56 +54,44 @@ class KeyCorridor(RoomGrid):
         return obs, reward, done, info
 
 
-class KeyCorridorS3R1(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=3, num_rows=1, **kwargs)
-
-
-class KeyCorridorS3R2(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=3, num_rows=2, **kwargs)
-
-
-class KeyCorridorS3R3(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=3, num_rows=3, **kwargs)
-
-
-class KeyCorridorS4R3(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=4, num_rows=3, **kwargs)
-
-
-class KeyCorridorS5R3(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=5, num_rows=3, **kwargs)
-
-
-class KeyCorridorS6R3(KeyCorridor):
-    def __init__(self, **kwargs):
-        super().__init__(room_size=6, num_rows=3, **kwargs)
-
-
 register(
-    id="MiniGrid-KeyCorridorS3R1-v0", entry_point="gym_minigrid.envs:KeyCorridorS3R1"
+    id="MiniGrid-KeyCorridorS3R1-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=3,
+    num_rows=1,
 )
 
 register(
-    id="MiniGrid-KeyCorridorS3R2-v0", entry_point="gym_minigrid.envs:KeyCorridorS3R2"
+    id="MiniGrid-KeyCorridorS3R2-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=3,
+    num_rows=2,
 )
 
 register(
-    id="MiniGrid-KeyCorridorS3R3-v0", entry_point="gym_minigrid.envs:KeyCorridorS3R3"
+    id="MiniGrid-KeyCorridorS3R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=3,
+    num_rows=3,
 )
 
 register(
-    id="MiniGrid-KeyCorridorS4R3-v0", entry_point="gym_minigrid.envs:KeyCorridorS4R3"
+    id="MiniGrid-KeyCorridorS4R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=4,
+    num_rows=3,
 )
 
 register(
-    id="MiniGrid-KeyCorridorS5R3-v0", entry_point="gym_minigrid.envs:KeyCorridorS5R3"
+    id="MiniGrid-KeyCorridorS5R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=5,
+    num_rows=3,
 )
 
 register(
-    id="MiniGrid-KeyCorridorS6R3-v0", entry_point="gym_minigrid.envs:KeyCorridorS6R3"
+    id="MiniGrid-KeyCorridorS6R3-v0",
+    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
+    room_size=6,
+    num_rows=3,
 )

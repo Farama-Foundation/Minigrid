@@ -2,7 +2,7 @@ from gym_minigrid.register import register
 from gym_minigrid.roomgrid import RoomGrid
 
 
-class Unlock(RoomGrid):
+class UnlockEnv(RoomGrid):
     """
     Unlock a door
     """
@@ -41,4 +41,4 @@ class Unlock(RoomGrid):
         return obs, reward, done, info
 
 
-register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs:Unlock")
+register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs.unlock:UnlockEnv")

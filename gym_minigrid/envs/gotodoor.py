@@ -80,18 +80,18 @@ class GoToDoorEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-class GoToDoor8x8Env(GoToDoorEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=8, **kwargs)
+register(
+    id="MiniGrid-GoToDoor-5x5-v0", entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv"
+)
 
+register(
+    id="MiniGrid-GoToDoor-6x6-v0",
+    entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv",
+    size=6,
+)
 
-class GoToDoor6x6Env(GoToDoorEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=6, **kwargs)
-
-
-register(id="MiniGrid-GoToDoor-5x5-v0", entry_point="gym_minigrid.envs:GoToDoorEnv")
-
-register(id="MiniGrid-GoToDoor-6x6-v0", entry_point="gym_minigrid.envs:GoToDoor6x6Env")
-
-register(id="MiniGrid-GoToDoor-8x8-v0", entry_point="gym_minigrid.envs:GoToDoor8x8Env")
+register(
+    id="MiniGrid-GoToDoor-8x8-v0",
+    entry_point="gym_minigrid.envs.gotodoor:GoToDoorEnv",
+    size=8,
+)

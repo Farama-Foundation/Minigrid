@@ -85,82 +85,62 @@ class CrossingEnv(MiniGridEnv):
         )
 
 
-class LavaCrossingEnv(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=1, **kwargs)
-
-
-class LavaCrossingS9N2Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=2, **kwargs)
-
-
-class LavaCrossingS9N3Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=3, **kwargs)
-
-
-class LavaCrossingS11N5Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=11, num_crossings=5, **kwargs)
-
-
 register(
-    id="MiniGrid-LavaCrossingS9N1-v0", entry_point="gym_minigrid.envs:LavaCrossingEnv"
+    id="MiniGrid-LavaCrossingS9N1-v0",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=1,
 )
 
 register(
     id="MiniGrid-LavaCrossingS9N2-v0",
-    entry_point="gym_minigrid.envs:LavaCrossingS9N2Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=2,
 )
 
 register(
     id="MiniGrid-LavaCrossingS9N3-v0",
-    entry_point="gym_minigrid.envs:LavaCrossingS9N3Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=3,
 )
 
 register(
     id="MiniGrid-LavaCrossingS11N5-v0",
-    entry_point="gym_minigrid.envs:LavaCrossingS11N5Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=11,
+    num_crossings=5,
 )
-
-
-class SimpleCrossingEnv(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=1, obstacle_type=Wall, **kwargs)
-
-
-class SimpleCrossingS9N2Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=2, obstacle_type=Wall, **kwargs)
-
-
-class SimpleCrossingS9N3Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=9, num_crossings=3, obstacle_type=Wall, **kwargs)
-
-
-class SimpleCrossingS11N5Env(CrossingEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=11, num_crossings=5, obstacle_type=Wall, **kwargs)
-
 
 register(
     id="MiniGrid-SimpleCrossingS9N1-v0",
-    entry_point="gym_minigrid.envs:SimpleCrossingEnv",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=1,
+    obstacle_type=Wall,
 )
 
 register(
     id="MiniGrid-SimpleCrossingS9N2-v0",
-    entry_point="gym_minigrid.envs:SimpleCrossingS9N2Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=2,
+    obstacle_type=Wall,
 )
 
 register(
     id="MiniGrid-SimpleCrossingS9N3-v0",
-    entry_point="gym_minigrid.envs:SimpleCrossingS9N3Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=9,
+    num_crossings=3,
+    obstacle_type=Wall,
 )
 
 register(
     id="MiniGrid-SimpleCrossingS11N5-v0",
-    entry_point="gym_minigrid.envs:SimpleCrossingS11N5Env",
+    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
+    size=11,
+    num_crossings=5,
+    obstacle_type=Wall,
 )

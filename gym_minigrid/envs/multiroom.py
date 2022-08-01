@@ -2,7 +2,7 @@ from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, MiniGridEnv, Wa
 from gym_minigrid.register import register
 
 
-class Room:
+class MultiRoom:
     def __init__(self, top, size, entryDoorPos, exitDoorPos):
         self.top = top
         self.size = size
@@ -153,7 +153,7 @@ class MultiRoomEnv(MiniGridEnv):
                 return False
 
         # Add this room to the list
-        roomList.append(Room((topX, topY), (sizeX, sizeY), entryDoorPos, None))
+        roomList.append(MultiRoom((topX, topY), (sizeX, sizeY), entryDoorPos, None))
 
         # If this was the last room, stop
         if numLeft == 1:
@@ -200,27 +200,25 @@ class MultiRoomEnv(MiniGridEnv):
         return True
 
 
-class MultiRoomEnvN2S4(MultiRoomEnv):
-    def __init__(self, **kwargs):
-        super().__init__(minNumRooms=2, maxNumRooms=2, maxRoomSize=4, **kwargs)
-
-
-class MultiRoomEnvN4S5(MultiRoomEnv):
-    def __init__(self, **kwargs):
-        super().__init__(minNumRooms=4, maxNumRooms=4, maxRoomSize=5, **kwargs)
-
-
-class MultiRoomEnvN6(MultiRoomEnv):
-    def __init__(self, **kwargs):
-        super().__init__(minNumRooms=6, maxNumRooms=6, **kwargs)
-
-
 register(
-    id="MiniGrid-MultiRoom-N2-S4-v0", entry_point="gym_minigrid.envs:MultiRoomEnvN2S4"
+    id="MiniGrid-MultiRoom-N2-S4-v0",
+    entry_point="gym_minigrid.envs.multiroom:MultiRoomEnv",
+    minNumRooms=2,
+    maxNumRooms=2,
+    maxRoomSize=4,
 )
 
 register(
-    id="MiniGrid-MultiRoom-N4-S5-v0", entry_point="gym_minigrid.envs:MultiRoomEnvN4S5"
+    id="MiniGrid-MultiRoom-N4-S5-v0",
+    entry_point="gym_minigrid.envs.multiroom:MultiRoomEnv",
+    minNumRooms=4,
+    maxNumRooms=4,
+    maxRoomSize=5,
 )
 
-register(id="MiniGrid-MultiRoom-N6-v0", entry_point="gym_minigrid.envs:MultiRoomEnvN6")
+register(
+    id="MiniGrid-MultiRoom-N6-v0",
+    entry_point="gym_minigrid.envs.multiroom:MultiRoomEnv",
+    minNumRooms=6,
+    maxNumRooms=6,
+)

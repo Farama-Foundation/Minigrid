@@ -58,23 +58,20 @@ class LavaGapEnv(MiniGridEnv):
         )
 
 
-class LavaGapS5Env(LavaGapEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=5, **kwargs)
+register(
+    id="MiniGrid-LavaGapS5-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=5,
+)
 
+register(
+    id="MiniGrid-LavaGapS6-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=6,
+)
 
-class LavaGapS6Env(LavaGapEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=6, **kwargs)
-
-
-class LavaGapS7Env(LavaGapEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=7, **kwargs)
-
-
-register(id="MiniGrid-LavaGapS5-v0", entry_point="gym_minigrid.envs:LavaGapS5Env")
-
-register(id="MiniGrid-LavaGapS6-v0", entry_point="gym_minigrid.envs:LavaGapS6Env")
-
-register(id="MiniGrid-LavaGapS7-v0", entry_point="gym_minigrid.envs:LavaGapS7Env")
+register(
+    id="MiniGrid-LavaGapS7-v0",
+    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
+    size=7,
+)

@@ -65,15 +65,13 @@ class RedBlueDoorEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-class RedBlueDoorEnv6x6(RedBlueDoorEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=6, **kwargs)
-
-
 register(
-    id="MiniGrid-RedBlueDoors-6x6-v0", entry_point="gym_minigrid.envs:RedBlueDoorEnv6x6"
+    id="MiniGrid-RedBlueDoors-6x6-v0",
+    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
+    size=6,
 )
 
 register(
-    id="MiniGrid-RedBlueDoors-8x8-v0", entry_point="gym_minigrid.envs:RedBlueDoorEnv"
+    id="MiniGrid-RedBlueDoors-8x8-v0",
+    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
 )

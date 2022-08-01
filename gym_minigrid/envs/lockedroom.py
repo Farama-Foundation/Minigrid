@@ -2,7 +2,7 @@ from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, Key, MiniGridEn
 from gym_minigrid.register import register
 
 
-class Room:
+class LockedRoom:
     def __init__(self, top, size, doorPos):
         self.top = top
         self.size = size
@@ -16,7 +16,7 @@ class Room:
         return env._rand_pos(topX + 1, topX + sizeX - 1, topY + 1, topY + sizeY - 1)
 
 
-class LockedRoom(MiniGridEnv):
+class LockedRoomEnv(MiniGridEnv):
     """
     Environment in which the agent is instructed to go to a given object
     named using an English text string
@@ -56,8 +56,10 @@ class LockedRoom(MiniGridEnv):
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
-            self.rooms.append(Room((0, j), (roomW, roomH), (lWallIdx, j + 3)))
-            self.rooms.append(Room((rWallIdx, j), (roomW, roomH), (rWallIdx, j + 3)))
+            self.rooms.append(LockedRoom((0, j), (roomW, roomH), (lWallIdx, j + 3)))
+            self.rooms.append(
+                LockedRoom((rWallIdx, j), (roomW, roomH), (rWallIdx, j + 3))
+            )
 
         # Choose one random room to be locked
         lockedRoom = self._rand_elem(self.rooms)
@@ -101,4 +103,7 @@ class LockedRoom(MiniGridEnv):
         return obs, reward, done, info
 
 
-register(id="MiniGrid-LockedRoom-v0", entry_point="gym_minigrid.envs:LockedRoom")
+register(
+    id="MiniGrid-LockedRoom-v0",
+    entry_point="gym_minigrid.envs.lockedroom:LockedRoomEnv",
+)

@@ -2,7 +2,7 @@ from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniG
 from gym_minigrid.register import register
 
 
-class PlaygroundV0(MiniGridEnv):
+class PlaygroundEnv(MiniGridEnv):
     """
     Environment with multiple rooms and random objects.
     This environment has no specific goals or rewards.
@@ -72,4 +72,7 @@ class PlaygroundV0(MiniGridEnv):
         return obs, reward, done, info
 
 
-register(id="MiniGrid-Playground-v0", entry_point="gym_minigrid.envs:PlaygroundV0")
+register(
+    id="MiniGrid-Playground-v0",
+    entry_point="gym_minigrid.envs.playground:PlaygroundEnv",
+)

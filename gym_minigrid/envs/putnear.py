@@ -113,11 +113,13 @@ class PutNearEnv(MiniGridEnv):
         return obs, reward, done, info
 
 
-class PutNear8x8N3(PutNearEnv):
-    def __init__(self, **kwargs):
-        super().__init__(size=8, numObjs=3, **kwargs)
+register(
+    id="MiniGrid-PutNear-6x6-N2-v0", entry_point="gym_minigrid.envs.putnear:PutNearEnv"
+)
 
-
-register(id="MiniGrid-PutNear-6x6-N2-v0", entry_point="gym_minigrid.envs:PutNearEnv")
-
-register(id="MiniGrid-PutNear-8x8-N3-v0", entry_point="gym_minigrid.envs:PutNear8x8N3")
+register(
+    id="MiniGrid-PutNear-8x8-N3-v0",
+    entry_point="gym_minigrid.envs.putnear:PutNearEnv",
+    size=8,
+    numObjs=3,
+)
