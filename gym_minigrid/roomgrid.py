@@ -1,3 +1,5 @@
+import numpy as np
+
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
 
 
@@ -163,9 +165,11 @@ class RoomGrid(MiniGridEnv):
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
-        self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
+        self.agent_pos = np.array(
+            (
+                (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+                (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
+            )
         )
         self.agent_dir = 0
 

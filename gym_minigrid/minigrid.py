@@ -5,7 +5,6 @@ from enum import IntEnum
 
 import gym
 import numpy as np
-import numpy.typing as npt
 from gym import spaces
 
 # Size in pixels of a tile in the full-scale human view
@@ -712,8 +711,8 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
-        self.agent_pos = None
-        self.agent_dir = None
+        self.agent_pos: np.ndarray = None
+        self.agent_dir: int = None
 
         # Initialize the state
         self.reset()
@@ -721,9 +720,8 @@ class MiniGridEnv(gym.Env):
     def reset(self, *, seed=None, return_info=False, options=None):
         super().reset(seed=seed)
         # Current position and direction of the agent
-        NDArrayInt = npt.NDArray[np.int_]
-        self.agent_pos: NDArrayInt = None
-        self.agent_dir: int = None
+        self.agent_pos = None
+        self.agent_dir = None
 
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
@@ -1122,7 +1120,6 @@ class MiniGridEnv(gym.Env):
                 reward = self._reward()
             if fwd_cell is not None and fwd_cell.type == "lava":
                 done = True
-
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():

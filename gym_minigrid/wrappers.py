@@ -102,7 +102,7 @@ class StateBonus(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 
-class ImgObsWrapper(gym.core.ObservationWrapper):
+class ImgObsWrapper(gym.ObservationWrapper):
     """
     Use the image as the only observation output, no language/mission.
     """
@@ -115,7 +115,7 @@ class ImgObsWrapper(gym.core.ObservationWrapper):
         return obs["image"]
 
 
-class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
+class OneHotPartialObsWrapper(gym.ObservationWrapper):
     """
     Wrapper to get a one-hot encoding of a partially observable
     agent view as observation.
@@ -155,7 +155,7 @@ class OneHotPartialObsWrapper(gym.core.ObservationWrapper):
         return {**obs, "image": out}
 
 
-class RGBImgObsWrapper(gym.core.ObservationWrapper):
+class RGBImgObsWrapper(gym.ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
@@ -187,7 +187,7 @@ class RGBImgObsWrapper(gym.core.ObservationWrapper):
         return {**obs, "image": rgb_img}
 
 
-class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
+class RGBImgPartialObsWrapper(gym.ObservationWrapper):
     """
     Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
@@ -218,7 +218,7 @@ class RGBImgPartialObsWrapper(gym.core.ObservationWrapper):
         return {**obs, "image": rgb_img_partial}
 
 
-class FullyObsWrapper(gym.core.ObservationWrapper):
+class FullyObsWrapper(gym.ObservationWrapper):
     """
     Fully observable gridworld using a compact grid encoding
     """
@@ -247,7 +247,7 @@ class FullyObsWrapper(gym.core.ObservationWrapper):
         return {**obs, "image": full_grid}
 
 
-class DictObservationSpaceWrapper(gym.core.ObservationWrapper):
+class DictObservationSpaceWrapper(gym.ObservationWrapper):
     """
     Transforms the observation space (that has a textual component) to a fully numerical observation space,
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
@@ -365,7 +365,7 @@ class DictObservationSpaceWrapper(gym.core.ObservationWrapper):
         return obs
 
 
-class FlatObsWrapper(gym.core.ObservationWrapper):
+class FlatObsWrapper(gym.ObservationWrapper):
     """
     Encode mission strings using a one-hot scheme,
     and combine these with observed images into one flat array
@@ -459,7 +459,7 @@ class ViewSizeWrapper(gym.Wrapper):
         return {**obs, "image": image}
 
 
-class DirectionObsWrapper(gym.core.ObservationWrapper):
+class DirectionObsWrapper(gym.ObservationWrapper):
     """
     Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
     type = {slope , angle}
@@ -493,7 +493,7 @@ class DirectionObsWrapper(gym.core.ObservationWrapper):
         return obs
 
 
-class SymbolicObsWrapper(gym.core.ObservationWrapper):
+class SymbolicObsWrapper(gym.ObservationWrapper):
     """
     Fully observable grid with a symbolic state representation.
     The symbol is a triple of (X, Y, IDX), where X and Y are
