@@ -387,8 +387,7 @@ class FlatObsWrapper(gym.ObservationWrapper):
             dtype="uint8",
         )
 
-        self.cachedStr = None
-        self.cachedArray = None
+        self.cachedStr: str = None
 
     def observation(self, obs):
         image = obs["image"]
@@ -410,6 +409,10 @@ class FlatObsWrapper(gym.ObservationWrapper):
                     chNo = ord(ch) - ord("a")
                 elif ch == " ":
                     chNo = ord("z") - ord("a") + 1
+                else:
+                    raise ValueError(
+                        f"Character {ch} is not available in mission string."
+                    )
                 assert chNo < self.numCharCodes, "%s : %d" % (ch, chNo)
                 strArray[idx, chNo] = 1
 
@@ -464,7 +467,7 @@ class DirectionObsWrapper(gym.ObservationWrapper):
 
     def __init__(self, env, type="slope"):
         super().__init__(env)
-        self.goal_position = None
+        self.goal_position: tuple = None
         self.type = type
 
     def reset(self):

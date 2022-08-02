@@ -1,3 +1,5 @@
+import numpy as np
+
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
 
 
@@ -69,7 +71,7 @@ class RoomGrid(MiniGridEnv):
         num_cols=3,
         max_steps=100,
         agent_view_size=7,
-        **kwargs
+        **kwargs,
     ):
         assert room_size > 0
         assert room_size >= 3
@@ -91,7 +93,7 @@ class RoomGrid(MiniGridEnv):
             max_steps=max_steps,
             see_through_walls=False,
             agent_view_size=agent_view_size,
-            **kwargs
+            **kwargs,
         )
 
     def room_from_pos(self, x, y):
@@ -163,9 +165,11 @@ class RoomGrid(MiniGridEnv):
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
-        self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
+        self.agent_pos = np.array(
+            (
+                (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+                (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
+            )
         )
         self.agent_dir = 0
 
@@ -203,6 +207,8 @@ class RoomGrid(MiniGridEnv):
             obj = Ball(color)
         elif kind == "box":
             obj = Box(color)
+        else:
+            raise f"{kind} object kind is not available in this environment."
 
         return self.place_in_room(i, j, obj)
 

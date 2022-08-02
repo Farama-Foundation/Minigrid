@@ -18,6 +18,7 @@ from gym_minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
+from gym_minigrid.window import Window
 
 TILE_PIXELS = 32
 
@@ -252,8 +253,15 @@ class Door(WorldObj):
             state = 0
         elif self.is_locked:
             state = 2
+        # if door is closed and unlocked
         elif not self.is_open:
             state = 1
+        else:
+            raise ValueError(
+                "There is no possible state encoding for the state:\n -Door Open: {}\n -Door Closed: {}\n -Door Locked: {}".format(
+                    self.is_open, not self.is_open, self.is_locked
+                )
+            )
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
@@ -580,17 +588,17 @@ class Grid:
 
         return grid, vis_mask
 
-    def process_vis(grid, agent_pos):
-        mask = np.zeros(shape=(grid.width, grid.height), dtype=bool)
+    def process_vis(self, agent_pos):
+        mask = np.zeros(shape=(self.width, self.height), dtype=bool)
 
         mask[agent_pos[0], agent_pos[1]] = True
 
-        for j in reversed(range(0, grid.height)):
-            for i in range(0, grid.width - 1):
+        for j in reversed(range(0, self.height)):
+            for i in range(0, self.width - 1):
                 if not mask[i, j]:
                     continue
 
-                cell = grid.get(i, j)
+                cell = self.get(i, j)
                 if cell and not cell.see_behind():
                     continue
 
@@ -599,11 +607,11 @@ class Grid:
                     mask[i + 1, j - 1] = True
                     mask[i, j - 1] = True
 
-            for i in reversed(range(1, grid.width)):
+            for i in reversed(range(1, self.width)):
                 if not mask[i, j]:
                     continue
 
-                cell = grid.get(i, j)
+                cell = self.get(i, j)
                 if cell and not cell.see_behind():
                     continue
 
@@ -612,10 +620,10 @@ class Grid:
                     mask[i - 1, j - 1] = True
                     mask[i, j - 1] = True
 
-        for j in range(0, grid.height):
-            for i in range(0, grid.width):
+        for j in range(0, self.height):
+            for i in range(0, self.width):
                 if not mask[i, j]:
-                    grid.set(i, j, None)
+                    self.set(i, j, None)
 
         return mask
 
@@ -652,13 +660,13 @@ class MiniGridEnv(gym.Env):
 
     def __init__(
         self,
-        grid_size=None,
-        width=None,
-        height=None,
-        max_steps=100,
-        see_through_walls=False,
-        agent_view_size=7,
-        render_mode=None,
+        grid_size: int = None,
+        width: int = None,
+        height: int = None,
+        max_steps: int = 100,
+        see_through_walls: bool = False,
+        agent_view_size: int = 7,
+        render_mode: str = None,
         **kwargs
     ):
         # Can't set both grid_size and width/height
@@ -703,8 +711,7 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
-        # Window to use for human rendering mode
-        self.window = None
+        self.window: Window = None
 
         # Environment configuration
         self.width = width
@@ -713,8 +720,8 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
-        self.agent_pos = None
-        self.agent_dir = None
+        self.agent_pos: np.ndarray = None
+        self.agent_dir: int = None
 
         # Initialize the state
         self.reset()
@@ -1122,7 +1129,6 @@ class MiniGridEnv(gym.Env):
                 reward = self._reward()
             if fwd_cell is not None and fwd_cell.type == "lava":
                 done = True
-
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():
@@ -1245,9 +1251,7 @@ class MiniGridEnv(gym.Env):
             return
 
         if mode == "human" and not self.window:
-            import gym_minigrid.window
-
-            self.window = gym_minigrid.window.Window("gym_minigrid")
+            self.window = Window("gym_minigrid")
             self.window.show(block=False)
 
         # Compute which cells are visible to the agent

@@ -71,7 +71,7 @@ class ObstructedMazeEnv(RoomGrid):
         if locked:
             obj = Key(door.color)
             if key_in_box:
-                box = Box(self.box_color) if key_in_box else None
+                box = Box(self.box_color)
                 box.contains = obj
                 obj = box
             self.place_in_room(i, j, obj)
