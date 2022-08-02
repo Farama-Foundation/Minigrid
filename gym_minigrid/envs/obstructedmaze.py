@@ -67,8 +67,7 @@ class ObstructedMazeEnv(RoomGrid):
         if blocked:
             vec = DIR_TO_VEC[door_idx]
             blocking_ball = Ball(self.blocking_ball_color) if blocked else None
-            self.grid.set(door_pos[0] - vec[0],
-                          door_pos[1] - vec[1], blocking_ball)
+            self.grid.set(door_pos[0] - vec[0], door_pos[1] - vec[1], blocking_ball)
 
         if locked:
             obj = Key(door.color)
@@ -106,8 +105,7 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
             blocked=self.blocked,
         )
 
-        self.obj, _ = self.add_object(
-            1, 0, "ball", color=self.ball_to_find_color)
+        self.obj, _ = self.add_object(1, 0, "ball", color=self.ball_to_find_color)
         self.place_agent(0, 0)
 
 
@@ -166,7 +164,8 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         ball_room = self._rand_elem(corners)
 
         self.obj, _ = self.add_object(
-            ball_room[0], ball_room[1], "ball", color=self.ball_to_find_color)
+            ball_room[0], ball_room[1], "ball", color=self.ball_to_find_color
+        )
         self.place_agent(*self.agent_room)
 
 

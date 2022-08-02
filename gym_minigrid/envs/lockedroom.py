@@ -56,8 +56,7 @@ class LockedRoomEnv(MiniGridEnv):
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
-            self.rooms.append(LockedRoom(
-                (0, j), (roomW, roomH), (lWallIdx, j + 3)))
+            self.rooms.append(LockedRoom((0, j), (roomW, roomH), (lWallIdx, j + 3)))
             self.rooms.append(
                 LockedRoom((rWallIdx, j), (roomW, roomH), (rWallIdx, j + 3))
             )

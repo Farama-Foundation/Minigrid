@@ -1,12 +1,13 @@
 import hashlib
 import math
 import string
+from abc import abstractmethod
 from enum import IntEnum
 
 import gym
 import numpy as np
 from gym import spaces
-from abc import abstractmethod
+
 # Size in pixels of a tile in the full-scale human view
 from gym_minigrid.rendering import (
     downsample,
@@ -34,8 +35,7 @@ COLORS = {
 COLOR_NAMES = sorted(list(COLORS.keys()))
 
 # Used to map colors to integers
-COLOR_TO_IDX = {"red": 0, "green": 1, "blue": 2,
-                "purple": 3, "yellow": 4, "grey": 5}
+COLOR_TO_IDX = {"red": 0, "green": 1, "blue": 2, "purple": 3, "yellow": 4, "grey": 5}
 
 IDX_TO_COLOR = dict(zip(COLOR_TO_IDX.values(), COLOR_TO_IDX.keys()))
 
@@ -203,14 +203,10 @@ class Lava(WorldObj):
         for i in range(3):
             ylo = 0.3 + 0.2 * i
             yhi = 0.4 + 0.2 * i
-            fill_coords(img, point_in_line(
-                0.1, ylo, 0.3, yhi, r=0.03), (0, 0, 0))
-            fill_coords(img, point_in_line(
-                0.3, yhi, 0.5, ylo, r=0.03), (0, 0, 0))
-            fill_coords(img, point_in_line(
-                0.5, ylo, 0.7, yhi, r=0.03), (0, 0, 0))
-            fill_coords(img, point_in_line(
-                0.7, yhi, 0.9, ylo, r=0.03), (0, 0, 0))
+            fill_coords(img, point_in_line(0.1, ylo, 0.3, yhi, r=0.03), (0, 0, 0))
+            fill_coords(img, point_in_line(0.3, yhi, 0.5, ylo, r=0.03), (0, 0, 0))
+            fill_coords(img, point_in_line(0.5, ylo, 0.7, yhi, r=0.03), (0, 0, 0))
+            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0, 0, 0))
 
 
 class Wall(WorldObj):
@@ -273,8 +269,7 @@ class Door(WorldObj):
         # Door frame and door
         if self.is_locked:
             fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
-            fill_coords(img, point_in_rect(
-                0.06, 0.94, 0.06, 0.94), 0.45 * np.array(c))
+            fill_coords(img, point_in_rect(0.06, 0.94, 0.06, 0.94), 0.45 * np.array(c))
 
             # Draw key slot
             fill_coords(img, point_in_rect(0.52, 0.75, 0.50, 0.56), c)
@@ -491,8 +486,7 @@ class Grid:
             )
 
             # Rotate the agent based on its direction
-            tri_fn = rotate_fn(tri_fn, cx=0.5, cy=0.5,
-                               theta=0.5 * math.pi * agent_dir)
+            tri_fn = rotate_fn(tri_fn, cx=0.5, cy=0.5, theta=0.5 * math.pi * agent_dir)
             fill_coords(img, tri_fn, (255, 0, 0))
 
         # Highlight the cell if needed
@@ -515,8 +509,7 @@ class Grid:
         """
 
         if highlight_mask is None:
-            highlight_mask = np.zeros(
-                shape=(self.width, self.height), dtype=bool)
+            highlight_mask = np.zeros(shape=(self.width, self.height), dtype=bool)
 
         # Compute the total grid size
         width_px = self.width * tile_size
@@ -768,8 +761,7 @@ class MiniGridEnv(gym.Env):
         """
         sample_hash = hashlib.sha256()
 
-        to_encode = [self.grid.encode().tolist(), self.agent_pos,
-                     self.agent_dir]
+        to_encode = [self.grid.encode().tolist(), self.agent_pos, self.agent_dir]
         for item in to_encode:
             sample_hash.update(str(item).encode("utf8"))
 
@@ -936,10 +928,8 @@ class MiniGridEnv(gym.Env):
 
             pos = np.array(
                 (
-                    self._rand_int(top[0], min(
-                        top[0] + size[0], self.grid.width)),
-                    self._rand_int(top[1], min(
-                        top[1] + size[1], self.grid.height)),
+                    self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
+                    self._rand_int(top[1], min(top[1] + size[1], self.grid.height)),
                 )
             )
 
@@ -1173,7 +1163,7 @@ class MiniGridEnv(gym.Env):
             pass
 
         else:
-            raise ValueError('Unknown action: {}'.format(action))
+            raise ValueError(f"Unknown action: {action}")
 
         if self.step_count >= self.max_steps:
             truncated = True
@@ -1233,8 +1223,7 @@ class MiniGridEnv(gym.Env):
         # - an image (partially observable view of the environment)
         # - the agent's direction/orientation (acting as a compass)
         # - a textual mission string (instructions for the agent)
-        obs = {"image": image, "direction": self.agent_dir,
-               "mission": self.mission}
+        obs = {"image": image, "direction": self.agent_dir, "mission": self.mission}
 
         return obs
 

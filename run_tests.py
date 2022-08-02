@@ -133,11 +133,9 @@ for env_idx, env_name in enumerate(env_list):
     env.close()
 
     # Test the wrappers return proper observation spaces.
-    wrappers = [RGBImgObsWrapper,
-                RGBImgPartialObsWrapper, OneHotPartialObsWrapper]
+    wrappers = [RGBImgObsWrapper, RGBImgPartialObsWrapper, OneHotPartialObsWrapper]
     for wrapper in wrappers:
-        env = wrapper(
-            gym.make(env_name, render_mode="rgb_array", new_step_api=True))
+        env = wrapper(gym.make(env_name, render_mode="rgb_array", new_step_api=True))
         obs_space, wrapper_name = env.observation_space, wrapper.__name__
         assert isinstance(
             obs_space, spaces.Dict
@@ -186,8 +184,9 @@ wrappers = [
 ]
 for wrapper in wrappers:
     env1 = wrapper(EmptyEnvWithExtraObs(render_mode="rgb_array"))
-    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0",
-                   render_mode="rgb_array", new_step_api=True))
+    env2 = wrapper(
+        gym.make("MiniGrid-Empty-5x5-v0", render_mode="rgb_array", new_step_api=True)
+    )
 
     obs1 = env1.reset(seed=0)
     obs2 = env2.reset(seed=0)

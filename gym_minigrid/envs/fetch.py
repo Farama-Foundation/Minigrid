@@ -100,5 +100,4 @@ register(
     numObjs=2,
 )
 
-register(id="MiniGrid-Fetch-8x8-N3-v0",
-         entry_point="gym_minigrid.envs.fetch:FetchEnv")
+register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="gym_minigrid.envs.fetch:FetchEnv")
