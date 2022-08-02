@@ -201,7 +201,7 @@ class RoomGrid(MiniGridEnv):
             obj = Key(color)
         elif kind == "ball":
             obj = Ball(color)
-        elif kind == "box":
+        else:  # kind == "box"
             obj = Box(color)
 
         return self.place_in_room(i, j, obj)
@@ -233,7 +233,7 @@ class RoomGrid(MiniGridEnv):
         door = Door(color, is_locked=locked)
 
         pos = room.door_pos[door_idx]
-        self.grid.set(*pos, door)
+        self.grid.set(pos[0], pos[1], door)
         door.cur_pos = pos
 
         neighbor = room.neighbors[door_idx]

@@ -26,10 +26,6 @@ class ReseedWrapper(gym.Wrapper):
         self.seed_idx = (self.seed_idx + 1) % len(self.seeds)
         return self.env.reset(seed=seed, **kwargs)
 
-    def step(self, action):
-        obs, reward, done, info = self.env.step(action)
-        return obs, reward, done, info
-
 
 class ActionBonus(gym.Wrapper):
     """
@@ -43,7 +39,7 @@ class ActionBonus(gym.Wrapper):
         self.counts = {}
 
     def step(self, action):
-        obs, reward, done, info = self.env.step(action)
+        obs, reward, terminated, truncated, info = self.env.step(action)
 
         env = self.unwrapped
         tup = (tuple(env.agent_pos), env.agent_dir, action)
@@ -60,7 +56,7 @@ class ActionBonus(gym.Wrapper):
         bonus = 1 / math.sqrt(new_count)
         reward += bonus
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
@@ -77,7 +73,7 @@ class StateBonus(gym.Wrapper):
         self.counts = {}
 
     def step(self, action):
-        obs, reward, done, info = self.env.step(action)
+        obs, reward, terminated, truncated, info = self.env.step(action)
 
         # Tuple based on which we index the counts
         # We use the position after an update
@@ -96,7 +92,7 @@ class StateBonus(gym.Wrapper):
         bonus = 1 / math.sqrt(new_count)
         reward += bonus
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)

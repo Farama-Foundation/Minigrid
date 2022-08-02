@@ -89,7 +89,7 @@ class PutNearEnv(MiniGridEnv):
     def step(self, action):
         preCarrying = self.carrying
 
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         u, v = self.dir_vec
         ox, oy = (self.agent_pos[0] + u, self.agent_pos[1] + v)
@@ -101,16 +101,16 @@ class PutNearEnv(MiniGridEnv):
                 self.carrying.type != self.move_type
                 or self.carrying.color != self.moveColor
             ):
-                done = True
+                terminated = True
 
         # If successfully dropping an object near the target
         if action == self.actions.drop and preCarrying:
             if self.grid.get(ox, oy) is preCarrying:
                 if abs(ox - tx) <= 1 and abs(oy - ty) <= 1:
                     reward = self._reward()
-            done = True
+            terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
 
 register(

@@ -56,7 +56,8 @@ class LockedRoomEnv(MiniGridEnv):
 
             roomW = lWallIdx + 1
             roomH = height // 3 + 1
-            self.rooms.append(LockedRoom((0, j), (roomW, roomH), (lWallIdx, j + 3)))
+            self.rooms.append(LockedRoom(
+                (0, j), (roomW, roomH), (lWallIdx, j + 3)))
             self.rooms.append(
                 LockedRoom((rWallIdx, j), (roomW, roomH), (rWallIdx, j + 3))
             )
@@ -97,10 +98,6 @@ class LockedRoomEnv(MiniGridEnv):
             "unlock the %s door and "
             "go to the goal"
         ) % (lockedRoom.color, keyRoom.color, lockedRoom.color)
-
-    def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
-        return obs, reward, done, info
 
 
 register(

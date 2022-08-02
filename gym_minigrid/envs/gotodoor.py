@@ -62,22 +62,22 @@ class GoToDoorEnv(MiniGridEnv):
         self.mission = "go to the %s door" % self.target_color
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         ax, ay = self.agent_pos
         tx, ty = self.target_pos
 
         # Don't let the agent open any of the doors
         if action == self.actions.toggle:
-            done = True
+            terminated = True
 
         # Reward performing done action in front of the target door
         if action == self.actions.done:
             if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = self._reward()
-            done = True
+            terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
 
 register(

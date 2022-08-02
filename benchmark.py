@@ -18,7 +18,7 @@ parser.add_argument("--num_resets", default=200)
 parser.add_argument("--num_frames", default=5000)
 args = parser.parse_args()
 
-env = gym.make(args.env_name, render_mode="rgb_array")
+env = gym.make(args.env_name, render_mode="rgb_array", new_step_api=True)
 
 # Benchmark env.reset
 t0 = time.time()
@@ -37,14 +37,14 @@ dt = t1 - t0
 frames_per_sec = args.num_frames / dt
 
 # Create an environment with an RGB agent observation
-env = gym.make(args.env_name)
+env = gym.make(args.env_name, new_step_api=True)
 env = RGBImgPartialObsWrapper(env)
 env = ImgObsWrapper(env)
 
 # Benchmark rendering
 t0 = time.time()
 for i in range(args.num_frames):
-    obs, reward, done, info = env.step(0)
+    obs, reward, terminated, truncated, info = env.step(0)
 t1 = time.time()
 dt = t1 - t0
 agent_view_fps = args.num_frames / dt

@@ -1,6 +1,7 @@
 from operator import add
 
 import gym
+from gym.spaces import Discrete
 
 from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
 from gym_minigrid.register import register
@@ -30,7 +31,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
             **kwargs
         )
         # Allow only 3 actions permitted: left, right, forward
-        self.action_space = gym.spaces.Discrete(self.actions.forward + 1)
+        self.action_space = Discrete(self.actions.forward + 1)
         self.reward_range = (-1, 1)
 
     def _gen_grid(self, width, height):
@@ -76,20 +77,20 @@ class DynamicObstaclesEnv(MiniGridEnv):
                 self.place_obj(
                     self.obstacles[i_obst], top=top, size=(3, 3), max_tries=100
                 )
-                self.grid.set(*old_pos, None)
+                self.grid.set(old_pos[0], old_pos[1], None)
             except Exception:
                 pass
 
         # Update the agent's position/direction
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         # If the agent tried to walk over an obstacle or wall
         if action == self.actions.forward and not_clear:
             reward = -1
-            done = True
-            return obs, reward, done, info
+            terminated = True
+            return obs, reward, terminated, truncated, info
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
 
 register(

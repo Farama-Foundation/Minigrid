@@ -6,7 +6,7 @@ import time
 import gym
 
 # Load the gym environment
-env = gym.make("MiniGrid-Empty-8x8-v0")
+env = gym.make("MiniGrid-Empty-8x8-v0", new_step_api=True)
 env.reset()
 
 for i in range(0, 100):
@@ -15,7 +15,7 @@ for i in range(0, 100):
     # Pick a random action
     action = random.randint(0, env.action_space.n - 1)
 
-    obs, reward, done, info = env.step(action)
+    obs, reward, terminated, truncated, info = env.step(action)
 
     env.render()
 

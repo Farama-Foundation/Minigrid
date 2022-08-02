@@ -20,6 +20,7 @@ class ObstructedMazeEnv(RoomGrid):
             max_steps=max_steps,
             **kwargs
         )
+        self.obj = Ball()  # intiale the obj attribute, that will be changed later on
 
     def _gen_grid(self, width, height):
         super()._gen_grid(width, height)
@@ -36,14 +37,14 @@ class ObstructedMazeEnv(RoomGrid):
         self.mission = "pick up the %s ball" % self.ball_to_find_color
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         if action == self.actions.pickup:
             if self.carrying and self.carrying == self.obj:
                 reward = self._reward()
-                done = True
+                terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
     def add_door(
         self,
@@ -66,13 +67,14 @@ class ObstructedMazeEnv(RoomGrid):
         if blocked:
             vec = DIR_TO_VEC[door_idx]
             blocking_ball = Ball(self.blocking_ball_color) if blocked else None
-            self.grid.set(door_pos[0] - vec[0], door_pos[1] - vec[1], blocking_ball)
+            self.grid.set(door_pos[0] - vec[0],
+                          door_pos[1] - vec[1], blocking_ball)
 
         if locked:
             obj = Key(door.color)
             if key_in_box:
-                box = Box(self.box_color) if key_in_box else None
-                box.contains = obj
+                box = Box(self.box_color)
+                box.set_contains(obj)
                 obj = box
             self.place_in_room(i, j, obj)
 
@@ -104,7 +106,8 @@ class ObstructedMaze_1Dlhb(ObstructedMazeEnv):
             blocked=self.blocked,
         )
 
-        self.obj, _ = self.add_object(1, 0, "ball", color=self.ball_to_find_color)
+        self.obj, _ = self.add_object(
+            1, 0, "ball", color=self.ball_to_find_color)
         self.place_agent(0, 0)
 
 
@@ -162,7 +165,8 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         corners = [(2, 0), (2, 2), (0, 2), (0, 0)][: self.num_quarters]
         ball_room = self._rand_elem(corners)
 
-        self.obj, _ = self.add_object(*ball_room, "ball", color=self.ball_to_find_color)
+        self.obj, _ = self.add_object(
+            ball_room[0], ball_room[1], "ball", color=self.ball_to_find_color)
         self.place_agent(*self.agent_room)
 
 

@@ -37,7 +37,8 @@ class MultiRoomEnv(MiniGridEnv):
         while len(roomList) < numRooms:
             curRoomList = []
 
-            entryDoorPos = (self._rand_int(0, width - 2), self._rand_int(0, width - 2))
+            entryDoorPos = (self._rand_int(0, width - 2),
+                            self._rand_int(0, width - 2))
 
             # Recursively place the rooms
             self._placeRoom(
@@ -89,7 +90,8 @@ class MultiRoomEnv(MiniGridEnv):
                 doorColor = self._rand_elem(sorted(doorColors))
 
                 entryDoor = Door(doorColor)
-                self.grid.set(*room.entryDoorPos, entryDoor)
+                self.grid.set(
+                    room.entryDoorPos[0], room.entryDoorPos[1], entryDoor)
                 prevDoorColor = doorColor
 
                 prevRoom = roomList[idx - 1]
@@ -99,7 +101,8 @@ class MultiRoomEnv(MiniGridEnv):
         self.place_agent(roomList[0].top, roomList[0].size)
 
         # Place the final goal in the last room
-        self.goal_pos = self.place_obj(Goal(), roomList[-1].top, roomList[-1].size)
+        self.goal_pos = self.place_obj(
+            Goal(), roomList[-1].top, roomList[-1].size)
 
         self.mission = "traverse the rooms to get to the goal"
 
@@ -153,7 +156,8 @@ class MultiRoomEnv(MiniGridEnv):
                 return False
 
         # Add this room to the list
-        roomList.append(MultiRoom((topX, topY), (sizeX, sizeY), entryDoorPos, None))
+        roomList.append(
+            MultiRoom((topX, topY), (sizeX, sizeY), entryDoorPos, None))
 
         # If this was the last room, stop
         if numLeft == 1:
@@ -171,10 +175,12 @@ class MultiRoomEnv(MiniGridEnv):
             # Pick the exit door position
             # Exit on right wall
             if exitDoorWall == 0:
-                exitDoorPos = (topX + sizeX - 1, topY + self._rand_int(1, sizeY - 1))
+                exitDoorPos = (topX + sizeX - 1, topY +
+                               self._rand_int(1, sizeY - 1))
             # Exit on south wall
             elif exitDoorWall == 1:
-                exitDoorPos = (topX + self._rand_int(1, sizeX - 1), topY + sizeY - 1)
+                exitDoorPos = (
+                    topX + self._rand_int(1, sizeX - 1), topY + sizeY - 1)
             # Exit on left wall
             elif exitDoorWall == 2:
                 exitDoorPos = (topX, topY + self._rand_int(1, sizeY - 1))
