@@ -1,7 +1,6 @@
 import numpy as np
 
 from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class LavaGapEnv(MiniGridEnv):
@@ -56,22 +55,3 @@ class LavaGapEnv(MiniGridEnv):
             if self.obstacle_type == Lava
             else "find the opening and get to the green goal square"
         )
-
-
-register(
-    id="MiniGrid-LavaGapS5-v0",
-    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
-    size=5,
-)
-
-register(
-    id="MiniGrid-LavaGapS6-v0",
-    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-LavaGapS7-v0",
-    entry_point="gym_minigrid.envs.lavagap:LavaGapEnv",
-    size=7,
-)

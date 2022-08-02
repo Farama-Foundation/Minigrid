@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class PutNearEnv(MiniGridEnv):
@@ -117,15 +116,3 @@ class PutNearEnv(MiniGridEnv):
             done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-PutNear-6x6-N2-v0", entry_point="gym_minigrid.envs.putnear:PutNearEnv"
-)
-
-register(
-    id="MiniGrid-PutNear-8x8-N3-v0",
-    entry_point="gym_minigrid.envs.putnear:PutNearEnv",
-    size=8,
-    numObjs=3,
-)

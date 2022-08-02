@@ -1,7 +1,6 @@
 import numpy as np
 
 from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, Wall
-from gym_minigrid.register import register
 
 
 class MemoryEnv(MiniGridEnv):
@@ -96,40 +95,3 @@ class MemoryEnv(MiniGridEnv):
             done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-MemoryS17Random-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=17,
-    random_length=True,
-)
-
-register(
-    id="MiniGrid-MemoryS13Random-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=13,
-    random_length=True,
-)
-
-
-register(
-    id="MiniGrid-MemoryS13-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=13,
-)
-
-
-register(
-    id="MiniGrid-MemoryS11-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=11,
-)
-
-register(
-    id="MiniGrid-MemoryS9-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=9
-)
-
-register(
-    id="MiniGrid-MemoryS7-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=7
-)

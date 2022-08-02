@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import Ball
-from gym_minigrid.register import register
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -46,9 +45,3 @@ class BlockedUnlockPickupEnv(RoomGrid):
                 done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-BlockedUnlockPickup-v0",
-    entry_point="gym_minigrid.envs.blockedunlockpickup:BlockedUnlockPickupEnv",
-)

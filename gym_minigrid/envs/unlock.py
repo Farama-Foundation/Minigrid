@@ -1,4 +1,3 @@
-from gym_minigrid.register import register
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -39,6 +38,3 @@ class UnlockEnv(RoomGrid):
                 done = True
 
         return obs, reward, done, info
-
-
-register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs.unlock:UnlockEnv")

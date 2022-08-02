@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class DistShiftEnv(MiniGridEnv):
@@ -53,16 +52,3 @@ class DistShiftEnv(MiniGridEnv):
             self.place_agent()
 
         self.mission = "get to the green goal square"
-
-
-register(
-    id="MiniGrid-DistShift1-v0",
-    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
-    strip2_row=2,
-)
-
-register(
-    id="MiniGrid-DistShift2-v0",
-    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
-    strip2_row=5,
-)

@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class FetchEnv(MiniGridEnv):
@@ -90,20 +89,3 @@ class FetchEnv(MiniGridEnv):
                 done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-Fetch-5x5-N2-v0",
-    entry_point="gym_minigrid.envs.fetch:FetchEnv",
-    size=5,
-    numObjs=2,
-)
-
-register(
-    id="MiniGrid-Fetch-6x6-N2-v0",
-    entry_point="gym_minigrid.envs.fetch:FetchEnv",
-    size=6,
-    numObjs=2,
-)
-
-register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="gym_minigrid.envs.fetch:FetchEnv")

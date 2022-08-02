@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import Door, Grid, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class RedBlueDoorEnv(MiniGridEnv):
@@ -63,15 +62,3 @@ class RedBlueDoorEnv(MiniGridEnv):
                 done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-RedBlueDoors-6x6-v0",
-    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-RedBlueDoors-8x8-v0",
-    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
-)

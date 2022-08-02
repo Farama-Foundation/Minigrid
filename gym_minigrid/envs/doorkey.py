@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import Door, Goal, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class DoorKeyEnv(MiniGridEnv):
@@ -38,28 +37,3 @@ class DoorKeyEnv(MiniGridEnv):
         self.place_obj(obj=Key("yellow"), top=(0, 0), size=(splitIdx, height))
 
         self.mission = "use the key to open the door and then get to the goal"
-
-
-register(
-    id="MiniGrid-DoorKey-5x5-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=5,
-)
-
-register(
-    id="MiniGrid-DoorKey-6x6-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-DoorKey-8x8-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=8,
-)
-
-register(
-    id="MiniGrid-DoorKey-16x16-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=16,
-)
