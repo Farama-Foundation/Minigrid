@@ -1,6 +1,5 @@
 from operator import add
 
-import gym
 from gym.spaces import Discrete
 
 from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
