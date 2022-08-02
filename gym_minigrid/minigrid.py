@@ -752,10 +752,7 @@ class MiniGridEnv(gym.Env):
         # Return first observation
         obs = self.gen_obs()
 
-        if not return_info:
-            return obs
-        else:
-            return obs, {}
+        return obs
 
     def hash(self, size=16):
         """Compute a hash that uniquely identifies the current state of the environment.
