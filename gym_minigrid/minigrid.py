@@ -253,8 +253,14 @@ class Door(WorldObj):
         elif self.is_locked:
             state = 2
         # if door is closed and unlocked
-        else:
+        elif not self.is_open:
             state = 1
+        else:
+            raise ValueError(
+                "There is no possible state encoding for the state:\n -Door Open: {}\n -Door Closed: {}\n -Door Locked: {}".format(
+                    self.is_open, not self.is_open, self.is_locked
+                )
+            )
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
