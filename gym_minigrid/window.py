@@ -42,9 +42,9 @@ class Window:
 
         # If no image has been shown yet,
         # show the first image of the environment
-        if self.imshow_obj is None:
+        if self.no_image_shown:
             self.imshow_obj = self.ax.imshow(img, interpolation="bilinear")
-
+            self.no_image_shown = False
         # Update the image data
         self.imshow_obj.set_data(img)
 

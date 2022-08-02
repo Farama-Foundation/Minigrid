@@ -18,6 +18,7 @@ from gym_minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
+from gym_minigrid.window import Window
 
 TILE_PIXELS = 32
 
@@ -710,6 +711,8 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
+        self.window: Window = None
+
         # Environment configuration
         self.width = width
         self.height = height
@@ -1248,9 +1251,7 @@ class MiniGridEnv(gym.Env):
             return
 
         if mode == "human" and not self.window:
-            import gym_minigrid.window
-
-            self.window = gym_minigrid.window.Window("gym_minigrid")
+            self.window = Window("gym_minigrid")
             self.window.show(block=False)
 
         # Compute which cells are visible to the agent
