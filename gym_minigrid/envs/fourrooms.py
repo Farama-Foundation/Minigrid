@@ -66,13 +66,6 @@ class FourRoomsEnv(MiniGridEnv):
             self.place_obj(Goal())
 
         self.mission = "reach the goal"
-<<<<<<< HEAD
-=======
-
-    def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
-        return obs, reward, done, info
->>>>>>> master-upstream
 
 
 register(

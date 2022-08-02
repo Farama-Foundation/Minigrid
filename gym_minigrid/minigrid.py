@@ -254,12 +254,8 @@ class Door(WorldObj):
             state = 0
         elif self.is_locked:
             state = 2
-<<<<<<< HEAD
-        else:
-=======
         # if door is closed and unlocked
         elif not self.is_open:
->>>>>>> master-upstream
             state = 1
         else:
             raise ValueError(
@@ -335,9 +331,6 @@ class Box(WorldObj):
 
     def can_pickup(self):
         return True
-
-    def set_contains(self, contains):
-        self.contains = contains
 
     def render(self, img):
         c = COLORS[self.color]
@@ -675,7 +668,7 @@ class MiniGridEnv(gym.Env):
         see_through_walls: bool = False,
         agent_view_size: int = 7,
         render_mode: str = None,
-        **kwargs
+        **kwargs,
     ):
         # Can't set both grid_size and width/height
         if grid_size:
@@ -728,18 +721,13 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
-<<<<<<< HEAD
-        self.agent_pos = (-1, -1)
-        self.agent_dir = -1
+        self.agent_pos: np.ndarray = None
+        self.agent_dir: int = None
 
         # Current grid and mission and carryinh
         self.grid = Grid(width, height)
         self.mission = ""
         self.carrying = None
-=======
-        self.agent_pos: np.ndarray = None
-        self.agent_dir: int = None
->>>>>>> master-upstream
 
         # Initialize the state
         self.reset()
@@ -755,7 +743,11 @@ class MiniGridEnv(gym.Env):
         self._gen_grid(self.width, self.height)
 
         # These fields should be defined by _gen_grid
-        assert self.agent_pos >= (0, 0) and self.agent_dir >= 0
+        assert (
+            self.agent_pos >= (0, 0)
+            if isinstance(self.agent_pos, tuple)
+            else all(self.agent_pos >= 0) and self.agent_dir >= 0
+        )
 
         # Check that the agent doesn't overlap with an object
         start_cell = self.grid.get(*self.agent_pos)
@@ -1152,12 +1144,8 @@ class MiniGridEnv(gym.Env):
                 terminated = True
                 reward = self._reward()
             if fwd_cell is not None and fwd_cell.type == "lava":
-<<<<<<< HEAD
                 terminated = True
 
-=======
-                done = True
->>>>>>> master-upstream
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():

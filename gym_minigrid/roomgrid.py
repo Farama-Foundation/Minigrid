@@ -205,7 +205,7 @@ class RoomGrid(MiniGridEnv):
             obj = Key(color)
         elif kind == "ball":
             obj = Ball(color)
-        else:  # kind == "box"
+        elif kind == "box":
             obj = Box(color)
         else:
             raise f"{kind} object kind is not available in this environment."
