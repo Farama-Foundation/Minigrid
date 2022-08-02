@@ -5,6 +5,7 @@ from enum import IntEnum
 
 import gym
 import numpy as np
+import numpy.typing as npt
 from gym import spaces
 
 # Size in pixels of a tile in the full-scale human view
@@ -254,7 +255,7 @@ class Door(WorldObj):
             state = 2
         # if door is closed and unlocked
         else:
-            state = 1 
+            state = 1
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
@@ -586,8 +587,8 @@ class Grid:
 
         mask[agent_pos[0], agent_pos[1]] = True
 
-        for j in reversed(range(0, grid.height)):
-            for i in range(0, grid.width - 1):
+        for j in reversed(range(0, self.height)):
+            for i in range(0, self.width - 1):
                 if not mask[i, j]:
                     continue
 
@@ -653,13 +654,13 @@ class MiniGridEnv(gym.Env):
 
     def __init__(
         self,
-        grid_size: int=None,
-        width: int=None,
-        height: int=None,
-        max_steps: int=100,
-        see_through_walls: bool=False,
-        agent_view_size: int=7,
-        render_mode: str=None,
+        grid_size: int = None,
+        width: int = None,
+        height: int = None,
+        max_steps: int = 100,
+        see_through_walls: bool = False,
+        agent_view_size: int = 7,
+        render_mode: str = None,
         **kwargs
     ):
         # Can't set both grid_size and width/height

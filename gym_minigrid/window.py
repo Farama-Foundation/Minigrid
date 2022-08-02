@@ -7,7 +7,6 @@ except ImportError:
     )
 
 
-
 class Window:
     """
     Window to draw a gridworld instance using Matplotlib

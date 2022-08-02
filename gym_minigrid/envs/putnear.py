@@ -59,7 +59,9 @@ class PutNearEnv(MiniGridEnv):
                 obj = Box(objColor)
             else:
                 raise ValueError(
-                    "{} object type given. Object type can only be of values key, ball and box.".format(objType)
+                    "{} object type given. Object type can only be of values key, ball and box.".format(
+                        objType
+                    )
                 )
 
             pos = self.place_obj(obj, reject_fn=near_obj)
