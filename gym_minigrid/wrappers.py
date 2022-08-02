@@ -160,7 +160,6 @@ class RGBImgObsWrapper(ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
-    To use it, make the unwrapped environment with render_mode='rgb_array'.
     """
 
     def __init__(self, env, tile_size=8):
@@ -181,9 +180,10 @@ class RGBImgObsWrapper(ObservationWrapper):
 
     def observation(self, obs):
         env = self.unwrapped
-        assert env.render_mode == "rgb_array", env.render_mode
 
-        rgb_img = env.render(highlight=False, tile_size=self.tile_size)
+        rgb_img = env._render(
+            mode="rgb_array", highlight=True, tile_size=self.tile_size
+        )
 
         return {**obs, "image": rgb_img}
 
