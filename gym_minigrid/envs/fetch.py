@@ -41,6 +41,12 @@ class FetchEnv(MiniGridEnv):
                 obj = Key(objColor)
             elif objType == "ball":
                 obj = Ball(objColor)
+            else:
+                raise ValueError(
+                    "{} object type given. Object type can only be of values key and ball.".format(
+                        objType
+                    )
+                )
 
             self.place_obj(obj)
             objs.append(obj)

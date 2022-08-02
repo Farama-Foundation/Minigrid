@@ -1,5 +1,7 @@
 import itertools as itt
 
+import numpy as np
+
 from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, Wall
 from gym_minigrid.register import register
 
@@ -30,7 +32,7 @@ class CrossingEnv(MiniGridEnv):
         self.grid.wall_rect(0, 0, width, height)
 
         # Place the agent in the top-left corner
-        self.agent_pos = (1, 1)
+        self.agent_pos = np.array((1, 1))
         self.agent_dir = 0
 
         # Place a goal square in the bottom-right corner

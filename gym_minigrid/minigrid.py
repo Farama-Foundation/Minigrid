@@ -19,6 +19,7 @@ from gym_minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
+from gym_minigrid.window import Window
 
 TILE_PIXELS = 32
 
@@ -253,8 +254,19 @@ class Door(WorldObj):
             state = 0
         elif self.is_locked:
             state = 2
+<<<<<<< HEAD
         else:
+=======
+        # if door is closed and unlocked
+        elif not self.is_open:
+>>>>>>> master-upstream
             state = 1
+        else:
+            raise ValueError(
+                "There is no possible state encoding for the state:\n -Door Open: {}\n -Door Closed: {}\n -Door Locked: {}".format(
+                    self.is_open, not self.is_open, self.is_locked
+                )
+            )
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
 
@@ -656,13 +668,13 @@ class MiniGridEnv(gym.Env):
 
     def __init__(
         self,
-        grid_size=None,
-        width=None,
-        height=None,
-        max_steps=100,
-        see_through_walls=False,
-        agent_view_size=7,
-        render_mode=None,
+        grid_size: int = None,
+        width: int = None,
+        height: int = None,
+        max_steps: int = 100,
+        see_through_walls: bool = False,
+        agent_view_size: int = 7,
+        render_mode: str = None,
         **kwargs
     ):
         # Can't set both grid_size and width/height
@@ -707,8 +719,7 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
-        # Window to use for human rendering mode
-        self.window = None
+        self.window: Window = None
 
         # Environment configuration
         self.width = width
@@ -717,6 +728,7 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
+<<<<<<< HEAD
         self.agent_pos = (-1, -1)
         self.agent_dir = -1
 
@@ -724,6 +736,10 @@ class MiniGridEnv(gym.Env):
         self.grid = Grid(width, height)
         self.mission = ""
         self.carrying = None
+=======
+        self.agent_pos: np.ndarray = None
+        self.agent_dir: int = None
+>>>>>>> master-upstream
 
         # Initialize the state
         self.reset()
@@ -1136,8 +1152,12 @@ class MiniGridEnv(gym.Env):
                 terminated = True
                 reward = self._reward()
             if fwd_cell is not None and fwd_cell.type == "lava":
+<<<<<<< HEAD
                 terminated = True
 
+=======
+                done = True
+>>>>>>> master-upstream
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():
@@ -1256,9 +1276,7 @@ class MiniGridEnv(gym.Env):
             return
 
         if mode == "human" and not self.window:
-            import gym_minigrid.window
-
-            self.window = gym_minigrid.window.Window("gym_minigrid")
+            self.window = Window("gym_minigrid")
             self.window.show(block=False)
 
         # Compute which cells are visible to the agent

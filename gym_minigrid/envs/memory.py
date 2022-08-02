@@ -1,3 +1,5 @@
+import numpy as np
+
 from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, Wall
 from gym_minigrid.register import register
 
@@ -58,7 +60,7 @@ class MemoryEnv(MiniGridEnv):
             self.grid.set(hallway_end + 2, j, Wall())
 
         # Fix the player's start position and orientation
-        self.agent_pos = (self._rand_int(1, hallway_end + 1), height // 2)
+        self.agent_pos = np.array((self._rand_int(1, hallway_end + 1), height // 2))
         self.agent_dir = 0
 
         # Place objects
