@@ -384,7 +384,10 @@ class Batch:
 
     @staticmethod
     def encode_gridworld_to_graph(gridworlds: np.ndarray):
-        # gridworls shape: [m, odd, odd, 3]
+        # Graph feature shape [empty, wall, start, goal]
+        # Graph nodes: ((gw_dim - 1)/2)**2
+
+        # gridworlds shape: [m, odd, odd, 3]
         assert gridworlds.shape[1] % 2 == 1 and gridworlds.shape[2] % 2 == 1, \
             "Inputted Gridworlds do not have a layout of odd dimensions"
         assert gridworlds.shape[-1] == 3, "Inputted Gridworlds do not have 3 channels"
