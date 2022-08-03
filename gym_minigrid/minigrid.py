@@ -1,7 +1,7 @@
 import hashlib
-from abc import abstractmethod
 import math
 import string
+from abc import abstractmethod
 from enum import IntEnum
 
 import gym
