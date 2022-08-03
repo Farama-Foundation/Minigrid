@@ -376,7 +376,7 @@ class FlatObsWrapper(ObservationWrapper):
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
-        self.numCharCodes = 27
+        self.numCharCodes = 28
 
         imgSpace = env.observation_space.spaces["image"]
         imgSize = reduce(operator.mul, imgSpace.shape, 1)
@@ -410,6 +410,8 @@ class FlatObsWrapper(ObservationWrapper):
                     chNo = ord(ch) - ord("a")
                 elif ch == " ":
                     chNo = ord("z") - ord("a") + 1
+                elif ch == ",":
+                    chNo = ord("z") - ord("a") + 2
                 else:
                     raise ValueError(
                         f"Character {ch} is not available in mission string."
