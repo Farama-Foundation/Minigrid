@@ -5,10 +5,10 @@ import random
 import gym
 import numpy as np
 from gym import spaces
+from gym.envs.registration import registry
 
-from gym_minigrid.envs.empty import EmptyEnv5x5
+from gym_minigrid.envs.empty import EmptyEnv
 from gym_minigrid.minigrid import Grid
-from gym_minigrid.register import env_list
 from gym_minigrid.wrappers import (
     DictObservationSpaceWrapper,
     FlatObsWrapper,
@@ -21,7 +21,7 @@ from gym_minigrid.wrappers import (
     ViewSizeWrapper,
 )
 
-# Test importing wrappers
+env_list = [key for key in registry.keys() if key.startswith("MiniGrid")]
 
 
 print("%d environments registered" % len(env_list))
@@ -151,13 +151,13 @@ for env_idx, env_name in enumerate(env_list):
 print("testing extra observations")
 
 
-class EmptyEnvWithExtraObs(EmptyEnv5x5):
+class EmptyEnvWithExtraObs(EmptyEnv):
     """
     Custom environment with an extra observation
     """
 
     def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+        super().__init__(size=5, **kwargs)
         self.observation_space["size"] = spaces.Box(
             low=0,
             high=1000,  # gym does not like np.iinfo(np.uint).max,

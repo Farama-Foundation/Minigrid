@@ -1,6 +1,7 @@
 import hashlib
 import math
 import string
+from abc import abstractmethod
 from enum import IntEnum
 
 import gym
@@ -823,8 +824,9 @@ class MiniGridEnv(gym.Env):
 
         return str
 
+    @abstractmethod
     def _gen_grid(self, width, height):
-        assert False, "_gen_grid needs to be implemented by each environment"
+        pass
 
     def _reward(self):
         """
