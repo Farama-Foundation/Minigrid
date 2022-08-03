@@ -751,6 +751,7 @@ class MiniGridEnv(gym.Env):
 
         # Return first observation
         obs = self.gen_obs()
+
         return obs
 
     def hash(self, size=16):

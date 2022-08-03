@@ -2,8 +2,7 @@ import itertools as itt
 
 import numpy as np
 
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, Wall
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
 
 
 class CrossingEnv(MiniGridEnv):
@@ -85,64 +84,3 @@ class CrossingEnv(MiniGridEnv):
             if self.obstacle_type == Lava
             else "find the opening and get to the green goal square"
         )
-
-
-register(
-    id="MiniGrid-LavaCrossingS9N1-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=1,
-)
-
-register(
-    id="MiniGrid-LavaCrossingS9N2-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=2,
-)
-
-register(
-    id="MiniGrid-LavaCrossingS9N3-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=3,
-)
-
-register(
-    id="MiniGrid-LavaCrossingS11N5-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=11,
-    num_crossings=5,
-)
-
-register(
-    id="MiniGrid-SimpleCrossingS9N1-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=1,
-    obstacle_type=Wall,
-)
-
-register(
-    id="MiniGrid-SimpleCrossingS9N2-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=2,
-    obstacle_type=Wall,
-)
-
-register(
-    id="MiniGrid-SimpleCrossingS9N3-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=9,
-    num_crossings=3,
-    obstacle_type=Wall,
-)
-
-register(
-    id="MiniGrid-SimpleCrossingS11N5-v0",
-    entry_point="gym_minigrid.envs.crossing:CrossingEnv",
-    size=11,
-    num_crossings=5,
-    obstacle_type=Wall,
-)

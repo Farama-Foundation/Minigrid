@@ -1,5 +1,4 @@
 from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
 
 
 class GoToObjectEnv(MiniGridEnv):
@@ -86,16 +85,3 @@ class GoToObjectEnv(MiniGridEnv):
             done = True
 
         return obs, reward, done, info
-
-
-register(
-    id="MiniGrid-GoToObject-6x6-N2-v0",
-    entry_point="gym_minigrid.envs.gotoobject:GoToObjectEnv",
-)
-
-register(
-    id="MiniGrid-GoToObject-8x8-N2-v0",
-    entry_point="gym_minigrid.envs.gotoobject:GoToObjectEnv",
-    size=8,
-    numObjs=2,
-)
