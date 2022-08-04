@@ -28,7 +28,7 @@ def test_env(spec):
     env = spec.make(disable_env_checker=True).unwrapped
 
     # Test if env adheres to Gym API
-    with pytest.warns(None) as warnings:
+    with pytest.warns() as warnings:
         check_env(env)
 
     for warning in warnings.list:
