@@ -3,10 +3,12 @@ import math
 import string
 from abc import abstractmethod
 from enum import IntEnum
+from functools import partial
 
 import gym
 import numpy as np
 from gym import spaces
+from gym.utils.renderer import Renderer
 
 # Size in pixels of a tile in the full-scale human view
 from gym_minigrid.rendering import (
@@ -638,7 +640,7 @@ class MiniGridEnv(gym.Env):
         # Deprecated: use 'render_modes' instead
         "render.modes": ["human", "rgb_array"],
         "video.frames_per_second": 10,  # Deprecated: use 'render_fps' instead
-        "render_modes": ["human", "rgb_array"],
+        "render_modes": ["human", "rgb_array", "single_rgb_array"],
         "render_fps": 10,
     }
 
@@ -668,6 +670,8 @@ class MiniGridEnv(gym.Env):
         see_through_walls: bool = False,
         agent_view_size: int = 7,
         render_mode: str = None,
+        highlight: bool = True,
+        tile_size: int = TILE_PIXELS,
         **kwargs
     ):
         # Can't set both grid_size and width/height
@@ -708,6 +712,12 @@ class MiniGridEnv(gym.Env):
 
         # render mode
         self.render_mode = render_mode
+        render_frame = partial(
+            self._render,
+            highlight=highlight,
+            tile_size=tile_size,
+        )
+        self.renderer = Renderer(self.render_mode, render_frame)
 
         # Range of possible rewards
         self.reward_range = (0, 1)
@@ -753,7 +763,12 @@ class MiniGridEnv(gym.Env):
         # Return first observation
         obs = self.gen_obs()
 
-        return obs
+        self.renderer.reset()
+        self.renderer.render_step()
+        if not return_info:
+            return obs
+        else:
+            return obs, {}
 
     def hash(self, size=16):
         """Compute a hash that uniquely identifies the current state of the environment.
@@ -1164,6 +1179,7 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
+        self.renderer.render_step()
         return obs, reward, done, {}
 
     def gen_obs_grid(self, agent_view_size=None):
@@ -1242,17 +1258,11 @@ class MiniGridEnv(gym.Env):
 
         return img
 
-    def render(self, mode="human", close=False, highlight=True, tile_size=TILE_PIXELS):
+    def _render(self, mode="human", highlight=True, tile_size=TILE_PIXELS):
+        assert mode in self.metadata["render_modes"]
         """
         Render the whole-grid human view
         """
-        if self.render_mode is not None:
-            mode = self.render_mode
-        if close:
-            if self.window:
-                self.window.close()
-            return
-
         if mode == "human" and not self.window:
             self.window = Window("gym_minigrid")
             self.window.show(block=False)
@@ -1302,10 +1312,19 @@ class MiniGridEnv(gym.Env):
         if mode == "human":
             self.window.set_caption(self.mission)
             self.window.show_img(img)
+        else:
+            return img
 
-        return img
+    def render(self, mode="human", close=False, highlight=True, tile_size=TILE_PIXELS):
+        if close:
+            raise Exception(
+                "Please close the rendering window using env.close(). Closing the rendering window with the render method is no longer allowed."
+            )
+        if self.render_mode is not None:
+            return self.renderer.get_renders()
+        else:
+            return self._render(mode, highlight=highlight, tile_size=tile_size)
 
     def close(self):
         if self.window:
             self.window.close()
-        return
