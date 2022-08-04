@@ -158,7 +158,7 @@ def test_main_wrappers(wrapper, env_spec):
     for _ in range(10):
         env.reset()
         env.step(0)
-        env.close()
+    env.close()
 
 
 @pytest.mark.parametrize(
