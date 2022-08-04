@@ -1,33 +1,12 @@
 """Finds all the specs that we can test with"""
-from typing import Optional
-
 import gym
 import numpy as np
-from gym import logger
-from gym.envs.registration import EnvSpec
 
-
-def try_make_env(env_spec: EnvSpec) -> Optional[gym.Env]:
-    """Tries to make the environment showing if it is possible. Warning the environments have no wrappers, including time limit and order enforcing."""
-    try:
-        return env_spec.make(disable_env_checker=True).unwrapped
-    except ImportError as e:
-        logger.warn(f"Not testing {env_spec.id} due to error: {e}")
-        return None
-
-
-# Tries to make all gym_minigrid environment to test with
-all_testing_initialised_envs = list(
-    filter(
-        None,
-        [
-            try_make_env(env_spec)
-            for env_spec in gym.envs.registry.values()
-            if env_spec.entry_point.startswith("gym_minigrid.envs")
-        ],
-    )
-)
-all_testing_env_specs = [env.spec for env in all_testing_initialised_envs]
+all_testing_env_specs = [
+    env_spec
+    for env_spec in gym.envs.registry.values()
+    if env_spec.entry_point.startswith("gym_minigrid.envs")
+]
 
 
 def assert_equals(a, b, prefix=None):
