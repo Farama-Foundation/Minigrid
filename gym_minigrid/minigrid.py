@@ -1315,7 +1315,11 @@ class MiniGridEnv(gym.Env):
         else:
             return img
 
-    def render(self, mode="human", highlight=True, tile_size=TILE_PIXELS):
+    def render(self, mode="human", close=False, highlight=True, tile_size=TILE_PIXELS):
+        if close:
+            raise Exception(
+                "Please close the rendering window using env.close(). Closing the rendering window with the render method is no longer allowed."
+            )
         if self.render_mode is not None:
             return self.renderer.get_renders()
         else:
@@ -1324,4 +1328,3 @@ class MiniGridEnv(gym.Env):
     def close(self):
         if self.window:
             self.window.close()
-        return
