@@ -436,40 +436,106 @@ class Batch:
 
     #Note: Returns the gridworld in one given permutation
     @staticmethod
-    def encode_graph_to_gridworld(graphs: List[dgl.DGLGraph], layout_only = False, output_dtype: str = 'tensor'):
-        n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
-        feat_dim = graphs[0].ndata['feat'].shape
-        assert n_nodes % np.sqrt(n_nodes) == 0 # we are assuming square layout
+    def encode_graph_to_gridworld(graphs: Union[List[dgl.DGLGraph], tuple],
+                                  attributes:Tuple[str]=("empty", "wall", "start", "goal"),
+                                  used_attributes:Tuple[str]=("empty", "start", "goal" ),
+                                  output_dtype: str = 'tensor'):
+
+        def get_gw_inds(nodes_tuple:Tuple[np.ndarray], n_nodes, mapping=lambda x : 2*x+1):
+            inds_tuple = []
+            for nodes in nodes_tuple:
+                inds = (nodes[1] // np.sqrt(n_nodes), nodes[1] % np.sqrt(n_nodes))
+                inds = tuple([mapping(i.astype(int)) for i in inds])
+                inds = (nodes[0],) + inds
+                inds_tuple.append(inds)
+            return tuple(inds_tuple)
+
+        #Note: modes 2 and 3 can only work for layouts with 1-to-1 cell-node characterisation
+        possible_modes = {
+            ():0, ("",):0,                              #0: Layout only from A
+            ("start", "goal"): 1,                       #1: Layout from A, start and goal from Fx
+            ("empty", "start", "goal"): 2,              #2: Layout, start, goal from Fx
+            ("empty", "wall", "start", "goal"): 3,      #3: Layout, start, goal from Fx, may form impossible layouts
+        }
+
         if output_dtype == 'tensor':
             device = graphs[0].device
 
-        A = np.empty((len(graphs), n_nodes, n_nodes))
-        fx = np.empty((len(graphs), *feat_dim))
-        for m in range(len(graphs)):
-            A[m] = graphs[m].adj().cpu().to_dense().numpy()
-            fx[m] = graphs[m].ndata['feat'].cpu().numpy()
-        A = Batch.encode_adj_to_reduced_adj(A)
+        try:
+            mode = possible_modes[used_attributes]
+        except KeyError:
+            raise AttributeError(f"Gridworld encoding from {used_attributes} is not possible.")
 
-        gridworlds_layouts = Batch.encode_reduced_adj_to_gridworld_layout(A)
+        if isinstance(graphs, tuple):
+            A, fx = graphs
+            n_nodes = fx.shape[-2]
+            feat_dim = fx.shape[-1]
+            A = torch.reshape(A, (A.shape[0], -1, 2))
+        elif isinstance(graphs[0], dgl.DGLGraph):
+            n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
+            feat_dim = graphs[0].ndata['feat'].shape
+            assert n_nodes % np.sqrt(n_nodes) == 0 # we are assuming square layout
 
-        if layout_only:
-            gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape,1))
-        #TODO: use object dictionary
+            A = np.empty((len(graphs), n_nodes, n_nodes))
+            fx = np.empty((len(graphs), *feat_dim))
+            for m in range(len(graphs)):
+                A[m] = graphs[m].adj().cpu().to_dense().numpy()
+                fx[m] = graphs[m].ndata['feat'].cpu().numpy()
+            A = Batch.encode_adj_to_reduced_adj(A)
         else:
-            gridworlds = np.zeros((*gridworlds_layouts.shape, 3))
-            start_nodes = np.where(fx[..., OBJECT_TO_FEATURE_DIM['start']] == 1)
-            goal_nodes = np.where(fx[..., OBJECT_TO_FEATURE_DIM['goal']] == 1)
-            start_inds = (start_nodes[1] // np.sqrt(n_nodes), start_nodes[1] % np.sqrt(n_nodes))
-            goal_inds = (goal_nodes[1] // np.sqrt(n_nodes), goal_nodes[1] % np.sqrt(n_nodes))
-            start_inds, goal_inds = (tuple([2 * i.astype(int) + 1 for i in tup]) for tup in (start_inds, goal_inds))
-            start_inds = (start_nodes[0],) + start_inds
-            goal_inds = (goal_nodes[0],) + goal_inds
-            gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['wall'][0]] = OBJECT_TO_CHANNEL_AND_IDX['wall'][1] * \
-                                                                    gridworlds_layouts
+            raise RuntimeError(f"data format {type(graphs)} is not supported by function. Format supported are"
+                                 f"List[dgl.DGLGraph], tuple[tensor, tensor]")
+
+        gridworld_layout_dim = (int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
+
+        # Modes for which we need A
+        if mode in [0, 1]:
+            gridworlds_layouts = Batch.encode_reduced_adj_to_gridworld_layout(A, gridworld_layout_dim)
+            if mode in [0, ]:
+                gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape, 1))
+        # Modes for which we need Fx[start, goal]
+        if mode in [1, 2,]: #[1,2,3] when implemented
+            gridworlds = np.zeros((fx.shape[0], *gridworld_layout_dim, 3))
+
+            start_nodes = np.where(fx[..., attributes.index('start')] == 1)
+            goal_nodes = np.where(fx[..., attributes.index('goal')] == 1)
+            # start_inds = (start_nodes[1] // np.sqrt(n_nodes), start_nodes[1] % np.sqrt(n_nodes))
+            # goal_inds = (goal_nodes[1] // np.sqrt(n_nodes), goal_nodes[1] % np.sqrt(n_nodes))
+            # start_inds, goal_inds = (tuple([2 * i.astype(int) + 1 for i in tup]) for tup in (start_inds, goal_inds))
+            # start_inds = (start_nodes[0],) + start_inds
+            # goal_inds = (goal_nodes[0],) + goal_inds
+
+            start_inds, goal_inds = get_gw_inds((start_nodes, goal_nodes), n_nodes)
+
             gridworlds[(*start_inds, np.array([OBJECT_TO_CHANNEL_AND_IDX['start'][0]] * gridworlds.shape[0]))] = \
                 OBJECT_TO_CHANNEL_AND_IDX['start'][1]
             gridworlds[(*goal_inds, np.array([OBJECT_TO_CHANNEL_AND_IDX['goal'][0]] * gridworlds.shape[0]))] = \
                 OBJECT_TO_CHANNEL_AND_IDX['goal'][1]
+            if mode in [1,]: #add layout from adjacency
+                gridworlds[..., OBJECT_TO_CHANNEL_AND_IDX['wall'][0]] = OBJECT_TO_CHANNEL_AND_IDX['wall'][1] * \
+                                                                    gridworlds_layouts
+            elif mode in [2,]: #add layout from empty nodes
+                # set all cells to wall in layout channel
+                gridworlds[..., np.array([OBJECT_TO_CHANNEL_AND_IDX['wall'][0]])] = OBJECT_TO_CHANNEL_AND_IDX['wall'][1]
+
+                # set all non wall (empty, goal, start) to empty
+                #start, goal
+                gridworlds[(*start_inds, np.array([OBJECT_TO_CHANNEL_AND_IDX['empty'][0]] * gridworlds.shape[0]))] = \
+                    OBJECT_TO_CHANNEL_AND_IDX['empty'][1]
+                gridworlds[(*goal_inds, np.array([OBJECT_TO_CHANNEL_AND_IDX['empty'][0]] * gridworlds.shape[0]))] = \
+                    OBJECT_TO_CHANNEL_AND_IDX['empty'][1]
+
+                #empty
+                empty_nodes = np.where(fx[..., attributes.index('empty')] == 1)
+                # empty_inds = (empty_nodes[1] // np.sqrt(n_nodes), empty_nodes[1] % np.sqrt(n_nodes))
+                # empty_inds = tuple([2 * i.astype(int) + 1 for i in empty_inds])
+                # empty_inds = (empty_nodes[0],) + goal_inds
+                empty_inds, = get_gw_inds((empty_nodes,), n_nodes)
+
+                gridworlds[(*empty_inds, np.array([OBJECT_TO_CHANNEL_AND_IDX['empty'][0]] * empty_inds[0].shape[0]))] = \
+                    OBJECT_TO_CHANNEL_AND_IDX['empty'][1]
+        elif mode in [3,]:
+            raise NotImplementedError(f"Gridworld encoding from {used_attributes} not yet implemented.")
 
         if output_dtype == 'tensor':
             gridworlds = torch.tensor(gridworlds, dtype=torch.float, device=device)
@@ -478,10 +544,11 @@ class Batch:
         return gridworlds
 
     @staticmethod
-    def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor]):
+    def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor], layout_dim):
 
         n_nodes = A.shape[1] + 1
-        gridworlds_layout_dim = (A.shape[0], int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
+        gridworlds_layout_dim = (A.shape[0], *layout_dim)
+        assert gridworlds_layout_dim == (A.shape[0], int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
         gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
         gridworlds_empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
 
@@ -876,6 +943,9 @@ if __name__ == '__main__':
         },
     ]
 
+    attributes = ("empty", "wall", "start", "goal")
+    used_attributes = ("empty", "start", "goal")
+
     transforms = torch.tensor([[[1, 0], [0, 1]],
                                [[1, 0], [0, -1]],
                                [[0, 1], [1, 0]],
@@ -900,7 +970,7 @@ if __name__ == '__main__':
     gridworld = np.tile(gridworld, (10, 1, 1, 1))
 
     graphs = Batch.encode_gridworld_to_graph(gridworld)
-    rec_gridworlds = Batch.encode_graph_to_gridworld(graphs, layout_only=False, output_dtype='dewd')
+    rec_gridworlds = Batch.encode_graph_to_gridworld(graphs, attributes=attributes, used_attributes=used_attributes, output_dtype='dewd')
     assert (rec_gridworlds == gridworld).all()
     A = []
     for g in graphs:
@@ -915,7 +985,7 @@ if __name__ == '__main__':
 
 
     reduced_adj = Batch.encode_adj_to_reduced_adj(permuted_A_f)
-    gridworld_layouts = Batch.encode_reduced_adj_to_gridworld_layout(reduced_adj)
+    gridworld_layouts = Batch.encode_reduced_adj_to_gridworld_layout(reduced_adj, layout_dim = gridworld.shape[1:3])
     gridworld_layouts = gridworld_layouts.reshape(10, 8, 7, 7)
 
     for i in range(gridworld_layouts.shape[1]):
