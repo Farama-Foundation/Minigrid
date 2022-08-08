@@ -12,15 +12,15 @@ class LavaGapEnv(MiniGridEnv):
     def __init__(self, size, obstacle_type=Lava, **kwargs):
         self.obstacle_type = obstacle_type
         self.size = size
-        mission_space = (
-            MissionSpace(
+
+        if obstacle_type == Lava:
+            mission_space = MissionSpace(
                 mission_func=lambda: "avoid the lava and get to the green goal square"
             )
-            if self.obstacle_type == Lava
-            else MissionSpace(
+        else:
+            mission_space = MissionSpace(
                 mission_func=lambda: "find the opening and get to the green goal square"
             )
-        )
 
         super().__init__(
             mission_space=mission_space,
