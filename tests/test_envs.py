@@ -4,7 +4,7 @@ import pytest
 from gym.envs.registration import EnvSpec
 from gym.utils.env_checker import check_env
 
-from gym_minigrid.minigrid import Grid
+from gym_minigrid.minigrid import Grid, MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals
 
 CHECK_ENV_IGNORE_WARNINGS = [
@@ -205,3 +205,50 @@ def test_interactive_mode(env_id):
 
     # Test the close method
     env.close()
+
+
+def test_mission_space():
+
+    # Test placeholders
+    mission_space = MissionSpace(
+        mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",
+        ordered_placeholders=[["green", "red"], ["ball", "key"]],
+    )
+
+    assert mission_space.contains("Get the green ball.")
+    assert mission_space.contains("Get the red key.")
+    assert not mission_space.contains("Get the purple box.")
+
+    # Test passing inverted placeholders
+    assert not mission_space.contains("Get the key red.")
+
+    # Test passing extra repeated placeholders
+    assert not mission_space.contains("Get the key red key.")
+
+    # Test contained placeholders like "get the" and "go get the". "get the" string is contained in both placeholders.
+    mission_space = MissionSpace(
+        mission_func=lambda get_syntax, obj_type: f"{get_syntax} {obj_type}.",
+        ordered_placeholders=[
+            ["go get the", "get the", "go fetch the", "fetch the"],
+            ["ball", "key"],
+        ],
+    )
+
+    assert mission_space.contains("get the ball.")
+    assert mission_space.contains("go get the key.")
+    assert mission_space.contains("go fetch the ball.")
+
+    # Test repeated placeholders
+    mission_space = MissionSpace(
+        mission_func=lambda get_syntax, color_1, obj_type_1, color_2, obj_type_2: f"{get_syntax} {color_1} {obj_type_1} and the {color_2} {obj_type_2}.",
+        ordered_placeholders=[
+            ["go get the", "get the", "go fetch the", "fetch the"],
+            ["green", "red"],
+            ["ball", "key"],
+            ["green", "red"],
+            ["ball", "key"],
+        ],
+    )
+
+    assert mission_space.contains("get the green key and the green key.")
+    assert mission_space.contains("go fetch the red ball and the green key.")

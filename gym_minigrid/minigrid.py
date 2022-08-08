@@ -161,6 +161,7 @@ class MissionSpace(spaces.Space[str]):
                 for placeholder in placeholder_list:
                     if placeholder in x:
                         check_placeholder_list.append(placeholder)
+
             # Remove duplicates from the list
             check_placeholder_list = list(set(check_placeholder_list))
 
@@ -213,6 +214,14 @@ class MissionSpace(spaces.Space[str]):
                 placeholder[2] for placeholder in ordered_placeholder_list
             ]
 
+            # Check that the identified final placeholders are in the same order as the original placeholders.
+            for orered_placeholder, final_placeholder in zip(
+                self.ordered_placeholders, final_placeholders
+            ):
+                if final_placeholder in orered_placeholder:
+                    continue
+                else:
+                    return False
             try:
                 mission_string_with_placeholders = self.mission_func(
                     *final_placeholders
