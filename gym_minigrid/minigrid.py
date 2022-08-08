@@ -87,11 +87,11 @@ class MissionSpace(spaces.Space[str]):
     r"""A space representing a mission for the Gym-Minigrid environments.
     The space allows generating random mission strings constructed with an input placeholder list.
     Example Usage::
-        >>> observation_space = MissionSpace(mission_func=lambda color: "Get the {} ball.".format(color),
+        >>> observation_space = MissionSpace(mission_func=lambda color: f"Get the {color} ball.",
                                                 ordered_placeholders=[["green", "blue"]])
         >>> observation_space.sample()
             "Get the green ball."
-        >>> observation_space = MissionSpace(mission_func=lambda color: "Get the ball.".,
+        >>> observation_space = MissionSpace(mission_func=lambda : "Get the ball.".,
                                                 ordered_placeholders=None)
         >>> observation_space.sample()
             "Get the ball."
@@ -114,9 +114,7 @@ class MissionSpace(spaces.Space[str]):
         if ordered_placeholders is not None:
             assert (
                 len(ordered_placeholders) == mission_func.__code__.co_argcount
-            ), "The number of placeholders {} is different from the number of parameters in the mission function {}.".format(
-                len(ordered_placeholders), mission_func.__code__.co_argcount
-            )
+            ), f"The number of placeholders {len(ordered_placeholders)} is different from the number of parameters in the mission function {mission_func.__code__.co_argcount}."
             for placeholder_list in ordered_placeholders:
                 assert check_if_no_duplicate(
                     placeholder_list
@@ -124,9 +122,7 @@ class MissionSpace(spaces.Space[str]):
         else:
             assert (
                 mission_func.__code__.co_argcount == 0
-            ), "If the ordered placeholders are {}, the mission function shouldn't have any parameters.".format(
-                ordered_placeholders
-            )
+            ), f"If the ordered placeholders are {ordered_placeholders}, the mission function shouldn't have any parameters."
 
         self.ordered_placeholders = ordered_placeholders
         self.mission_func = mission_func
@@ -460,9 +456,7 @@ class Door(WorldObj):
             state = 1
         else:
             raise ValueError(
-                "There is no possible state encoding for the state:\n -Door Open: {}\n -Door Closed: {}\n -Door Locked: {}".format(
-                    self.is_open, not self.is_open, self.is_locked
-                )
+                f"There is no possible state encoding for the state:\n -Door Open: {self.is_open}\n -Door Closed: {not self.is_open}\n -Door Locked: {self.is_locked}"
             )
 
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], state)
