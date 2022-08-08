@@ -78,12 +78,9 @@ DIR_TO_VEC = [
 ]
 
 
-def check_if_duplicate(duplicate_list: list) -> bool:
+def check_if_no_duplicate(duplicate_list: list) -> bool:
     """Check if given list contains any duplicates"""
-    for element in duplicate_list:
-        if duplicate_list.count(element) > 1:
-            return True
-    return False
+    return len(set(duplicate_list)) == len(duplicate_list)
 
 
 class MissionSpace(spaces.Space[str]):
@@ -121,7 +118,7 @@ class MissionSpace(spaces.Space[str]):
                 len(ordered_placeholders), mission_func.__code__.co_argcount
             )
             for placeholder_list in ordered_placeholders:
-                assert not check_if_duplicate(
+                assert check_if_no_duplicate(
                     placeholder_list
                 ), "Make sure that the placeholders don't have any duplicate values."
         else:
@@ -237,35 +234,39 @@ class MissionSpace(spaces.Space[str]):
 
     def __eq__(self, other) -> bool:
         """Check whether ``other`` is equivalent to this instance."""
-        if not isinstance(other, MissionSpace):
-            return False
+        if isinstance(other, MissionSpace):
 
-        # Check that place holder lists are the same
-        if self.ordered_placeholders is not None:
-            # Check length
-            if len(self.order_placeholder) != len(other.order_placeholder):
-                return False
+            # Check that place holder lists are the same
+            if self.ordered_placeholders is not None:
+                # Check length
+                if len(self.order_placeholder) == len(other.order_placeholder):
 
-            # Placeholder list are ordered in placing order in the mission string
-            for placeholder, other_placeholder in zip(
-                self.order_placeholder, other.order_placeholder
-            ):
-                if set(placeholder) != set(other_placeholder):
-                    return False
+                    # Placeholder list are ordered in placing order in the mission string
+                    for placeholder, other_placeholder in zip(
+                        self.order_placeholder, other.order_placeholder
+                    ):
+                        if set(placeholder) == set(other_placeholder):
+                            continue
+                        else:
+                            return False
 
-            # Check mission string is the same with dummy space placeholders
-            test_placeholders = [""] * len(self.order_placeholder)
-            mission = self.mission_func(*test_placeholders)
-            other_mission = other.mission_func(*test_placeholders)
-            return mission == other_mission
-        else:
-            if other.ordered_placeholders is not None:
-                return False
+                    # Check mission string is the same with dummy space placeholders
+                    test_placeholders = [""] * len(self.order_placeholder)
+                    mission = self.mission_func(*test_placeholders)
+                    other_mission = other.mission_func(*test_placeholders)
+                    return mission == other_mission
+            else:
 
-            # Check mission string is the same
-            mission = self.mission_func()
-            other_mission = other.mission_func()
-            return mission == other_mission
+                # Check that other is also None
+                if other.ordered_placeholders is None:
+
+                    # Check mission string is the same
+                    mission = self.mission_func()
+                    other_mission = other.mission_func()
+                    return mission == other_mission
+
+        # If none of the statements above return then False
+        return False
 
 
 class WorldObj:
