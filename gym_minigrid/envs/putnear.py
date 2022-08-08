@@ -1,4 +1,12 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Ball,
+    Box,
+    Grid,
+    Key,
+    MiniGridEnv,
+    MissionSpace,
+)
 
 
 class PutNearEnv(MiniGridEnv):
@@ -8,14 +16,25 @@ class PutNearEnv(MiniGridEnv):
     """
 
     def __init__(self, size=6, numObjs=2, **kwargs):
+        self.size = size
         self.numObjs = numObjs
-
+        self.obj_types = ["key", "ball", "box"]
+        mission_space = MissionSpace(
+            mission_func=lambda move_color, move_type, target_color, target_type: f"put the {move_color} {move_type} near the {target_color} {target_type}",
+            ordered_placeholders=[
+                COLOR_NAMES,
+                self.obj_types,
+                COLOR_NAMES,
+                self.obj_types,
+            ],
+        )
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=5 * size,
             # Set this to True for maximum speed
             see_through_walls=True,
-            **kwargs
         )
 
     def _gen_grid(self, width, height):

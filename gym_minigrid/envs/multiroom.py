@@ -1,4 +1,12 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, MiniGridEnv, Wall
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Door,
+    Goal,
+    Grid,
+    MiniGridEnv,
+    MissionSpace,
+    Wall,
+)
 
 
 class MultiRoom:
@@ -25,7 +33,18 @@ class MultiRoomEnv(MiniGridEnv):
 
         self.rooms = []
 
-        super().__init__(grid_size=25, max_steps=self.maxNumRooms * 20, **kwargs)
+        mission_space = MissionSpace(
+            mission_func=lambda: "traverse the rooms to get to the goal"
+        )
+
+        self.size = 25
+
+        super().__init__(
+            mission_space=mission_space,
+            width=self.size,
+            height=self.size,
+            max_steps=self.maxNumRooms * 20,
+        )
 
     def _gen_grid(self, width, height):
         roomList = []

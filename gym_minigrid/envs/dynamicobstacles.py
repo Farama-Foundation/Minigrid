@@ -2,7 +2,7 @@ from operator import add
 
 import gym
 
-from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
+from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class DynamicObstaclesEnv(MiniGridEnv):
@@ -21,7 +21,13 @@ class DynamicObstaclesEnv(MiniGridEnv):
             self.n_obstacles = int(n_obstacles)
         else:
             self.n_obstacles = int(size / 2)
+
+        mission_space = MissionSpace(
+            mission_func=lambda: "get to the green goal square"
+        )
+
         super().__init__(
+            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed

@@ -2,7 +2,7 @@ import itertools as itt
 
 import numpy as np
 
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
 
 
 class CrossingEnv(MiniGridEnv):
@@ -13,7 +13,18 @@ class CrossingEnv(MiniGridEnv):
     def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, **kwargs):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
+
+        if obstacle_type == Lava:
+            mission_space = MissionSpace(
+                mission_func=lambda: "avoid the lava and get to the green goal square"
+            )
+        else:
+            mission_space = MissionSpace(
+                mission_func=lambda: "find the opening and get to the green goal square"
+            )
+
         super().__init__(
+            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed

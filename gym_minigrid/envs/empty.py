@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
+from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class EmptyEnv(MiniGridEnv):
@@ -10,7 +10,12 @@ class EmptyEnv(MiniGridEnv):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
+        mission_space = MissionSpace(
+            mission_func=lambda: "get to the green goal square"
+        )
+
         super().__init__(
+            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
