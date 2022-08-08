@@ -2,14 +2,12 @@ import hashlib
 import math
 from abc import abstractmethod
 from enum import IntEnum
-from functools import partial
 from typing import Any, Callable, Optional, Union
 
 import gym
 import numpy as np
 from gym import spaces
 from gym.utils import seeding
-from gym.utils.renderer import Renderer
 
 # Size in pixels of a tile in the full-scale human view
 from gym_minigrid.rendering import (
@@ -861,7 +859,6 @@ class MiniGridEnv(gym.Env):
         max_steps: int = 100,
         see_through_walls: bool = False,
         agent_view_size: int = 7,
-        render_mode: str = None,
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
         **kwargs,
@@ -902,15 +899,6 @@ class MiniGridEnv(gym.Env):
                 "mission": mission_space,
             }
         )
-
-        # render mode
-        self.render_mode = render_mode
-        render_frame = partial(
-            self._render,
-            highlight=highlight,
-            tile_size=tile_size,
-        )
-        self.renderer = Renderer(self.render_mode, render_frame)
 
         # Range of possible rewards
         self.reward_range = (0, 1)
@@ -956,8 +944,6 @@ class MiniGridEnv(gym.Env):
         # Return first observation
         obs = self.gen_obs()
 
-        self.renderer.reset()
-        self.renderer.render_step()
         if not return_info:
             return obs
         else:
@@ -1372,7 +1358,6 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
-        self.renderer.render_step()
         return obs, reward, done, {}
 
     def gen_obs_grid(self, agent_view_size=None):
@@ -1451,7 +1436,7 @@ class MiniGridEnv(gym.Env):
 
         return img
 
-    def _render(self, mode="human", highlight=True, tile_size=TILE_PIXELS):
+    def render(self, mode="human", highlight=True, tile_size=TILE_PIXELS):
         assert mode in self.metadata["render_modes"]
         """
         Render the whole-grid human view
@@ -1507,16 +1492,6 @@ class MiniGridEnv(gym.Env):
             self.window.show_img(img)
         else:
             return img
-
-    def render(self, mode="human", close=False, highlight=True, tile_size=TILE_PIXELS):
-        if close:
-            raise Exception(
-                "Please close the rendering window using env.close(). Closing the rendering window with the render method is no longer allowed."
-            )
-        if self.render_mode is not None:
-            return self.renderer.get_renders()
-        else:
-            return self._render(mode, highlight=highlight, tile_size=tile_size)
 
     def close(self):
         if self.window:

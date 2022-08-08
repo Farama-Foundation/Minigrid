@@ -101,11 +101,11 @@ def test_render_modes(spec):
 
     for mode in env.metadata.get("render_modes", []):
         if mode != "human":
-            new_env = spec.make(render_mode=mode)
+            new_env = spec.make()
 
             new_env.reset()
             new_env.step(new_env.action_space.sample())
-            new_env.render()
+            new_env.render(mode=mode)
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
@@ -192,7 +192,7 @@ def old_run_test(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-8x8-v0"])
 def test_interactive_mode(env_id):
-    env = gym.make(env_id, render_mode="human")
+    env = gym.make(env_id)
     env.reset()
 
     for i in range(0, 100):

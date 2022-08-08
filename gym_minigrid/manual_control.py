@@ -93,7 +93,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-env = gym.make(args.env, render_mode="rgb_array")
+env = gym.make(args.env)
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)

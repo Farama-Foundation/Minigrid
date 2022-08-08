@@ -181,9 +181,7 @@ class RGBImgObsWrapper(ObservationWrapper):
     def observation(self, obs):
         env = self.unwrapped
 
-        rgb_img = env._render(
-            mode="rgb_array", highlight=True, tile_size=self.tile_size
-        )
+        rgb_img = env.render(mode="rgb_array", highlight=True, tile_size=self.tile_size)
 
         return {**obs, "image": rgb_img}
 
