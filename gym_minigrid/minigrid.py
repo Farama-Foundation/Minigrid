@@ -166,10 +166,10 @@ class MissionSpace(spaces.Space[str]):
                         check_placeholder_list.append(placeholder)
             # Remove duplicates from the list
             check_placeholder_list = list(set(check_placeholder_list))
+
             start_id_placeholder = []
             end_id_placeholder = []
-
-            # Get the starting and ending id of the founded placeholders with possible duplicates
+            # Get the starting and ending id of the identified placeholders with possible duplicates
             new_check_placeholder_list = []
             for placeholder in check_placeholder_list:
                 new_start_id_placeholder = [

@@ -33,11 +33,7 @@ class LockedRoomEnv(MiniGridEnv):
     def __init__(self, size=19, **kwargs):
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda lockedroom_color, keyroom_color, door_color: "get the {} key from the {} room, unlock the {} door and go to the goal".format(
-                lockedroom_color,
-                keyroom_color,
-                lockedroom_color,
-            ),
+            mission_func=lambda lockedroom_color, keyroom_color, door_color: f"get the {lockedroom_color} key from the {keyroom_color} room, unlock the {door_color} door and go to the goal",
             ordered_placeholders=[COLOR_NAMES] * 3,
         )
         super().__init__(
@@ -45,7 +41,7 @@ class LockedRoomEnv(MiniGridEnv):
             width=size,
             height=size,
             max_steps=10 * size,
-            **kwargs
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):

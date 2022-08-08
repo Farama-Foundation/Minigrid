@@ -27,9 +27,7 @@ class FetchEnv(MiniGridEnv):
         ]
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda syntax, color, type: "{} {} {}".format(
-                syntax, color, type
-            ),
+            mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
             ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
         )
         super().__init__(

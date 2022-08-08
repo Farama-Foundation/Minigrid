@@ -20,12 +20,7 @@ class PutNearEnv(MiniGridEnv):
         self.numObjs = numObjs
         self.obj_types = ["key", "ball", "box"]
         mission_space = MissionSpace(
-            mission_func=lambda move_color, move_type, target_color, target_type: "put the {} {} near the {} {}".format(
-                move_color,
-                move_type,
-                target_color,
-                target_type,
-            ),
+            mission_func=lambda move_color, move_type, target_color, target_type: f"put the {move_color} {move_type} near the {target_color} {target_type}",
             ordered_placeholders=[
                 COLOR_NAMES,
                 self.obj_types,
