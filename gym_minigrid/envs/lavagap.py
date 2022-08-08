@@ -1,6 +1,6 @@
 import numpy as np
 
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
 
 
 class LavaGapEnv(MiniGridEnv):
@@ -11,12 +11,24 @@ class LavaGapEnv(MiniGridEnv):
 
     def __init__(self, size, obstacle_type=Lava, **kwargs):
         self.obstacle_type = obstacle_type
+        self.size = size
+        mission_space = (
+            MissionSpace(
+                mission_func=lambda: "avoid the lava and get to the green goal square"
+            )
+            if self.obstacle_type == Lava
+            else MissionSpace(
+                mission_func=lambda: "find the opening and get to the green goal square"
+            )
+        )
+
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
-            **kwargs
         )
 
     def _gen_grid(self, width, height):

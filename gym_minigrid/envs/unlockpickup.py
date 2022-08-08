@@ -1,3 +1,4 @@
+from gym_minigrid.minigrid import COLOR_NAMES, MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -8,7 +9,12 @@ class UnlockPickupEnv(RoomGrid):
 
     def __init__(self, **kwargs):
         room_size = 6
+        mission_space = MissionSpace(
+            mission_func=lambda color: f"pick up the {color} box",
+            ordered_placeholders=[COLOR_NAMES],
+        )
         super().__init__(
+            mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,

@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC, Ball, Box, Key
+from gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC, Ball, Box, Key, MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -12,12 +12,16 @@ class ObstructedMazeEnv(RoomGrid):
         room_size = 6
         max_steps = 4 * num_rooms_visited * room_size**2
 
+        mission_space = MissionSpace(
+            mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
+        )
         super().__init__(
+            mission_space=mission_space,
             room_size=room_size,
             num_rows=num_rows,
             num_cols=num_cols,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):
@@ -121,7 +125,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         blocked=True,
         num_quarters=4,
         num_rooms_visited=25,
-        **kwargs
+        **kwargs,
     ):
         self.agent_room = agent_room
         self.key_in_box = key_in_box
@@ -155,7 +159,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
                     door_idx=(i + k) % 4,
                     color=self.door_colors[(i + k) % len(self.door_colors)],
                     key_in_box=self.key_in_box,
-                    blocked=self.blocked
+                    blocked=self.blocked,
                 )
 
         corners = [(2, 0), (2, 2), (0, 2), (0, 0)][: self.num_quarters]

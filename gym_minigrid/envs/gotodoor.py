@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Door, Grid, MiniGridEnv
+from gym_minigrid.minigrid import COLOR_NAMES, Door, Grid, MiniGridEnv, MissionSpace
 
 
 class GoToDoorEnv(MiniGridEnv):
@@ -9,13 +9,19 @@ class GoToDoorEnv(MiniGridEnv):
 
     def __init__(self, size=5, **kwargs):
         assert size >= 5
-
+        self.size = size
+        mission_space = MissionSpace(
+            mission_func=lambda color: f"go to the {color} door",
+            ordered_placeholders=[COLOR_NAMES],
+        )
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
-            **kwargs
+            **kwargs,
         )
 
     def _gen_grid(self, width, height):

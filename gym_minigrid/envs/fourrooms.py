@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
+from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class FourRoomsEnv(MiniGridEnv):
@@ -10,7 +10,17 @@ class FourRoomsEnv(MiniGridEnv):
     def __init__(self, agent_pos=None, goal_pos=None, **kwargs):
         self._agent_default_pos = agent_pos
         self._goal_default_pos = goal_pos
-        super().__init__(grid_size=19, max_steps=100, **kwargs)
+
+        self.size = 19
+        mission_space = MissionSpace(mission_func=lambda: "reach the goal")
+
+        super().__init__(
+            mission_space=mission_space,
+            width=self.size,
+            height=self.size,
+            max_steps=100,
+            **kwargs
+        )
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -61,8 +71,6 @@ class FourRoomsEnv(MiniGridEnv):
             goal.init_pos, goal.cur_pos = self._goal_default_pos
         else:
             self.place_obj(Goal())
-
-        self.mission = "reach the goal"
 
     def step(self, action):
         obs, reward, done, info = MiniGridEnv.step(self, action)
