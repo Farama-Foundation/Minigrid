@@ -244,17 +244,12 @@ class MissionSpace(spaces.Space[str]):
             # Check that place holder lists are the same
             if self.ordered_placeholders is not None:
                 # Check length
-                if len(self.order_placeholder) == len(other.order_placeholder):
-
-                    # Placeholder list are ordered in placing order in the mission string
-                    for placeholder, other_placeholder in zip(
-                        self.order_placeholder, other.order_placeholder
-                    ):
-                        if set(placeholder) == set(other_placeholder):
-                            continue
-                        else:
-                            return False
-
+                if (len(self.order_placeholder) == len(other.order_placeholder)) and (
+                    all(
+                        set(i) == set(j)
+                        for i, j in zip(self.order_placeholder, other.order_placeholder)
+                    )
+                ):
                     # Check mission string is the same with dummy space placeholders
                     test_placeholders = [""] * len(self.order_placeholder)
                     mission = self.mission_func(*test_placeholders)
