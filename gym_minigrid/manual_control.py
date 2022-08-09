@@ -10,8 +10,7 @@ from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 def redraw(img):
     if not args.agent_view:
-        img = env.render(tile_size=args.tile_size)
-
+        img = env.render(mode="rgb_array", tile_size=args.tile_size)
     window.show_img(img)
 
 

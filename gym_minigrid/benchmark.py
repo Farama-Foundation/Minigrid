@@ -41,6 +41,7 @@ env = gym.make(args.env_name)
 env = RGBImgPartialObsWrapper(env)
 env = ImgObsWrapper(env)
 
+env.reset()
 # Benchmark rendering
 t0 = time.time()
 for i in range(args.num_frames):
