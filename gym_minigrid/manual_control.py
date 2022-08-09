@@ -15,8 +15,7 @@ def redraw(img):
 
 
 def reset():
-    seed = None if args.seed == -1 else args.seed
-    obs = env.reset(seed=seed)
+    obs = env.reset()
 
     if hasattr(env, "mission"):
         print("Mission: %s" % env.mission)
@@ -92,7 +91,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-env = gym.make(args.env)
+seed = None if args.seed == -1 else args.seed
+env = gym.make(args.env, seed=seed)
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
