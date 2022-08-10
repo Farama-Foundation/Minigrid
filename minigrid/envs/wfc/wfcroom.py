@@ -433,7 +433,7 @@ class Batch:
 
     #Note: Returns the gridworld in one given permutation
     @staticmethod
-    def encode_graph_to_gridworld(graphs: Union[List[dgl.DGLGraph], tuple],
+    def encode_graph_to_gridworld(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], tuple],
                                   attributes:Tuple[str]=("empty", "wall", "start", "goal"),
                                   used_attributes:Tuple[str]=("empty", "start", "goal" ),
                                   output_dtype: str = 'tensor'):
@@ -455,11 +455,8 @@ class Batch:
             ("empty", "wall", "start", "goal"): 3,      #3: Layout, start, goal from Fx, may form impossible layouts
         }
 
-        if output_dtype == 'tensor':
-            device = graphs[0].device
-
         try:
-            mode = possible_modes[used_attributes]
+            mode = possible_modes[tuple(used_attributes)]
         except KeyError:
             raise AttributeError(f"Gridworld encoding from {used_attributes} is not possible.")
 
@@ -471,7 +468,8 @@ class Batch:
             A = A.cpu().numpy() #TODO make more efficient to handle tensors
             if fx is not None:
                 fx = fx.cpu().numpy()
-        elif isinstance(graphs[0], dgl.DGLGraph):
+        elif isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph):
+            if isinstance(graphs, dgl.DGLGraph): graphs = dgl.unbatch(graphs)
             n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
             feat_dim = graphs[0].ndata['feat'].shape
             assert n_nodes % np.sqrt(n_nodes) == 0 # we are assuming square layout
@@ -485,6 +483,9 @@ class Batch:
         else:
             raise RuntimeError(f"data format {type(graphs)} is not supported by function. Format supported are"
                                  f"List[dgl.DGLGraph], tuple[tensor, tensor]")
+
+        if output_dtype == 'tensor':
+            device = graphs[0].device
 
         gridworld_layout_dim = (int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
 
