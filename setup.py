@@ -26,7 +26,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    version="1.1.0",
+    version="1.1.1",
     keywords="memory, environment, agent, rl, gym",
     url="https://github.com/Farama-Foundation/gym-minigrid",
     description="Minimalistic gridworld reinforcement learning environments",
