@@ -435,8 +435,11 @@ class Batch:
     @staticmethod
     def encode_graph_to_gridworld(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], tuple],
                                   attributes:Tuple[str]=("empty", "wall", "start", "goal"),
-                                  used_attributes:Tuple[str]=("empty", "start", "goal" ),
+                                  used_attributes:Tuple[str]=("start", "goal" ),
+                                  probabilistic_mode: bool = False,
                                   output_dtype: str = 'tensor'):
+    #TODO: probabilistic_mode not fully implemented
+    #TODO: perf enhancements if going full tensor
 
         def get_gw_inds(nodes_tuple:Tuple[np.ndarray], n_nodes, mapping=lambda x : 2*x+1):
             inds_tuple = []
@@ -491,7 +494,7 @@ class Batch:
 
         # Modes for which we need A
         if mode in [0, 1]:
-            gridworlds_layouts = Batch.encode_reduced_adj_to_gridworld_layout(A, gridworld_layout_dim)
+            gridworlds_layouts = Batch.encode_reduced_adj_to_gridworld_layout(A, gridworld_layout_dim, probalistic_mode=probabilistic_mode)
             if mode in [0, ]:
                 gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape, 1))
         # Modes for which we need Fx[start, goal]
