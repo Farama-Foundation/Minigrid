@@ -461,13 +461,13 @@ class Batch:
             raise AttributeError(f"Gridworld encoding from {used_attributes} is not possible.")
 
         if isinstance(graphs, tuple):
-            A, fx = graphs
-            #n_nodes = fx.shape[-2]
+            A, Fx = graphs
+            #n_nodes = Fx.shape[-2]
             n_nodes = int(A.shape[-1] / 2 + 1) #TODO: find a better way to handle full graph encoding (may require an additional input argument)
             A = torch.reshape(A, (A.shape[0], -1, 2))
             A = A.cpu().numpy() #TODO make more efficient to handle tensors
-            if fx is not None:
-                fx = fx.cpu().numpy()
+            if Fx is not None:
+                Fx = Fx.cpu().numpy()
         elif isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph):
             if isinstance(graphs, dgl.DGLGraph): graphs = dgl.unbatch(graphs)
             n_nodes = graphs[0].num_nodes() #assumption that all graphs have same number of nodes
@@ -475,10 +475,10 @@ class Batch:
             assert n_nodes % np.sqrt(n_nodes) == 0 # we are assuming square layout
 
             A = np.empty((len(graphs), n_nodes, n_nodes))
-            fx = np.empty((len(graphs), *feat_dim))
+            Fx = np.empty((len(graphs), *feat_dim))
             for m in range(len(graphs)):
                 A[m] = graphs[m].adj().cpu().to_dense().numpy()
-                fx[m] = graphs[m].ndata['feat'].cpu().numpy()
+                Fx[m] = graphs[m].ndata['feat'].cpu().numpy()
             A = Batch.encode_adj_to_reduced_adj(A)
         else:
             raise RuntimeError(f"data format {type(graphs)} is not supported by function. Format supported are"
@@ -496,10 +496,10 @@ class Batch:
                 gridworlds = np.reshape(gridworlds_layouts, (*gridworlds_layouts.shape, 1))
         # Modes for which we need Fx[start, goal]
         if mode in [1, 2,]: #[1,2,3] when implemented
-            gridworlds = np.zeros((fx.shape[0], *gridworld_layout_dim, 3))
+            gridworlds = np.zeros((Fx.shape[0], *gridworld_layout_dim, 3))
 
-            start_nodes = np.where(fx[..., attributes.index('start')] == 1)
-            goal_nodes = np.where(fx[..., attributes.index('goal')] == 1)
+            start_nodes = np.where(Fx[..., attributes.index('start')] == 1)
+            goal_nodes = np.where(Fx[..., attributes.index('goal')] == 1)
             # start_inds = (start_nodes[1] // np.sqrt(n_nodes), start_nodes[1] % np.sqrt(n_nodes))
             # goal_inds = (goal_nodes[1] // np.sqrt(n_nodes), goal_nodes[1] % np.sqrt(n_nodes))
             # start_inds, goal_inds = (tuple([2 * i.astype(int) + 1 for i in tup]) for tup in (start_inds, goal_inds))
@@ -527,7 +527,7 @@ class Batch:
                     OBJECT_TO_CHANNEL_AND_IDX['empty'][1]
 
                 #empty
-                empty_nodes = np.where(fx[..., attributes.index('empty')] == 1)
+                empty_nodes = np.where(Fx[..., attributes.index('empty')] == 1)
                 # empty_inds = (empty_nodes[1] // np.sqrt(n_nodes), empty_nodes[1] % np.sqrt(n_nodes))
                 # empty_inds = tuple([2 * i.astype(int) + 1 for i in empty_inds])
                 # empty_inds = (empty_nodes[0],) + goal_inds
@@ -545,38 +545,50 @@ class Batch:
         return gridworlds
 
     @staticmethod
-    def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor], layout_dim):
+    def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor], layout_dim, probalistic_mode=False, prob_threshold=0.5):
 
         n_nodes = A.shape[1] + 1
         gridworlds_layout_dim = (A.shape[0], *layout_dim)
         assert gridworlds_layout_dim == (A.shape[0], int(2 * np.sqrt(n_nodes) + 1), int(2 * np.sqrt(n_nodes) + 1))
-        gridworlds_layouts = np.ones(gridworlds_layout_dim) * OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
-        gridworlds_empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
-
+        gridworlds_layouts = np.zeros(gridworlds_layout_dim)
 
         for m in range(A.shape[0]):
             for n in range(A[m].shape[0]):
-                # horizontal edge:
-                if (A[m,n,:] == 1).any():
-                    i_n = n // int(np.sqrt(n_nodes))
-                    j_n = n % int(np.sqrt(n_nodes))
-                    i, j = 2 * i_n + 1, 2 * j_n + 1
-                    gridworlds_layouts[m, i, j] = gridworlds_empty_idx
-                    # TODO: is this cheating?
-                    if A[m,n,0] == 1 and (j+2)<gridworlds_layouts.shape[2]: #row edge is present
-                        gridworlds_layouts[m, i, j + 1] = gridworlds_empty_idx
-                        gridworlds_layouts[m, i, j + 2] = gridworlds_empty_idx
-                    if A[m,n,1] == 1 and (i+2)<gridworlds_layouts.shape[1]: #col edge is present
-                        gridworlds_layouts[m, i + 1, j] = gridworlds_empty_idx
-                        gridworlds_layouts[m, i + 2, j] = gridworlds_empty_idx
-                    # clique rule
-                    if i + 1 < gridworlds_layouts.shape[1] and j + 1 < gridworlds_layouts.shape[2]:
-                        if n+int(np.sqrt(n_nodes)) < A[m].shape[0]:
-                            if A[m,n,0] == A[m,n,1] == A[m,n+1,1] == A[m,n+int(np.sqrt(n_nodes)),0] == 1:
-                                gridworlds_layouts[m, i + 1, j + 1] = gridworlds_empty_idx
+                i_n = n // int(np.sqrt(n_nodes))
+                j_n = n % int(np.sqrt(n_nodes))
+                i, j = 2 * i_n + 1, 2 * j_n + 1
+                # nodes:
+                cell_val = max(A[m, n, :].max(), gridworlds_layouts[m, i, j]) # node likelihood is max of (max edge probability and previous inputed max edge probability)
+                gridworlds_layouts[m, i, j] = cell_val
+                # horizontal edges
+                if (j+2)<gridworlds_layouts.shape[2]:
+                    edge_val = A[m, n, 0]
+                    cell_val = max(A[m, n, 0], gridworlds_layouts[m, i, j + 2]) #update node likelihood if an edge of higher probability is found
+                    gridworlds_layouts[m, i, j + 1] = edge_val
+                    gridworlds_layouts[m, i, j + 2] = cell_val
+                # vertical edges
+                if (i+2)<gridworlds_layouts.shape[1]:
+                    edge_val = A[m, n, 1]
+                    cell_val = max(A[m, n, 1], gridworlds_layouts[m, i + 2, j])
+                    gridworlds_layouts[m, i + 1, j] = edge_val
+                    gridworlds_layouts[m, i + 2, j] = cell_val
+                # clique rule
+                if i + 1 < gridworlds_layouts.shape[1] and j + 1 < gridworlds_layouts.shape[2]:
+                    if n+int(np.sqrt(n_nodes)) < A[m].shape[0]:
+                        clique = torch.tensor([A[m,n,0],A[m,n,1],A[m,n+1,1],A[m,n+int(np.sqrt(n_nodes)),0]])
+                        cell_val = clique.min()
+                        gridworlds_layouts[m, i + 1, j + 1] = cell_val
 
         if torch.is_tensor(A):
-            gridworlds_layouts = torch.tensor(gridworlds_layouts).to(A.device)
+            gridworlds_layouts = torch.tensor(gridworlds_layouts).to(A)
+
+        if not probalistic_mode:
+            wall_idx = OBJECT_TO_CHANNEL_AND_IDX['wall'][-1]
+            empty_idx = OBJECT_TO_CHANNEL_AND_IDX['empty'][-1]
+            deterministic_layout = (gridworlds_layouts >= prob_threshold) * 1
+            gridworlds_layouts[deterministic_layout == 1] = empty_idx
+            gridworlds_layouts[deterministic_layout == 0] = wall_idx
+
         return gridworlds_layouts
 
     @staticmethod
