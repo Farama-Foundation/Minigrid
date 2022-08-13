@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import Door, Goal, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Door, Goal, Grid, Key, MiniGridEnv, MissionSpace
 
 
 class DoorKeyEnv(MiniGridEnv):
@@ -10,7 +9,10 @@ class DoorKeyEnv(MiniGridEnv):
     def __init__(self, size=8, **kwargs):
         if "max_steps" not in kwargs:
             kwargs["max_steps"] = 10 * size * size
-        super().__init__(grid_size=size, **kwargs)
+        mission_space = MissionSpace(
+            mission_func=lambda: "use the key to open the door and then get to the goal"
+        )
+        super().__init__(mission_space=mission_space, grid_size=size, **kwargs)
 
     def _gen_grid(self, width, height):
         # Create an empty grid
@@ -38,28 +40,3 @@ class DoorKeyEnv(MiniGridEnv):
         self.place_obj(obj=Key("yellow"), top=(0, 0), size=(splitIdx, height))
 
         self.mission = "use the key to open the door and then get to the goal"
-
-
-register(
-    id="MiniGrid-DoorKey-5x5-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=5,
-)
-
-register(
-    id="MiniGrid-DoorKey-6x6-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-DoorKey-8x8-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=8,
-)
-
-register(
-    id="MiniGrid-DoorKey-16x16-v0",
-    entry_point="gym_minigrid.envs.doorkey:DoorKeyEnv",
-    size=16,
-)

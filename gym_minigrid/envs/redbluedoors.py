@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import Door, Grid, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Door, Grid, MiniGridEnv, MissionSpace
 
 
 class RedBlueDoorEnv(MiniGridEnv):
@@ -11,9 +10,15 @@ class RedBlueDoorEnv(MiniGridEnv):
 
     def __init__(self, size=8, **kwargs):
         self.size = size
-
+        mission_space = MissionSpace(
+            mission_func=lambda: "open the red door then the blue door"
+        )
         super().__init__(
-            width=2 * size, height=size, max_steps=20 * size * size, **kwargs
+            mission_space=mission_space,
+            width=2 * size,
+            height=size,
+            max_steps=20 * size * size,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
@@ -63,15 +68,3 @@ class RedBlueDoorEnv(MiniGridEnv):
                 terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-RedBlueDoors-6x6-v0",
-    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-RedBlueDoors-8x8-v0",
-    entry_point="gym_minigrid.envs.redbluedoors:RedBlueDoorEnv",
-)

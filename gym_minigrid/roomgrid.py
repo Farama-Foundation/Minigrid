@@ -208,7 +208,9 @@ class RoomGrid(MiniGridEnv):
         elif kind == "box":
             obj = Box(color)
         else:
-            raise f"{kind} object kind is not available in this environment."
+            raise ValueError(
+                f"{kind} object kind is not available in this environment."
+            )
 
         return self.place_in_room(i, j, obj)
 

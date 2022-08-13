@@ -2,8 +2,7 @@ from operator import add
 
 from gym.spaces import Discrete
 
-from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class DynamicObstaclesEnv(MiniGridEnv):
@@ -22,7 +21,13 @@ class DynamicObstaclesEnv(MiniGridEnv):
             self.n_obstacles = int(n_obstacles)
         else:
             self.n_obstacles = int(size / 2)
+
+        mission_space = MissionSpace(
+            mission_func=lambda: "get to the green goal square"
+        )
+
         super().__init__(
+            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
@@ -90,46 +95,3 @@ class DynamicObstaclesEnv(MiniGridEnv):
             return obs, reward, terminated, truncated, info
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-5x5-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-    size=5,
-    n_obstacles=2,
-)
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-Random-5x5-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-    size=5,
-    agent_start_pos=None,
-    n_obstacles=2,
-)
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-6x6-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-    size=6,
-    n_obstacles=3,
-)
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-Random-6x6-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-    size=6,
-    agent_start_pos=None,
-    n_obstacles=3,
-)
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-8x8-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-)
-
-register(
-    id="MiniGrid-Dynamic-Obstacles-16x16-v0",
-    entry_point="gym_minigrid.envs.dynamicobstacles:DynamicObstaclesEnv",
-    size=16,
-    n_obstacles=8,
-)

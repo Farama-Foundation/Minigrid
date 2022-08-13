@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC, Ball, Box, Key
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC, Ball, Box, Key, MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -13,12 +12,16 @@ class ObstructedMazeEnv(RoomGrid):
         room_size = 6
         max_steps = 4 * num_rooms_visited * room_size**2
 
+        mission_space = MissionSpace(
+            mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
+        )
         super().__init__(
+            mission_space=mission_space,
             room_size=room_size,
             num_rows=num_rows,
             num_cols=num_cols,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
         self.obj = Ball()  # initialize the obj attribute, that will be changed later on
 
@@ -123,7 +126,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         blocked=True,
         num_quarters=4,
         num_rooms_visited=25,
-        **kwargs
+        **kwargs,
     ):
         self.agent_room = agent_room
         self.key_in_box = key_in_box
@@ -157,7 +160,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
                     door_idx=(i + k) % 4,
                     color=self.door_colors[(i + k) % len(self.door_colors)],
                     key_in_box=self.key_in_box,
-                    blocked=self.blocked
+                    blocked=self.blocked,
                 )
 
         corners = [(2, 0), (2, 2), (0, 2), (0, 0)][: self.num_quarters]
@@ -182,78 +185,3 @@ class ObstructedMaze_2Dlh(ObstructedMaze_Full):
 class ObstructedMaze_2Dlhb(ObstructedMaze_Full):
     def __init__(self, **kwargs):
         super().__init__((2, 1), True, True, 1, 4, **kwargs)
-
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dl-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
-    key_in_box=False,
-    blocked=False,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dlh-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
-    key_in_box=True,
-    blocked=False,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Dlhb-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_1Dlhb",
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dl-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1),
-    key_in_box=False,
-    blocked=False,
-    num_quarters=1,
-    num_rooms_visited=4,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dlh-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1),
-    key_in_box=True,
-    blocked=False,
-    num_quarters=1,
-    num_rooms_visited=4,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Dlhb-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1),
-    key_in_box=True,
-    blocked=True,
-    num_quarters=1,
-    num_rooms_visited=4,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-1Q-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(1, 1),
-    key_in_box=True,
-    blocked=True,
-    num_quarters=1,
-    num_rooms_visited=5,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-2Q-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-    agent_room=(2, 1),
-    key_in_box=True,
-    blocked=True,
-    num_quarters=2,
-    num_rooms_visited=11,
-)
-
-register(
-    id="MiniGrid-ObstructedMaze-Full-v0",
-    entry_point="gym_minigrid.envs.obstructedmaze:ObstructedMaze_Full",
-)

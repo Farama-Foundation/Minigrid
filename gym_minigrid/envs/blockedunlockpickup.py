@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import Ball
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import COLOR_NAMES, Ball, MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -11,7 +10,12 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     def __init__(self, **kwargs):
         room_size = 6
+        mission_space = MissionSpace(
+            mission_func=lambda color, type: f"pick up the {color} {type}",
+            ordered_placeholders=[COLOR_NAMES, ["box", "key"]],
+        )
         super().__init__(
+            mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,
@@ -46,9 +50,3 @@ class BlockedUnlockPickupEnv(RoomGrid):
                 terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-BlockedUnlockPickup-v0",
-    entry_point="gym_minigrid.envs.blockedunlockpickup:BlockedUnlockPickupEnv",
-)

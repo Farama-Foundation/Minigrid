@@ -1,7 +1,6 @@
 import numpy as np
 
-from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, Wall
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, MissionSpace, Wall
 
 
 class MemoryEnv(MiniGridEnv):
@@ -15,9 +14,15 @@ class MemoryEnv(MiniGridEnv):
     """
 
     def __init__(self, size=8, random_length=False, **kwargs):
+        self.size = size
         self.random_length = random_length
+        mission_space = MissionSpace(
+            mission_func=lambda: "go to the matching object at the end of the hallway"
+        )
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=False,
@@ -96,40 +101,3 @@ class MemoryEnv(MiniGridEnv):
             terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-MemoryS17Random-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=17,
-    random_length=True,
-)
-
-register(
-    id="MiniGrid-MemoryS13Random-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=13,
-    random_length=True,
-)
-
-
-register(
-    id="MiniGrid-MemoryS13-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=13,
-)
-
-
-register(
-    id="MiniGrid-MemoryS11-v0",
-    entry_point="gym_minigrid.envs.memory:MemoryEnv",
-    size=11,
-)
-
-register(
-    id="MiniGrid-MemoryS9-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=9
-)
-
-register(
-    id="MiniGrid-MemoryS7-v0", entry_point="gym_minigrid.envs.memory:MemoryEnv", size=7
-)

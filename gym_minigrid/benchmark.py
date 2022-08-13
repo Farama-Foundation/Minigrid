@@ -18,7 +18,7 @@ parser.add_argument("--num_resets", default=200)
 parser.add_argument("--num_frames", default=5000)
 args = parser.parse_args()
 
-env = gym.make(args.env_name, render_mode="rgb_array", new_step_api=True)
+env = gym.make(args.env_name, new_step_api=True)
 
 # Benchmark env.reset
 t0 = time.time()
@@ -41,6 +41,7 @@ env = gym.make(args.env_name, new_step_api=True)
 env = RGBImgPartialObsWrapper(env)
 env = ImgObsWrapper(env)
 
+env.reset()
 # Benchmark rendering
 t0 = time.time()
 for i in range(args.num_frames):

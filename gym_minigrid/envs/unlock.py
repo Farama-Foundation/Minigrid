@@ -1,4 +1,4 @@
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -9,7 +9,9 @@ class UnlockEnv(RoomGrid):
 
     def __init__(self, **kwargs):
         room_size = 6
+        mission_space = MissionSpace(mission_func=lambda: "open the door")
         super().__init__(
+            mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,
@@ -39,6 +41,3 @@ class UnlockEnv(RoomGrid):
                 terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs.unlock:UnlockEnv")

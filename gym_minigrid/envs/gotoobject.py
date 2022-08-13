@@ -1,5 +1,12 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Ball,
+    Box,
+    Grid,
+    Key,
+    MiniGridEnv,
+    MissionSpace,
+)
 
 
 class GoToObjectEnv(MiniGridEnv):
@@ -10,9 +17,18 @@ class GoToObjectEnv(MiniGridEnv):
 
     def __init__(self, size=6, numObjs=2, **kwargs):
         self.numObjs = numObjs
+        self.size = size
+        # Types of objects to be generated
+        self.obj_types = ["key", "ball", "box"]
 
+        mission_space = MissionSpace(
+            mission_func=lambda color, type: f"go to the {color} {type}",
+            ordered_placeholders=[COLOR_NAMES, self.obj_types],
+        )
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
@@ -86,16 +102,3 @@ class GoToObjectEnv(MiniGridEnv):
             terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-GoToObject-6x6-N2-v0",
-    entry_point="gym_minigrid.envs.gotoobject:GoToObjectEnv",
-)
-
-register(
-    id="MiniGrid-GoToObject-8x8-N2-v0",
-    entry_point="gym_minigrid.envs.gotoobject:GoToObjectEnv",
-    size=8,
-    numObjs=2,
-)

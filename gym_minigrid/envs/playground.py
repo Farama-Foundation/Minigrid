@@ -1,5 +1,13 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Ball, Box, Door, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Ball,
+    Box,
+    Door,
+    Grid,
+    Key,
+    MiniGridEnv,
+    MissionSpace,
+)
 
 
 class PlaygroundEnv(MiniGridEnv):
@@ -9,7 +17,15 @@ class PlaygroundEnv(MiniGridEnv):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(grid_size=19, max_steps=100, **kwargs)
+        mission_space = MissionSpace(mission_func=lambda: "")
+        self.size = 19
+        super().__init__(
+            mission_space=mission_space,
+            width=self.size,
+            height=self.size,
+            max_steps=100,
+            **kwargs
+        )
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -72,9 +88,3 @@ class PlaygroundEnv(MiniGridEnv):
 
         # No explicit mission in this environment
         self.mission = ""
-
-
-register(
-    id="MiniGrid-Playground-v0",
-    entry_point="gym_minigrid.envs.playground:PlaygroundEnv",
-)

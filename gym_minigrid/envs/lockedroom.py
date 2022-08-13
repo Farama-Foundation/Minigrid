@@ -1,5 +1,13 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Door, Goal, Grid, Key, MiniGridEnv, Wall
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Door,
+    Goal,
+    Grid,
+    Key,
+    MiniGridEnv,
+    MissionSpace,
+    Wall,
+)
 
 
 class LockedRoom:
@@ -23,7 +31,18 @@ class LockedRoomEnv(MiniGridEnv):
     """
 
     def __init__(self, size=19, **kwargs):
-        super().__init__(grid_size=size, max_steps=10 * size, **kwargs)
+        self.size = size
+        mission_space = MissionSpace(
+            mission_func=lambda lockedroom_color, keyroom_color, door_color: f"get the {lockedroom_color} key from the {keyroom_color} room, unlock the {door_color} door and go to the goal",
+            ordered_placeholders=[COLOR_NAMES] * 3,
+        )
+        super().__init__(
+            mission_space=mission_space,
+            width=size,
+            height=size,
+            max_steps=10 * size,
+            **kwargs,
+        )
 
     def _gen_grid(self, width, height):
         # Create the grid
@@ -97,9 +116,3 @@ class LockedRoomEnv(MiniGridEnv):
             "unlock the %s door and "
             "go to the goal"
         ) % (lockedRoom.color, keyRoom.color, lockedRoom.color)
-
-
-register(
-    id="MiniGrid-LockedRoom-v0",
-    entry_point="gym_minigrid.envs.lockedroom:LockedRoomEnv",
-)

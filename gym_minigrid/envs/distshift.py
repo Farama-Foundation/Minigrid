@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
 
 
 class DistShiftEnv(MiniGridEnv):
@@ -21,7 +20,12 @@ class DistShiftEnv(MiniGridEnv):
         self.goal_pos = (width - 2, 1)
         self.strip2_row = strip2_row
 
+        mission_space = MissionSpace(
+            mission_func=lambda: "get to the green goal square"
+        )
+
         super().__init__(
+            mission_space=mission_space,
             width=width,
             height=height,
             max_steps=4 * width * height,
@@ -53,16 +57,3 @@ class DistShiftEnv(MiniGridEnv):
             self.place_agent()
 
         self.mission = "get to the green goal square"
-
-
-register(
-    id="MiniGrid-DistShift1-v0",
-    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
-    strip2_row=2,
-)
-
-register(
-    id="MiniGrid-DistShift2-v0",
-    entry_point="gym_minigrid.envs.distshift:DistShiftEnv",
-    strip2_row=5,
-)

@@ -1,4 +1,4 @@
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import COLOR_NAMES, MissionSpace
 from gym_minigrid.roomgrid import RoomGrid
 
 
@@ -10,8 +10,12 @@ class KeyCorridorEnv(RoomGrid):
 
     def __init__(self, num_rows=3, obj_type="ball", room_size=6, **kwargs):
         self.obj_type = obj_type
-
+        mission_space = MissionSpace(
+            mission_func=lambda color: f"pick up the {color} {obj_type}",
+            ordered_placeholders=[COLOR_NAMES],
+        )
         super().__init__(
+            mission_space=mission_space,
             room_size=room_size,
             num_rows=num_rows,
             max_steps=30 * room_size**2,
@@ -52,46 +56,3 @@ class KeyCorridorEnv(RoomGrid):
                 terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-KeyCorridorS3R1-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=3,
-    num_rows=1,
-)
-
-register(
-    id="MiniGrid-KeyCorridorS3R2-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=3,
-    num_rows=2,
-)
-
-register(
-    id="MiniGrid-KeyCorridorS3R3-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=3,
-    num_rows=3,
-)
-
-register(
-    id="MiniGrid-KeyCorridorS4R3-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=4,
-    num_rows=3,
-)
-
-register(
-    id="MiniGrid-KeyCorridorS5R3-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=5,
-    num_rows=3,
-)
-
-register(
-    id="MiniGrid-KeyCorridorS6R3-v0",
-    entry_point="gym_minigrid.envs.keycorridor:KeyCorridorEnv",
-    room_size=6,
-    num_rows=3,
-)

@@ -1,5 +1,11 @@
-from gym_minigrid.minigrid import COLOR_NAMES, Ball, Grid, Key, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import (
+    COLOR_NAMES,
+    Ball,
+    Grid,
+    Key,
+    MiniGridEnv,
+    MissionSpace,
+)
 
 
 class FetchEnv(MiniGridEnv):
@@ -10,9 +16,24 @@ class FetchEnv(MiniGridEnv):
 
     def __init__(self, size=8, numObjs=3, **kwargs):
         self.numObjs = numObjs
+        self.obj_types = ["key", "ball"]
 
+        MISSION_SYNTAX = [
+            "get a",
+            "go get a",
+            "fetch a",
+            "go fetch a",
+            "you must fetch a",
+        ]
+        self.size = size
+        mission_space = MissionSpace(
+            mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
+            ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
+        )
         super().__init__(
-            grid_size=size,
+            mission_space=mission_space,
+            width=size,
+            height=size,
             max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
@@ -28,13 +49,11 @@ class FetchEnv(MiniGridEnv):
         self.grid.vert_wall(0, 0)
         self.grid.vert_wall(width - 1, 0)
 
-        types = ["key", "ball"]
-
         objs = []
 
         # For each object to be generated
         while len(objs) < self.numObjs:
-            objType = self._rand_elem(types)
+            objType = self._rand_elem(self.obj_types)
             objColor = self._rand_elem(COLOR_NAMES)
 
             if objType == "key":
@@ -90,20 +109,3 @@ class FetchEnv(MiniGridEnv):
                 terminated = True
 
         return obs, reward, terminated, truncated, info
-
-
-register(
-    id="MiniGrid-Fetch-5x5-N2-v0",
-    entry_point="gym_minigrid.envs.fetch:FetchEnv",
-    size=5,
-    numObjs=2,
-)
-
-register(
-    id="MiniGrid-Fetch-6x6-N2-v0",
-    entry_point="gym_minigrid.envs.fetch:FetchEnv",
-    size=6,
-    numObjs=2,
-)
-
-register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="gym_minigrid.envs.fetch:FetchEnv")

@@ -1,5 +1,4 @@
-from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
-from gym_minigrid.register import register
+from gym_minigrid.minigrid import Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class EmptyEnv(MiniGridEnv):
@@ -11,7 +10,12 @@ class EmptyEnv(MiniGridEnv):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
+        mission_space = MissionSpace(
+            mission_func=lambda: "get to the green goal square"
+        )
+
         super().__init__(
+            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
             # Set this to True for maximum speed
@@ -37,39 +41,3 @@ class EmptyEnv(MiniGridEnv):
             self.place_agent()
 
         self.mission = "get to the green goal square"
-
-
-register(
-    id="MiniGrid-Empty-5x5-v0", entry_point="gym_minigrid.envs.empty:EmptyEnv", size=5
-)
-
-register(
-    id="MiniGrid-Empty-Random-5x5-v0",
-    entry_point="gym_minigrid.envs.empty:EmptyEnv",
-    size=5,
-    agent_start_pos=None,
-)
-
-register(
-    id="MiniGrid-Empty-6x6-v0",
-    entry_point="gym_minigrid.envs.empty:EmptyEnv",
-    size=6,
-)
-
-register(
-    id="MiniGrid-Empty-Random-6x6-v0",
-    entry_point="gym_minigrid.envs.empty:EmptyEnv",
-    size=6,
-    agent_start_pos=None,
-)
-
-register(
-    id="MiniGrid-Empty-8x8-v0",
-    entry_point="gym_minigrid.envs.empty:EmptyEnv",
-)
-
-register(
-    id="MiniGrid-Empty-16x16-v0",
-    entry_point="gym_minigrid.envs.empty:EmptyEnv",
-    size=16,
-)
