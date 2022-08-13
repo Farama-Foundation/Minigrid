@@ -116,7 +116,3 @@ class LockedRoomEnv(MiniGridEnv):
             "unlock the %s door and "
             "go to the goal"
         ) % (lockedRoom.color, keyRoom.color, lockedRoom.color)
-
-    def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
-        return obs, reward, done, info

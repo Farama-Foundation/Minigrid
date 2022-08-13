@@ -534,7 +534,7 @@ class Box(WorldObj):
 
     def toggle(self, env, pos):
         # Replace the box by its contents
-        env.grid.set(*pos, self.contains)
+        env.grid.set(pos[0], pos[1], self.contains)
         return True
 
 
@@ -696,7 +696,7 @@ class Grid:
 
         return img
 
-    def render(self, tile_size, agent_pos=None, agent_dir=None, highlight_mask=None):
+    def render(self, tile_size, agent_pos, agent_dir=None, highlight_mask=None):
         """
         Render this grid at a given scale
         :param r: target renderer object
@@ -914,21 +914,29 @@ class MiniGridEnv(gym.Env):
         self.agent_pos: np.ndarray = None
         self.agent_dir: int = None
 
+        # Current grid and mission and carryinh
+        self.grid = Grid(width, height)
+        self.carrying = None
+
         # Initialize the state
         self.reset()
 
     def reset(self, *, seed=None, return_info=False, options=None):
         super().reset(seed=seed)
-        # Current position and direction of the agent
-        self.agent_pos = None
-        self.agent_dir = None
+
+        # Reinitialize episode-specific variables
+        self.agent_pos = (-1, -1)
+        self.agent_dir = -1
 
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
 
         # These fields should be defined by _gen_grid
-        assert self.agent_pos is not None
-        assert self.agent_dir is not None
+        assert (
+            self.agent_pos >= (0, 0)
+            if isinstance(self.agent_pos, tuple)
+            else all(self.agent_pos >= 0) and self.agent_dir >= 0
+        )
 
         # Check that the agent doesn't overlap with an object
         start_cell = self.grid.get(*self.agent_pos)
@@ -1126,6 +1134,8 @@ class MiniGridEnv(gym.Env):
                 )
             )
 
+            pos = tuple(pos)
+
             # Don't place the object on top of another object
             if self.grid.get(*pos) is not None:
                 continue
@@ -1140,7 +1150,7 @@ class MiniGridEnv(gym.Env):
 
             break
 
-        self.grid.set(*pos, obj)
+        self.grid.set(pos[0], pos[1], obj)
 
         if obj is not None:
             obj.init_pos = pos
@@ -1162,7 +1172,7 @@ class MiniGridEnv(gym.Env):
         Set the agent's starting point at an empty position in the grid
         """
 
-        self.agent_pos = None
+        self.agent_pos = (-1, -1)
         pos = self.place_obj(None, top, size, max_tries=max_tries)
         self.agent_pos = pos
 
@@ -1292,13 +1302,16 @@ class MiniGridEnv(gym.Env):
         obs_cell = obs_grid.get(vx, vy)
         world_cell = self.grid.get(x, y)
 
+        assert world_cell is not None
+
         return obs_cell is not None and obs_cell.type == world_cell.type
 
     def step(self, action):
         self.step_count += 1
 
         reward = 0
-        done = False
+        terminated = False
+        truncated = False
 
         # Get the position in front of the agent
         fwd_pos = self.front_pos
@@ -1319,24 +1332,25 @@ class MiniGridEnv(gym.Env):
         # Move forward
         elif action == self.actions.forward:
             if fwd_cell is None or fwd_cell.can_overlap():
-                self.agent_pos = fwd_pos
+                self.agent_pos = tuple(fwd_pos)
             if fwd_cell is not None and fwd_cell.type == "goal":
-                done = True
+                terminated = True
                 reward = self._reward()
             if fwd_cell is not None and fwd_cell.type == "lava":
-                done = True
+                terminated = True
+
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():
                 if self.carrying is None:
                     self.carrying = fwd_cell
                     self.carrying.cur_pos = np.array([-1, -1])
-                    self.grid.set(*fwd_pos, None)
+                    self.grid.set(fwd_pos[0], fwd_pos[1], None)
 
         # Drop an object
         elif action == self.actions.drop:
             if not fwd_cell and self.carrying:
-                self.grid.set(*fwd_pos, self.carrying)
+                self.grid.set(fwd_pos[0], fwd_pos[1], self.carrying)
                 self.carrying.cur_pos = fwd_pos
                 self.carrying = None
 
@@ -1350,14 +1364,14 @@ class MiniGridEnv(gym.Env):
             pass
 
         else:
-            assert False, "unknown action"
+            raise ValueError(f"Unknown action: {action}")
 
         if self.step_count >= self.max_steps:
-            done = True
+            truncated = True
 
         obs = self.gen_obs()
 
-        return obs, reward, done, {}
+        return obs, reward, terminated, truncated, {}
 
     def gen_obs_grid(self, agent_view_size=None):
         """
@@ -1405,10 +1419,6 @@ class MiniGridEnv(gym.Env):
 
         # Encode the partially observable view into a numpy array
         image = grid.encode(vis_mask)
-
-        assert hasattr(
-            self, "mission"
-        ), "environments must define a textual mission string"
 
         # Observations are dictionaries containing:
         # - an image (partially observable view of the environment)
@@ -1487,6 +1497,7 @@ class MiniGridEnv(gym.Env):
         )
 
         if mode == "human":
+            assert self.window is not None
             self.window.set_caption(self.mission)
             self.window.show_img(img)
         else:

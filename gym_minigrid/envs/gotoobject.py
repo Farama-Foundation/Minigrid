@@ -86,19 +86,19 @@ class GoToObjectEnv(MiniGridEnv):
         # print(self.mission)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         ax, ay = self.agent_pos
         tx, ty = self.target_pos
 
         # Toggle/pickup action terminates the episode
         if action == self.actions.toggle:
-            done = True
+            terminated = True
 
         # Reward performing the done action next to the target object
         if action == self.actions.done:
             if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
                 reward = self._reward()
-            done = True
+            terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info

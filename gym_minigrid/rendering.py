@@ -49,8 +49,8 @@ def rotate_fn(fin, cx, cy, theta):
 
 
 def point_in_line(x0, y0, x1, y1, r):
-    p0 = np.array([x0, y0])
-    p1 = np.array([x1, y1])
+    p0 = np.array([x0, y0], dtype=np.float32)
+    p1 = np.array([x1, y1], dtype=np.float32)
     dir = p1 - p0
     dist = np.linalg.norm(dir)
     dir = dir / dist
@@ -94,9 +94,9 @@ def point_in_rect(xmin, xmax, ymin, ymax):
 
 
 def point_in_triangle(a, b, c):
-    a = np.array(a)
-    b = np.array(b)
-    c = np.array(c)
+    a = np.array(a, dtype=np.float32)
+    b = np.array(b, dtype=np.float32)
+    c = np.array(c, dtype=np.float32)
 
     def fn(x, y):
         v0 = c - a

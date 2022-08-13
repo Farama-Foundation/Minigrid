@@ -17,7 +17,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
         "Initializing wrapper in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
         "Initializing environment in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
-        "Core environment is written in old step API which returns one bool instead of two. It is recommended to rewrite the environment with new step API. ",
+        "Core environment is written in old step API which returns one bool instead of two. It is recommended to  norewrite the environment with new step API. ",
     ]
 ]
 
@@ -55,14 +55,14 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     - observation after first reset are the same
     - same actions are sampled by the two envs
     - observations are contained in the observation space
-    - obs, rew, done and info are equals between the two envs
+    - obs, rew, terminated, truncated and info are equals between the two envs
     """
     # Don't check rollout equality if it's a nondeterministic environment.
     if env_spec.nondeterministic is True:
         return
 
-    env_1 = env_spec.make(disable_env_checker=True)
-    env_2 = env_spec.make(disable_env_checker=True)
+    env_1 = env_spec.make(disable_env_checker=True, new_step_api=True)
+    env_2 = env_spec.make(disable_env_checker=True, new_step_api=True)
 
     initial_obs_1 = env_1.reset(seed=SEED)
     initial_obs_2 = env_2.reset(seed=SEED)
@@ -74,8 +74,8 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
         # We don't evaluate the determinism of actions
         action = env_1.action_space.sample()
 
-        obs_1, rew_1, done_1, info_1 = env_1.step(action)
-        obs_2, rew_2, done_2, info_2 = env_2.step(action)
+        obs_1, rew_1, terminated_1, truncated_1, info_1 = env_1.step(action)
+        obs_2, rew_2, terminated_2, truncated_2, info_2 = env_2.step(action)
 
         assert_equals(obs_1, obs_2, f"[{time_step}] ")
         assert env_1.observation_space.contains(
@@ -83,10 +83,17 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
         )  # obs_2 verified by previous assertion
 
         assert rew_1 == rew_2, f"[{time_step}] reward 1={rew_1}, reward 2={rew_2}"
-        assert done_1 == done_2, f"[{time_step}] done 1={done_1}, done 2={done_2}"
+        assert (
+            terminated_1 == terminated_2
+        ), f"[{time_step}] terminated 1={terminated_1}, terminated 2={terminated_2}"
+        assert (
+            truncated_1 == truncated_2
+        ), f"[{time_step}] truncated 1={truncated_1}, truncated 2={truncated_2}"
         assert_equals(info_1, info_2, f"[{time_step}] ")
 
-        if done_1:  # done_2 verified by previous assertion
+        if (
+            terminated_1 or truncated_1
+        ):  # terminated_2 and truncated_2 verified by previous assertion
             env_1.reset(seed=SEED)
             env_2.reset(seed=SEED)
 
@@ -98,11 +105,11 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_render_modes(spec):
-    env = spec.make()
+    env = spec.make(new_step_api=True)
 
     for mode in env.metadata.get("render_modes", []):
         if mode != "human":
-            new_env = spec.make()
+            new_env = spec.make(new_step_api=True)
 
             new_env.reset()
             new_env.step(new_env.action_space.sample())
@@ -111,7 +118,7 @@ def test_render_modes(spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
-    env = gym.make(env_id)
+    env = gym.make(env_id, new_step_api=True)
     goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
     # Test the "in" operator on grid objects
@@ -122,14 +129,14 @@ def test_agent_sees_method(env_id):
     env.reset()
     for i in range(0, 500):
         action = env.action_space.sample()
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
         grid, _ = Grid.decode(obs["image"])
         goal_visible = ("green", "goal") in grid
 
         agent_sees_goal = env.agent_sees(*goal_pos)
         assert agent_sees_goal == goal_visible
-        if done:
+        if terminated or truncated:
             env.reset()
 
     env.close()
@@ -140,7 +147,7 @@ def test_agent_sees_method(env_id):
 )
 def old_run_test(env_spec):
     # Load the gym environment
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env.max_steps = min(env.max_steps, 200)
     env.reset()
     env.render()
@@ -162,7 +169,7 @@ def old_run_test(env_spec):
         # Pick a random action
         action = env.action_space.sample()
 
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
         # Validate the agent position
         assert env.agent_pos[0] < env.width
@@ -181,7 +188,7 @@ def old_run_test(env_spec):
         assert reward >= env.reward_range[0], reward
         assert reward <= env.reward_range[1], reward
 
-        if done:
+        if terminated or truncated:
             num_episodes += 1
             env.reset()
 
@@ -193,7 +200,7 @@ def old_run_test(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-8x8-v0"])
 def test_interactive_mode(env_id):
-    env = gym.make(env_id)
+    env = gym.make(env_id, new_step_api=True)
     env.reset()
 
     for i in range(0, 100):
@@ -202,7 +209,7 @@ def test_interactive_mode(env_id):
         # Pick a random action
         action = env.action_space.sample()
 
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
     # Test the close method
     env.close()

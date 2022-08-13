@@ -32,8 +32,8 @@ def test_reseed_wrapper(env_spec):
     """
     Test the ReseedWrapper with a list of SEEDS.
     """
-    unwrapped_env = env_spec.make()
-    env = env_spec.make()
+    unwrapped_env = env_spec.make(new_step_api=True)
+    env = env_spec.make(new_step_api=True)
     env = ReseedWrapper(env, seeds=SEEDS)
     env.action_space.seed(0)
 
@@ -43,11 +43,12 @@ def test_reseed_wrapper(env_spec):
         for time_step in range(NUM_STEPS):
             action = env.action_space.sample()
 
-            obs, rew, done, info = env.step(action)
+            obs, rew, terminated, truncated, info = env.step(action)
             (
                 unwrapped_obs,
                 unwrapped_rew,
-                unwrapped_done,
+                unwrapped_terminated,
+                unwrapped_truncated,
                 unwrapped_info,
             ) = unwrapped_env.step(action)
 
@@ -58,12 +59,15 @@ def test_reseed_wrapper(env_spec):
                 rew == unwrapped_rew
             ), f"[{time_step}] reward={rew}, unwrapped reward={unwrapped_rew}"
             assert (
-                done == unwrapped_done
-            ), f"[{time_step}] done={done}, unwrapped done={unwrapped_done}"
+                terminated == unwrapped_terminated
+            ), f"[{time_step}] terminated={terminated}, unwrapped terminated={unwrapped_terminated}"
+            assert (
+                truncated == unwrapped_truncated
+            ), f"[{time_step}] truncated={truncated}, unwrapped truncated={unwrapped_truncated}"
             assert_equals(info, unwrapped_info, f"[{time_step}] ")
 
             # Start the next seed
-            if done:
+            if terminated or truncated:
                 break
 
     env.close()
@@ -72,8 +76,8 @@ def test_reseed_wrapper(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_state_bonus_wrapper(env_id):
-    env = gym.make(env_id)
-    wrapped_env = StateBonus(gym.make(env_id))
+    env = gym.make(env_id, new_step_api=True)
+    wrapped_env = StateBonus(gym.make(env_id, new_step_api=True))
 
     action_forward = MiniGridEnv.Actions.forward
     action_left = MiniGridEnv.Actions.left
@@ -86,14 +90,14 @@ def test_state_bonus_wrapper(env_id):
 
     # Turn lef 3 times (check that actions don't influence bonus)
     for _ in range(3):
-        _, wrapped_rew, _, _ = wrapped_env.step(action_left)
+        _, wrapped_rew, _, _, _ = wrapped_env.step(action_left)
 
     env.reset()
     for _ in range(5):
         env.step(action_forward)
     # Turn right 3 times
     for _ in range(3):
-        _, rew, _, _ = env.step(action_right)
+        _, rew, _, _, _ = env.step(action_right)
 
     expected_bonus_reward = rew + 1 / math.sqrt(13)
 
@@ -102,19 +106,19 @@ def test_state_bonus_wrapper(env_id):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_action_bonus_wrapper(env_id):
-    env = gym.make(env_id)
-    wrapped_env = ActionBonus(gym.make(env_id))
+    env = gym.make(env_id, new_step_api=True)
+    wrapped_env = ActionBonus(gym.make(env_id, new_step_api=True))
 
     action = MiniGridEnv.Actions.forward
 
     for _ in range(10):
         wrapped_env.reset()
         for _ in range(5):
-            _, wrapped_rew, _, _ = wrapped_env.step(action)
+            _, wrapped_rew, _, _, _ = wrapped_env.step(action)
 
     env.reset()
     for _ in range(5):
-        _, rew, _, _ = env.step(action)
+        _, rew, _, _, _ = env.step(action)
 
     expected_bonus_reward = rew + 1 / math.sqrt(10)
 
@@ -125,11 +129,11 @@ def test_action_bonus_wrapper(env_id):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_dict_observation_space_wrapper(env_spec):
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env = DictObservationSpaceWrapper(env)
     env.reset()
     mission = env.mission
-    obs, _, _, _ = env.step(0)
+    obs, _, _, _, _ = env.step(0)
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
     ]
@@ -153,7 +157,7 @@ def test_dict_observation_space_wrapper(env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_main_wrappers(wrapper, env_spec):
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env = wrapper(env)
     for _ in range(10):
         env.reset()
@@ -173,7 +177,7 @@ def test_main_wrappers(wrapper, env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_observation_space_wrappers(wrapper, env_spec):
-    env = wrapper(env_spec.make(disable_env_checker=True))
+    env = wrapper(env_spec.make(disable_env_checker=True, new_step_api=True))
     obs_space, wrapper_name = env.observation_space, wrapper.__name__
     assert isinstance(
         obs_space, gym.spaces.Dict
@@ -202,9 +206,9 @@ class EmptyEnvWithExtraObs(EmptyEnv):
         return obs
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
         obs["size"] = np.array([self.width, self.height])
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info
 
 
 @pytest.mark.parametrize(
@@ -218,7 +222,7 @@ class EmptyEnvWithExtraObs(EmptyEnv):
 )
 def test_agent_sees_method(wrapper):
     env1 = wrapper(EmptyEnvWithExtraObs())
-    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0"))
+    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0", new_step_api=True))
 
     obs1 = env1.reset(seed=0)
     obs2 = env2.reset(seed=0)
@@ -228,8 +232,8 @@ def test_agent_sees_method(wrapper):
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
 
-    obs1, reward1, done1, _ = env1.step(0)
-    obs2, reward2, done2, _ = env2.step(0)
+    obs1, reward1, terminated1, truncated1, _ = env1.step(0)
+    obs2, reward2, terminated2, truncated2, _ = env2.step(0)
     assert "size" in obs1
     assert obs1["size"].shape == (2,)
     assert (obs1["size"] == [5, 5]).all()

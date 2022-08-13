@@ -95,7 +95,7 @@ class FetchEnv(MiniGridEnv):
         assert hasattr(self, "mission")
 
     def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         if self.carrying:
             if (
@@ -103,9 +103,9 @@ class FetchEnv(MiniGridEnv):
                 and self.carrying.type == self.targetType
             ):
                 reward = self._reward()
-                done = True
+                terminated = True
             else:
                 reward = 0
-                done = True
+                terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info

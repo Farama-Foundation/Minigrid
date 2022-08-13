@@ -61,7 +61,8 @@ class FourRoomsEnv(MiniGridEnv):
         if self._agent_default_pos is not None:
             self.agent_pos = self._agent_default_pos
             self.grid.set(*self._agent_default_pos, None)
-            self.agent_dir = self._rand_int(0, 4)  # assuming random start direction
+            # assuming random start direction
+            self.agent_dir = self._rand_int(0, 4)
         else:
             self.place_agent()
 
@@ -71,7 +72,3 @@ class FourRoomsEnv(MiniGridEnv):
             goal.init_pos, goal.cur_pos = self._goal_default_pos
         else:
             self.place_obj(Goal())
-
-    def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
-        return obs, reward, done, info

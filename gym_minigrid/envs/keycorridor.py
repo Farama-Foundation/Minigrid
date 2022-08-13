@@ -48,11 +48,11 @@ class KeyCorridorEnv(RoomGrid):
         self.mission = f"pick up the {obj.color} {obj.type}"
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, terminated, truncated, info = super().step(action)
 
         if action == self.actions.pickup:
             if self.carrying and self.carrying == self.obj:
                 reward = self._reward()
-                done = True
+                terminated = True
 
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info

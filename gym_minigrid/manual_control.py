@@ -25,11 +25,14 @@ def reset():
 
 
 def step(action):
-    obs, reward, done, info = env.step(action)
+    obs, reward, terminated, truncated, info = env.step(action)
     print(f"step={env.step_count}, reward={reward:.2f}")
 
-    if done:
-        print("done!")
+    if terminated:
+        print("terminated!")
+        reset()
+    elif truncated:
+        print("truncated!")
         reset()
     else:
         redraw(obs)
@@ -92,7 +95,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 seed = None if args.seed == -1 else args.seed
-env = gym.make(args.env, seed=seed)
+env = gym.make(args.env, seed=seed, new_step_api=True)
 
 if args.agent_view:
     env = RGBImgPartialObsWrapper(env)

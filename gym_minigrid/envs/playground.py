@@ -88,7 +88,3 @@ class PlaygroundEnv(MiniGridEnv):
 
         # No explicit mission in this environment
         self.mission = ""
-
-    def step(self, action):
-        obs, reward, done, info = super().step(action)
-        return obs, reward, done, info

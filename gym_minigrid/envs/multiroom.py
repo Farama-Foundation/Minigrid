@@ -107,7 +107,7 @@ class MultiRoomEnv(MiniGridEnv):
                 doorColor = self._rand_elem(sorted(doorColors))
 
                 entryDoor = Door(doorColor)
-                self.grid.set(*room.entryDoorPos, entryDoor)
+                self.grid.set(room.entryDoorPos[0], room.entryDoorPos[1], entryDoor)
                 prevDoorColor = doorColor
 
                 prevRoom = roomList[idx - 1]
