@@ -27,10 +27,6 @@ class ReseedWrapper(Wrapper):
         self.seed_idx = (self.seed_idx + 1) % len(self.seeds)
         return self.env.reset(seed=seed, **kwargs)
 
-    def step(self, action):
-        obs, reward, done, info = self.env.step(action)
-        return obs, reward, done, info
-
 
 class ActionBonus(gym.Wrapper):
     """

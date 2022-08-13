@@ -54,7 +54,7 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     - observation after first reset are the same
     - same actions are sampled by the two envs
     - observations are contained in the observation space
-    - obs, rew, done and info are equals between the two envs
+    - obs, rew, terminated, truncated and info are equals between the two envs
     """
     # Don't check rollout equality if it's a nondeterministic environment.
     if env_spec.nondeterministic is True:
@@ -73,8 +73,8 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
         # We don't evaluate the determinism of actions
         action = env_1.action_space.sample()
 
-        obs_1, rew_1, done_1, info_1 = env_1.step(action)
-        obs_2, rew_2, done_2, info_2 = env_2.step(action)
+        obs_1, rew_1, terminated_1, truncated_1, info_1 = env_1.step(action)
+        obs_2, rew_2, terminated_2, truncated_2, info_2 = env_2.step(action)
 
         assert_equals(obs_1, obs_2, f"[{time_step}] ")
         assert env_1.observation_space.contains(
@@ -82,10 +82,11 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
         )  # obs_2 verified by previous assertion
 
         assert rew_1 == rew_2, f"[{time_step}] reward 1={rew_1}, reward 2={rew_2}"
-        assert done_1 == done_2, f"[{time_step}] done 1={done_1}, done 2={done_2}"
+        assert terminated_1 == terminated_2, f"[{time_step}] terminated 1={terminated_1}, terminated 2={terminated_2}"
+        assert truncated_1 == truncated_2, f"[{time_step}] truncated 1={truncated_1}, truncated 2={truncated_2}"
         assert_equals(info_1, info_2, f"[{time_step}] ")
 
-        if done_1:  # done_2 verified by previous assertion
+        if terminated_1 or truncated_1:  # terminated_2 and truncated_2 verified by previous assertion
             env_1.reset(seed=SEED)
             env_2.reset(seed=SEED)
 
@@ -110,7 +111,7 @@ def test_render_modes(spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
-    env = gym.make(env_id)
+    env = gym.make(env_id, new_step_api=True)
     goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
     # Test the "in" operator on grid objects
@@ -121,14 +122,14 @@ def test_agent_sees_method(env_id):
     env.reset()
     for i in range(0, 500):
         action = env.action_space.sample()
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
         grid, _ = Grid.decode(obs["image"])
         goal_visible = ("green", "goal") in grid
 
         agent_sees_goal = env.agent_sees(*goal_pos)
         assert agent_sees_goal == goal_visible
-        if done:
+        if terminated or truncated:
             env.reset()
 
     env.close()
@@ -161,7 +162,7 @@ def old_run_test(env_spec):
         # Pick a random action
         action = env.action_space.sample()
 
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
         # Validate the agent position
         assert env.agent_pos[0] < env.width
@@ -180,7 +181,7 @@ def old_run_test(env_spec):
         assert reward >= env.reward_range[0], reward
         assert reward <= env.reward_range[1], reward
 
-        if done:
+        if terminated or truncated:
             num_episodes += 1
             env.reset()
 
@@ -192,7 +193,7 @@ def old_run_test(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-8x8-v0"])
 def test_interactive_mode(env_id):
-    env = gym.make(env_id)
+    env = gym.make(env_id, new_step_api=True)
     env.reset()
 
     for i in range(0, 100):
@@ -201,7 +202,7 @@ def test_interactive_mode(env_id):
         # Pick a random action
         action = env.action_space.sample()
 
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
 
     # Test the close method
     env.close()
