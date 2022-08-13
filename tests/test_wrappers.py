@@ -107,7 +107,7 @@ def test_state_bonus_wrapper(env_id):
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_action_bonus_wrapper(env_id):
     env = gym.make(env_id, new_step_api=True)
-    wrapped_env = ActionBonus(gym.make(env_id, new_step_api = True))
+    wrapped_env = ActionBonus(gym.make(env_id, new_step_api=True))
 
     action = MiniGridEnv.Actions.forward
 

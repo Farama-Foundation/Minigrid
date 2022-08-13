@@ -30,6 +30,7 @@ class ReseedWrapper(Wrapper):
     def step(self, action):
         return self.env.step(action)
 
+
 class ActionBonus(gym.Wrapper):
     """
     Wrapper which adds an exploration bonus.

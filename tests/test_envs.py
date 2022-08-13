@@ -83,11 +83,17 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
         )  # obs_2 verified by previous assertion
 
         assert rew_1 == rew_2, f"[{time_step}] reward 1={rew_1}, reward 2={rew_2}"
-        assert terminated_1 == terminated_2, f"[{time_step}] terminated 1={terminated_1}, terminated 2={terminated_2}"
-        assert truncated_1 == truncated_2, f"[{time_step}] truncated 1={truncated_1}, truncated 2={truncated_2}"
+        assert (
+            terminated_1 == terminated_2
+        ), f"[{time_step}] terminated 1={terminated_1}, terminated 2={terminated_2}"
+        assert (
+            truncated_1 == truncated_2
+        ), f"[{time_step}] truncated 1={truncated_1}, truncated 2={truncated_2}"
         assert_equals(info_1, info_2, f"[{time_step}] ")
 
-        if terminated_1 or truncated_1:  # terminated_2 and truncated_2 verified by previous assertion
+        if (
+            terminated_1 or truncated_1
+        ):  # terminated_2 and truncated_2 verified by previous assertion
             env_1.reset(seed=SEED)
             env_2.reset(seed=SEED)
 
