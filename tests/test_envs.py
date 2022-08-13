@@ -1,3 +1,5 @@
+import warnings
+
 import gym
 import numpy as np
 import pytest
@@ -25,13 +27,12 @@ CHECK_ENV_IGNORE_WARNINGS = [
 )
 def test_env(spec):
     # Capture warnings
-    env = spec.make(disable_env_checker=True, new_step_api=True).unwrapped
+    env = spec.make(disable_env_checker=True).unwrapped
 
     # Test if env adheres to Gym API
-    with pytest.warns() as warnings:
+    with warnings.catch_warnings(record=True) as w:
         check_env(env)
-
-    for warning in warnings.list:
+    for warning in w:
         if warning.message.args[0] not in CHECK_ENV_IGNORE_WARNINGS:
             raise gym.error.Error(f"Unexpected warning: {warning.message}")
 
