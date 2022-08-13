@@ -916,7 +916,6 @@ class MiniGridEnv(gym.Env):
 
         # Current grid and mission and carryinh
         self.grid = Grid(width, height)
-        self.mission = ""
         self.carrying = None
 
         # Initialize the state

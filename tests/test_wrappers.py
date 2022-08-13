@@ -32,8 +32,8 @@ def test_reseed_wrapper(env_spec):
     """
     Test the ReseedWrapper with a list of SEEDS.
     """
-    unwrapped_env = env_spec.make()
-    env = env_spec.make()
+    unwrapped_env = env_spec.make(new_step_api=True)
+    env = env_spec.make(new_step_api=True)
     env = ReseedWrapper(env, seeds=SEEDS)
     env.action_space.seed(0)
 
@@ -129,7 +129,7 @@ def test_action_bonus_wrapper(env_id):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_dict_observation_space_wrapper(env_spec):
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env = DictObservationSpaceWrapper(env)
     env.reset()
     mission = env.mission
@@ -157,7 +157,7 @@ def test_dict_observation_space_wrapper(env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_main_wrappers(wrapper, env_spec):
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env = wrapper(env)
     for _ in range(10):
         env.reset()
@@ -177,7 +177,7 @@ def test_main_wrappers(wrapper, env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_observation_space_wrappers(wrapper, env_spec):
-    env = wrapper(env_spec.make(disable_env_checker=True))
+    env = wrapper(env_spec.make(disable_env_checker=True, new_step_api=True))
     obs_space, wrapper_name = env.observation_space, wrapper.__name__
     assert isinstance(
         obs_space, gym.spaces.Dict

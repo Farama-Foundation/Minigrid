@@ -15,7 +15,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
         "Initializing wrapper in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
         "Initializing environment in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
-        "Core environment is written in old step API which returns one bool instead of two. It is recommended to rewrite the environment with new step API. ",
+        "Core environment is written in old step API which returns one bool instead of two. It is recommended to  norewrite the environment with new step API. ",
     ]
 ]
 
@@ -25,7 +25,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
 )
 def test_env(spec):
     # Capture warnings
-    env = spec.make(disable_env_checker=True).unwrapped
+    env = spec.make(disable_env_checker=True, new_step_api=True).unwrapped
 
     # Test if env adheres to Gym API
     with pytest.warns() as warnings:
@@ -60,8 +60,8 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     if env_spec.nondeterministic is True:
         return
 
-    env_1 = env_spec.make(disable_env_checker=True)
-    env_2 = env_spec.make(disable_env_checker=True)
+    env_1 = env_spec.make(disable_env_checker=True, new_step_api=True)
+    env_2 = env_spec.make(disable_env_checker=True, new_step_api=True)
 
     initial_obs_1 = env_1.reset(seed=SEED)
     initial_obs_2 = env_2.reset(seed=SEED)
@@ -98,11 +98,11 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_render_modes(spec):
-    env = spec.make()
+    env = spec.make(new_step_api=True)
 
     for mode in env.metadata.get("render_modes", []):
         if mode != "human":
-            new_env = spec.make()
+            new_env = spec.make(new_step_api=True)
 
             new_env.reset()
             new_env.step(new_env.action_space.sample())
@@ -140,7 +140,7 @@ def test_agent_sees_method(env_id):
 )
 def old_run_test(env_spec):
     # Load the gym environment
-    env = env_spec.make()
+    env = env_spec.make(new_step_api=True)
     env.max_steps = min(env.max_steps, 200)
     env.reset()
     env.render()
