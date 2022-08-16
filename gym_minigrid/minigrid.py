@@ -858,10 +858,17 @@ class MiniGridEnv(gym.Env):
         max_steps: int = 100,
         see_through_walls: bool = False,
         agent_view_size: int = 7,
+        render_mode: Optional[str] = None,
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
+        agent_pov: bool = False,
         **kwargs,
     ):
+        # Rendering attributes
+        self.render_mode = render_mode
+        self.highlight = highlight
+        self.tile_size = tile_size
+        self.agent_pov = agent_pov
 
         # Initialize mission
         self.mission = mission_space.sample()
@@ -1428,16 +1435,15 @@ class MiniGridEnv(gym.Env):
 
         return obs
 
-    def get_obs_render(self, obs, tile_size=TILE_PIXELS // 2):
+    def get_pov_render(self):
         """
-        Render an agent observation for visualization
+        Render an agent's POV observation for visualization
         """
-
-        grid, vis_mask = Grid.decode(obs)
+        grid, vis_mask = self.gen_obs_grid()
 
         # Render the whole grid
         img = grid.render(
-            tile_size,
+            self.tile_size,
             agent_pos=(self.agent_view_size // 2, self.agent_view_size - 1),
             agent_dir=3,
             highlight_mask=vis_mask,
@@ -1445,14 +1451,12 @@ class MiniGridEnv(gym.Env):
 
         return img
 
-    def render(self, mode="human", highlight=True, tile_size=TILE_PIXELS):
-        assert mode in self.metadata["render_modes"]
+    def get_full_render(self):
         """
-        Render the whole-grid human view
+        Render a non-paratial observation for visualization
         """
-        if mode == "human" and not self.window:
-            self.window = Window("gym_minigrid")
-            self.window.show(block=False)
+        tile_size = self.tile_size
+        highlight = self.highlight
 
         # Compute which cells are visible to the agent
         _, vis_mask = self.gen_obs_grid()
@@ -1496,8 +1500,26 @@ class MiniGridEnv(gym.Env):
             highlight_mask=highlight_mask if highlight else None,
         )
 
+        return img
+
+    def get_render(self):
+        "Returns an image corresponding to the whole environment or the agent's pov"
+        if self.agent_pov:
+            return self.get_pov_render()
+        else:
+            return self.get_full_render()
+
+    def render(self):
+        """
+        Render the whole-grid human view
+        """
+        img = self.get_render()
+
+        mode = self.render_mode
         if mode == "human":
-            assert self.window is not None
+            if self.window is None:
+                self.window = Window("gym_minigrid")
+                self.window.show(block=False)
             self.window.set_caption(self.mission)
             self.window.show_img(img)
         else:

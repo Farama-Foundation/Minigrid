@@ -109,11 +109,11 @@ def test_render_modes(spec):
 
     for mode in env.metadata.get("render_modes", []):
         if mode != "human":
-            new_env = spec.make(new_step_api=True)
+            new_env = spec.make(new_step_api=True, render_mode=mode)
 
             new_env.reset()
             new_env.step(new_env.action_space.sample())
-            new_env.render(mode=mode)
+            new_env.render()
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])

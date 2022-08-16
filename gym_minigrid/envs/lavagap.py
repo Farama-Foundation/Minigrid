@@ -29,6 +29,7 @@ class LavaGapEnv(MiniGridEnv):
             max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):

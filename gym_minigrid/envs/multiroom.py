@@ -44,6 +44,7 @@ class MultiRoomEnv(MiniGridEnv):
             width=self.size,
             height=self.size,
             max_steps=self.maxNumRooms * 20,
+            **kwargs
         )
 
     def _gen_grid(self, width, height):
