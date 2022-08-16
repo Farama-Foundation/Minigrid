@@ -196,6 +196,7 @@ class EmptyEnvWithExtraObs(EmptyEnv):
 
     def __init__(self) -> None:
         super().__init__(size=5)
+        self.new_step_api = True
         self.observation_space["size"] = gym.spaces.Box(
             low=0, high=np.iinfo(np.uint).max, shape=(2,), dtype=np.uint
         )
