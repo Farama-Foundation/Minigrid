@@ -1,3 +1,5 @@
+import logging
+
 from omegaconf import DictConfig
 from typing import List, Tuple, Dict, Any, Union
 import numpy as np
@@ -24,6 +26,8 @@ from gym_minigrid.minigrid import MiniGridEnv
 from gym_minigrid.minigrid import Grid as Minigrid_Grid
 from gym_minigrid.minigrid import OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX
 from gym_minigrid.minigrid import IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
+
+logger = logging.getLogger(__name__)
 
 # Map of object type to channel and id used within that channel, used for grid and gridworld representations
 # Agent and Start are considered equivalent
@@ -70,8 +74,8 @@ class GridNavDatasetGenerator:
 
     def __init__(self, dataset_config: DictConfig, dataset_dir_name=None):
         self.config = dataset_config
-        self.dataset_meta = self.get_dataset_meta()
-        self.batches_meta = self.get_batches_meta()
+        self.dataset_meta = self.get_dataset_metadata()
+        self.batches_meta = self.get_batches_metadata()
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(dataset_dir_name)
         self.generated_batches = []
@@ -105,8 +109,8 @@ class GridNavDatasetGenerator:
     def normalise_difficulty(self):
         pass  # TODO: implement
 
-    def generate_dataset_metadata(self):
-        self.dataset_meta = {
+    def get_dataset_metadata(self):
+        dataset_meta = {
             'output_file'                      : 'dataset.meta',
             'seed'                             : self.config.seed,
             'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
@@ -117,27 +121,30 @@ class GridNavDatasetGenerator:
             'feature_descriptors'              : self.config.feature_descriptors,
             }
 
-    def generate_batches_metadata(self):
+        return dataset_meta
 
-        regimes = ["train", "test"]
+    def get_batches_metadata(self):
 
-        self.batches_meta = []
+        all_batches_meta = {
+            "train": [],
+            "test": []
+            }
 
-        for regime in regimes:
+        for regime, batches_meta in all_batches_meta.items():
 
             batch_ids = []
-            if regimes == "train":
+            if regime == "train":
                 num_batches = self.config.num_train_batches
                 batch_size = self.config.size_train_batch
                 if self.config.train_batch_ids is None: self.config.train_batch_ids = batch_ids
                 start_at_id = 0
-            elif regimes == "test":
+            elif regime == "test":
                 num_batches = self.config.num_test_batches
                 batch_size = self.config.size_test_batch
                 if self.config.test_batch_ids is None: self.config.test_batch_ids = batch_ids
                 start_at_id = 90
             else:
-                raise NotImplementedError
+                raise NotImplementedError(f"Regime {regime} not implemented.")
 
             if num_batches > 0:
 
@@ -176,6 +183,9 @@ class GridNavDatasetGenerator:
                         }
                     batches_meta.append(batch_meta)
 
+        batches_meta = []
+        for val in all_batches_meta.values():
+            batches_meta.extend(val)
 
 
         return batches_meta
