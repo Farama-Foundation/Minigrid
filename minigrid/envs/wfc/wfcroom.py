@@ -1,6 +1,8 @@
+from omegaconf import DictConfig
 from typing import List, Tuple, Dict, Any, Union
 import numpy as np
 import torch
+import hydra
 import einops
 from torchvision import transforms
 import pickle
@@ -43,34 +45,47 @@ OBJECT_TO_FEATURE_DIM = {
     'goal'          : 3,
 }
 
+@hydra.main(version_base=None, config_path="conf", config_name="config.yaml")
+def generate_dataset(cfg: DictConfig) -> None:
+    """
+    Generate a dataset of gridworld navigation problems.
+    """
+
+    dataset_config = cfg.data.data_generation
+    DatasetGenerator = GridNavDatasetGenerator(dataset_config, dataset_dir_name=dataset_config.dir_name)
+    DatasetGenerator.generate_dataset(normalise_difficulty=dataset_config.normalise_difficulty)
+
 
 class GridNavDatasetGenerator:
 
-    def __init__(self, dataset_meta: Dict[str, Any], batches_meta: List[Dict[str, Any]], save_dir: str):
-        self.dataset_meta = dataset_meta
-        self.batches_meta = batches_meta
-        self.base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
-        self.save_dir = self.base_dir + save_dir + '/'
+    # def __init__(self, dataset_meta: Dict[str, Any], batches_meta: List[Dict[str, Any]], save_dir: str):
+    #     self.dataset_meta = dataset_meta
+    #     self.batches_meta = batches_meta
+    #     self.base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
+    #     self.save_dir = self.base_dir + save_dir + '/'
+    #     self.generated_batches = []
+    #     self.generated_labels = []
+    #     self.generated_label_contents = []
+    #     self.data_type = self.dataset_meta['data_type']
+
+    def __init__(self, dataset_config: DictConfig, dataset_dir_name=None):
+        self.config = dataset_config
+        self.dataset_meta = self.get_dataset_meta()
+        self.batches_meta = self.get_batches_meta()
+        self.data_type = self.dataset_meta['data_type']
+        self.save_dir = self.get_dataset_dir(dataset_dir_name)
         self.generated_batches = []
         self.generated_labels = []
         self.generated_label_contents = []
-        self.data_type = self.dataset_meta['data_type']
-
-        if self.data_type == 'grid':
-            dim0, dim1 = (int((self.dataset_meta['data_dim'][0]-1)/2), int((self.dataset_meta['data_dim'][1]-1)/2))
-            self.feature_shape = (dim0, dim1, 4)
-        elif self.data_type == 'gridworld':
-            self.feature_shape = (self.dataset_meta['data_dim'][0], self.dataset_meta['data_dim'][1], 3)
-        elif self.data_type == 'graph':
-            self.feature_shape = None #TODO: decide if used later
-        else:
-            raise KeyError(f"Data Type '{self.data_type}' not recognised")
 
     def generate_dataset(self, normalise_difficulty: bool = True):
 
+        n_generated_samples = 0
         for i, batch_meta in enumerate(self.batches_meta):
             batch_g = BatchGenerator(batch_meta, self.dataset_meta)
             batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
+            batch_label_ids += n_generated_samples
+            n_generated_samples += len(batch_label_ids)
             self.generated_batches.append(batch_features)
             self.generated_labels.append(batch_label_ids)
             self.generated_label_contents.append(batch_label_contents)
@@ -86,6 +101,94 @@ class GridNavDatasetGenerator:
                             self.generated_label_contents[i], self.batches_meta[i])
 
         self.save_dataset_meta()
+
+    def normalise_difficulty(self):
+        pass  # TODO: implement
+
+    def generate_dataset_metadata(self):
+        self.dataset_meta = {
+            'output_file'                      : 'dataset.meta',
+            'seed'                             : self.config.seed,
+            'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
+            'encoding'                         : self.config.encoding,  # types: minimal, full (only for graph)
+            'data_dim'                         : (self.config.gridworld_datadim[-1],)*2,  # TODO: assert odd. Note: always in "gridworld" type
+            'task_type'                        : self.config.task_type,
+            'label_descriptors'                : self.config.label_descriptors_config,
+            'feature_descriptors'              : self.config.feature_descriptors,
+            }
+
+    def generate_batches_metadata(self):
+
+        regimes = ["train", "test"]
+
+        self.batches_meta = []
+
+        for regime in regimes:
+
+            batch_ids = []
+            if regimes == "train":
+                num_batches = self.config.num_train_batches
+                batch_size = self.config.size_train_batch
+                if self.config.train_batch_ids is None: self.config.train_batch_ids = batch_ids
+                start_at_id = 0
+            elif regimes == "test":
+                num_batches = self.config.num_test_batches
+                batch_size = self.config.size_test_batch
+                if self.config.test_batch_ids is None: self.config.test_batch_ids = batch_ids
+                start_at_id = 90
+            else:
+                raise NotImplementedError
+
+            if num_batches > 0:
+
+                task_structures = []
+                assigned_batches = 0
+                for task, split in self.config.task_structure_split.items():
+                    assert num_batches % split == 0, \
+                        f"Cannot split provided num_{regime}_batches ({num_batches}) by split ratio " \
+                        f"{split} for task {task}. Adjust data_generation config."
+                    num_batches = int(split*num_batches)
+                    task_structures.extend([task]*num_batches)
+                    assigned_batches += num_batches
+
+                assert assigned_batches == num_batches, \
+                    f"Provided task structure split {str(self.config.task_structure_split)} is not compatible with " \
+                    f"num_{regime}_batches ({num_batches}). Adjust data_generation config."
+                for i in range(num_batches):
+                    batch_id = i + start_at_id
+                    batch_ids.append(batch_id)
+
+                    if task_structures[i] == "maze":
+                        algo = "Prims"
+                    elif task_structures[i] == "rooms_unstructured_layout":
+                        algo = "Minigrid_Multiroom"
+                    else:
+                        raise NotImplementedError(f'No task generation algorithm available for task structure '
+                                                  f'"{task_structures[i]}" ')
+
+                    batch_meta = {
+                        'output_file': f'batch_{batch_id}.data',
+                        'batch_size': batch_size,
+                        'batch_id': batch_id,
+                        'task_structure': task_structures[i],
+                        'generating_algorithm': algo,
+                        'generating_algorithm_options': [],
+                        }
+                    batches_meta.append(batch_meta)
+
+
+
+        return batches_meta
+
+    def get_dataset_dir(self, dir_name=None):
+        base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
+
+        if dir_name is None:
+            task_structures = '-'.join(self.config.label_descriptors_config.task_structures)
+            dir_name = f"ts={task_structures}-x={self.dataset_meta['data_type']}-s={self.config.size}" \
+                                f"-d={self.config.gridworld_data_dim[-1]}-f={self.config.gridworld_data_dim[0]}" \
+                                f"-enc={self.config.encoding}"
+        return base_dir + dir_name + '/'
 
     def save_batch(self, batch_data: List[Any], batch_labels: np.ndarray,
                    batch_label_contents: Dict[int, Any], batch_meta: Dict[str, Any]):
@@ -113,9 +216,6 @@ class GridNavDatasetGenerator:
         filename = self.save_dir + self.dataset_meta['output_file']
         with open(filename, 'wb') as f:
             pickle.dump(entry, f)
-
-    def normalise_difficulty(self):
-        pass  # TODO: implement
 
 
 class BatchGenerator:
