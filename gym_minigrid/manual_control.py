@@ -10,8 +10,8 @@ def redraw(window, img):
     window.show_img(img)
 
 
-def reset(env, window):
-    _ = env.reset()
+def reset(env, window, seed=None):
+    _ = env.reset(seed=seed)
 
     if hasattr(env, "mission"):
         print("Mission: %s" % env.mission)
@@ -99,10 +99,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    seed = None if args.seed == -1 else args.seed
     env = gym.make(
         args.env,
-        seed=seed,
         new_step_api=True,
         render_mode="human",  # Note that we do not need to use "human", as Window handles human rendering.
         tile_size=args.tile_size,
@@ -114,8 +112,9 @@ if __name__ == "__main__":
 
     window = Window("gym_minigrid - " + args.env)
     window.reg_key_handler(lambda event: key_handler(env, window, event))
-
-    reset(env, window)
+    
+    seed = None if args.seed == -1 else args.seed
+    reset(env, window, seed)
 
     # Blocking event loop
     window.show(block=True)
