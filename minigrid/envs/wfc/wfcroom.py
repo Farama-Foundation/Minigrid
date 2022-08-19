@@ -553,6 +553,23 @@ class Batch:
 
         return graphs
 
+
+    @staticmethod
+    def encode_decoder_mode_to_graph(mode_A:torch.Tensor, mode_Fx:torch.Tensor, make_valid=False, device=None):
+        #TODO: add prevent_invalid option, implement device
+        device = device if device is not None else mode_A.device
+        adj = Batch.encode_reduced_adj_to_adj(mode_A.reshape(mode_A.shape[0], -1, 2).cpu().numpy())
+        mode_Fx = mode_Fx.cpu()
+
+        graphs = []
+        for m in range(adj.shape[0]):
+            src, dst = np.nonzero(adj[m])
+            g = dgl.graph((src, dst), num_nodes=len(mode_Fx[m]))
+            g.ndata['feat'] = mode_Fx[m]
+            graphs.append(g)
+
+        return graphs
+
     #Note: Returns the gridworld in one given permutation
     @staticmethod
     def encode_graph_to_gridworld(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], tuple],
@@ -767,6 +784,7 @@ class Batch:
             A[m] = np.triu(A[m]) + np.tril(A[m].T, 1)
 
         return A # (m, n, n)
+
 
     @staticmethod
     def augment_adj(n: int, transforms: torch.tensor):
