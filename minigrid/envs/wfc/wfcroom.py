@@ -7,24 +7,15 @@ import torch
 import hydra
 from omegaconf import OmegaConf
 import einops
-from torchvision import transforms
 import pickle
 from pathlib import Path
 import os
 import dgl
-from copy import deepcopy, copy
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
-from mazelib.generate.DungeonRooms import DungeonRooms
-from mazelib.solve.ShortestPaths import ShortestPaths
-from mazelib.solve.ShortestPath import ShortestPath
-from mazelib.solve.BacktrackingSolver import BacktrackingSolver
-from mazelib.solve.Chain import Chain
-from mazelib.solve.RandomMouse import RandomMouse
 from gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 from gym_minigrid.minigrid import MiniGridEnv
-from gym_minigrid.minigrid import Grid as Minigrid_Grid
 from gym_minigrid.minigrid import OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX
 from gym_minigrid.minigrid import IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
 
