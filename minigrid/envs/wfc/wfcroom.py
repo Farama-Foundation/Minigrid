@@ -5,6 +5,7 @@ from typing import List, Tuple, Dict, Any, Union
 import numpy as np
 import torch
 import hydra
+from omegaconf import OmegaConf
 import einops
 from torchvision import transforms
 import pickle
@@ -26,6 +27,9 @@ from gym_minigrid.minigrid import MiniGridEnv
 from gym_minigrid.minigrid import Grid as Minigrid_Grid
 from gym_minigrid.minigrid import OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX
 from gym_minigrid.minigrid import IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
+
+from util import graph_metrics
+from util.util import seed_everything
 
 logger = logging.getLogger(__name__)
 
@@ -56,21 +60,15 @@ def generate_dataset(cfg: DictConfig) -> None:
     """
 
     dataset_config = cfg.data.data_generation
+    logger.info("\n" + OmegaConf.to_yaml(dataset_config))
+
+    logger.info("Parsing Data Generation config to DatasetGenerator...")
     DatasetGenerator = GridNavDatasetGenerator(dataset_config, dataset_dir_name=dataset_config.dir_name)
-    DatasetGenerator.generate_dataset(normalise_difficulty=dataset_config.normalise_difficulty)
+    logger.info("Generating Data...")
+    DatasetGenerator.generate_dataset(normalise_metrics=dataset_config.normalise_metrics)
 
 
 class GridNavDatasetGenerator:
-
-    # def __init__(self, dataset_meta: Dict[str, Any], batches_meta: List[Dict[str, Any]], save_dir: str):
-    #     self.dataset_meta = dataset_meta
-    #     self.batches_meta = batches_meta
-    #     self.base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
-    #     self.save_dir = self.base_dir + save_dir + '/'
-    #     self.generated_batches = []
-    #     self.generated_labels = []
-    #     self.generated_label_contents = []
-    #     self.data_type = self.dataset_meta['data_type']
 
     def __init__(self, dataset_config: DictConfig, dataset_dir_name=None):
         self.config = dataset_config
@@ -82,11 +80,24 @@ class GridNavDatasetGenerator:
         self.generated_labels = []
         self.generated_label_contents = []
 
-    def generate_dataset(self, normalise_difficulty: bool = True):
+        if self.config.label_descriptors_config.use_seed:
+            if self.config.seed is None:
+                self.seed = self.config.label_descriptors_config.seed = 123456 #default seed
+            else:
+                self.seed = self.config.seed
+            seed_everything(self.seed)
+            logger.info(f"Using seed {self.seed}")
+
+        self._task_seeds = torch.randperm(int(1e7)) #10M possible seeds
+
+
+    def generate_dataset(self, normalise_metrics: bool = True):
 
         n_generated_samples = 0
         for i, batch_meta in enumerate(self.batches_meta):
-            batch_g = BatchGenerator(batch_meta, self.dataset_meta)
+            logger.info(f"Generating Batch {i}/{len(self.batches_meta)}")
+            batch_g = BatchGenerator(batch_meta, self.dataset_meta, seeds=
+                self._task_seeds[n_generated_samples:n_generated_samples+batch_meta['batch_size']])
             batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
             batch_label_ids += n_generated_samples
             n_generated_samples += len(batch_label_ids)
@@ -94,7 +105,10 @@ class GridNavDatasetGenerator:
             self.generated_labels.append(batch_label_ids)
             self.generated_label_contents.append(batch_label_contents)
 
-        if normalise_difficulty: self.normalise_difficulty()
+        if normalise_metrics: self.normalise_metrics()
+
+        #update the dataset meta with the values automatically updated during generation
+        self.dataset_meta = self.get_dataset_metadata()
 
         # creates folder if it does not exist.
         if not os.path.exists(self.save_dir):
@@ -106,8 +120,20 @@ class GridNavDatasetGenerator:
 
         self.save_dataset_meta()
 
-    def normalise_difficulty(self):
-        pass  # TODO: implement
+    def normalise_metrics(self):
+
+            maximums = ["shortest_path", "resistance", "navigable_nodes"]
+            for key in maximums:
+                stack = []
+                for i in range(len(self.generated_label_contents)):
+                    stack.append(self.generated_label_contents[i][key])
+                stack = torch.cat(stack)
+                self.config.label_descriptors_config[key]['normalisation_factor'] = \
+                    float(stack.amax() * self.config.label_descriptors_config[key]['max'])
+                for i in range(len(self.generated_label_contents)):
+                    self.generated_label_contents[i][key] = \
+                        self.generated_label_contents[i][key].to(torch.float) \
+                        / self.config.label_descriptors_config[key]['normalisation_factor']
 
     def get_dataset_metadata(self):
         dataset_meta = {
@@ -115,9 +141,10 @@ class GridNavDatasetGenerator:
             'seed'                             : self.config.seed,
             'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
             'encoding'                         : self.config.encoding,  # types: minimal, full (only for graph)
-            'data_dim'                         : (self.config.gridworld_datadim[-1],)*2,  # TODO: assert odd. Note: always in "gridworld" type
+            'data_dim'                         : (self.config.gridworld_data_dim[-1],)*2,  # TODO: assert odd. Note: always in "gridworld" type
             'task_type'                        : self.config.task_type,
-            'label_descriptors'                : self.config.label_descriptors_config,
+            'label_descriptors':                 self.config.label_descriptors,
+            'label_descriptors_config'         : self.config.label_descriptors_config,
             'feature_descriptors'              : self.config.feature_descriptors,
             }
 
@@ -154,9 +181,9 @@ class GridNavDatasetGenerator:
                     assert num_batches % split == 0, \
                         f"Cannot split provided num_{regime}_batches ({num_batches}) by split ratio " \
                         f"{split} for task {task}. Adjust data_generation config."
-                    num_batches = int(split*num_batches)
-                    task_structures.extend([task]*num_batches)
-                    assigned_batches += num_batches
+                    task_num_batches = int(split*num_batches)
+                    task_structures.extend([task]*task_num_batches)
+                    assigned_batches += task_num_batches
 
                 assert assigned_batches == num_batches, \
                     f"Provided task structure split {str(self.config.task_structure_split)} is not compatible with " \
@@ -230,7 +257,7 @@ class GridNavDatasetGenerator:
 
 class BatchGenerator:
 
-    def __new__(cls, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+    def __new__(cls, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
 
         if batch_meta['task_structure'] == 'maze':
             instance = super().__new__(MazeBatch)
@@ -239,7 +266,7 @@ class BatchGenerator:
         else:
             raise KeyError("Task Structure was not recognised")
 
-        instance.__init__(batch_meta, dataset_meta)
+        instance.__init__(batch_meta, dataset_meta, seeds=seeds)
 
         return instance
 
@@ -249,10 +276,14 @@ class BatchGenerator:
 
 class Batch:
 
-    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
+        self.seeds = seeds
         self.batch_meta = batch_meta
         self.dataset_meta = dataset_meta
         self.data_type = dataset_meta['data_type']
+        self.label_ids = np.arange(self.batch_meta['batch_size'])
+        self.label_contents = dict.fromkeys(self.dataset_meta['label_descriptors'])
+        self.features = None
 
     def generate_batch(self):
 
@@ -266,62 +297,43 @@ class Batch:
             # assert np.array_equal(features, features3)
         elif self.data_type == 'graph':
             features = self.encode_gridworld_to_graph(features)
-        solutions = self.generate_solutions(features)
-        label_ids, label_content = self.generate_labels(solutions)
+            self.generate_label_contents(features)
 
-        return features, label_ids, label_content
+        self.features = features
+        return self.features, self.label_ids, self.label_contents
 
     def generate_data(self):
         raise NotImplementedError
 
-    def generate_labels(self, solutions: List[List[Tuple]]) -> Tuple[
-        np.ndarray, Dict[int, Any]]:
-        # call a specific quantity with
-        # labels[dataset_meta['label_descriptors'].index('wanted_label_descriptor')][label_id]
+    def generate_label_contents(self, features):
 
-        batch_id = [self.batch_meta['batch_id']] * self.batch_meta['batch_size']  # from batch_meta
+        for key in self.label_contents.keys():
+            self.label_contents[key] = []
 
-        task_difficulty = self.task_difficulty(solutions, self.dataset_meta['difficulty_descriptors'])
+        self.label_contents["seed"] = self.seeds if self.seeds is not None else [None] * self.batch_meta['batch_size']
+        self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
+        self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
 
-        seed = [0] * self.batch_meta['batch_size']  # TODO: implement
+        start_dim, goal_dim = self.dataset_meta['feature_descriptors'].index('start'), \
+                              self.dataset_meta['feature_descriptors'].index('goal')
+        for i, graph in enumerate(features):
+            start_node = int(graph.ndata["feat"][:,start_dim].argmax())
+            goal_node = int(graph.ndata["feat"][:,goal_dim].argmax())
+            graph = graph.to_networkx()
 
-        # task structure one-hot vector [0,1]
-        task_structure = np.zeros((self.batch_meta['batch_size'], len(self.dataset_meta['task_structure_descriptors'])),
-                                  dtype=int)
-        batch_task_structure_idx = self.dataset_meta['task_structure_descriptors'].index(self.batch_meta['task_structure'])
-        task_structure[:, batch_task_structure_idx] = 1
+            shortest_paths = graph_metrics.shortest_paths(graph, start_node, goal_node, num_paths=1)
+            self.label_contents["optimal_trajectories"].append(shortest_paths)
+            self.label_contents["shortest_path"].append(len(shortest_paths[0]))
 
-        # TODO: make robust against change of label descriptors (or declare label descriptors as a class var)
-        # TODO: assert checks that they are all the right dimensions
-        label_ids = np.arange(self.batch_meta['batch_size'])
-        label_contents = {0: task_difficulty, 1: task_structure, 2: batch_id, 3: seed, 4: solutions}
+            resistance_distance = graph_metrics.resistance_distance(graph, start_node, goal_node)
+            self.label_contents["resistance"].append(resistance_distance)
 
-        return label_ids, label_contents
+            num_navigable_nodes = graph_metrics.len_connected_component(graph, start_node, goal_node)
+            self.label_contents["navigable_nodes"].append(num_navigable_nodes)
 
-    #TODO implement
-    @staticmethod
-    def generate_solutions(features) -> List[List[Tuple]]:
-
-        solutions = []
-        for layout in features:
-            optimal_trajectory = (0,0)
-            solutions.append(optimal_trajectory)
-
-        return solutions
-
-    @staticmethod
-    def task_difficulty(solutions: List[List[Tuple]], difficulty_descriptors: List[str]) -> np.ndarray:
-
-        difficulty_metrics = np.zeros((len(solutions), len(difficulty_descriptors)))
-
-        if 'shortest_path' in difficulty_descriptors:
-            shortest_path_ind = difficulty_descriptors.index('shortest_path')
-            shortest_path_length = [len(solutions[i]) for i in range(len(solutions))]
-            difficulty_metrics[:, shortest_path_ind] = shortest_path_length
-
-        # TODO: add other difficulty metrics
-
-        return difficulty_metrics
+        self.label_contents["shortest_path"] = torch.tensor(self.label_contents["shortest_path"])
+        self.label_contents["resistance"] = torch.tensor(self.label_contents["resistance"])
+        self.label_contents["navigable_nodes"] = torch.tensor(self.label_contents["navigable_nodes"])
 
     @staticmethod
     def encode_maze_to_gridworld(mazes: Union[Maze, List[Maze]]) -> np.ndarray:
@@ -778,12 +790,12 @@ class Batch:
 
 class MazeBatch(Batch):
 
-    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
-        super().__init__(batch_meta, dataset_meta)
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
+        super().__init__(batch_meta, dataset_meta, seeds)
 
     def generate_data(self):
         # Set up maze generator
-        maze_generator = Maze()  # TODO: here add seed argument later
+        maze_generator = Maze()
         maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['data_dim']]
 
         # Set up generating algorithm
@@ -794,7 +806,7 @@ class MazeBatch(Batch):
 
         batch_features = []
         for i in range(self.batch_meta['batch_size']):
-            # maze_generator.set_seed(self.batch_seeds[i]) #TODO
+            maze_generator.set_seed(int(self.seeds[i]))
             maze_generator.generate()
             maze_generator.generate_entrances(False, False)
             features = self.encode_maze_to_gridworld(maze_generator)
@@ -803,284 +815,262 @@ class MazeBatch(Batch):
         batch_features = np.squeeze(batch_features)
         return batch_features
 
-    # def generate_solutions(self, features) -> List[List[Tuple]]:
-    #
-    #     solutions = []
-    #     # Set up solving algorithm
-    #     if self.batch_meta['solving_algorithm'] == 'ShortestPaths':
-    #         maze_generator.solver = ShortestPaths()
-    #     else:
-    #         raise KeyError("Maze solving algorithm was not recognised")
-    #
-    #     for i in range(self.batch_meta['batch_size']):
-    #         maze_generator.solve()
-    #         optimal_trajectory = maze_generator.solutions[0]  # TODO Check this is the right one.
-    #         solutions.append(optimal_trajectory)
-
 
 class RoomsUnstructuredBatch(Batch):
 
-    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any]):
-        super().__init__(batch_meta, dataset_meta)
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
+        super().__init__(batch_meta, dataset_meta, seeds)
 
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
         # Set up generator
-        #TODO do seed properly
         envs = [MultiRoomEnv(minNumRooms=4, maxNumRooms=12, minRoomSize=5, maxRoomSize=9,
                              grid_size=self.dataset_meta['data_dim'][0], odd=True,
-                             seed=np.random.randint(1e6)) for i in range(self.batch_meta['batch_size'])]
+                             seed=int(self.seeds[i])) for i in range(self.batch_meta['batch_size'])]
 
         batch_features = self.encode_minigrid_to_gridworld(envs)
 
         return batch_features
 
-    #TODO: Fix
-    # def generate_solutions(self, features) -> List[List[Tuple]]:
-    #
-    #     solutions = []
-    #     for layout in features:
-    #         optimal_trajectory = (0,0)  # TODO Check this is the right one.
-    #         solutions.append(optimal_trajectory)
-    #
-    #     return solutions
-
-
 if __name__ == '__main__':
-    dataset_meta = {
-        'output_file': 'dataset.meta',
-        'data_type': 'graph', #types: gridworld, grid, graph
-        'encoding': 'minimal', #types: minimal, full (only for graph)
-        'data_dim': (27, 27),  # TODO: assert odd. Note: always in "gridworld" type
-        'task_type': 'find_goal',
-        'label_descriptors': [
-            'difficulty_metrics',
-            'task structure',
-            'batch_id',
-            'seed',
-            'optimal_trajectory',
-        ],
-        'difficulty_descriptors': [
-            'shortest_path',
-            'full_exploration',
-        ],
-        'task_structure_descriptors': [
-            'rooms_unstructured_layout',
-            'rooms_square_layout',
-            'maze',
-            'dungeon',
-        ],
-        'feature_descriptors': [
-            'empty',
-            'walls',
-            'start_position',
-            'goal_position',
-        ],
-        'generating_algorithms_descriptors': [
-            'Prims',
-        ],
-        'solving_algorithms_descriptors': [
-            'ShortestPaths',
-        ],
-    }
+    generate_dataset()
 
-    # batches_meta = [
-    #     {
-    #         'output_file': 'batch_0.data',
-    #         'batch_size': 100,
-    #         'batch_id': 0,
-    #         'task_structure': 'rooms_unstructured_layout',
-    #         'generating_algorithm': 'Prims',
-    #         'generating_algorithm_options': [
-    #
-    #         ],
-    #         'solving_algorithm': 'ShortestPaths',
-    #         'solving_algorithm_options': [
-    #
-    #         ],
-    #     },
-    # ]
 
-    batches_meta = [
-        {
-            'output_file': 'batch_0.data',
-            'batch_size': 10000,
-            'batch_id': 0,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_1.data',
-            'batch_size': 10000,
-            'batch_id': 1,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_2.data',
-            'batch_size': 10000,
-            'batch_id': 2,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_3.data',
-            'batch_size': 10000,
-            'batch_id': 3,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_4.data',
-            'batch_size': 10000,
-            'batch_id': 4,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_5.data',
-            'batch_size': 10000,
-            'batch_id': 5,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_6.data',
-            'batch_size': 10000,
-            'batch_id': 6,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_7.data',
-            'batch_size': 10000,
-            'batch_id': 7,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_8.data',
-            'batch_size': 10000,
-            'batch_id': 8,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'batch_9.data',
-            'batch_size': 10000,
-            'batch_id': 9,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'test_batch_0.data',
-            'batch_size': 10000,
-            'batch_id': 10,
-            'task_structure': 'rooms_unstructured_layout',
-            'generating_algorithm': 'Minigrid_MultiRoom',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-        {
-            'output_file': 'test_batch_1.data',
-            'batch_size': 10000,
-            'batch_id': 91,
-            'task_structure': 'maze',
-            'generating_algorithm': 'Prims',
-            'generating_algorithm_options': [
-
-            ],
-            'solving_algorithm': 'ShortestPaths',
-            'solving_algorithm_options': [
-
-            ],
-        },
-    ]
-
-    task_structures = []
-    dataset_size = 0
-    for batch_meta in batches_meta:
-        if batch_meta['task_structure'] not in task_structures:
-            task_structures.append(batch_meta['task_structure'])
-        dataset_size += batch_meta['batch_size']
-    task_structures = '-'.join(task_structures)
-    f = len(dataset_meta['feature_descriptors'])
-    dataset_directory = f"ts={task_structures}-x={dataset_meta['data_type']}-s={dataset_size}-d={dataset_meta['data_dim'][0]}-f={f}-enc={dataset_meta['encoding']}"
-    MazeGenerator = GridNavDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
-    MazeGenerator.generate_dataset()
-
-    print("Done")
+# if __name__ == '__main__':
+#     dataset_meta = {
+#         'output_file': 'dataset.meta',
+#         'data_type': 'graph', #types: gridworld, grid, graph
+#         'encoding': 'minimal', #types: minimal, full (only for graph)
+#         'data_dim': (27, 27),  # TODO: assert odd. Note: always in "gridworld" type
+#         'task_type': 'find_goal',
+#         'label_descriptors': [
+#             'difficulty_metrics',
+#             'task structure',
+#             'batch_id',
+#             'seed',
+#             'optimal_trajectory',
+#         ],
+#         'difficulty_descriptors': [
+#             'shortest_path',
+#             'full_exploration',
+#         ],
+#         'task_structure_descriptors': [
+#             'rooms_unstructured_layout',
+#             'rooms_square_layout',
+#             'maze',
+#             'dungeon',
+#         ],
+#         'feature_descriptors': [
+#             'empty',
+#             'walls',
+#             'start_position',
+#             'goal_position',
+#         ],
+#         'generating_algorithms_descriptors': [
+#             'Prims',
+#         ],
+#         'solving_algorithms_descriptors': [
+#             'ShortestPaths',
+#         ],
+#     }
+#
+#     # batches_meta = [
+#     #     {
+#     #         'output_file': 'batch_0.data',
+#     #         'batch_size': 100,
+#     #         'batch_id': 0,
+#     #         'task_structure': 'rooms_unstructured_layout',
+#     #         'generating_algorithm': 'Prims',
+#     #         'generating_algorithm_options': [
+#     #
+#     #         ],
+#     #         'solving_algorithm': 'ShortestPaths',
+#     #         'solving_algorithm_options': [
+#     #
+#     #         ],
+#     #     },
+#     # ]
+#
+#     batches_meta = [
+#         {
+#             'output_file': 'batch_0.data',
+#             'batch_size': 10000,
+#             'batch_id': 0,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_1.data',
+#             'batch_size': 10000,
+#             'batch_id': 1,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_2.data',
+#             'batch_size': 10000,
+#             'batch_id': 2,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_3.data',
+#             'batch_size': 10000,
+#             'batch_id': 3,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_4.data',
+#             'batch_size': 10000,
+#             'batch_id': 4,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_5.data',
+#             'batch_size': 10000,
+#             'batch_id': 5,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_6.data',
+#             'batch_size': 10000,
+#             'batch_id': 6,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_7.data',
+#             'batch_size': 10000,
+#             'batch_id': 7,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_8.data',
+#             'batch_size': 10000,
+#             'batch_id': 8,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'batch_9.data',
+#             'batch_size': 10000,
+#             'batch_id': 9,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'test_batch_0.data',
+#             'batch_size': 10000,
+#             'batch_id': 10,
+#             'task_structure': 'rooms_unstructured_layout',
+#             'generating_algorithm': 'Minigrid_MultiRoom',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#         {
+#             'output_file': 'test_batch_1.data',
+#             'batch_size': 10000,
+#             'batch_id': 91,
+#             'task_structure': 'maze',
+#             'generating_algorithm': 'Prims',
+#             'generating_algorithm_options': [
+#
+#             ],
+#             'solving_algorithm': 'ShortestPaths',
+#             'solving_algorithm_options': [
+#
+#             ],
+#         },
+#     ]
+#
+#     task_structures = []
+#     dataset_size = 0
+#     for batch_meta in batches_meta:
+#         if batch_meta['task_structure'] not in task_structures:
+#             task_structures.append(batch_meta['task_structure'])
+#         dataset_size += batch_meta['batch_size']
+#     task_structures = '-'.join(task_structures)
+#     f = len(dataset_meta['feature_descriptors'])
+#     dataset_directory = f"ts={task_structures}-x={dataset_meta['data_type']}-s={dataset_size}-d={dataset_meta['data_dim'][0]}-f={f}-enc={dataset_meta['encoding']}"
+#     MazeGenerator = GridNavDatasetGenerator(dataset_meta=dataset_meta, batches_meta=batches_meta, save_dir=dataset_directory)
+#     MazeGenerator.generate_dataset()
+#
+#     print("Done")
