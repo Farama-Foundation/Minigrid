@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     window = Window("gym_minigrid - " + args.env)
     window.reg_key_handler(lambda event: key_handler(env, window, event))
-    
+
     seed = None if args.seed == -1 else args.seed
     reset(env, window, seed)
 

@@ -1514,8 +1514,8 @@ class MiniGridEnv(gym.Env):
 
         Args:
 
-            highlight (bool): If true, the agent's field of view or point of view is higlighted with a lighter gray color.
-            tile_size (int): How many pixels will form a tile from the NxM grid. 
+            highlight (bool): If true, the agent's field of view or point of view is highlighted with a lighter gray color.
+            tile_size (int): How many pixels will form a tile from the NxM grid.
             agent_pov (bool): If true, the rendered frame will only contain the point of view of the agent.
 
         Returns:
@@ -1523,7 +1523,7 @@ class MiniGridEnv(gym.Env):
             frame (np.ndarray): A frame of type numpy.ndarray with shape (x, y, 3) representing RGB values for the x-by-y pixel image.
 
         """
-        
+
         if agent_pov:
             return self.get_pov_render(tile_size)
         else:
