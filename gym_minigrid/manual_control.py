@@ -33,7 +33,7 @@ def step(env, window, action):
         print("truncated!")
         reset(env, window)
     else:
-        img = env.get_full_render()
+        img = env.get_frame()
         redraw(window, img)
 
 

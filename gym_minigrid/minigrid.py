@@ -926,9 +926,6 @@ class MiniGridEnv(gym.Env):
 
         self.renderer = Renderer(self.render_mode, frame_rendering)
 
-        # Initialize the state
-        self.reset()
-
     def reset(self, *, seed=None, return_info=False, options=None):
         super().reset(seed=seed)
 

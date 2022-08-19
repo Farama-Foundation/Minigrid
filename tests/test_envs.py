@@ -121,12 +121,11 @@ def test_agent_sees_method(env_id):
     env = gym.make(env_id, new_step_api=True)
     goal_pos = (env.grid.width - 2, env.grid.height - 2)
 
+    # Test the env.agent_sees() function
+    env.reset()
     # Test the "in" operator on grid objects
     assert ("green", "goal") in env.grid
     assert ("blue", "key") not in env.grid
-
-    # Test the env.agent_sees() function
-    env.reset()
     for i in range(0, 500):
         action = env.action_space.sample()
         obs, reward, terminated, truncated, info = env.step(action)
