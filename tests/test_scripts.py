@@ -23,7 +23,7 @@ def test_window():
     caption = "testing caption"
     window.set_caption(caption)
 
-    window.show()
+    window.show(block=False)
 
     window.close()
 
