@@ -17,7 +17,7 @@ def reset(env, window):
         print("Mission: %s" % env.mission)
         window.set_caption(env.mission)
 
-    img = env.get_render()
+    img = env.get_frame()
 
     redraw(window, img)
 

@@ -164,10 +164,6 @@ class RGBImgObsWrapper(ObservationWrapper):
     def __init__(self, env, tile_size=8):
         super().__init__(env, new_step_api=env.new_step_api)
 
-        # Rendering attributes
-        self.highlight = True
-        self.tile_size = tile_size
-
         self.tile_size = tile_size
 
         new_image_space = spaces.Box(
@@ -182,7 +178,7 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_full_render()
+        rgb_img = self.get_frame(highlight=True, tile_size=self.tile_size)
 
         return {**obs, "image": rgb_img}
 
@@ -196,8 +192,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
     def __init__(self, env, tile_size=8):
         super().__init__(env, new_step_api=env.new_step_api)
 
-        # Rendering attributes
-        self.unwrapped.agent_pov = True
+        # Rendering attributes for observations
         self.tile_size = tile_size
 
         obs_shape = env.observation_space.spaces["image"].shape
@@ -213,7 +208,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_pov_render()
+        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
 
         return {**obs, "image": rgb_img_partial}
 

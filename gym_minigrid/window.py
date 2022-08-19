@@ -88,6 +88,5 @@ class Window:
         """
         Close the window
         """
-
         plt.close()
         self.closed = True
