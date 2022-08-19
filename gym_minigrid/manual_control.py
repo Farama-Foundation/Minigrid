@@ -102,7 +102,6 @@ if __name__ == "__main__":
     env = gym.make(
         args.env,
         new_step_api=True,
-        render_mode="human",  # Note that we do not need to use "human", as Window handles human rendering.
         tile_size=args.tile_size,
     )
 
