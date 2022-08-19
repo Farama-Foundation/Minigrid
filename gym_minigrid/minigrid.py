@@ -825,9 +825,6 @@ class MiniGridEnv(gym.Env):
     """
 
     metadata = {
-        # Deprecated: use 'render_modes' instead
-        "render.modes": ["human", "rgb_array"],
-        "video.frames_per_second": 10,  # Deprecated: use 'render_fps' instead
         "render_modes": ["human", "rgb_array", "single_rgb_array"],
         "render_fps": 10,
     }
