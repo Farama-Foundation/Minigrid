@@ -192,8 +192,13 @@ class GridNavDatasetGenerator:
                         raise NotImplementedError(f'No task generation algorithm available for task structure '
                                                   f'"{task_structures[i]}" ')
 
+                    if batch_id >= 90:
+                        prefix = "test_"
+                    else:
+                        prefix = ""
+
                     batch_meta = {
-                        'output_file': f'batch_{batch_id}.data',
+                        'output_file': f'{prefix}batch_{batch_id}.data',
                         'batch_size': batch_size,
                         'batch_id': batch_id,
                         'task_structure': task_structures[i],
@@ -233,6 +238,7 @@ class GridNavDatasetGenerator:
             entry = {'label_contents': batch_label_contents, 'batch_meta': batch_meta}
             dgl.data.utils.save_graphs(filename, batch_data, {'labels': batch_labels})
             filename += '.meta'
+            logger.info(f"Saving Batch {batch_meta['batch_id']} Metadata to {filename}.")
         else:
             entry = {'data': batch_data, 'labels': batch_labels,
                      'label_contents': batch_label_contents, 'batch_meta': batch_meta}
