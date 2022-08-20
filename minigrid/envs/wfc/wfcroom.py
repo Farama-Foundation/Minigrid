@@ -555,9 +555,12 @@ class Batch:
 
 
     @staticmethod
-    def encode_decoder_mode_to_graph(mode_A:torch.Tensor, mode_Fx:torch.Tensor, make_valid=False, device=None):
-        #TODO: add prevent_invalid option, implement device
+    def encode_decoder_mode_to_graph(mode_A:torch.Tensor, mode_Fx:torch.Tensor, force_valid_A=False, device=None):
+        #TODO: add prevent_invalid option, implement device (need to make encode_reduced_adj_to_adj torch compatible)
         device = device if device is not None else mode_A.device
+        if force_valid_A:
+            # Note: this doesn't guarantee validity for Fx
+            mode_A, _ = Batch.is_valid_reduced_A(mode_A, n_nodes=mode_Fx.shape[1], correct_A=True)
         adj = Batch.encode_reduced_adj_to_adj(mode_A.reshape(mode_A.shape[0], -1, 2).cpu().numpy())
         mode_Fx = mode_Fx.cpu()
 
@@ -569,6 +572,34 @@ class Batch:
             graphs.append(g)
 
         return graphs
+
+    @staticmethod
+    def is_valid_reduced_A(A, n_nodes, correct_A=False, threshold=0.5):
+
+        if len(A.shape) == 2:
+            A = A.reshape(A.shape[0], -1, 2)
+
+        assert len(A.shape) == 3
+        assert A.shape[1], A.shape[2] == (n_nodes - 1, 2)
+
+        n_root = np.sqrt(n_nodes)
+        seq = np.arange(1, n_root)
+        inds_grid_right = seq * n_root - 1
+        # Note: the -1 below achieves 2 things:
+        # 1) catch the first element of the last row,
+        # 2) account for the last node (bottom right corner) not being present in A reduced
+        inds_grid_bot = (n_root - 1) * n_root + seq - 1
+
+        if (A[:, inds_grid_bot, 1] >= threshold).any() or (A[:, inds_grid_right, 0] >= threshold).any():
+            mask = (A[:, inds_grid_bot, 1] >= threshold).sum(axis=-1) + (A[:, inds_grid_right, 0] >= threshold).sum(axis=-1)
+            valid = ~mask.to(torch.bool)
+            if correct_A:
+                A[:, inds_grid_bot, 1] = 0
+                A[:, inds_grid_right, 0] = 0
+        else:
+            valid = torch.tensor([True] * A.shape[0], dtype=torch.bool, device=A.device)
+
+        return A, valid
 
     #Note: Returns the gridworld in one given permutation
     @staticmethod
