@@ -641,15 +641,16 @@ class Nav2DTransforms:
         return valid, A_red
 
     @staticmethod
-    def force_valid_goal(graphs:nx.Graph, logits_goal:torch.tensor):
+    def force_valid_goal(graphs: nx.Graph, logits_goal: torch.tensor, start_nodes: List[int]):
         """
-        Make the layouts valid by forcing the goal node to be on the same component than the start node.
+        Make the layouts valid by forcing the goal node to be on the same component of the start node
+        (but not at the same position).
         """
 
         all_nodes = set(range(logits_goal.shape[-1]))
         for m, graph in enumerate(graphs):
             connected_nodes = set(graph.nodes)
-            to_remove_nodes = list(all_nodes - connected_nodes)
+            to_remove_nodes = list(all_nodes - connected_nodes - {start_nodes[m]})
             logits_goal[m, to_remove_nodes] = 0.
 
         goal_nodes = logits_goal.argmax(dim=-1)
