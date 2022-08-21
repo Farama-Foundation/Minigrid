@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from data_generators import OBJECT_TO_CHANNEL_AND_IDX, Batch, OBJECT_TO_FEATURE_DIM
+from data_generators import OBJECT_TO_CHANNEL_AND_IDX, OBJECT_TO_FEATURE_DIM
 from gym_minigrid.minigrid import MiniGridEnv, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
 

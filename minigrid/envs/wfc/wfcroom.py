@@ -17,7 +17,7 @@ from gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 
 from util import graph_metrics
 import util.transforms as tr
-from util.util import seed_everything
+import util.util as util
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class GridNavDatasetGenerator:
                 self.seed = self.config.label_descriptors_config.seed = 123456 #default seed
             else:
                 self.seed = self.config.seed
-            seed_everything(self.seed)
+            util.seed_everything(self.seed)
             logger.info(f"Using seed {self.seed}")
 
         self._task_seeds = torch.randperm(int(1e7)) #10M possible seeds
@@ -285,6 +285,8 @@ class Batch:
     def generate_batch(self):
 
         features = self.generate_data()
+        if not util.check_unique(features).all():
+            logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
         if self.data_type == 'gridworld':
             pass
         elif self.data_type == 'grid':
