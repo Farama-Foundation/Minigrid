@@ -1,6 +1,6 @@
 from gym.envs.registration import register
 
-from gym_minigrid.minigrid import Wall
+from gym_minigrid import minigrid, roomgrid, wrappers
 
 
 def register_minigrid_envs():
@@ -44,25 +44,25 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
         entry_point="gym_minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N2-v0",
         entry_point="gym_minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N3-v0",
         entry_point="gym_minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS11N5-v0",
         entry_point="gym_minigrid.envs:CrossingEnv",
-        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": Wall},
+        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": minigrid.Wall},
     )
 
     # DistShift
