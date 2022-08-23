@@ -94,6 +94,8 @@ class GridNavDatasetGenerator:
             self.generated_labels.append(batch_label_ids)
             self.generated_label_contents.append(batch_label_contents)
 
+        self.config.size = n_generated_samples
+
         if normalise_metrics: self.normalise_metrics()
 
         #update the dataset meta with the values automatically updated during generation
@@ -215,9 +217,9 @@ class GridNavDatasetGenerator:
         base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
 
         if dir_name is None:
-            task_structures = '-'.join(self.config.label_descriptors_config.task_structures)
+            task_structures = '-'.join(sorted(self.config.label_descriptors_config.task_structures))
             dir_name = f"ts={task_structures}-x={self.dataset_meta['data_type']}-s={self.config.size}" \
-                                f"-d={self.config.gridworld_data_dim[-1]}-f={self.config.gridworld_data_dim[0]}" \
+                                f"-d={self.config.gridworld_data_dim[-1]}-f={len(self.config.feature_descriptors)}" \
                                 f"-enc={self.config.encoding}"
         return base_dir + dir_name + '/'
 

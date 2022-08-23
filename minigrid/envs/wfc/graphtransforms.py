@@ -575,7 +575,7 @@ class Nav2DTransforms:
         return nodes_inds_t
 
     @staticmethod
-    def check_validity_start_goal(start_nodes, goal_nodes, A_red):
+    def check_validity_start_goal(start_nodes, goal_nodes, A_red, threshold=0.5):
         """
         Check if the start and goal nodes are valid.
         """
@@ -583,10 +583,10 @@ class Nav2DTransforms:
         batch_inds = torch.arange(0, start_nodes.shape[0])
 
         mask1 = start_nodes == goal_nodes
-        mask2 = A_red[batch_inds, start_nodes].sum(dim=-1) == 0
-        mask3 = A_red[batch_inds, goal_nodes].sum(dim=-1) == 0
-        # valid only if NOT(start==goal AND no edges from start AND no edges from goal)
-        valid = ~(mask1 & mask2 & mask3)
+        mask2 = A_red[batch_inds, start_nodes].amax(dim=-1) < threshold
+        mask3 = A_red[batch_inds, goal_nodes].amax(dim=-1) < threshold
+        # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
+        valid = ~(mask1 | mask2 | mask3)
         # TODO: check with this
         # check that start and goal are not isolated (inactive) nodes
         # if start in list(nx.isolates(graph)) or goal in list(nx.isolates(graph)):
@@ -595,9 +595,10 @@ class Nav2DTransforms:
         return valid
 
     @staticmethod
-    def check_validity_reduced_A(A, n_nodes, correct_A=False, threshold=0.5):
+    def check_invalid_edges_reduced_A(A, n_nodes, correct_A=False, threshold=0.5):
         """
-        Check if the reduced adjacency matrix is valid. Will always return true flags if A is corrected
+        Checks for and optionally corrects invalid edges in the reduced adjacency matrix. Will always return true if
+        correct_A flag is true. Does not check if there are no edges between nodes.
         """
 
         if len(A.shape) == 2:
@@ -629,19 +630,19 @@ class Nav2DTransforms:
         return A, valid
 
     @staticmethod
-    def check_validity(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False):
+    def check_validity(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False, threshold=0.5):
         """
         Check if the reduced adjacency matrix is valid and checks if the start and goal nodes are placed correctly
         """
 
-        A_red, valid_A = Nav2DTransforms.check_validity_reduced_A(A_red, n_nodes, correct_A)
-        valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A_red)
+        A_red, valid_A = Nav2DTransforms.check_invalid_edges_reduced_A(A_red, n_nodes, correct_A, threshold=threshold)
+        valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A_red, threshold=threshold)
         valid = valid_A & valid_start_goal
 
         return valid, A_red
 
     @staticmethod
-    def force_valid_layout(graphs: nx.Graph, logits_start, logits_goal: torch.tensor):
+    def force_valid_layout(graphs: List[nx.Graph], logits_start, logits_goal: torch.tensor):
         """
         Given a fully connected graph (previously reduced to its principal component), ensures the generated layouts
         valid by forcing the start and goal node to be on the largest connected component.
@@ -649,11 +650,16 @@ class Nav2DTransforms:
         """
 
         all_nodes = set(range(logits_goal.shape[-1]))
+        is_valid = [True] * len(logits_start)
         for m, graph in enumerate(graphs):
             connected_nodes = set(graph.nodes)
             to_remove_nodes_start = list(all_nodes - connected_nodes)
             start_node = logits_start[m].argmax()
             to_remove_nodes_goal = list(all_nodes - connected_nodes - {start_node.item()})
+
+            if to_remove_nodes_goal==all_nodes or to_remove_nodes_start==all_nodes:
+                is_valid[m] = False
+                continue
 
             logits_start[m, to_remove_nodes_start] = 0.
             logits_goal[m, to_remove_nodes_goal] = 0.
@@ -663,5 +669,5 @@ class Nav2DTransforms:
         start_onehot = F.one_hot(start_nodes, num_classes=logits_start.shape[-1]).to(logits_start)
         goal_onehot = F.one_hot(goal_nodes, num_classes=logits_goal.shape[-1]).to(logits_goal)
 
-        return start_onehot, goal_onehot, start_nodes.tolist(), goal_nodes.tolist()
+        return start_onehot, goal_onehot, start_nodes.tolist(), goal_nodes.tolist(), is_valid
 
