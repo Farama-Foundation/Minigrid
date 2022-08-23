@@ -641,20 +641,27 @@ class Nav2DTransforms:
         return valid, A_red
 
     @staticmethod
-    def force_valid_goal(graphs: nx.Graph, logits_goal: torch.tensor, start_nodes: List[int]):
+    def force_valid_layout(graphs: nx.Graph, logits_start, logits_goal: torch.tensor):
         """
-        Make the layouts valid by forcing the goal node to be on the same component of the start node
+        Given a fully connected graph (previously reduced to its principal component), ensures the generated layouts
+        valid by forcing the start and goal node to be on the largest connected component.
         (but not at the same position).
         """
 
         all_nodes = set(range(logits_goal.shape[-1]))
         for m, graph in enumerate(graphs):
             connected_nodes = set(graph.nodes)
-            to_remove_nodes = list(all_nodes - connected_nodes - {start_nodes[m]})
-            logits_goal[m, to_remove_nodes] = 0.
+            to_remove_nodes_start = list(all_nodes - connected_nodes)
+            start_node = logits_start[m].argmax()
+            to_remove_nodes_goal = list(all_nodes - connected_nodes - {start_node.item()})
 
+            logits_start[m, to_remove_nodes_start] = 0.
+            logits_goal[m, to_remove_nodes_goal] = 0.
+
+        start_nodes = logits_start.argmax(dim=-1)
         goal_nodes = logits_goal.argmax(dim=-1)
+        start_onehot = F.one_hot(start_nodes, num_classes=logits_start.shape[-1]).to(logits_start)
         goal_onehot = F.one_hot(goal_nodes, num_classes=logits_goal.shape[-1]).to(logits_goal)
 
-        return goal_onehot, goal_nodes.tolist()
+        return start_onehot, goal_onehot, start_nodes.tolist(), goal_nodes.tolist()
 
