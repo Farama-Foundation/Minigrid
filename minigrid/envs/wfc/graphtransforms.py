@@ -1,3 +1,5 @@
+import logging
+
 import dgl
 import einops
 import networkx as nx
@@ -13,6 +15,7 @@ from data_generators import OBJECT_TO_CHANNEL_AND_IDX, OBJECT_TO_FEATURE_DIM
 from gym_minigrid.minigrid import MiniGridEnv, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
 
+logger = logging.getLogger(__name__)
 
 class BinaryTransform(object):
     def __init__(self, thr):
@@ -309,6 +312,8 @@ class Nav2DTransforms:
 
         mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx))
 
+        logger.info(f"encode_decoder_output_to_graph(): Executed mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx)).")
+
         start_dim = decoder.attributes.index('start')
         goal_dim = decoder.attributes.index('goal')
         n_nodes = mode_Fx.shape[1]
@@ -316,19 +321,26 @@ class Nav2DTransforms:
         # TODO correct_Fx
         mode_A = mode_A.reshape(mode_A.shape[0], -1, 2)
 
+        logger.info(f"encode_decoder_output_to_graph(): Executed mode_A = mode_A.reshape(mode_A.shape[0], -1, 2).")
+
         start_nodes = mode_Fx[..., start_dim].argmax(dim=-1)
         goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
-        is_valid, mode_A = Nav2DTransforms.check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
 
+        logger.info(f"encode_decoder_output_to_graph(): Executed goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1).")
+        is_valid, mode_A = Nav2DTransforms.check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
+        logger.info(f"encode_decoder_output_to_graph(): Executed Nav2DTransforms.check_validity().")
         adj = Nav2DTransforms.encode_reduced_adj_to_adj(mode_A.cpu().numpy())
+        logger.info(f"encode_decoder_output_to_graph(): Nav2DTransforms.encode_reduced_adj_to_adj().")
         mode_Fx = mode_Fx.cpu()
 
+        logger.info(f"encode_decoder_output_to_graph(): Executed mode_Fx = mode_Fx.cpu().")
         graphs = []
         for m in range(adj.shape[0]):
             src, dst = np.nonzero(adj[m])
             g = dgl.graph((src, dst), num_nodes=len(mode_Fx[m]))
             g.ndata['feat'] = mode_Fx[m]
             graphs.append(g)
+        logger.info(f"encode_decoder_output_to_graph(): Executed graphs.append(g) m times.")
 
         return graphs, start_nodes, goal_nodes, is_valid
 
