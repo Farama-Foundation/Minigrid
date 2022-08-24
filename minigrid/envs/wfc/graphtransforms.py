@@ -329,6 +329,7 @@ class Nav2DTransforms:
         logger.info(f"encode_decoder_output_to_graph(): Executed goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1).")
         is_valid, mode_A = Nav2DTransforms.check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
         logger.info(f"encode_decoder_output_to_graph(): Executed Nav2DTransforms.check_validity().")
+        #DEBUG: CRASHING HERE
         adj = Nav2DTransforms.encode_reduced_adj_to_adj(mode_A.cpu().numpy())
         logger.info(f"encode_decoder_output_to_graph(): Nav2DTransforms.encode_reduced_adj_to_adj().")
         mode_Fx = mode_Fx.cpu()
@@ -554,6 +555,7 @@ class Nav2DTransforms:
 
     @staticmethod
     def encode_reduced_adj_to_adj(adj_r: np.ndarray):
+        #DEBUG: CRASHING
         # only for square grids
         # adj shape (m, n-1, 2)
         A = np.empty((adj_r.shape[0], adj_r.shape[1] + 1, adj_r.shape[1] + 1))
@@ -646,9 +648,18 @@ class Nav2DTransforms:
         """
         Check if the reduced adjacency matrix is valid and checks if the start and goal nodes are placed correctly
         """
-
+        logger.info(f"check_validity(): Entered function.")
+        logger.info(f"check_validity(): Inputs:")
+        logger.info(f"A_red:{A_red}")
+        logger.info(f"start_nodes{start_nodes}")
+        logger.info(f"goal_nodes{goal_nodes}")
+        logger.info(f"n_nodes={n_nodes}")
+        logger.info(f"correct_A={correct_A}")
+        logger.info(f"threshold={threshold}")
         A_red, valid_A = Nav2DTransforms.check_invalid_edges_reduced_A(A_red, n_nodes, correct_A, threshold=threshold)
+        logger.info(f"check_validity(): Executed check_invalid_edges_reduced_A().")
         valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A_red, threshold=threshold)
+        logger.info(f"check_validity(): Executed check_validity_start_goal().")
         valid = valid_A & valid_start_goal
 
         return valid, A_red
