@@ -327,14 +327,11 @@ class Nav2DTransforms:
         goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
 
         logger.info(f"encode_decoder_output_to_graph(): Executed goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1).")
-        is_valid, mode_A = Nav2DTransforms.check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
+        is_valid, adj = Nav2DTransforms._check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
         logger.info(f"encode_decoder_output_to_graph(): Executed Nav2DTransforms.check_validity().")
         #DEBUG: CRASHING HERE *2
-        logger.info(f"encode_decoder_output_to_graph(): Encoding mode_A to numpy.")
-        mode_A = mode_A.cpu().numpy()
-        adj = Nav2DTransforms.encode_reduced_adj_to_adj(mode_A)
-        logger.info(f"encode_decoder_output_to_graph(): Nav2DTransforms.encode_reduced_adj_to_adj().")
         mode_Fx = mode_Fx.cpu()
+        adj = adj.cpu().numpy()
 
         logger.info(f"encode_decoder_output_to_graph(): Executed mode_Fx = mode_Fx.cpu().")
         graphs = []
@@ -591,39 +588,29 @@ class Nav2DTransforms:
         return nodes_inds_t
 
     @staticmethod
-    def check_validity_start_goal(start_nodes, goal_nodes, A_red, threshold=0.5):
+    def check_validity_start_goal(start_nodes: torch.Tensor, goal_nodes: torch.Tensor, A:torch.Tensor, threshold:int=0.5) -> torch.Tensor:
         """
         Check if the start and goal nodes are valid.
         """
         logger.info("check_validity_start_goal(): Entering function")
-        logger.info(f"check_validity_start_goal(): Input shapes: start_nodes {start_nodes.shape}, goal_nodes {goal_nodes.shape}, A_red {A_red.shape}")
-        device = start_nodes.device
-        start_nodes = start_nodes.cpu()
-        goal_nodes = goal_nodes.cpu()
-        A_red = A_red.cpu()
-
-        logger.info("check_validity_start_goal(): Moved, start_nodes, goal_nodes, A_red to cpu")
+        logger.info(f"check_validity_start_goal(): Input shapes: start_nodes {start_nodes.shape}, goal_nodes {goal_nodes.shape}, A {A.shape}")
+        # device = start_nodes.device
+        # start_nodes = start_nodes.cpu()
+        # goal_nodes = goal_nodes.cpu()
+        # A = A.cpu()
+        #
+        # logger.info("check_validity_start_goal(): Moved, start_nodes, goal_nodes, A to cpu")
 
         batch_inds = torch.arange(0, start_nodes.shape[0])
 
         mask1 = start_nodes == goal_nodes
-        mask2 = A_red[batch_inds, start_nodes].amax(dim=-1) < threshold
-        mask3 = A_red[batch_inds, goal_nodes].amax(dim=-1) < threshold
+        mask2 = A[batch_inds, start_nodes].amax(dim=-1) < threshold
+        mask3 = A[batch_inds, goal_nodes].amax(dim=-1) < threshold
         # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
         valid = ~(mask1 | mask2 | mask3)
 
-        # start_nodes = start_nodes.cpu().numpy()
-        # #rewriting in numpy:
-        # batch_inds = np.arange(0, start_nodes.shape[0])
-        #
-        # mask1 = start_nodes == goal_nodes
-        # mask2 = A_red[batch_inds, start_nodes].max(axis=-1) < threshold
-        # mask3 = A_red[batch_inds, goal_nodes].max(axis=-1) < threshold
-        # # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
-        # valid = ~(mask1 | mask2 | mask3)
-
-
-        return valid.to(device)
+        return valid
+        # return valid.to(device)
 
     @staticmethod
     def check_invalid_edges_reduced_A(A, n_nodes, correct_A=False, threshold=0.5):
@@ -661,9 +648,13 @@ class Nav2DTransforms:
         return A, valid
 
     @staticmethod
-    def check_validity(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False, threshold=0.5):
+    def _check_validity(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False, threshold=0.5) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Check if the reduced adjacency matrix is valid and checks if the start and goal nodes are placed correctly
+
+        Returns:
+            - valid: an boolean tensor of shape (batch_size,) indicating whether the reduced adjacency matrix is valid
+            - A: the full adjacency matrices. Corrected if correct_A is True.
         """
         logger.debug(f"check_validity(): DOES DEBUG WORK HERE??")
         logger.info(f"check_validity(): Entered function.")
@@ -677,11 +668,13 @@ class Nav2DTransforms:
         A_red, valid_A = Nav2DTransforms.check_invalid_edges_reduced_A(A_red, n_nodes, correct_A, threshold=threshold)
         logger.info(f"check_validity(): Executed check_invalid_edges_reduced_A().")
         # DEBUG: crash here
-        valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A_red, threshold=threshold)
+        A = Nav2DTransforms.encode_reduced_adj_to_adj(A_red.cpu().numpy())
+        A = torch.tensor(A, device=start_nodes.device, dtype=torch.float)
+        valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A, threshold=threshold)
         logger.info(f"check_validity(): Executed check_validity_start_goal().")
         valid = valid_A & valid_start_goal
 
-        return valid, A_red
+        return valid, A
 
     @staticmethod
     def force_valid_layout(graphs: List[nx.Graph], logits_start, logits_goal: torch.tensor):
