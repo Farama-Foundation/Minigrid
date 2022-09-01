@@ -380,7 +380,7 @@ class Nav2DTransforms:
             # n_nodes = Fx.shape[-2]
             n_nodes = int(A.shape[
                               -1] / 2 + 1)  # TODO: find a better way to handle full graph encoding (may require an additional input argument)
-            A = torch.reshape(A, (A.shape[0], -1, 2))
+            A = A.reshape(A.shape[0], -1, 2)
             A = A.cpu().numpy()  # TODO make more efficient to handle tensors
             if Fx is not None:
                 Fx = Fx.cpu().numpy()
