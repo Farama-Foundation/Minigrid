@@ -3,9 +3,68 @@ from gym_minigrid.roomgrid import RoomGrid
 
 
 class ObstructedMazeEnv(RoomGrid):
+
     """
-    A blue ball is hidden in the maze. Doors may be locked,
-    doors may be obstructed by a ball and keys may be hidden in boxes.
+    ### Description
+
+    The agent has to pick up a box which is placed in a corner of a 3x3 maze.
+    The doors are locked, the keys are hidden in boxes and doors are obstructed
+    by balls. This environment can be solved without relying on language.
+
+    ### Mission Space
+
+    "pick up the {COLOR_NAMES[0]} ball"
+
+    ### Action Space
+
+    | Num | Name         | Action                    |
+    |-----|--------------|---------------------------|
+    | 0   | left         | Turn left                 |
+    | 1   | right        | Turn right                |
+    | 2   | forward      | Move forward              |
+    | 3   | pickup       | Pick up an object         |
+    | 4   | drop         | Unused                    |
+    | 5   | toggle       | Toggle/activate an object |
+    | 6   | done         | Unused                    |
+
+    ### Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ### Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ### Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent picks up the blue ball.
+    2. Timeout (see `max_steps`).
+
+    ### Registered Configurations
+
+    "NDl" are the number of doors locked.
+    "h" if the key is hidden in a box.
+    "b" if the door is obstructed by a ball.
+    "Q" number of quarters that will have doors and keys out of the 9 that the
+    map already has.
+    "Full" 3x3 maze with "h" and "b" options.
+
+    - `MiniGrid-ObstructedMaze-1Dl-v0`
+    - `MiniGrid-ObstructedMaze-1Dlh-v0`
+    - `MiniGrid-ObstructedMaze-1Dlhb-v0`
+    - `MiniGrid-ObstructedMaze-2Dl-v0`
+    - `MiniGrid-ObstructedMaze-2Dlh-v0`
+    - `MiniGrid-ObstructedMaze-2Dlhb-v0`
+    - `MiniGrid-ObstructedMaze-1Q-v0`
+    - `MiniGrid-ObstructedMaze-2Q-v0`
+    - `MiniGrid-ObstructedMaze-Full-v0`
+
     """
 
     def __init__(self, num_rows, num_cols, num_rooms_visited, **kwargs):
