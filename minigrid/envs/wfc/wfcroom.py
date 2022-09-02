@@ -320,7 +320,7 @@ class Batch:
         for i, graph in enumerate(features):
             start_node = int(graph.ndata["feat"][:,start_dim].argmax())
             goal_node = int(graph.ndata["feat"][:,goal_dim].argmax())
-            graph, solvable = graph_metrics.prepare_graph(graph, start_node, goal_node)
+            graph, valid, solvable = graph_metrics.prepare_graph(graph, start_node, goal_node)
 
             shortest_paths = graph_metrics.shortest_paths(graph, start_node, goal_node, num_paths=1)
             self.label_contents["optimal_trajectories"].append(shortest_paths)

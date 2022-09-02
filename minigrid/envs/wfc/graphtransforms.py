@@ -677,32 +677,31 @@ class Nav2DTransforms:
         return valid, A
 
     @staticmethod
-    def force_valid_layout(graphs: List[nx.Graph], logits_start, logits_goal: torch.tensor):
+    def force_valid_layout(graphs: List[nx.Graph], probs_start, probs_goal: torch.tensor):
         """
         Given a fully connected graph (previously reduced to its principal component), ensures the generated layouts
         valid by forcing the start and goal node to be on the largest connected component.
         (but not at the same position).
         """
 
-        all_nodes = set(range(logits_goal.shape[-1]))
-        is_valid = [True] * len(logits_start)
+        all_nodes = set(range(probs_goal.shape[-1]))
+        is_valid = [True] * len(probs_start)
         for m, graph in enumerate(graphs):
             connected_nodes = set(graph.nodes)
-            to_remove_nodes_start = list(all_nodes - connected_nodes)
-            start_node = logits_start[m].argmax()
-            to_remove_nodes_goal = list(all_nodes - connected_nodes - {start_node.item()})
-
-            if to_remove_nodes_goal==all_nodes or to_remove_nodes_start==all_nodes:
+            if len(connected_nodes) < 2:
                 is_valid[m] = False
                 continue
+            to_remove_nodes_start = list(all_nodes - connected_nodes)
+            probs_start[m, to_remove_nodes_start] = 0.
+            start_node = probs_start[m].argmax()
 
-            logits_start[m, to_remove_nodes_start] = 0.
-            logits_goal[m, to_remove_nodes_goal] = 0.
+            to_remove_nodes_goal = list(all_nodes - connected_nodes - {start_node.item()})
+            probs_goal[m, to_remove_nodes_goal] = 0.
 
-        start_nodes = logits_start.argmax(dim=-1)
-        goal_nodes = logits_goal.argmax(dim=-1)
-        start_onehot = F.one_hot(start_nodes, num_classes=logits_start.shape[-1]).to(logits_start)
-        goal_onehot = F.one_hot(goal_nodes, num_classes=logits_goal.shape[-1]).to(logits_goal)
+        start_nodes = probs_start.argmax(dim=-1)
+        goal_nodes = probs_goal.argmax(dim=-1)
+        start_onehot = F.one_hot(start_nodes, num_classes=probs_start.shape[-1]).to(probs_start)
+        goal_onehot = F.one_hot(goal_nodes, num_classes=probs_goal.shape[-1]).to(probs_goal)
 
         return start_onehot, goal_onehot, start_nodes.tolist(), goal_nodes.tolist(), is_valid
 
