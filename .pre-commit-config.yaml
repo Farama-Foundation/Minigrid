@@ -8,8 +8,8 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-#        args:
-#          - --ignore-words-list=
+        args:
+          - --ignore-words-list=linz
   - repo: https://gitlab.com/PyCQA/flake8
     rev: 4.0.1
     hooks:
