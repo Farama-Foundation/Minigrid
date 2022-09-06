@@ -312,8 +312,6 @@ class Nav2DTransforms:
 
         mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx))
 
-        logger.info(f"encode_decoder_output_to_graph(): Executed mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx)).")
-
         start_dim = decoder.attributes.index('start')
         goal_dim = decoder.attributes.index('goal')
         n_nodes = mode_Fx.shape[1]
@@ -321,26 +319,20 @@ class Nav2DTransforms:
         # TODO correct_Fx
         mode_A = mode_A.reshape(mode_A.shape[0], -1, 2)
 
-        logger.info(f"encode_decoder_output_to_graph(): Executed mode_A = mode_A.reshape(mode_A.shape[0], -1, 2).")
-
         start_nodes = mode_Fx[..., start_dim].argmax(dim=-1)
         goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
 
-        logger.info(f"encode_decoder_output_to_graph(): Executed goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1).")
         is_valid, adj = Nav2DTransforms._check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
-        logger.info(f"encode_decoder_output_to_graph(): Executed Nav2DTransforms.check_validity().")
-        #DEBUG: CRASHING HERE *2
+
         mode_Fx = mode_Fx.cpu()
         adj = adj.cpu().numpy()
 
-        logger.info(f"encode_decoder_output_to_graph(): Executed mode_Fx = mode_Fx.cpu().")
         graphs = []
         for m in range(adj.shape[0]):
             src, dst = np.nonzero(adj[m])
             g = dgl.graph((src, dst), num_nodes=len(mode_Fx[m]))
             g.ndata['feat'] = mode_Fx[m]
             graphs.append(g)
-        logger.info(f"encode_decoder_output_to_graph(): Executed graphs.append(g) m times.")
 
         return graphs, start_nodes, goal_nodes, is_valid
 
@@ -407,6 +399,7 @@ class Nav2DTransforms:
 
         # Modes for which we need A
         if mode in [0, 1]:
+            A, _ = Nav2DTransforms.check_invalid_edges_reduced_A(A, n_nodes, correct_A=True, threshold=0.5)
             gridworlds_layouts = Nav2DTransforms.encode_reduced_adj_to_gridworld_layout(A, gridworld_layout_dim,
                                                                                         probalistic_mode=probabilistic_mode)
             if mode in [0, ]:
@@ -592,14 +585,6 @@ class Nav2DTransforms:
         """
         Check if the start and goal nodes are valid.
         """
-        logger.info("check_validity_start_goal(): Entering function")
-        logger.info(f"check_validity_start_goal(): Input shapes: start_nodes {start_nodes.shape}, goal_nodes {goal_nodes.shape}, A {A.shape}")
-        # device = start_nodes.device
-        # start_nodes = start_nodes.cpu()
-        # goal_nodes = goal_nodes.cpu()
-        # A = A.cpu()
-        #
-        # logger.info("check_validity_start_goal(): Moved, start_nodes, goal_nodes, A to cpu")
 
         batch_inds = torch.arange(0, start_nodes.shape[0])
 
@@ -610,7 +595,6 @@ class Nav2DTransforms:
         valid = ~(mask1 | mask2 | mask3)
 
         return valid
-        # return valid.to(device)
 
     @staticmethod
     def check_invalid_edges_reduced_A(A, n_nodes, correct_A=False, threshold=0.5):
@@ -619,14 +603,19 @@ class Nav2DTransforms:
         correct_A flag is true. Does not check if there are no edges between nodes.
         """
 
+        if isinstance(A, torch.Tensor):
+            device = A.device
+        else:
+            device = torch.device("cpu")
+
         if len(A.shape) == 2:
             A = A.reshape(A.shape[0], -1, 2)
 
         assert len(A.shape) == 3
         assert A.shape[1], A.shape[2] == (n_nodes - 1, 2)
 
-        n_root = np.sqrt(n_nodes)
-        seq = np.arange(1, n_root)
+        n_root = int(np.sqrt(n_nodes))
+        seq = np.arange(1, n_root).astype(int)
         inds_grid_right = seq * n_root - 1
         # Note: the -1 below achieves 2 things:
         # 1) catch the first element of the last row,
@@ -637,13 +626,13 @@ class Nav2DTransforms:
             if correct_A:
                 A[:, inds_grid_bot, 1] = 0
                 A[:, inds_grid_right, 0] = 0
-                valid = torch.tensor([True] * A.shape[0], dtype=torch.bool, device=A.device)
+                valid = torch.tensor([True] * A.shape[0], dtype=torch.bool, device=device)
             else:
                 mask = (A[:, inds_grid_bot, 1] >= threshold).sum(axis=-1) + (A[:, inds_grid_right, 0] >= threshold).sum(
                     axis=-1)
                 valid = ~mask.to(torch.bool)
         else:
-            valid = torch.tensor([True] * A.shape[0], dtype=torch.bool, device=A.device)
+            valid = torch.tensor([True] * A.shape[0], dtype=torch.bool, device=device)
 
         return A, valid
 
@@ -656,22 +645,11 @@ class Nav2DTransforms:
             - valid: an boolean tensor of shape (batch_size,) indicating whether the reduced adjacency matrix is valid
             - A: the full adjacency matrices. Corrected if correct_A is True.
         """
-        logger.debug(f"check_validity(): DOES DEBUG WORK HERE??")
-        logger.info(f"check_validity(): Entered function.")
-        logger.info(f"check_validity(): Input shapes:")
-        logger.info(f"A_red:{A_red.shape}")
-        logger.info(f"start_nodes{start_nodes.shape}")
-        logger.info(f"goal_nodes{goal_nodes.shape}")
-        logger.info(f"n_nodes={n_nodes}")
-        logger.info(f"correct_A={correct_A}")
-        logger.info(f"threshold={threshold}")
         A_red, valid_A = Nav2DTransforms.check_invalid_edges_reduced_A(A_red, n_nodes, correct_A, threshold=threshold)
-        logger.info(f"check_validity(): Executed check_invalid_edges_reduced_A().")
         # DEBUG: crash here
         A = Nav2DTransforms.encode_reduced_adj_to_adj(A_red.cpu().numpy())
         A = torch.tensor(A, device=start_nodes.device, dtype=torch.float)
         valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A, threshold=threshold)
-        logger.info(f"check_validity(): Executed check_validity_start_goal().")
         valid = valid_A & valid_start_goal
 
         return valid, A
@@ -695,7 +673,7 @@ class Nav2DTransforms:
             probs_start[m, to_remove_nodes_start] = 0.
             start_node = probs_start[m].argmax()
 
-            to_remove_nodes_goal = list(all_nodes - connected_nodes - {start_node.item()})
+            to_remove_nodes_goal = list((all_nodes - connected_nodes).union({start_node.item()}))
             probs_goal[m, to_remove_nodes_goal] = 0.
 
         start_nodes = probs_start.argmax(dim=-1)
