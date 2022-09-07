@@ -20,7 +20,7 @@ class ReseedWrapper(Wrapper):
     def __init__(self, env, seeds=[0], seed_idx=0):
         self.seeds = list(seeds)
         self.seed_idx = seed_idx
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
     def reset(self, **kwargs):
         seed = self.seeds[self.seed_idx]
@@ -39,7 +39,7 @@ class ActionBonus(gym.Wrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
         self.counts = {}
 
     def step(self, action):
@@ -73,7 +73,7 @@ class StateBonus(Wrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
         self.counts = {}
 
     def step(self, action):
@@ -108,7 +108,7 @@ class ImgObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
         self.observation_space = env.observation_space.spaces["image"]
 
     def observation(self, obs):
@@ -122,7 +122,7 @@ class OneHotPartialObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env, tile_size=8):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         self.tile_size = tile_size
 
@@ -162,7 +162,7 @@ class RGBImgObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env, tile_size=8):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         self.tile_size = tile_size
 
@@ -190,7 +190,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env, tile_size=8):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         # Rendering attributes for observations
         self.tile_size = tile_size
@@ -219,7 +219,7 @@ class FullyObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         new_image_space = spaces.Box(
             low=0,
@@ -254,7 +254,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         word_dict is a dictionary of words to use (keys=words, values=indices from 1 to < max_words_in_mission),
                   if None, use the Minigrid language
         """
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         if word_dict is None:
             word_dict = self.get_minigrid_words()
@@ -367,7 +367,7 @@ class FlatObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env, maxStrLen=96):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         self.maxStrLen = maxStrLen
         self.numCharCodes = 28
@@ -428,7 +428,7 @@ class ViewSizeWrapper(Wrapper):
     """
 
     def __init__(self, env, agent_view_size=7):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         assert agent_view_size % 2 == 1
         assert agent_view_size >= 3
@@ -463,7 +463,7 @@ class DirectionObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env, type="slope"):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
         self.goal_position: tuple = None
         self.type = type
 
@@ -498,7 +498,7 @@ class SymbolicObsWrapper(ObservationWrapper):
     """
 
     def __init__(self, env):
-        super().__init__(env, new_step_api=env.new_step_api)
+        super().__init__(env)
 
         new_image_space = spaces.Box(
             low=0,
