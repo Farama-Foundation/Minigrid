@@ -43,7 +43,7 @@ def test_manual_control():
                 self.key = self.close_action
 
     env_id = "MiniGrid-Empty-16x16-v0"
-    env = gym.make(env_id, new_step_api=True)
+    env = gym.make(env_id)
     window = Window(env_id)
 
     reset(env, window)
