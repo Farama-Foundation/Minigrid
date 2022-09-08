@@ -8,7 +8,7 @@ from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
 def benchmark(env_id, num_resets, num_frames):
-    env = gym.make(env_id, new_step_api=True, render_mode="rgb_array")
+    env = gym.make(env_id, render_mode="rgb_array")
     # Benchmark env.reset
     t0 = time.time()
     for i in range(num_resets):
@@ -26,7 +26,7 @@ def benchmark(env_id, num_resets, num_frames):
     frames_per_sec = num_frames / dt
 
     # Create an environment with an RGB agent observation
-    env = gym.make(env_id, new_step_api=True, render_mode="rgb_array")
+    env = gym.make(env_id, render_mode="rgb_array")
     env = RGBImgPartialObsWrapper(env)
     env = ImgObsWrapper(env)
 

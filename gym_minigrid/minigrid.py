@@ -2,14 +2,12 @@ import hashlib
 import math
 from abc import abstractmethod
 from enum import IntEnum
-from functools import partial
 from typing import Any, Callable, Optional, Union
 
 import gym
 import numpy as np
 from gym import spaces
 from gym.utils import seeding
-from gym.utils.renderer import Renderer
 
 # Size in pixels of a tile in the full-scale human view
 from gym_minigrid.rendering import (
@@ -920,13 +918,7 @@ class MiniGridEnv(gym.Env):
         self.grid = Grid(width, height)
         self.carrying = None
 
-        frame_rendering = partial(
-            self._render, highlight=highlight, tile_size=tile_size, agent_pov=agent_pov
-        )
-
-        self.renderer = Renderer(self.render_mode, frame_rendering)
-
-    def reset(self, *, seed=None, return_info=False, options=None):
+    def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
 
         # Reinitialize episode-specific variables
@@ -956,14 +948,11 @@ class MiniGridEnv(gym.Env):
         # Return first observation
         obs = self.gen_obs()
 
-        # Reset Renderer
-        self.renderer.reset()
-        self.renderer.render_step()
+        # new render API
+        if self.render_mode == "human":
+            self.render()
 
-        if not return_info:
-            return obs
-        else:
-            return obs, {}
+        return obs, {}
 
     def hash(self, size=16):
         """Compute a hash that uniquely identifies the current state of the environment.
@@ -1380,8 +1369,9 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
-        # Reset Renderer
-        self.renderer.render_step()
+        # new render API
+        if self.render_mode == "human":
+            self.render()
 
         return obs, reward, terminated, truncated, {}
 
@@ -1547,23 +1537,19 @@ class MiniGridEnv(gym.Env):
 
     def render(
         self,
-        mode: str = "human",
         highlight: Optional[bool] = None,
         tile_size: Optional[int] = None,
         agent_pov: Optional[bool] = None,
     ):
-        if self.render_mode is not None:
-            assert (
-                highlight is None and tile_size is None and agent_pov is None
-            ), "Unexpected argument for render. Specify render arguments at environment initialization."
-            return self.renderer.get_renders()
-        else:
-            highlight = highlight if highlight is not None else True
-            tile_size = tile_size if tile_size is not None else TILE_PIXELS
-            agent_pov = agent_pov if agent_pov is not None else False
-            return self._render(
-                mode=mode, highlight=highlight, tile_size=tile_size, agent_pov=agent_pov
-            )
+        highlight = highlight if highlight is not None else True
+        tile_size = tile_size if tile_size is not None else TILE_PIXELS
+        agent_pov = agent_pov if agent_pov is not None else False
+        return self._render(
+            mode=self.render_mode,
+            highlight=highlight,
+            tile_size=tile_size,
+            agent_pov=agent_pov,
+        )
 
     def close(self):
         if self.window:

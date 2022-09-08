@@ -32,8 +32,8 @@ def test_reseed_wrapper(env_spec):
     """
     Test the ReseedWrapper with a list of SEEDS.
     """
-    unwrapped_env = env_spec.make(new_step_api=True)
-    env = env_spec.make(new_step_api=True)
+    unwrapped_env = env_spec.make()
+    env = env_spec.make()
     env = ReseedWrapper(env, seeds=SEEDS)
     env.action_space.seed(0)
 
@@ -76,8 +76,8 @@ def test_reseed_wrapper(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_state_bonus_wrapper(env_id):
-    env = gym.make(env_id, new_step_api=True)
-    wrapped_env = StateBonus(gym.make(env_id, new_step_api=True))
+    env = gym.make(env_id)
+    wrapped_env = StateBonus(gym.make(env_id))
 
     action_forward = MiniGridEnv.Actions.forward
     action_left = MiniGridEnv.Actions.left
@@ -106,8 +106,8 @@ def test_state_bonus_wrapper(env_id):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_action_bonus_wrapper(env_id):
-    env = gym.make(env_id, new_step_api=True)
-    wrapped_env = ActionBonus(gym.make(env_id, new_step_api=True))
+    env = gym.make(env_id)
+    wrapped_env = ActionBonus(gym.make(env_id))
 
     action = MiniGridEnv.Actions.forward
 
@@ -129,7 +129,7 @@ def test_action_bonus_wrapper(env_id):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_dict_observation_space_wrapper(env_spec):
-    env = env_spec.make(new_step_api=True)
+    env = env_spec.make()
     env = DictObservationSpaceWrapper(env)
     env.reset()
     mission = env.mission
@@ -157,7 +157,7 @@ def test_dict_observation_space_wrapper(env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_main_wrappers(wrapper, env_spec):
-    env = env_spec.make(new_step_api=True)
+    env = env_spec.make()
     env = wrapper(env)
     for _ in range(10):
         env.reset()
@@ -177,7 +177,7 @@ def test_main_wrappers(wrapper, env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_observation_space_wrappers(wrapper, env_spec):
-    env = wrapper(env_spec.make(disable_env_checker=True, new_step_api=True))
+    env = wrapper(env_spec.make(disable_env_checker=True))
     obs_space, wrapper_name = env.observation_space, wrapper.__name__
     assert isinstance(
         obs_space, gym.spaces.Dict
@@ -196,15 +196,14 @@ class EmptyEnvWithExtraObs(EmptyEnv):
 
     def __init__(self) -> None:
         super().__init__(size=5)
-        self.new_step_api = True
         self.observation_space["size"] = gym.spaces.Box(
             low=0, high=np.iinfo(np.uint).max, shape=(2,), dtype=np.uint
         )
 
     def reset(self, **kwargs):
-        obs = super().reset(**kwargs)
+        obs, _ = super().reset(**kwargs)
         obs["size"] = np.array([self.width, self.height])
-        return obs
+        return obs, {}
 
     def step(self, action):
         obs, reward, terminated, truncated, info = super().step(action)
@@ -223,10 +222,10 @@ class EmptyEnvWithExtraObs(EmptyEnv):
 )
 def test_agent_sees_method(wrapper):
     env1 = wrapper(EmptyEnvWithExtraObs())
-    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0", new_step_api=True))
+    env2 = wrapper(gym.make("MiniGrid-Empty-5x5-v0"))
 
-    obs1 = env1.reset(seed=0)
-    obs2 = env2.reset(seed=0)
+    obs1, _ = env1.reset(seed=0)
+    obs2, _ = env2.reset(seed=0)
     assert "size" in obs1
     assert obs1["size"].shape == (2,)
     assert (obs1["size"] == [5, 5]).all()

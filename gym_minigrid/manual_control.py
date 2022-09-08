@@ -101,7 +101,6 @@ if __name__ == "__main__":
 
     env = gym.make(
         args.env,
-        new_step_api=True,
         tile_size=args.tile_size,
     )
 
