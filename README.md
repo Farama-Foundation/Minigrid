@@ -12,7 +12,7 @@ implementation can be found [in this repository](https://github.com/lcswillems/t
 
 Requirements:
 - Python 3.7 to 3.10
-- OpenAI Gym v0.22 to v0.25
+- OpenAI Gym v0.26
 - NumPy 1.18+
 - Matplotlib (optional, only needed for display) - 3.0+
 
