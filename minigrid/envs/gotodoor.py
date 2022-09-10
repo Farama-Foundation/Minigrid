@@ -2,7 +2,6 @@ from minigrid.minigrid import COLOR_NAMES, Door, Grid, MiniGridEnv, MissionSpace
 
 
 class GoToDoorEnv(MiniGridEnv):
-
     """
     ### Description
 

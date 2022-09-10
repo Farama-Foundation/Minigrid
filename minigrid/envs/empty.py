@@ -2,7 +2,6 @@ from minigrid.minigrid import Goal, Grid, MiniGridEnv, MissionSpace
 
 
 class EmptyEnv(MiniGridEnv):
-
     """
     ### Description
 

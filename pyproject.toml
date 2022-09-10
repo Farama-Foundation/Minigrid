@@ -31,6 +31,7 @@ reportUntypedFunctionDecorator = "none"
 reportMissingTypeStubs = false
 reportUnboundVariable = "warning"
 reportGeneralTypeIssues ="none"
+reportPrivateImportUsage = "none"
 
 [tool.pytest.ini_options]
 filterwarnings = ['ignore:.*step API.*:DeprecationWarning'] # TODO: to be removed when old step API is removed
