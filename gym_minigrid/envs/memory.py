@@ -1,6 +1,10 @@
 import numpy as np
 
-from gym_minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, MissionSpace, Wall
+from gym_minigrid.core.actions import Actions
+from gym_minigrid.core.grid import Grid
+from gym_minigrid.core.mission import MissionSpace
+from gym_minigrid.core.world_object import Ball, Key, Wall
+from gym_minigrid.minigrid import MiniGridEnv
 
 
 class MemoryEnv(MiniGridEnv):
@@ -137,8 +141,8 @@ class MemoryEnv(MiniGridEnv):
         self.mission = "go to the matching object at the end of the hallway"
 
     def step(self, action):
-        if action == self.Actions.pickup:
-            action = self.Actions.toggle
+        if action == Actions.pickup:
+            action = Actions.toggle
         obs, reward, terminated, truncated, info = super().step(action)
 
         if tuple(self.agent_pos) == self.success_pos:

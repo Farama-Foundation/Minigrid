@@ -2,7 +2,10 @@ from operator import add
 
 from gym.spaces import Discrete
 
-from gym_minigrid.minigrid import Ball, Goal, Grid, MiniGridEnv, MissionSpace
+from gym_minigrid.core.grid import Grid
+from gym_minigrid.core.mission import MissionSpace
+from gym_minigrid.core.world_object import Ball, Goal
+from gym_minigrid.minigrid import MiniGridEnv
 
 
 class DynamicObstaclesEnv(MiniGridEnv):

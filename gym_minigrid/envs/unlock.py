@@ -1,5 +1,5 @@
+from gym_minigrid.core.mission import MissionSpace
 from gym_minigrid.core.roomgrid import RoomGrid
-from gym_minigrid.minigrid import MissionSpace
 
 
 class UnlockEnv(RoomGrid):

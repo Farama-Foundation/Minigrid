@@ -1,5 +1,7 @@
+from gym_minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
+from gym_minigrid.core.mission import MissionSpace
 from gym_minigrid.core.roomgrid import RoomGrid
-from gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC, Ball, Box, Key, MissionSpace
+from gym_minigrid.core.world_object import Ball, Box, Key
 
 
 class ObstructedMazeEnv(RoomGrid):
