@@ -11,7 +11,7 @@ def redraw(window, img):
 
 
 def reset(env, window, seed=None):
-    _ = env.reset(seed=seed)
+    env.reset(seed=seed)
 
     if hasattr(env, "mission"):
         print("Mission: %s" % env.mission)
@@ -101,7 +101,6 @@ if __name__ == "__main__":
 
     env = gym.make(
         args.env,
-        new_step_api=True,
         tile_size=args.tile_size,
     )
 
