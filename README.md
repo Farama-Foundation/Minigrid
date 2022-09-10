@@ -125,7 +125,7 @@ field which can be used as an optional compass. Using dictionaries makes it
 easy for you to add additional information to observations
 if you need to, without having to encode everything into a single tensor.
 
-There are a variety of wrappers to change the observation format available in [gym_minigrid/wrappers.py](/gym_minigrid/wrappers.py). 
+There are a variety of wrappers to change the observation format available in [gym_minigrid/wrappers.py](/gym_minigrid/wrappers/wrappers.py). 
 If your RL code expects one single tensor for observations, take a look at `FlatObsWrapper`. 
 There is also an `ImgObsWrapper` that gets rid of the 'mission' field in observations, leaving only the image field tensor.
 
@@ -136,12 +136,12 @@ use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```python
 import gym
-from gym_minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
+from gym_minigrid.wrappers.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
 
 env = gym.make('MiniGrid-Empty-8x8-v0', new_step_api=True)
-env = RGBImgPartialObsWrapper(env) # Get pixel observations
-env = ImgObsWrapper(env) # Get rid of the 'mission' field
-obs = env.reset() # This now produces an RGB tensor only
+env = RGBImgPartialObsWrapper(env)  # Get pixel observations
+env = ImgObsWrapper(env)  # Get rid of the 'mission' field
+obs = env.reset()  # This now produces an RGB tensor only
 ```
 
 ## Design

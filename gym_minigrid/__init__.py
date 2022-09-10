@@ -1,6 +1,7 @@
 from gym.envs.registration import register
 
-from gym_minigrid import minigrid, roomgrid, wrappers
+from gym_minigrid import minigrid
+from gym_minigrid.core import roomgrid
 
 
 def register_minigrid_envs():

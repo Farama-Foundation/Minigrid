@@ -2,7 +2,7 @@
 
 import gym
 
-from gym_minigrid.window import Window
+from gym_minigrid.utils.window import Window
 from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 

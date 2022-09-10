@@ -6,7 +6,7 @@ import pytest
 
 from gym_minigrid.envs import EmptyEnv
 from gym_minigrid.minigrid import MiniGridEnv
-from gym_minigrid.wrappers import (
+from gym_minigrid.wrappers.wrappers import (
     ActionBonus,
     DictObservationSpaceWrapper,
     FlatObsWrapper,
