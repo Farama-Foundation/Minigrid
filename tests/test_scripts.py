@@ -3,7 +3,7 @@ import numpy as np
 
 from gym_minigrid.benchmark import benchmark
 from gym_minigrid.manual_control import key_handler, reset
-from gym_minigrid.window import Window
+from gym_minigrid.utils.window import Window
 
 
 def test_benchmark():

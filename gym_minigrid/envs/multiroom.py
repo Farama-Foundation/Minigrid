@@ -1,12 +1,8 @@
-from gym_minigrid.minigrid import (
-    COLOR_NAMES,
-    Door,
-    Goal,
-    Grid,
-    MiniGridEnv,
-    MissionSpace,
-    Wall,
-)
+from gym_minigrid.core.constants import COLOR_NAMES
+from gym_minigrid.core.grid import Grid
+from gym_minigrid.core.mission import MissionSpace
+from gym_minigrid.core.world_object import Door, Goal, Wall
+from gym_minigrid.minigrid import MiniGridEnv
 
 
 class MultiRoom:

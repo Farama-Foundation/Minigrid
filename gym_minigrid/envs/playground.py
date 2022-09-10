@@ -1,13 +1,8 @@
-from gym_minigrid.minigrid import (
-    COLOR_NAMES,
-    Ball,
-    Box,
-    Door,
-    Grid,
-    Key,
-    MiniGridEnv,
-    MissionSpace,
-)
+from gym_minigrid.core.constants import COLOR_NAMES
+from gym_minigrid.core.grid import Grid
+from gym_minigrid.core.mission import MissionSpace
+from gym_minigrid.core.world_object import Ball, Box, Door, Key
+from gym_minigrid.minigrid import MiniGridEnv
 
 
 class PlaygroundEnv(MiniGridEnv):

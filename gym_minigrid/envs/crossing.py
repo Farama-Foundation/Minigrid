@@ -2,7 +2,10 @@ import itertools as itt
 
 import numpy as np
 
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
+from gym_minigrid.core.grid import Grid
+from gym_minigrid.core.mission import MissionSpace
+from gym_minigrid.core.world_object import Goal, Lava
+from gym_minigrid.minigrid import MiniGridEnv
 
 
 class CrossingEnv(MiniGridEnv):
