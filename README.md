@@ -138,10 +138,10 @@ use the `RGBImgPartialObsWrapper`. You can use it as follows:
 import gym
 from gym_minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
 
-env = gym.make('MiniGrid-Empty-8x8-v0', new_step_api=True)
+env = gym.make('MiniGrid-Empty-8x8-v0')
 env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field
-obs = env.reset() # This now produces an RGB tensor only
+obs, _ = env.reset() # This now produces an RGB tensor only
 ```
 
 ## Design
