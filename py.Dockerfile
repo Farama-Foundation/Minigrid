@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get -y update
 
-COPY . /usr/local/gym_minigrid/
-WORKDIR /usr/local/gym_minigrid/
+COPY . /usr/local/minigrid/
+WORKDIR /usr/local/minigrid/
 
 RUN pip install .[testing] --no-cache-dir

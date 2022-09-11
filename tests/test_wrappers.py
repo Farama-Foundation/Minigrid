@@ -1,12 +1,12 @@
 import math
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pytest
 
-from gym_minigrid.core.actions import Actions
-from gym_minigrid.envs import EmptyEnv
-from gym_minigrid.wrappers import (
+from minigrid.core.actions import Actions
+from minigrid.envs import EmptyEnv
+from minigrid.wrappers import (
     ActionBonus,
     DictObservationSpaceWrapper,
     FlatObsWrapper,
