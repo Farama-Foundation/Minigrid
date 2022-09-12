@@ -47,7 +47,7 @@ def generate_dataset(cfg: DictConfig) -> None:
     Generate a dataset of gridworld navigation problems.
     """
 
-    dataset_config = cfg.data.data_generation
+    dataset_config = cfg.data_generation
     logger.info("\n" + OmegaConf.to_yaml(dataset_config))
 
     logger.info("Parsing Data Generation config to DatasetGenerator...")
@@ -374,7 +374,7 @@ class RoomsUnstructuredBatch(Batch):
 
     def generate_data(self) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
         # Set up generator
-        envs = [MultiRoomEnv(minNumRooms=4, maxNumRooms=12, minRoomSize=5, maxRoomSize=9,
+        envs = [MultiRoomEnv(minNumRooms=1, maxNumRooms=6, minRoomSize=5, maxRoomSize=9,
                              grid_size=self.dataset_meta['data_dim'][0], odd=True,
                              seed=int(self.seeds[i])) for i in range(self.batch_meta['batch_size'])]
 
