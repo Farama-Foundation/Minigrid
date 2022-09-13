@@ -21,26 +21,6 @@ import util.util as util
 
 logger = logging.getLogger(__name__)
 
-# Map of object type to channel and id used within that channel, used for grid and gridworld representations
-# Agent and Start are considered equivalent
-OBJECT_TO_CHANNEL_AND_IDX = {
-    'empty'         : (0, 0),
-    'wall'          : (0, 1),
-    'agent': (1, 1),
-    'start': (1, 1),
-    'goal'          : (2, 1),
-}
-
-# Map of object type to feature dimension, used for graph representations
-# Agent and Start are considered equivalent
-OBJECT_TO_FEATURE_DIM = {
-    'empty'         : 0,
-    'wall'          : 1,
-    'agent'         : 2,
-    'start'         : 2,
-    'goal'          : 3,
-}
-
 @hydra.main(version_base=None, config_path="conf", config_name="config.yaml")
 def generate_dataset(cfg: DictConfig) -> None:
     """

@@ -11,11 +11,30 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from data_generators import OBJECT_TO_CHANNEL_AND_IDX, OBJECT_TO_FEATURE_DIM
-from gym_minigrid.minigrid import MiniGridEnv, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
-    IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT
+from gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
+    IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
 
 logger = logging.getLogger(__name__)
+
+# Map of object type to channel and id used within that channel, used for grid and gridworld representations
+# Agent and Start are considered equivalent
+OBJECT_TO_CHANNEL_AND_IDX = {
+    'empty'         : (0, 0),
+    'wall'          : (0, 1),
+    'agent': (1, 1),
+    'start': (1, 1),
+    'goal'          : (2, 1),
+}
+
+# Map of object type to feature dimension, used for graph representations
+# Agent and Start are considered equivalent
+OBJECT_TO_FEATURE_DIM = {
+    'empty'         : 0,
+    'wall'          : 1,
+    'agent'         : 2,
+    'start'         : 2,
+    'goal'          : 3,
+}
 
 class BinaryTransform(object):
     def __init__(self, thr):
@@ -136,8 +155,41 @@ class Nav2DTransforms:
         return mazes
 
     @staticmethod
-    def encode_gridworld_to_minigrid(mazes: np.ndarray, config: Dict) -> List[Any]:
-        raise NotImplementedError
+    def encode_gridworld_to_minigrid(gridworlds: Union[np.ndarray, torch.Tensor], config_minigrid:Dict=None) -> np.ndarray:
+
+        assert gridworlds.ndim == 4, "Gridworlds must be a 4D array or tensor."
+        if gridworlds.shape[-1] != 3:
+            gridworlds = einops.rearrange(gridworlds, 'b c h w -> b h w c')
+        assert gridworlds.shape[-1] == 3, "Gridworlds must have 3 channels."
+
+        if config_minigrid is None:
+            config_minigrid = {
+                'empty': None,
+                'wall' : 'grey',
+                'agent': 'blue',
+                'goal' : 'green',
+                }
+
+        minigrid_object_to_encoding_map = {} #[object_id, color, state]
+        for obj_type, color_str in config_minigrid.items():
+            if obj_type == "empty":
+                minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX["empty"], 0, 0]
+            else:
+                minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX[obj_type],
+                                                             Minigrid_COLOR_TO_IDX[color_str], 0]
+
+        grids = np.empty_like(gridworlds, dtype=np.int8)
+        for obj, mapping in minigrid_object_to_encoding_map.items():
+            id_m = mapping[0]
+            co = mapping[1]
+            st = mapping[2]
+
+            id_gw = OBJECT_TO_CHANNEL_AND_IDX[obj][1]
+            ch_gw = OBJECT_TO_CHANNEL_AND_IDX[obj][0]
+
+            grids[gridworlds[..., ch_gw] == id_gw] = (id_m, co, st)
+
+        return grids
 
     @staticmethod
     def encode_gridworld_to_grid(gridworlds: np.ndarray):
