@@ -144,17 +144,6 @@ class Nav2DTransforms:
         return features
 
     @staticmethod
-    def encode_gridworld_to_maze(grids: np.ndarray) -> List[Maze]:
-        # Set up maze generator
-        mazes = [Maze() for i in range(grids.shape[0])]
-        for (maze, grid) in zip(mazes, grids):
-            maze.grid = np.int8(grid[..., 0])
-            maze.start = tuple(np.argwhere(grid[..., 1] == 1)[0])
-            maze.end = tuple(np.argwhere(grid[..., 2] == 1)[0])
-
-        return mazes
-
-    @staticmethod
     def encode_gridworld_to_minigrid(gridworlds: Union[np.ndarray, torch.Tensor], config_minigrid:Dict=None) -> np.ndarray:
 
         assert gridworlds.ndim == 4, "Gridworlds must be a 4D array or tensor."
@@ -178,6 +167,7 @@ class Nav2DTransforms:
                 minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX[obj_type],
                                                              Minigrid_COLOR_TO_IDX[color_str], 0]
 
+        gridworlds = gridworlds.cpu()
         grids = np.empty_like(gridworlds, dtype=np.int8)
         for obj, mapping in minigrid_object_to_encoding_map.items():
             id_m = mapping[0]
@@ -190,6 +180,17 @@ class Nav2DTransforms:
             grids[gridworlds[..., ch_gw] == id_gw] = (id_m, co, st)
 
         return grids
+
+    @staticmethod
+    def encode_gridworld_to_maze(grids: np.ndarray) -> List[Maze]:
+        # Set up maze generator
+        mazes = [Maze() for i in range(grids.shape[0])]
+        for (maze, grid) in zip(mazes, grids):
+            maze.grid = np.int8(grid[..., 0])
+            maze.start = tuple(np.argwhere(grid[..., 1] == 1)[0])
+            maze.end = tuple(np.argwhere(grid[..., 2] == 1)[0])
+
+        return mazes
 
     @staticmethod
     def encode_gridworld_to_grid(gridworlds: np.ndarray):
