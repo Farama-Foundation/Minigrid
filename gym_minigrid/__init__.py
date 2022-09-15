@@ -1,9 +1,19 @@
+from warnings import warn
+
 from gym.envs.registration import register
 
 from gym_minigrid import minigrid, roomgrid, wrappers
 
 
 def register_minigrid_envs():
+
+    # gym_minigrid package deprecated in favor of minigrid
+    warn(
+        "The package name gym_minigrid has been deprecated in favor of minigrid. Please uninstall gym_minigrid and install minigrid with `pip install minigrid`. Future releases will be maintained under the new package name minigrid.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
     # BlockedUnlockPickup
     # ----------------------------------------
 
