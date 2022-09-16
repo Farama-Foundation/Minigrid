@@ -7,7 +7,7 @@ import numpy as np
 from gym import spaces
 from gym.core import ObservationWrapper, Wrapper
 
-from gym_minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
+from minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
 
 class ReseedWrapper(Wrapper):

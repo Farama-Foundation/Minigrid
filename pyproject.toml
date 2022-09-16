@@ -1,7 +1,7 @@
 [tool.pyright]
 
 include = [
-    "gym_minigrid/**",
+    "minigrid/**",
 ]
 
 exclude = [

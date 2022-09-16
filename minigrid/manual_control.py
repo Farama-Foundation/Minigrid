@@ -2,8 +2,8 @@
 
 import gym
 
-from gym_minigrid.window import Window
-from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
+from minigrid.window import Window
+from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
 def redraw(window, img):
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         env = RGBImgPartialObsWrapper(env)
         env = ImgObsWrapper(env)
 
-    window = Window("gym_minigrid - " + args.env)
+    window = Window("minigrid - " + args.env)
     window.reg_key_handler(lambda event: key_handler(env, window, event))
 
     seed = None if args.seed == -1 else args.seed

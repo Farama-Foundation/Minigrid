@@ -6,7 +6,7 @@ import pytest
 from gym.envs.registration import EnvSpec
 from gym.utils.env_checker import check_env
 
-from gym_minigrid.minigrid import Grid, MissionSpace
+from minigrid.minigrid import Grid, MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals
 
 CHECK_ENV_IGNORE_WARNINGS = [

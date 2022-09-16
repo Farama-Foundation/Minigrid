@@ -2,7 +2,7 @@ import itertools as itt
 
 import numpy as np
 
-from gym_minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
+from minigrid.minigrid import Goal, Grid, Lava, MiniGridEnv, MissionSpace
 
 
 class CrossingEnv(MiniGridEnv):
@@ -44,7 +44,7 @@ class CrossingEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py)
+        [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ### Rewards
