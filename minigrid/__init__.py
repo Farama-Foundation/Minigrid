@@ -1,6 +1,6 @@
 from gym.envs.registration import register
 
-from gym_minigrid import minigrid, roomgrid, wrappers
+from minigrid import minigrid, roomgrid, wrappers
 
 
 def register_minigrid_envs():
@@ -9,32 +9,32 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-BlockedUnlockPickup-v0",
-        entry_point="gym_minigrid.envs:BlockedUnlockPickupEnv",
+        entry_point="minigrid.envs:BlockedUnlockPickupEnv",
     )
 
     # LavaCrossing
     # ----------------------------------------
     register(
         id="MiniGrid-LavaCrossingS9N1-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 1},
     )
 
     register(
         id="MiniGrid-LavaCrossingS9N2-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 2},
     )
 
     register(
         id="MiniGrid-LavaCrossingS9N3-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 3},
     )
 
     register(
         id="MiniGrid-LavaCrossingS11N5-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 11, "num_crossings": 5},
     )
 
@@ -43,25 +43,25 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 1, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N2-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 2, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N3-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 9, "num_crossings": 3, "obstacle_type": minigrid.Wall},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS11N5-v0",
-        entry_point="gym_minigrid.envs:CrossingEnv",
+        entry_point="minigrid.envs:CrossingEnv",
         kwargs={"size": 11, "num_crossings": 5, "obstacle_type": minigrid.Wall},
     )
 
@@ -70,13 +70,13 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-DistShift1-v0",
-        entry_point="gym_minigrid.envs:DistShiftEnv",
+        entry_point="minigrid.envs:DistShiftEnv",
         kwargs={"strip2_row": 2},
     )
 
     register(
         id="MiniGrid-DistShift2-v0",
-        entry_point="gym_minigrid.envs:DistShiftEnv",
+        entry_point="minigrid.envs:DistShiftEnv",
         kwargs={"strip2_row": 5},
     )
 
@@ -85,25 +85,25 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-DoorKey-5x5-v0",
-        entry_point="gym_minigrid.envs:DoorKeyEnv",
+        entry_point="minigrid.envs:DoorKeyEnv",
         kwargs={"size": 5},
     )
 
     register(
         id="MiniGrid-DoorKey-6x6-v0",
-        entry_point="gym_minigrid.envs:DoorKeyEnv",
+        entry_point="minigrid.envs:DoorKeyEnv",
         kwargs={"size": 5},
     )
 
     register(
         id="MiniGrid-DoorKey-8x8-v0",
-        entry_point="gym_minigrid.envs:DoorKeyEnv",
+        entry_point="minigrid.envs:DoorKeyEnv",
         kwargs={"size": 8},
     )
 
     register(
         id="MiniGrid-DoorKey-16x16-v0",
-        entry_point="gym_minigrid.envs:DoorKeyEnv",
+        entry_point="minigrid.envs:DoorKeyEnv",
         kwargs={"size": 16},
     )
 
@@ -112,36 +112,36 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-Dynamic-Obstacles-5x5-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
         kwargs={"size": 5, "n_obstacles": 2},
     )
 
     register(
         id="MiniGrid-Dynamic-Obstacles-Random-5x5-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
         kwargs={"size": 5, "agent_start_pos": None, "n_obstacles": 2},
     )
 
     register(
         id="MiniGrid-Dynamic-Obstacles-6x6-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
         kwargs={"size": 6, "n_obstacles": 3},
     )
 
     register(
         id="MiniGrid-Dynamic-Obstacles-Random-6x6-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
         kwargs={"size": 6, "agent_start_pos": None, "n_obstacles": 3},
     )
 
     register(
         id="MiniGrid-Dynamic-Obstacles-8x8-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
     )
 
     register(
         id="MiniGrid-Dynamic-Obstacles-16x16-v0",
-        entry_point="gym_minigrid.envs:DynamicObstaclesEnv",
+        entry_point="minigrid.envs:DynamicObstaclesEnv",
         kwargs={"size": 16, "n_obstacles": 8},
     )
 
@@ -150,36 +150,36 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-Empty-5x5-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
         kwargs={"size": 5},
     )
 
     register(
         id="MiniGrid-Empty-Random-5x5-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
         kwargs={"size": 5, "agent_start_pos": None},
     )
 
     register(
         id="MiniGrid-Empty-6x6-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
         kwargs={"size": 6},
     )
 
     register(
         id="MiniGrid-Empty-Random-6x6-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
         kwargs={"size": 6, "agent_start_pos": None},
     )
 
     register(
         id="MiniGrid-Empty-8x8-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
     )
 
     register(
         id="MiniGrid-Empty-16x16-v0",
-        entry_point="gym_minigrid.envs:EmptyEnv",
+        entry_point="minigrid.envs:EmptyEnv",
         kwargs={"size": 16},
     )
 
@@ -188,24 +188,24 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-Fetch-5x5-N2-v0",
-        entry_point="gym_minigrid.envs:FetchEnv",
+        entry_point="minigrid.envs:FetchEnv",
         kwargs={"size": 5, "numObjs": 2},
     )
 
     register(
         id="MiniGrid-Fetch-6x6-N2-v0",
-        entry_point="gym_minigrid.envs:FetchEnv",
+        entry_point="minigrid.envs:FetchEnv",
         kwargs={"size": 6, "numObjs": 2},
     )
 
-    register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="gym_minigrid.envs:FetchEnv")
+    register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="minigrid.envs:FetchEnv")
 
     # FourRooms
     # ----------------------------------------
 
     register(
         id="MiniGrid-FourRooms-v0",
-        entry_point="gym_minigrid.envs:FourRoomsEnv",
+        entry_point="minigrid.envs:FourRoomsEnv",
     )
 
     # GoToDoor
@@ -213,18 +213,18 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-GoToDoor-5x5-v0",
-        entry_point="gym_minigrid.envs:GoToDoorEnv",
+        entry_point="minigrid.envs:GoToDoorEnv",
     )
 
     register(
         id="MiniGrid-GoToDoor-6x6-v0",
-        entry_point="gym_minigrid.envs:GoToDoorEnv",
+        entry_point="minigrid.envs:GoToDoorEnv",
         kwargs={"size": 6},
     )
 
     register(
         id="MiniGrid-GoToDoor-8x8-v0",
-        entry_point="gym_minigrid.envs:GoToDoorEnv",
+        entry_point="minigrid.envs:GoToDoorEnv",
         kwargs={"size": 8},
     )
 
@@ -233,12 +233,12 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-GoToObject-6x6-N2-v0",
-        entry_point="gym_minigrid.envs:GoToObjectEnv",
+        entry_point="minigrid.envs:GoToObjectEnv",
     )
 
     register(
         id="MiniGrid-GoToObject-8x8-N2-v0",
-        entry_point="gym_minigrid.envs:GoToObjectEnv",
+        entry_point="minigrid.envs:GoToObjectEnv",
         kwargs={"size": 8, "numObjs": 2},
     )
 
@@ -247,37 +247,37 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-KeyCorridorS3R1-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 3, "num_rows": 1},
     )
 
     register(
         id="MiniGrid-KeyCorridorS3R2-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 3, "num_rows": 2},
     )
 
     register(
         id="MiniGrid-KeyCorridorS3R3-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 3, "num_rows": 3},
     )
 
     register(
         id="MiniGrid-KeyCorridorS4R3-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 4, "num_rows": 3},
     )
 
     register(
         id="MiniGrid-KeyCorridorS5R3-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 5, "num_rows": 3},
     )
 
     register(
         id="MiniGrid-KeyCorridorS6R3-v0",
-        entry_point="gym_minigrid.envs:KeyCorridorEnv",
+        entry_point="minigrid.envs:KeyCorridorEnv",
         kwargs={"room_size": 6, "num_rows": 3},
     )
 
@@ -286,19 +286,19 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-LavaGapS5-v0",
-        entry_point="gym_minigrid.envs:LavaGapEnv",
+        entry_point="minigrid.envs:LavaGapEnv",
         kwargs={"size": 5},
     )
 
     register(
         id="MiniGrid-LavaGapS6-v0",
-        entry_point="gym_minigrid.envs:LavaGapEnv",
+        entry_point="minigrid.envs:LavaGapEnv",
         kwargs={"size": 6},
     )
 
     register(
         id="MiniGrid-LavaGapS7-v0",
-        entry_point="gym_minigrid.envs:LavaGapEnv",
+        entry_point="minigrid.envs:LavaGapEnv",
         kwargs={"size": 7},
     )
 
@@ -307,7 +307,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-LockedRoom-v0",
-        entry_point="gym_minigrid.envs:LockedRoomEnv",
+        entry_point="minigrid.envs:LockedRoomEnv",
     )
 
     # Memory
@@ -315,37 +315,37 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-MemoryS17Random-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 17, "random_length": True},
     )
 
     register(
         id="MiniGrid-MemoryS13Random-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 13, "random_length": True},
     )
 
     register(
         id="MiniGrid-MemoryS13-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 13},
     )
 
     register(
         id="MiniGrid-MemoryS11-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 11},
     )
 
     register(
         id="MiniGrid-MemoryS9-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 9},
     )
 
     register(
         id="MiniGrid-MemoryS7-v0",
-        entry_point="gym_minigrid.envs:MemoryEnv",
+        entry_point="minigrid.envs:MemoryEnv",
         kwargs={"size": 7},
     )
 
@@ -354,19 +354,19 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-MultiRoom-N2-S4-v0",
-        entry_point="gym_minigrid.envs:MultiRoomEnv",
+        entry_point="minigrid.envs:MultiRoomEnv",
         kwargs={"minNumRooms": 2, "maxNumRooms": 2, "maxRoomSize": 4},
     )
 
     register(
         id="MiniGrid-MultiRoom-N4-S5-v0",
-        entry_point="gym_minigrid.envs:MultiRoomEnv",
+        entry_point="minigrid.envs:MultiRoomEnv",
         kwargs={"minNumRooms": 6, "maxNumRooms": 6, "maxRoomSize": 5},
     )
 
     register(
         id="MiniGrid-MultiRoom-N6-v0",
-        entry_point="gym_minigrid.envs:MultiRoomEnv",
+        entry_point="minigrid.envs:MultiRoomEnv",
         kwargs={"minNumRooms": 6, "maxNumRooms": 6},
     )
 
@@ -375,24 +375,24 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-1Dl-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_1Dlhb",
+        entry_point="minigrid.envs:ObstructedMaze_1Dlhb",
         kwargs={"key_in_box": False, "blocked": False},
     )
 
     register(
         id="MiniGrid-ObstructedMaze-1Dlh-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_1Dlhb",
+        entry_point="minigrid.envs:ObstructedMaze_1Dlhb",
         kwargs={"key_in_box": True, "blocked": False},
     )
 
     register(
         id="MiniGrid-ObstructedMaze-1Dlhb-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_1Dlhb",
+        entry_point="minigrid.envs:ObstructedMaze_1Dlhb",
     )
 
     register(
         id="MiniGrid-ObstructedMaze-2Dl-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": False,
@@ -404,7 +404,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-2Dlh-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": True,
@@ -416,7 +416,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-2Dlhb-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": True,
@@ -428,7 +428,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-1Q-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
         kwargs={
             "agent_room": (1, 1),
             "key_in_box": True,
@@ -440,7 +440,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-2Q-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": True,
@@ -452,7 +452,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-Full-v0",
-        entry_point="gym_minigrid.envs:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full",
     )
 
     # Playground
@@ -460,7 +460,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-Playground-v0",
-        entry_point="gym_minigrid.envs:PlaygroundEnv",
+        entry_point="minigrid.envs:PlaygroundEnv",
     )
 
     # PutNear
@@ -468,12 +468,12 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-PutNear-6x6-N2-v0",
-        entry_point="gym_minigrid.envs:PutNearEnv",
+        entry_point="minigrid.envs:PutNearEnv",
     )
 
     register(
         id="MiniGrid-PutNear-8x8-N3-v0",
-        entry_point="gym_minigrid.envs:PutNearEnv",
+        entry_point="minigrid.envs:PutNearEnv",
         kwargs={"size": 8, "numObjs": 3},
     )
 
@@ -482,24 +482,24 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-RedBlueDoors-6x6-v0",
-        entry_point="gym_minigrid.envs:RedBlueDoorEnv",
+        entry_point="minigrid.envs:RedBlueDoorEnv",
         kwargs={"size": 6},
     )
 
     register(
         id="MiniGrid-RedBlueDoors-8x8-v0",
-        entry_point="gym_minigrid.envs:RedBlueDoorEnv",
+        entry_point="minigrid.envs:RedBlueDoorEnv",
     )
 
     # Unlock
     # ----------------------------------------
 
-    register(id="MiniGrid-Unlock-v0", entry_point="gym_minigrid.envs:UnlockEnv")
+    register(id="MiniGrid-Unlock-v0", entry_point="minigrid.envs:UnlockEnv")
 
     # UnlockPickup
     # ----------------------------------------
 
     register(
         id="MiniGrid-UnlockPickup-v0",
-        entry_point="gym_minigrid.envs:UnlockPickupEnv",
+        entry_point="minigrid.envs:UnlockPickupEnv",
     )

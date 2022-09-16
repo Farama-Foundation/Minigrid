@@ -10,7 +10,7 @@ from gym import spaces
 from gym.utils import seeding
 
 # Size in pixels of a tile in the full-scale human view
-from gym_minigrid.rendering import (
+from minigrid.rendering import (
     downsample,
     fill_coords,
     highlight_img,
@@ -20,7 +20,7 @@ from gym_minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
-from gym_minigrid.window import Window
+from minigrid.window import Window
 
 TILE_PIXELS = 32
 
@@ -1525,7 +1525,7 @@ class MiniGridEnv(gym.Env):
 
         if self.render_mode == "human":
             if self.window is None:
-                self.window = Window("gym_minigrid")
+                self.window = Window("minigrid")
                 self.window.show(block=False)
             self.window.set_caption(self.mission)
             self.window.show_img(img)

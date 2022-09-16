@@ -1,9 +1,9 @@
 import gym
 import numpy as np
 
-from gym_minigrid.benchmark import benchmark
-from gym_minigrid.manual_control import key_handler, reset
-from gym_minigrid.window import Window
+from minigrid.benchmark import benchmark
+from minigrid.manual_control import key_handler, reset
+from minigrid.window import Window
 
 
 def test_benchmark():

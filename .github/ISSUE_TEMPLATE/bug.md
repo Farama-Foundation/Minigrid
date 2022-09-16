@@ -15,7 +15,7 @@ Please try to provide a minimal example to reproduce the bug. Error messages and
 
 **System Info**
 Describe the characteristic of your environment:
- * Describe how `gym-minigrid` was installed (pip, docker, source, ...)
+ * Describe how `minigrid` was installed (pip, docker, source, ...)
  * What OS/version of Linux you're using. Note that while we will accept PRs to improve Window's support, we do not officially support it.
  * Python version
 
@@ -24,4 +24,4 @@ Add any other context about the problem here.
 
 ### Checklist
 
-- [ ] I have checked that there is no similar [issue](https://github.com/Farama-Foundation/gym-minigrid/issues) in the repo (**required**)
+- [ ] I have checked that there is no similar [issue](https://github.com/Farama-Foundation/MiniGrid/issues) in the repo (**required**)

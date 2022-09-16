@@ -1,4 +1,4 @@
-from gym_minigrid.minigrid import (
+from minigrid.minigrid import (
     COLOR_NAMES,
     Ball,
     Box,
