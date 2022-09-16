@@ -1,11 +1,4 @@
-from minigrid.minigrid import (
-    COLOR_NAMES,
-    Ball,
-    Grid,
-    Key,
-    MiniGridEnv,
-    MissionSpace,
-)
+from minigrid.minigrid import COLOR_NAMES, Ball, Grid, Key, MiniGridEnv, MissionSpace
 
 
 class FetchEnv(MiniGridEnv):
