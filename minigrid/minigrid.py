@@ -4,10 +4,10 @@ from abc import abstractmethod
 from enum import IntEnum
 from typing import Any, Callable, Optional, Union
 
-import gym
+import gymnasium as gym
 import numpy as np
-from gym import spaces
-from gym.utils import seeding
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 # Size in pixels of a tile in the full-scale human view
 from minigrid.rendering import (
