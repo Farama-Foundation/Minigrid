@@ -32,7 +32,9 @@ setup(
     description="Minimalistic gridworld reinforcement learning environments",
     extras_require=extras,
     packages=["minigrid", "minigrid.envs"],
-    entry_points={"gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]},
+    entry_points={
+        "gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]
+    },
     license="Apache",
     long_description=long_description,
     long_description_content_type="text/markdown",
