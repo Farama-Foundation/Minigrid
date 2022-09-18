@@ -135,7 +135,7 @@ These values are **not pixels**. If you want to obtain an array of RGB pixels as
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```python
-import gym
+import gymnasium as gym
 from minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
 
 env = gym.make('MiniGrid-Empty-8x8-v0')
