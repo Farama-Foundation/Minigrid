@@ -61,8 +61,25 @@ class PedestrianEnv9x16(PedestrianEnv):
             agent_start_dir=0
         )
 
+class PedestrianEnv6x20(PedestrianEnv):
+    def __init__(self):
+        width = 60
+        height = 200
+        super().__init__(
+            width=width,
+            height=height,
+            agent_start_pos=(1, height // 2),
+            agent_start_dir=0
+        )
+
         
 register(
     id='Pedestrian-Empty-9x16-v0',
     entry_point='gym_minigrid.envs:PedestrianEnv9x16'
+)
+
+        
+register(
+    id='Pedestrian-Empty-6x20-v0',
+    entry_point='gym_minigrid.envs:PedestrianEnv6x20'
 )
