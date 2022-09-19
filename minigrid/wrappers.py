@@ -12,9 +12,31 @@ from minigrid.minigrid import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX, Goal
 
 class ReseedWrapper(Wrapper):
     """
-    Wrapper to always regenerate an environment with the same set of seeds.
-    This can be used to force an environment to always keep the same
-    configuration when reset.
+    ## Description
+
+    Wrapper to always regenerate an environment with the same set of seeds. This
+    can be used to force an environment to always keep the same configuration
+    when reset.
+
+    ## Methods
+
+    ### `ReseedWrapper.__init__(env, seeds, seed_idx)`
+    Constructor.
+
+    - `env`: the environment to wrap
+    - `seeds`: a list of seeds to use
+    - `seed_idx`: the index of the seed to use for the next reset
+
+    ### `ReseedWrapper.reset(**kwargs)`
+    Reset the environment and return the observation.
+
+    - `**kwargs`: additional arguments to pass to the environment's reset
+
+    ### `ReseedWrapper.step(action)`
+    Step the environment with the given action and return the observation.
+
+    - `action`: the action to perform
+
     """
 
     def __init__(self, env, seeds=[0], seed_idx=0):
@@ -33,9 +55,28 @@ class ReseedWrapper(Wrapper):
 
 class ActionBonus(gym.Wrapper):
     """
-    Wrapper which adds an exploration bonus.
-    This is a reward to encourage exploration of less
-    visited (state,action) pairs.
+    ## Description
+
+    Wrapper which adds an exploration bonus. This is a reward to encourage
+    exploration of less visited (state,action) pairs.
+
+    ## Methods
+
+    ### `ActionBonus.__init__(env)`
+    Constructor.
+
+    - `env`: the environment to wrap
+
+    ### `ActionBonus.step(action)`
+    Step the environment with the given action and return the observation.
+
+    - `action`: the action to perform
+
+    ### `ActionBonus.reset(**kwargs)`
+    Reset the environment and return the observation.
+
+    - `**kwargs`: additional arguments to pass to the environment's reset
+
     """
 
     def __init__(self, env):
@@ -68,8 +109,27 @@ class ActionBonus(gym.Wrapper):
 
 class StateBonus(Wrapper):
     """
-    Adds an exploration bonus based on which positions
-    are visited on the grid.
+    ## Description
+
+    Adds an exploration bonus based on which positions are visited on the grid.
+
+    ## Methods
+
+    ### `StateBonus.__init__(env)`
+    Constructor.
+
+    - `env`: the environment to wrap
+
+    ### `StateBonus.step(action)`
+    Step the environment with the given action and return the observation.
+
+    - `action`: the action to perform
+
+    ### `StateBonus.reset(**kwargs)`
+    Reset the environment and return the observation.
+
+    - `**kwargs`: additional arguments to pass to the environment's reset
+
     """
 
     def __init__(self, env):
@@ -104,7 +164,24 @@ class StateBonus(Wrapper):
 
 class ImgObsWrapper(ObservationWrapper):
     """
+    ## Description
+
     Use the image as the only observation output, no language/mission.
+
+    ## Methods
+
+    ### `ImgObsWrapper.__init__(env)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+
+    ### `ImgObsWrapper.observation(obs)`
+    Return the image as the observation.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env):
@@ -117,8 +194,26 @@ class ImgObsWrapper(ObservationWrapper):
 
 class OneHotPartialObsWrapper(ObservationWrapper):
     """
-    Wrapper to get a one-hot encoding of a partially observable
-    agent view as observation.
+    ## Description
+
+    Wrapper to get a one-hot encoding of a partially observable agent view as
+    observation.
+
+    ## Methods
+
+    ### `OneHotPartialObsWrapper.__init__(env, title_size)`
+    Constructor.
+
+    - `env`: the environment to wrap
+    - `title_size`: the size of the title to use (default: 8)
+
+    ### `OneHotPartialObsWrapper.observation(obs)`
+    Return the one-hot encoding of the partially observable agent view as
+    observation.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, tile_size=8):
@@ -157,8 +252,26 @@ class OneHotPartialObsWrapper(ObservationWrapper):
 
 class RGBImgObsWrapper(ObservationWrapper):
     """
-    Wrapper to use fully observable RGB image as observation,
-    This can be used to have the agent to solve the gridworld in pixel space.
+    ## Description
+
+    Wrapper to use fully observable RGB image as observation. This can be used
+    to have the agent to solve the gridworld in pixel space.
+
+    ## Methods
+
+    ### `RGBImgObsWrapper.__init__(env, tile_size)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `tile_size`: the size of the tiles to use (default: 8)
+
+    ### `RGBImgObsWrapper.observation(obs)`
+    Return the RGB image as the observation.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, tile_size=8):
@@ -185,8 +298,26 @@ class RGBImgObsWrapper(ObservationWrapper):
 
 class RGBImgPartialObsWrapper(ObservationWrapper):
     """
-    Wrapper to use partially observable RGB image as observation.
-    This can be used to have the agent to solve the gridworld in pixel space.
+    ## Description
+
+    Wrapper to use partially observable RGB image as observation. This can be
+    used to have the agent to solve the gridworld in pixel space.
+
+    ## Methods
+
+    ### `RGBImgPartialObsWrapper.__init__(env, title_size)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `tile_size`: the size of the tiles to use (default: 8)
+
+    ### `RGBImgPartialObsWrapper.observation(obs)`
+    Return the RGB image as the observation.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, tile_size=8):
@@ -215,7 +346,24 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
 
 class FullyObsWrapper(ObservationWrapper):
     """
-    Fully observable gridworld using a compact grid encoding
+    ## Description
+
+    Fully observable gridworld using a compact grid encoding.
+
+    ## Methods
+
+    ### `FullyObsWrapper.__init__(env)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+
+    ### `FullyObsWrapper.observation(obs)`
+    Return the fully observable gridworld as the observation.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env):
@@ -244,16 +392,47 @@ class FullyObsWrapper(ObservationWrapper):
 
 class DictObservationSpaceWrapper(ObservationWrapper):
     """
-    Transforms the observation space (that has a textual component) to a fully numerical observation space,
-    where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
+    ## Description
+    Transforms the observation space (that has a textual component) to a fully
+    numerical observation space, where the textual instructions are replaced by
+    arrays representing the indices of each word in a fixed vocabulary.
+
+    ## Methods
+
+    ### `DictObservationSpaceWrapper.__init__(env, max_words_in_mission, word_dict)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `max_word_in_mission`: the length of the array to represent a mission,
+                             value 0 for missing words (default: 50)
+    - `word_dict`: a dictionary of words to use (keys=words, values=indices from
+                   1 to < max_words_in_mission), if None, use the Minigrid
+                   language (default: None)
+
+    ### `DictObservationSpaceWrapper.get_minigrid_words()`
+    Return all the words used in the Minigrid language.
+
+    ### `DictObservationSpaceWrapper.string_to_indices(string,offset)`
+    Convert a string to a list of indices.
+
+    Args:
+    - `string`: the string to convert
+    - `offset`: the offset to add to each index (default: 1)
+
+    Raises:
+    - `ValueError`: if the string contains a word not in the dictionary
+
+    ### `DictObservationSpaceWrapper.observation(obs)`
+    Return the observation as a dictionary.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, max_words_in_mission=50, word_dict=None):
-        """
-        max_words_in_mission is the length of the array to represent a mission, value 0 for missing words
-        word_dict is a dictionary of words to use (keys=words, values=indices from 1 to < max_words_in_mission),
-                  if None, use the Minigrid language
-        """
+
         super().__init__(env)
 
         if word_dict is None:
@@ -339,9 +518,6 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         return {word: i for i, word in enumerate(all_words)}
 
     def string_to_indices(self, string, offset=1):
-        """
-        Convert a string to a list of indices.
-        """
         indices = []
         # adding space before and after commas
         string = string.replace(",", " , ")
@@ -362,8 +538,29 @@ class DictObservationSpaceWrapper(ObservationWrapper):
 
 class FlatObsWrapper(ObservationWrapper):
     """
-    Encode mission strings using a one-hot scheme,
-    and combine these with observed images into one flat array
+    ## Description
+
+    Encode mission strings using a one-hot scheme, and combine these with
+    observed images into one flat array.
+
+    ## Methods
+
+    ### `FlatObsWrapper.__init__(env, maxStrLen)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `maxStrLen`: the maximum length of the mission string (default: 96)
+
+    ### `FlatObsWrapper.observation(obs)`
+    Return the observation as a dictionary.
+
+    Args:
+    - `obs`: the observation to process
+
+    Raises:
+    - `ValueError`: if a character is not available in mission string
+
     """
 
     def __init__(self, env, maxStrLen=96):
@@ -423,8 +620,26 @@ class FlatObsWrapper(ObservationWrapper):
 
 class ViewSizeWrapper(Wrapper):
     """
-    Wrapper to customize the agent field of view size.
-    This cannot be used with fully observable wrappers.
+    ## Description
+
+    Wrapper to customize the agent field of view size. This cannot be used with
+    fully observable wrappers.
+
+    ## Methods
+
+    ### `ViewSizeWrapper.__init__(env, agent_view_size)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `agent_view_size`: the size of the agent field of view (default: 7)
+
+    ### `ViewSizeWrapper.observation(obs)`
+    Return the observation as a dictionary.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, agent_view_size=7):
@@ -458,8 +673,29 @@ class ViewSizeWrapper(Wrapper):
 
 class DirectionObsWrapper(ObservationWrapper):
     """
-    Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
-    type = {slope , angle}
+    ## Description
+
+    Provides the slope/angular direction to the goal with the observations as
+    modeled by (y2 - y2 )/( x2 - x1) type = {slope , angle}
+
+    ## Methods
+
+    ### `DirectionObsWrapper.__init__(env, type)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+    - `type`: the type of direction to be provided (default: slope)
+
+    ### `DirectionObsWrapper.reset()`
+    Reset the environment.
+
+    ### `DirectionObsWrapper.observation(obs)`
+    Return the observation as a dictionary.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env, type="slope"):
@@ -492,9 +728,26 @@ class DirectionObsWrapper(ObservationWrapper):
 
 class SymbolicObsWrapper(ObservationWrapper):
     """
-    Fully observable grid with a symbolic state representation.
-    The symbol is a triple of (X, Y, IDX), where X and Y are
-    the coordinates on the grid, and IDX is the id of the object.
+    ## Description
+
+    Fully observable grid with a symbolic state representation. The symbol is a
+    triple of (X, Y, IDX), where X and Y are the coordinates on the grid, and
+    IDX is the id of the object.
+
+    ## Methods
+
+    ### `SymbolicObsWrapper.__init__(env)`
+    Constructor.
+
+    Args:
+    - `env`: the environment to wrap
+
+    ### `SymbolicObsWrapper.observation(obs)`
+    Return the observation as a dictionary.
+
+    Args:
+    - `obs`: the observation to process
+
     """
 
     def __init__(self, env):
