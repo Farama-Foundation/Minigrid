@@ -22,4 +22,5 @@ conda install matplotlib
 
 ```
 python manual_control.py --env Pedestrian-Empty-9x16-v0
+python manual_control.py --env MultiPedestrian-Empty-9x16-v0
 ```
