@@ -19,20 +19,20 @@ jobs:
         run: pip install -r docs/requirements.txt && git clone https://github.com/Farama-Foundation/MiniGrid.git && pip install ./MiniGrid
 
       - name: Build
-        run: cd docs/docs && sphinx-build -b dirhtml -v source build/dirhtml
+        run: cd docs/docs && sphinx-build -b dirhtml -v source _build/dirhtml
 
       - name: Move 404
-        run: mv docs/docs/build/dirhtml/404/index.html docs/docs/build/dirhtml/404.html
+        run: mv docs/docs/_build/dirhtml/404/index.html docs/docs/_build/dirhtml/404.html
 
       - name: Update 404 links
-        run: python docs/docs/scripts/move404.py docs/docs/build/dirhtml/404.html
+        run: python docs/docs/scripts/move404.py docs/docs/_build/dirhtml/404.html
 
       - name: Remove .doctrees
-        run: rm -r docs/docs/build/dirhtml/.doctrees
+        run: rm -r docs/docs/_build/dirhtml/.doctrees
 
       - name: Upload to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs/docs/build/dirhtml
+          folder: docs/docs/_build/dirhtml
           clean-exclude: | 
             *.*.*/
