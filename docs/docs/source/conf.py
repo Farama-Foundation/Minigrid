@@ -16,7 +16,7 @@
 
 # -- Project information -----------------------------------------------------
 # TODO: change to minigrid version
-#from TODO import __version__ as minigrid_version
+# from TODO import __version__ as minigrid_version
 
 import os
 import sys
@@ -27,9 +27,9 @@ author = ""
 
 # The full version, including alpha/beta/rc tags
 # TODO: change to minigrid version
-release = '1.2.1'
+release = "1.2.1"
 
-sys.path.insert(0, os.path.abspath('../../..'))
+sys.path.insert(0, os.path.abspath("../../.."))
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,8 +45,8 @@ extensions = [
 ]
 
 source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    ".rst": "restructuredtext",
+    ".md": "markdown",
 }
 
 # Add any paths that contain templates here, relative to this directory.
