@@ -18,7 +18,6 @@
 # TODO: change to minigrid version
 #from TODO import __version__ as minigrid_version
 
-from importlib.machinery import SOURCE_SUFFIXES
 import os
 import sys
 
