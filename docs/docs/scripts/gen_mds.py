@@ -3,13 +3,10 @@ __email__ = "contact@fenggu.me"
 
 import re
 import os
-from functools import reduce
 
-import numpy as np
 from tqdm import tqdm
 from utils import trim
 
-import gymnasium as gym
 
 from gym.envs.registration import registry
 
