@@ -4,3 +4,4 @@ furo==2022.6.21
 moviepy
 pygame
 pygments==2.11.2
+sphinx-notfound-page
