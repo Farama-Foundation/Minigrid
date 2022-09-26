@@ -4,7 +4,7 @@ import time
 
 import gym
 
-from gym_minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
+from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
 def benchmark(env_id, num_resets, num_frames):

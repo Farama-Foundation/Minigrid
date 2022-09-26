@@ -15,7 +15,7 @@ with open("README.md") as fh:
 extras = {"testing": ["pytest==7.0.1"]}
 
 setup(
-    name="gym_minigrid",
+    name="MiniGrid",
     author="Farama Foundation",
     author_email="jkterry@farama.org",
     classifiers=[
@@ -28,13 +28,11 @@ setup(
     ],
     version="1.2.1",
     keywords="memory, environment, agent, rl, gym",
-    url="https://github.com/Farama-Foundation/gym-minigrid",
+    url="https://github.com/Farama-Foundation/MiniGrid",
     description="Minimalistic gridworld reinforcement learning environments",
     extras_require=extras,
-    packages=["gym_minigrid", "gym_minigrid.envs"],
-    entry_points={
-        "gym.envs": ["__root__ = gym_minigrid.__init__:register_minigrid_envs"]
-    },
+    packages=["minigrid", "minigrid.envs"],
+    entry_points={"gym.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]},
     license="Apache",
     long_description=long_description,
     long_description_content_type="text/markdown",
