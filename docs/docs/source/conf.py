@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "myst_parser",
+    'notfound.extension',
 ]
 
 source_suffix = {
