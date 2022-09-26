@@ -83,4 +83,4 @@ html_css_files = [
     "css/custom.css",
 ]
 
-notfound_urls_prefix = "/docs/docs/_build/dirhtml//en/latest"
+notfound_urls_prefix = "/docs/docs/_build/dirhtml/en/latest"
