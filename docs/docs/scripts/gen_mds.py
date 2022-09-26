@@ -1,6 +1,10 @@
 __author__ = "Feng Gu"
 __email__ = "contact@fenggu.me"
 
+"""
+   isort:skip_file
+"""
+
 import os
 import re
 
