@@ -2,5 +2,5 @@
 _site
 .jekyll-cache
 __pycache__
-build/
+_build/
 .vscode/

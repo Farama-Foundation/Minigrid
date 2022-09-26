@@ -23,7 +23,7 @@ import sys
 
 project = "MiniGrid"
 copyright = "2022"
-author = ""
+author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
 # TODO: change to minigrid version
@@ -73,7 +73,7 @@ html_theme = "furo"
 html_title = "MiniGrid Documentation"
 html_baseurl = "TODO"
 html_copy_source = False
-html_favicon = "_static/img/favicon.svg"
+html_favicon = "_static/img/minigrid-white.svg"
 html_theme_options = {
     "light_logo": "img/minigrid.svg",
     "dark_logo": "img/minigrid-white.svg",
