@@ -1,0 +1,38 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    name: Generate Website
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt && git clone https://github.com/Farama-Foundation/MiniGrid.git && pip install ./MiniGrid
+
+      - name: Build
+        run: sphinx-build -b dirhtml -v docs/source build
+
+      - name: Move 404
+        run: mv ./build/404/index.html ./build/404.html
+
+      - name: Update 404 links
+        run: python ./docs/scripts/move404.py ./build/404.html
+
+      - name: Remove .doctrees
+        run: rm -r ./build/.doctrees
+
+      - name: Upload to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          clean-exclude: | 
+            *.*.*/
