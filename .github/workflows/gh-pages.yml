@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Docs
 on:
   push:
     branches: [main]
@@ -19,16 +19,16 @@ jobs:
         run: pip install -r requirements.txt && git clone https://github.com/Farama-Foundation/MiniGrid.git && pip install ./MiniGrid
 
       - name: Build
-        run: sphinx-build -b dirhtml -v docs/source build
+        run: sphinx-build -b dirhtml -v docs/docs/source build
 
       - name: Move 404
-        run: mv ./build/404/index.html ./build/404.html
+        run: mv ./docs/docs/build/404/index.html ./docs/docs/build/404.html
 
       - name: Update 404 links
-        run: python ./docs/scripts/move404.py ./build/404.html
+        run: python ./docs/docs/scripts/move404.py ./docs/docs/build/404.html
 
       - name: Remove .doctrees
-        run: rm -r ./build/.doctrees
+        run: rm -r .docs/docs/build/.doctrees
 
       - name: Upload to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
