@@ -73,10 +73,10 @@ html_theme = "furo"
 html_title = "MiniGrid Documentation"
 html_baseurl = "https://fenggu.me/"
 html_copy_source = False
-html_favicon = "_static/img/minigrid-white.svg"
+html_favicon = "_static/img/minigrid-white.png"
 html_theme_options = {
-    "light_logo": "img/minigrid.svg",
-    "dark_logo": "img/minigrid-white.svg",
+    "light_logo": "img/minigrid.png",
+    "dark_logo": "img/minigrid-white.png",
 }
 html_static_path = ["_static"]
 html_css_files = [
