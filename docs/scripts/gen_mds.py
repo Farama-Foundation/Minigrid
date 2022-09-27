@@ -53,7 +53,6 @@ for env_name, env_spec in filtered_envs.items():
 
     v_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
-        "source",
         "environments",
         snake_env_name + ".md",
     )
