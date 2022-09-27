@@ -8,7 +8,7 @@ __email__ = "contact@fenggu.me"
 import os
 import re
 
-from gym.envs.registration import registry
+from gymnasium.envs.registration import registry
 from tqdm import tqdm
 
 from utils import trim
@@ -23,11 +23,11 @@ filtered_envs_by_type = {}
 
 # Obtain filtered list
 for env_spec in tqdm(all_envs):
-    # gym_minigrid.envs:Env
+    # minigrid.envs:Env
     split = env_spec.entry_point.split(".")
     # ignore gymnasium.envs.env_type:Env
     env_module = split[0]
-    if env_module != "gym_minigrid":
+    if env_module != "minigrid":
         continue
 
     env_name = split[1]
