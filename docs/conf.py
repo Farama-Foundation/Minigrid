@@ -71,7 +71,7 @@ napoleon_custom_sections = [("Returns", "params_style")]
 #
 html_theme = "furo"
 html_title = "MiniGrid Documentation"
-html_baseurl = "https://fenggu.me/"
+html_baseurl = "https://minigrid.farama.org/"
 html_copy_source = False
 html_favicon = "_static/img/minigrid-white.png"
 html_theme_options = {
@@ -82,5 +82,3 @@ html_static_path = ["_static"]
 html_css_files = [
     "css/custom.css",
 ]
-
-notfound_urls_prefix = "/MiniGrid/"
