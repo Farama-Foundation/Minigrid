@@ -1,10 +1,10 @@
 import warnings
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pytest
-from gym.envs.registration import EnvSpec
-from gym.utils.env_checker import check_env
+from gymnasium.envs.registration import EnvSpec
+from gymnasium.utils.env_checker import check_env
 
 from minigrid.minigrid import Grid, MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals

@@ -2,7 +2,7 @@
 
 import time
 
-import gym
+import gymnasium as gym
 
 from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
