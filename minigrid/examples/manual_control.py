@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import gym
+import gymnasium as gym
 
 from minigrid.window import Window
 from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper

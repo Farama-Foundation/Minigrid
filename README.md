@@ -94,13 +94,13 @@ pip install -e .
 There is a UI application which allows you to manually control the agent with the arrow keys:
 
 ```
-./minigrid/manual_control.py
+./minigrid/examples/manual_control.py
 ```
 
 The environment being run can be selected with the `--env` option, eg:
 
 ```
-./minigrid/manual_control.py --env MiniGrid-Empty-8x8-v0
+./minigrid/examples/manual_control.py --env MiniGrid-Empty-8x8-v0
 ```
 
 ## Reinforcement Learning
@@ -135,7 +135,7 @@ These values are **not pixels**. If you want to obtain an array of RGB pixels as
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```python
-import gym
+import gymnasium as gym
 from minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
 
 env = gym.make('MiniGrid-Empty-8x8-v0')
