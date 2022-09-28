@@ -3,7 +3,7 @@ import numpy as np
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.world_object import Ball, Box, Door, Key
-from minigrid.minigrid import MiniGridEnv
+from minigrid.minigrid_env import MiniGridEnv
 
 
 def reject_next_to(env, pos):

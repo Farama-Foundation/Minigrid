@@ -2,7 +2,7 @@ from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Ball, Box, Door, Key
-from minigrid.minigrid import MiniGridEnv
+from minigrid.minigrid_env import MiniGridEnv
 
 
 class PlaygroundEnv(MiniGridEnv):

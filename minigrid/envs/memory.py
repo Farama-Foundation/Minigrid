@@ -4,7 +4,7 @@ from minigrid.core.actions import Actions
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Ball, Key, Wall
-from minigrid.minigrid import MiniGridEnv
+from minigrid.minigrid_env import MiniGridEnv
 
 
 class MemoryEnv(MiniGridEnv):

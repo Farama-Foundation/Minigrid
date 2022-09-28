@@ -1,8 +1,8 @@
 import gymnasium as gym
 import numpy as np
 
-from minigrid.examples.benchmark import benchmark
-from minigrid.examples.manual_control import key_handler, reset
+from MiniGrid.minigrid.benchmark import benchmark
+from MiniGrid.minigrid.manual_control import key_handler, reset
 from minigrid.utils.window import Window
 
 
