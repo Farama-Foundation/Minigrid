@@ -4,8 +4,8 @@ import gymnasium as gym
 import numpy as np
 import pytest
 
+from minigrid.core.actions import Actions
 from minigrid.envs import EmptyEnv
-from minigrid.minigrid import MiniGridEnv
 from minigrid.wrappers import (
     ActionBonus,
     DictObservationSpaceWrapper,
@@ -79,9 +79,9 @@ def test_state_bonus_wrapper(env_id):
     env = gym.make(env_id)
     wrapped_env = StateBonus(gym.make(env_id))
 
-    action_forward = MiniGridEnv.Actions.forward
-    action_left = MiniGridEnv.Actions.left
-    action_right = MiniGridEnv.Actions.right
+    action_forward = Actions.forward
+    action_left = Actions.left
+    action_right = Actions.right
 
     for _ in range(10):
         wrapped_env.reset()
@@ -109,7 +109,7 @@ def test_action_bonus_wrapper(env_id):
     env = gym.make(env_id)
     wrapped_env = ActionBonus(gym.make(env_id))
 
-    action = MiniGridEnv.Actions.forward
+    action = Actions.forward
 
     for _ in range(10):
         wrapped_env.reset()

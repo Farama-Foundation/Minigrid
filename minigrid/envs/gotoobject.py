@@ -1,12 +1,8 @@
-from minigrid.minigrid import (
-    COLOR_NAMES,
-    Ball,
-    Box,
-    Grid,
-    Key,
-    MiniGridEnv,
-    MissionSpace,
-)
+from minigrid.core.constants import COLOR_NAMES
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Ball, Box, Key
+from minigrid.minigrid import MiniGridEnv
 
 
 class GoToObjectEnv(MiniGridEnv):

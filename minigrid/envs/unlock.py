@@ -1,5 +1,5 @@
-from minigrid.minigrid import MissionSpace
-from minigrid.roomgrid import RoomGrid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.roomgrid import RoomGrid
 
 
 class UnlockEnv(RoomGrid):

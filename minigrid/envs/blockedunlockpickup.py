@@ -1,5 +1,7 @@
-from minigrid.minigrid import COLOR_NAMES, Ball, MissionSpace
-from minigrid.roomgrid import RoomGrid
+from minigrid.core.constants import COLOR_NAMES
+from minigrid.core.mission import MissionSpace
+from minigrid.core.roomgrid import RoomGrid
+from minigrid.core.world_object import Ball
 
 
 class BlockedUnlockPickupEnv(RoomGrid):

@@ -3,7 +3,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-There are other gridworld Gym environments out there, but this one is
+There are other gridworld Gymnasium environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5000 FPS on a Core i7
@@ -12,7 +12,7 @@ implementation can be found [in this repository](https://github.com/lcswillems/t
 
 Requirements:
 - Python 3.7 to 3.10
-- OpenAI Gym v0.26
+- Gymnasium v0.26
 - NumPy 1.18+
 - Matplotlib (optional, only needed for display) - 3.0+
 
