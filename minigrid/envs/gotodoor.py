@@ -1,4 +1,8 @@
-from minigrid.minigrid import COLOR_NAMES, Door, Grid, MiniGridEnv, MissionSpace
+from minigrid.core.constants import COLOR_NAMES
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Door
+from minigrid.minigrid import MiniGridEnv
 
 
 class GoToDoorEnv(MiniGridEnv):

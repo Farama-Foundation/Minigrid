@@ -1,5 +1,6 @@
-from minigrid.minigrid import COLOR_NAMES, MissionSpace
-from minigrid.roomgrid import RoomGrid
+from minigrid.core.constants import COLOR_NAMES
+from minigrid.core.mission import MissionSpace
+from minigrid.core.roomgrid import RoomGrid
 
 
 class KeyCorridorEnv(RoomGrid):

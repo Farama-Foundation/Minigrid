@@ -4,8 +4,8 @@ import gymnasium as gym
 import numpy as np
 import pytest
 
+from minigrid.core.actions import Actions
 from minigrid.envs import EmptyEnv
-from minigrid.minigrid import MiniGridEnv
 from minigrid.wrappers import (
     ActionBonus,
     DictObservationSpaceWrapper,

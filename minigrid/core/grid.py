@@ -2,9 +2,9 @@ import math
 
 import numpy as np
 
-from gym_minigrid.core.constants import OBJECT_TO_IDX, TILE_PIXELS
-from gym_minigrid.core.world_object import Wall, WorldObj
-from gym_minigrid.utils.rendering import (
+from minigrid.core.constants import OBJECT_TO_IDX, TILE_PIXELS
+from minigrid.core.world_object import Wall, WorldObj
+from minigrid.utils.rendering import (
     downsample,
     fill_coords,
     highlight_img,

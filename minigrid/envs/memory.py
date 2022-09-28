@@ -1,6 +1,10 @@
 import numpy as np
 
-from minigrid.minigrid import Ball, Grid, Key, MiniGridEnv, MissionSpace, Wall
+from minigrid.core.actions import Actions
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Ball, Key, Wall
+from minigrid.minigrid import MiniGridEnv
 
 
 class MemoryEnv(MiniGridEnv):

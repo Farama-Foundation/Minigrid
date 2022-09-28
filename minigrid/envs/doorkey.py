@@ -1,4 +1,7 @@
-from minigrid.minigrid import Door, Goal, Grid, Key, MiniGridEnv, MissionSpace
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Door, Goal, Key
+from minigrid.minigrid import MiniGridEnv
 
 
 class DoorKeyEnv(MiniGridEnv):

@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional, Union
 
-from gym import spaces
-from gym.utils import seeding
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 
 def check_if_no_duplicate(duplicate_list: list) -> bool:

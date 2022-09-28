@@ -1,6 +1,12 @@
 from gymnasium.envs.registration import register
 
+<<<<<<< HEAD:minigrid/__init__.py
 from minigrid import minigrid, roomgrid, wrappers
+=======
+from minigrid import minigrid, wrappers
+from minigrid.core import roomgrid
+from minigrid.core.world_object import Wall
+>>>>>>> Rebase to master (#246):gym_minigrid/__init__.py
 
 
 def register_minigrid_envs():
@@ -44,19 +50,31 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
         entry_point="minigrid.envs:CrossingEnv",
+<<<<<<< HEAD:minigrid/__init__.py
         kwargs={"size": 9, "num_crossings": 1, "obstacle_type": minigrid.Wall},
+=======
+        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": Wall},
+>>>>>>> Rebase to master (#246):gym_minigrid/__init__.py
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N2-v0",
         entry_point="minigrid.envs:CrossingEnv",
+<<<<<<< HEAD:minigrid/__init__.py
         kwargs={"size": 9, "num_crossings": 2, "obstacle_type": minigrid.Wall},
+=======
+        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": Wall},
+>>>>>>> Rebase to master (#246):gym_minigrid/__init__.py
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N3-v0",
         entry_point="minigrid.envs:CrossingEnv",
+<<<<<<< HEAD:minigrid/__init__.py
         kwargs={"size": 9, "num_crossings": 3, "obstacle_type": minigrid.Wall},
+=======
+        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": Wall},
+>>>>>>> Rebase to master (#246):gym_minigrid/__init__.py
     )
 
     register(

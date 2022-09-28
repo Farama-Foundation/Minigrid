@@ -1,13 +1,13 @@
 import numpy as np
 
-from gym_minigrid.core.constants import (
+from minigrid.core.constants import (
     COLOR_TO_IDX,
     COLORS,
     IDX_TO_COLOR,
     IDX_TO_OBJECT,
     OBJECT_TO_IDX,
 )
-from gym_minigrid.utils.rendering import (
+from minigrid.utils.rendering import (
     fill_coords,
     point_in_circle,
     point_in_line,
