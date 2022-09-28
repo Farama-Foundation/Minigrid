@@ -3,7 +3,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-There are other gridworld Gym environments out there, but this one is
+There are other gridworld Gymnasium environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5000 FPS on a Core i7
@@ -12,20 +12,20 @@ implementation can be found [in this repository](https://github.com/lcswillems/t
 
 Requirements:
 - Python 3.7 to 3.10
-- OpenAI Gym v0.26
+- Gymnasium v0.26
 - NumPy 1.18+
 - Matplotlib (optional, only needed for display) - 3.0+
 
 Please use this bibtex if you want to cite this repository in your publications:
 
 ```
-@misc{gym_minigrid,
+@misc{minigrid,
   author = {Chevalier-Boisvert, Maxime and Willems, Lucas and Pal, Suman},
-  title = {Minimalistic Gridworld Environment for OpenAI Gym},
+  title = {Minimalistic Gridworld Environment for Gymnasium},
   year = {2018},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/maximecb/gym-minigrid}},
+  howpublished = {\url{https://github.com/Farama-Foundation/MiniGrid}},
 }
 ```
 
@@ -75,18 +75,18 @@ This environment has been built as part of work done at [Mila](https://mila.queb
 
 ## Installation
 
-There is now a [pip package](https://pypi.org/project/gym-minigrid/) available, which is updated periodically:
+There is now a [pip package](https://pypi.org/project/minigrid/) available, which is updated periodically:
 
 ```
-pip3 install gym-minigrid
+pip install minigrid
 ```
 
 Alternatively, to get the latest version of MiniGrid, you can clone this repository and install the dependencies with `pip3`:
 
 ```
-git clone https://github.com/maximecb/gym-minigrid.git
-cd gym-minigrid
-pip3 install -e .
+git clone https://github.com/Farama-Foundation/MiniGrid
+cd MiniGrid
+pip install -e .
 ```
 
 ## Basic Usage
@@ -94,13 +94,13 @@ pip3 install -e .
 There is a UI application which allows you to manually control the agent with the arrow keys:
 
 ```
-./gym-minigrid/manual_control.py
+./minigrid/examples/manual_control.py
 ```
 
 The environment being run can be selected with the `--env` option, eg:
 
 ```
-./gym-minigrid/manual_control.py --env MiniGrid-Empty-8x8-v0
+./minigrid/examples/manual_control.py --env MiniGrid-Empty-8x8-v0
 ```
 
 ## Reinforcement Learning
@@ -125,7 +125,7 @@ field which can be used as an optional compass. Using dictionaries makes it
 easy for you to add additional information to observations
 if you need to, without having to encode everything into a single tensor.
 
-There are a variety of wrappers to change the observation format available in [gym_minigrid/wrappers.py](/gym_minigrid/wrappers/wrappers.py). 
+There are a variety of wrappers to change the observation format available in [minigrid/wrappers.py](/minigrid/wrappers.py). 
 If your RL code expects one single tensor for observations, take a look at `FlatObsWrapper`. 
 There is also an `ImgObsWrapper` that gets rid of the 'mission' field in observations, leaving only the image field tensor.
 
@@ -135,13 +135,13 @@ These values are **not pixels**. If you want to obtain an array of RGB pixels as
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```python
-import gym
-from gym_minigrid.wrappers.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
+import gymnasium as gym
+from minigrid.wrappers import RGBImgPartialObsWrapper, ImgObsWrapper
 
-env = gym.make('MiniGrid-Empty-8x8-v0', new_step_api=True)
-env = RGBImgPartialObsWrapper(env)  # Get pixel observations
-env = ImgObsWrapper(env)  # Get rid of the 'mission' field
-obs = env.reset()  # This now produces an RGB tensor only
+env = gym.make('MiniGrid-Empty-8x8-v0')
+env = RGBImgPartialObsWrapper(env) # Get pixel observations
+env = ImgObsWrapper(env) # Get rid of the 'mission' field
+obs, _ = env.reset() # This now produces an RGB tensor only
 ```
 
 ## Design
@@ -167,7 +167,7 @@ Actions in the basic environment:
 
 Default tile/observation encoding:
 - Each tile is encoded as a 3 dimensional tuple: `(OBJECT_IDX, COLOR_IDX, STATE)` 
-- `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py)
+- `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in [minigrid/minigrid.py](minigrid/minigrid.py)
 - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
 By default, sparse rewards are given for reaching a green goal tile. A
@@ -176,11 +176,11 @@ environment-specific time step limit for completing the task.
 You can define your own reward function by creating a class derived
 from `MiniGridEnv`. Extending the environment with new object types or new actions
 should be very easy. If you wish to do this, you should take a look at the
-[gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
+[minigrid/minigrid.py](minigrid/minigrid.py) source file.
 
 ## Included Environments
 
-The environments listed below are implemented in the [gym_minigrid/envs](/gym_minigrid/envs) directory.
+The environments listed below are implemented in the [minigrid/envs](/minigrid/envs) directory.
 Each environment provides one or more configurations registered with OpenAI gym. Each environment
 is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning
 or to fine-tune difficulty.
