@@ -61,5 +61,5 @@ environments/index
 
 Github <https://github.com/Farama-Foundation/MiniGrid>
 Donate <https://farama.org/donations>
-Contribute to the Docs <404>
+Contribute to the Docs <https://github.com/Farama-Foundation/MiniGrid/blob/master/.github/PULL_REQUEST_TEMPLATE.md>
 ```
