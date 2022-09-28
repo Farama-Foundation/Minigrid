@@ -1,4 +1,7 @@
-from minigrid.minigrid import Door, Grid, MiniGridEnv, MissionSpace
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Door
+from minigrid.minigrid_env import MiniGridEnv
 
 
 class RedBlueDoorEnv(MiniGridEnv):

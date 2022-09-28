@@ -10,7 +10,7 @@ from gymnasium import spaces
 from gymnasium.utils import seeding
 
 # Size in pixels of a tile in the full-scale human view
-from minigrid.rendering import (
+from minigrid.utils.rendering import (
     downsample,
     fill_coords,
     highlight_img,
@@ -20,7 +20,7 @@ from minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
-from minigrid.window import Window
+from minigrid.utils.window import Window
 
 TILE_PIXELS = 32
 

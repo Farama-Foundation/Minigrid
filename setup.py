@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open("README.md") as fh:
     long_description = ""
@@ -26,12 +26,12 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    version="1.2.1",
+    version="2.0.0",
     keywords="memory, environment, agent, rl, gymnasium",
     url="https://github.com/Farama-Foundation/MiniGrid",
     description="Minimalistic gridworld reinforcement learning environments",
     extras_require=extras,
-    packages=["minigrid", "minigrid.envs"],
+    packages=[package for package in find_packages() if package.startswith("minigrid")],
     entry_points={
         "gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]
     },

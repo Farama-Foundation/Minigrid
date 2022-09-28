@@ -2,7 +2,7 @@
 
 import gymnasium as gym
 
-from minigrid.window import Window
+from minigrid.utils.window import Window
 from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
