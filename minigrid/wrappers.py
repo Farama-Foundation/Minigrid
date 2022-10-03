@@ -247,6 +247,8 @@ class DictObservationSpaceWrapper(ObservationWrapper):
     """
     Transforms the observation space (that has a textual component) to a fully numerical observation space,
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
+
+    This wrapper is not applicable to BabyAI environments.
     """
 
     def __init__(self, env, max_words_in_mission=50, word_dict=None):
@@ -364,7 +366,9 @@ class DictObservationSpaceWrapper(ObservationWrapper):
 class FlatObsWrapper(ObservationWrapper):
     """
     Encode mission strings using a one-hot scheme,
-    and combine these with observed images into one flat array
+    and combine these with observed images into one flat array.
+
+    This wrapper is not applicable to BabyAI environments.
     """
 
     def __init__(self, env, maxStrLen=96):
