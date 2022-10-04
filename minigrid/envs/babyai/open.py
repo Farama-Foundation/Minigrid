@@ -4,9 +4,14 @@ Levels described in the Baby AI ICLR 2019 submission, with the `Open` instructio
 """
 
 from minigrid.core.constants import COLOR_NAMES
-
-from .core.levelgen import RoomGridLevel
-from .core.verifier import LOC_NAMES, AfterInstr, BeforeInstr, ObjDesc, OpenInstr
+from minigrid.envs.babyai.core.levelgen import RoomGridLevel
+from minigrid.envs.babyai.core.verifier import (
+    LOC_NAMES,
+    AfterInstr,
+    BeforeInstr,
+    ObjDesc,
+    OpenInstr,
+)
 
 
 class Open(RoomGridLevel):

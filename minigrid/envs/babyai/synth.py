@@ -4,7 +4,7 @@ Levels described in the Baby AI ICLR 2019 submission.
 The instructions are a synthesis of those from `PutNext`, `Open`, `GoTo`, and `Pickup`.
 """
 
-from .core.levelgen import LevelGen
+from minigrid.envs.babyai.core.levelgen import LevelGen
 
 
 class Synth(LevelGen):

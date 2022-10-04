@@ -3,9 +3,7 @@ Copied and adapted from https://github.com/mila-iqia/babyai
 """
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.roomgrid import Room, RoomGrid
-from minigrid.minigrid_env import MissionSpace
-
-from .verifier import (
+from minigrid.envs.babyai.core.verifier import (
     LOC_NAMES,
     OBJ_TYPES,
     OBJ_TYPES_NOT_DOOR,
@@ -20,6 +18,7 @@ from .verifier import (
     PutNextInstr,
     SeqInstr,
 )
+from minigrid.minigrid_env import MissionSpace
 
 
 class RejectSampling(Exception):

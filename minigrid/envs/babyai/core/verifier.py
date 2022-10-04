@@ -2,6 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
 import os
+from abc import ABC, abstractmethod
 
 import numpy as np
 
@@ -166,7 +167,7 @@ class ObjDesc:
         return self.obj_set, self.obj_poss
 
 
-class Instr:
+class Instr(ABC):
     """
     Base class for all instructions in the baby language
     """
@@ -174,6 +175,7 @@ class Instr:
     def __init__(self):
         self.env: MiniGridEnv
 
+    @abstractmethod
     def surface(self, env):
         """
         Produce a natural language representation of the instruction
@@ -188,6 +190,7 @@ class Instr:
 
         self.env = env
 
+    @abstractmethod
     def verify(self, action):
         """
         Verify if the task described by the instruction is incomplete,
@@ -207,7 +210,7 @@ class Instr:
                 getattr(self, attr).find_matching_objs(self.env, use_location=False)
 
 
-class ActionInstr(Instr):
+class ActionInstr(Instr, ABC):
     """
     Base class for all action instructions (clauses)
     """
@@ -234,6 +237,7 @@ class ActionInstr(Instr):
         res = self.verify_action(action)
         self.lastStepMatch = res == "success"
 
+    @abstractmethod
     def verify_action(self):
         """
         Each action instruction class should implement this method
@@ -427,7 +431,7 @@ class PutNextInstr(ActionInstr):
         return "continue"
 
 
-class SeqInstr(Instr):
+class SeqInstr(Instr, ABC):
     """
     Base class for sequencing instructions (before, after, and)
     """

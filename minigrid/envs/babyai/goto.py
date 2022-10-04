@@ -2,8 +2,8 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Go to` instruction.
 """
-from .core.levelgen import LevelGen, RejectSampling, RoomGridLevel
-from .core.verifier import GoToInstr, ObjDesc
+from minigrid.envs.babyai.core.levelgen import LevelGen, RejectSampling, RoomGridLevel
+from minigrid.envs.babyai.core.verifier import GoToInstr, ObjDesc
 
 
 class GoToRedBallGrey(RoomGridLevel):
