@@ -6,7 +6,6 @@ __email__ = "contact@fenggu.me"
 """
 
 import os
-import re
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
@@ -15,7 +14,7 @@ readme_path = os.path.join(
 output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "index.md",)
 
 sections = []
-all_text = f"""---
+all_text = """---
 hide-toc: true
 firstpage:
 lastpage:
@@ -56,7 +55,7 @@ with open(readme_path, "r") as f:
     readme = f.read()
 
     """
-    sections = [description, publications, installation, basic usage, wrappers, design, included envrionments&etc]
+    sections = [description, publications, installation, basic usage, wrappers, design, included environments&etc]
     """
     sections = readme.split("<br>")
     all_text += sections[0]

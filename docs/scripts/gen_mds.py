@@ -5,18 +5,16 @@ __email__ = "contact@fenggu.me"
    isort:skip_file
 """
 
-from operator import index
 import os
 import re
 
 from gymnasium.envs.registration import registry
 from tqdm import tqdm
+from utils import trim
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
 )
-
-from utils import trim
 
 LAYOUT = "env"
 
@@ -105,7 +103,7 @@ with open(readme_path, "r") as f:
     readme = f.read()
 
     """
-    sections = [description, publications, installation, basic usage, wrappers, design, included envrionments&etc]
+    sections = [description, publications, installation, basic usage, wrappers, design, included environments&etc]
     """
     sections = readme.split("<br>")
     index_texts += sections[6]
