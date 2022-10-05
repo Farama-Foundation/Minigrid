@@ -13,7 +13,8 @@ from tqdm import tqdm
 from utils import trim
 
 readme_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "README.md",
 )
 
 LAYOUT = "env"
@@ -116,7 +117,9 @@ with open(readme_path) as f:
     f.close()
 
 output_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "environments", "index.md",
+    os.path.dirname(os.path.dirname(__file__)),
+    "environments",
+    "index.md",
 )
 
 # output index.md
@@ -126,7 +129,9 @@ with open(output_path, "w+") as f:
 
 # gen /environments/design.md
 design_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "environments", "design.md",
+    os.path.dirname(os.path.dirname(__file__)),
+    "environments",
+    "design.md",
 )
 
 design_texts = """---

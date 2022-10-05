@@ -8,10 +8,14 @@ __email__ = "contact@fenggu.me"
 import os
 
 readme_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "README.md",
 )
 
-output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "index.md",)
+output_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "index.md",
+)
 
 sections = []
 all_text = """---
