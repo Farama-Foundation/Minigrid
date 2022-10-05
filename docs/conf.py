@@ -77,10 +77,17 @@ html_favicon = "_static/img/minigrid-white.png"
 html_theme_options = {
     "light_logo": "img/minigrid.png",
     "dark_logo": "img/minigrid-white.png",
+    "gtag": "",
 }
+html_context: Dict[str, Any] = {}
+html_context["conf_py_path"] = "/docs/"
+html_context["display_github"] = True
+html_context["github_user"] = "Farama-Foundation"
+html_context["github_repo"] = "Gymnasium"
+html_context["github_version"] = "master"
+html_context["slug"] = "gymnasium"
+
 html_static_path = ["_static"]
-html_css_files = [
-    "css/custom.css",
-]
+html_css_files = []
 
 notfound_urls_prefix = None

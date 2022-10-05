@@ -1,7 +1,7 @@
-sphinx==4.2.0
+sphinx==5.2.3
 myst-parser
-furo==2022.6.21
+sphinx-notfound-page
+git+https://github.com/Farama-Foundation/Celshast#egg=furo
 moviepy
 pygame
 pygments==2.11.2
-sphinx-notfound-page
