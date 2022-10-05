@@ -20,6 +20,7 @@
 
 import os
 import sys
+from typing import Any, Dict
 
 project = "MiniGrid"
 copyright = "2022"
