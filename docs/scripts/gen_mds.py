@@ -99,7 +99,7 @@ env_index_toctree = """
 """
 sections = []
 
-with open(readme_path, "r") as f:
+with open(readme_path) as f:
     readme = f.read()
 
     """

@@ -51,7 +51,7 @@ Contribute to the Docs <https://github.com/Farama-Foundation/MiniGrid/blob/maste
 
 """
 # gen index.md
-with open(readme_path, "r") as f:
+with open(readme_path) as f:
     readme = f.read()
 
     """
