@@ -9,14 +9,10 @@ import os
 import re
 
 readme_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    "README.md",
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
 )
 
-output_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "index.md",
-)
+output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "index.md",)
 
 sections = []
 all_text = f"""---
@@ -59,9 +55,9 @@ Contribute to the Docs <https://github.com/Farama-Foundation/MiniGrid/blob/maste
 with open(readme_path, "r") as f:
     readme = f.read()
 
-    '''
+    """
     sections = [description, publications, installation, basic usage, wrappers, design, included envrionments&etc]
-    '''
+    """
     sections = readme.split("<br>")
     all_text += sections[0]
     all_text += sections[2]
@@ -71,8 +67,8 @@ with open(output_path, "w") as f:
     f.write(all_text)
 
 
-'''
+"""
 1. gen index.md
 2. gen /environments/index.md
 3. gen /environments/design.md
-'''
+"""

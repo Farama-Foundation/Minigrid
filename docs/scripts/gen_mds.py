@@ -13,8 +13,7 @@ from gymnasium.envs.registration import registry
 from tqdm import tqdm
 
 readme_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    "README.md",
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md",
 )
 
 from utils import trim
@@ -58,7 +57,6 @@ for env_name, env_spec in filtered_envs.items():
     # remove suffix
     p = re.compile(r"([A-Z][a-z]+)*")
     name = p.search(pascal_env_name).group()
-    
 
     snake_env_name = pattern.sub("_", name).lower()
     env_names.append(snake_env_name)
@@ -106,9 +104,9 @@ sections = []
 with open(readme_path, "r") as f:
     readme = f.read()
 
-    '''
+    """
     sections = [description, publications, installation, basic usage, wrappers, design, included envrionments&etc]
-    '''
+    """
     sections = readme.split("<br>")
     index_texts += sections[6]
     index_texts += env_index_toctree
@@ -120,9 +118,7 @@ with open(readme_path, "r") as f:
     f.close()
 
 output_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "environments",
-    "index.md",
+    os.path.dirname(os.path.dirname(__file__)), "environments", "index.md",
 )
 
 # output index.md
@@ -132,9 +128,7 @@ with open(output_path, "w+") as f:
 
 # gen /environments/design.md
 design_path = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "environments",
-    "design.md",
+    os.path.dirname(os.path.dirname(__file__)), "environments", "design.md",
 )
 
 design_texts = """---

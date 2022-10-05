@@ -19,7 +19,7 @@ jobs:
         run: pip install -r docs/requirements.txt && git clone https://github.com/Farama-Foundation/MiniGrid.git && pip install ./MiniGrid
 
       - name: Register Envs
-        run: cd Minigrid && pip install -e .
+        run: cd MiniGrid && pip install -e .
 
       - name: Build Envs Docs
         run: python docs/scripts/gen_mds.py && python docs/scripts/gen_index.py
