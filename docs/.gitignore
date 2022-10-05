@@ -4,3 +4,4 @@ _site
 __pycache__
 _build/
 .vscode/
+docs/environments/*
