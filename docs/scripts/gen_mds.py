@@ -38,14 +38,9 @@ for env_spec in tqdm(all_envs):
     env_name = split[1]
     filtered_envs_by_type[env_name] = env_spec
 
-print(k for k, v in sorted(
-        filtered_envs_by_type.items(),
-        key=lambda item: item[1].entry_point.split(".")[1],
-    ))
-
 filtered_envs = {
-    k.split(":")[1]: v
-    for k, v in sorted(
+    env[0]: env[1]
+    for env in sorted(
         filtered_envs_by_type.items(),
         key=lambda item: item[1].entry_point.split(".")[1],
     )
