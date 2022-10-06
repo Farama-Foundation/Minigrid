@@ -505,3 +505,567 @@ def register_minigrid_envs():
         id="MiniGrid-UnlockPickup-v0",
         entry_point="minigrid.envs:UnlockPickupEnv",
     )
+
+    # BabyAI - Language based levels - GoTo
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-GoToRedBallGrey-v0",
+        entry_point="minigrid.envs.babyai:GoToRedBallGrey",
+    )
+
+    register(
+        id="BabyAI-GoToRedBall-v0",
+        entry_point="minigrid.envs.babyai:GoToRedBall",
+    )
+
+    register(
+        id="BabyAI-GoToRedBallNoDists-v0",
+        entry_point="minigrid.envs.babyai:GoToRedBallNoDists",
+    )
+
+    register(
+        id="BabyAI-GoToObj-v0",
+        entry_point="minigrid.envs.babyai:GoToObj",
+    )
+
+    register(
+        id="BabyAI-GoToObjS4-v0",
+        entry_point="minigrid.envs.babyai:GoToObj",
+        kwargs={"room_size": 4},
+    )
+
+    register(
+        id="BabyAI-GoToObjS6-v0",
+        entry_point="minigrid.envs.babyai:GoToObj",
+        kwargs={"room_size": 4},
+    )
+
+    register(
+        id="BabyAI-GoToLocal-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+    )
+
+    register(
+        id="BabyAI-GoToLocalS5N2-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 5, "num_dists": 2},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS6N2-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 6, "num_dists": 2},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS6N3-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 6, "num_dists": 3},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS6N4-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 6, "num_dists": 4},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS7N4-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 7, "num_dists": 4},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS7N5-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 7, "num_dists": 5},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N2-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 2},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N3-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 3},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N4-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 4},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N5-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 5},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N6-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 6},
+    )
+
+    register(
+        id="BabyAI-GoToLocalS8N7-v0",
+        entry_point="minigrid.envs.babyai:GoToLocal",
+        kwargs={"room_size": 8, "num_dists": 7},
+    )
+
+    register(
+        id="BabyAI-GoTo-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+    )
+
+    register(
+        "BabyAI-GoToOpen-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"doors_open": True},
+    )
+
+    register(
+        id="BabyAI-GoToObjMaze-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "doors_open": False},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeOpen-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "doors_open": True},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeS4R2-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "room_size": 4, "num_rows": 2, "num_cols": 2},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeS4-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "room_size": 4},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeS5-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "room_size": 5},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeS6-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "room_size": 6},
+    )
+
+    register(
+        id="BabyAI-GoToObjMazeS7-v0",
+        entry_point="minigrid.envs.babyai:GoTo",
+        kwargs={"num_dists": 1, "room_size": 7},
+    )
+
+    register(
+        id="BabyAI-GoToImpUnlock-v0",
+        entry_point="minigrid.envs.babyai:GoToImpUnlock",
+    )
+
+    register(
+        id="BabyAI-GoToSeq-v0",
+        entry_point="minigrid.envs.babyai:GoToSeq",
+    )
+
+    register(
+        id="BabyAI-GoToSeqS5R2-v0",
+        entry_point="minigrid.envs.babyai:GoToSeq",
+        kwargs={"room_size": 5, "num_rows": 2, "num_cols": 2, "num_dists": 4},
+    )
+
+    register(
+        id="BabyAI-GoToRedBlueBall-v0",
+        entry_point="minigrid.envs.babyai:GoToRedBlueBall",
+    )
+
+    register(
+        id="BabyAI-GoToDoor-v0",
+        entry_point="minigrid.envs.babyai:GoToDoor",
+    )
+
+    register(
+        id="BabyAI-GoToObjDoor-v0",
+        entry_point="minigrid.envs.babyai:GoToObjDoor",
+    )
+
+    # BabyAI - Language based levels - Open
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-Open-v0",
+        entry_point="minigrid.envs.babyai:Open",
+    )
+
+    register(
+        id="BabyAI-OpenRedDoor-v0",
+        entry_point="minigrid.envs.babyai:OpenRedDoor",
+    )
+
+    register(
+        id="BabyAI-OpenDoor-v0",
+        entry_point="minigrid.envs.babyai:OpenDoor",
+    )
+
+    register(
+        id="BabyAI-OpenDoorDebug-v0",
+        entry_point="minigrid.envs.babyai:OpenDoor",
+        kwargs={"debug": True, "select_by": None},
+    )
+
+    register(
+        id="BabyAI-OpenDoorColor-v0",
+        entry_point="minigrid.envs.babyai:OpenDoor",
+        kwargs={"select_by": "color"},
+    )
+
+    register(
+        id="BabyAI-OpenDoorLoc-v0",
+        entry_point="minigrid.envs.babyai:OpenDoor",
+        kwargs={"select_by": "loc"},
+    )
+
+    register(
+        id="BabyAI-OpenTwoDoors-v0",
+        entry_point="minigrid.envs.babyai:OpenTwoDoors",
+    )
+
+    register(
+        id="BabyAI-OpenRedBlueDoors-v0",
+        entry_point="minigrid.envs.babyai:OpenTwoDoors",
+        kwargs={"first_color": "red", "second_color": "blue"},
+    )
+
+    register(
+        id="BabyAI-OpenRedBlueDoorsDebug-v0",
+        entry_point="minigrid.envs.babyai:OpenTwoDoors",
+        kwargs={
+            "first_color": "red",
+            "second_color": "blue",
+            "strict": True,
+        },
+    )
+
+    register(
+        id="BabyAI-OpenDoorsOrderN2-v0",
+        entry_point="minigrid.envs.babyai:OpenDoorsOrder",
+        kwargs={"num_doors": 2},
+    )
+
+    register(
+        id="BabyAI-OpenDoorsOrderN4-v0",
+        entry_point="minigrid.envs.babyai:OpenDoorsOrder",
+        kwargs={"num_doors": 4},
+    )
+
+    register(
+        id="BabyAI-OpenDoorsOrderN2Debug-v0",
+        entry_point="minigrid.envs.babyai:OpenDoorsOrder",
+        kwargs={"debug": True, "num_doors": 2},
+    )
+
+    register(
+        id="BabyAI-OpenDoorsOrderN4Debug-v0",
+        entry_point="minigrid.envs.babyai:OpenDoorsOrder",
+        kwargs={"debug": True, "num_doors": 4},
+    )
+
+    # BabyAI - Language based levels - Pickup
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-Pickup-v0",
+        entry_point="minigrid.envs.babyai:Pickup",
+    )
+
+    register(
+        id="BabyAI-UnblockPickup-v0",
+        entry_point="minigrid.envs.babyai:UnblockPickup",
+    )
+
+    register(
+        id="BabyAI-PickupLoc-v0",
+        entry_point="minigrid.envs.babyai:PickupLoc",
+    )
+
+    register(
+        id="BabyAI-PickupDist-v0",
+        entry_point="minigrid.envs.babyai:PickupDist",
+    )
+
+    register(
+        id="BabyAI-PickupDistDebug-v0",
+        entry_point="minigrid.envs.babyai:PickupDist",
+        kwargs={"debug": True},
+    )
+
+    register(
+        id="BabyAI-PickupAbove-v0",
+        entry_point="minigrid.envs.babyai:PickupAbove",
+    )
+
+    # BabyAI - Language based levels - PutNext
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-PutNextLocal-v0",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+    )
+
+    register(
+        id="BabyAI-PutNextLocalS5N3-v0",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+        kwargs={"room_size": 5, "num_objs": 3},
+    )
+
+    register(
+        id="BabyAI-PutNextLocalS6N4-v0",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+        kwargs={"room_size": 6, "num_objs": 4},
+    )
+
+    register(
+        id="BabyAI-PutNextS4N1-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 4, "objs_per_room": 1},
+    )
+
+    register(
+        id="BabyAI-PutNextS5N2-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 5, "objs_per_room": 2},
+    )
+
+    register(
+        id="BabyAI-PutNextS5N1-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 5, "objs_per_room": 1},
+    )
+
+    register(
+        id="BabyAI-PutNextS6N3-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 6, "objs_per_room": 3},
+    )
+
+    register(
+        id="BabyAI-PutNextS7N4-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 7, "objs_per_room": 4},
+    )
+
+    register(
+        id="BabyAI-PutNextS5N2Carrying-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 5, "objs_per_room": 2, "start_carrying": True},
+    )
+
+    register(
+        id="BabyAI-PutNextS6N3Carrying-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 6, "objs_per_room": 3, "start_carrying": True},
+    )
+
+    register(
+        id="BabyAI-PutNextS7N4Carrying-v0",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 7, "objs_per_room": 4, "start_carrying": True},
+    )
+
+    # BabyAI - Language based levels - Unlock
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-Unlock-v0",
+        entry_point="minigrid.envs.babyai:Unlock",
+    )
+
+    register(
+        id="BabyAI-UnlockLocal-v0",
+        entry_point="minigrid.envs.babyai:UnlockLocal",
+    )
+
+    register(
+        id="BabyAI-UnlockLocalDist-v0",
+        entry_point="minigrid.envs.babyai:UnlockLocal",
+        kwargs={"distractors": True},
+    )
+
+    register(
+        id="BabyAI-KeyInBox-v0",
+        entry_point="minigrid.envs.babyai:KeyInBox",
+    )
+
+    register(
+        id="BabyAI-UnlockPickup-v0",
+        entry_point="minigrid.envs.babyai:UnlockPickup",
+    )
+
+    register(
+        id="BabyAI-UnlockPickupDist-v0",
+        entry_point="minigrid.envs.babyai:UnlockPickup",
+        kwargs={"distractors": True},
+    )
+
+    register(
+        id="BabyAI-BlockedUnlockPickup-v0",
+        entry_point="minigrid.envs.babyai:BlockedUnlockPickup",
+    )
+
+    register(
+        id="BabyAI-UnlockToUnlock-v0",
+        entry_point="minigrid.envs.babyai:UnlockToUnlock",
+    )
+
+    # BabyAI - Language based levels - Other
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-ActionObjDoor-v0",
+        entry_point="minigrid.envs.babyai:ActionObjDoor",
+    )
+
+    register(
+        id="BabyAI-FindObjS5-v0",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+    )
+
+    register(
+        id="BabyAI-FindObjS6-v0",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+        kwargs={"room_size": 6},
+    )
+
+    register(
+        id="BabyAI-FindObjS7-v0",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+        kwargs={"room_size": 7},
+    )
+
+    register(
+        id="BabyAI-KeyCorridor-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS3R1-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 3, "num_rows": 1},
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS3R2-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 3, "num_rows": 2},
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS3R3-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 3, "num_rows": 3},
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS4R3-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 4, "num_rows": 3},
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS5R3-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 5, "num_rows": 3},
+    )
+
+    register(
+        id="BabyAI-KeyCorridorS6R3-v0",
+        entry_point="minigrid.envs.babyai:KeyCorridor",
+        kwargs={"room_size": 6, "num_rows": 3},
+    )
+
+    register(
+        id="BabyAI-OneRoomS8-v0",
+        entry_point="minigrid.envs.babyai:OneRoomS8",
+    )
+
+    register(
+        id="BabyAI-OneRoomS12-v0",
+        entry_point="minigrid.envs.babyai:OneRoomS8",
+        kwargs={"room_size": 12},
+    )
+
+    register(
+        id="BabyAI-OneRoomS16-v0",
+        entry_point="minigrid.envs.babyai:OneRoomS8",
+        kwargs={"room_size": 16},
+    )
+
+    register(
+        id="BabyAI-OneRoomS20-v0",
+        entry_point="minigrid.envs.babyai:OneRoomS8",
+        kwargs={"room_size": 20},
+    )
+
+    register(
+        id="BabyAI-MoveTwoAcrossS5N2-v0",
+        entry_point="minigrid.envs.babyai:MoveTwoAcross",
+        kwargs={"room_size": 5, "objs_per_room": 2},
+    )
+
+    register(
+        id="BabyAI-MoveTwoAcrossS8N9-v0",
+        entry_point="minigrid.envs.babyai:MoveTwoAcross",
+        kwargs={"room_size": 8, "objs_per_room": 9},
+    )
+
+    # BabyAI - Language based levels - Synth
+    # ----------------------------------------
+
+    register(
+        id="BabyAI-Synth-v0",
+        entry_point="minigrid.envs.babyai:Synth",
+    )
+
+    register(
+        id="BabyAI-SynthS5R2-v0",
+        entry_point="minigrid.envs.babyai:Synth",
+        kwargs={"room_size": 5, "num_rows": 2},
+    )
+
+    register(
+        id="BabyAI-SynthLoc-v0",
+        entry_point="minigrid.envs.babyai:SynthLoc",
+    )
+
+    register(
+        id="BabyAI-SynthSeq-v0",
+        entry_point="minigrid.envs.babyai:SynthSeq",
+    )
+
+    register(
+        id="BabyAI-MiniBossLevel-v0",
+        entry_point="minigrid.envs.babyai:MiniBossLevel",
+    )
+
+    register(
+        id="BabyAI-BossLevel-v0",
+        entry_point="minigrid.envs.babyai:BossLevel",
+    )
+
+    register(
+        id="BabyAI-BossLevelNoUnlock-v0",
+        entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
+    )

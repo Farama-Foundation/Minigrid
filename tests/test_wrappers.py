@@ -19,7 +19,7 @@ from minigrid.wrappers import (
     StateBonus,
     ViewSizeWrapper,
 )
-from tests.utils import all_testing_env_specs, assert_equals
+from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
 
 SEEDS = [100, 243, 500]
 NUM_STEPS = 100
@@ -126,8 +126,10 @@ def test_action_bonus_wrapper(env_id):
 
 
 @pytest.mark.parametrize(
-    "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
-)
+    "env_spec",
+    minigrid_testing_env_specs,
+    ids=[spec.id for spec in minigrid_testing_env_specs],
+)  # DictObservationSpaceWrapper is not compatible with BabyAI levels. See minigrid/wrappers.py for more details.
 def test_dict_observation_space_wrapper(env_spec):
     env = env_spec.make()
     env = DictObservationSpaceWrapper(env)
@@ -157,6 +159,13 @@ def test_dict_observation_space_wrapper(env_spec):
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_main_wrappers(wrapper, env_spec):
+    if (
+        wrapper in (DictObservationSpaceWrapper, FlatObsWrapper)
+        and env_spec not in minigrid_testing_env_specs
+    ):
+        # DictObservationSpaceWrapper and FlatObsWrapper are not compatible with BabyAI levels
+        # See minigrid/wrappers.py for more details
+        pytest.skip()
     env = env_spec.make()
     env = wrapper(env)
     for _ in range(10):
