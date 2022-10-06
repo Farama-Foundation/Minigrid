@@ -3,7 +3,7 @@ Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Put Next` instruction.
 """
 
-from minigrid.envs.babyai.core.levelgen import RoomGridLevel
+from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
 from minigrid.envs.babyai.core.verifier import ObjDesc, PutNextInstr
 
 
