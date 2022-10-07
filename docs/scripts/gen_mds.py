@@ -1,4 +1,5 @@
 import minigrid.wrappers
+
 __author__ = "Feng Gu"
 __email__ = "contact@fenggu.me"
 
@@ -156,14 +157,18 @@ wrappers_path = os.path.join(
     "wrappers.md",
 )
 
-wrappers_texts = """---
+wrappers_texts = (
+    """---
 title: Wrappers
 lastpage:
----\n""" + sections[4] + "\n"
+---\n"""
+    + sections[4]
+    + "\n"
+)
 
 for name, obj in inspect.getmembers(minigrid.wrappers):
     if inspect.isclass(obj) and obj.__doc__ is not None:
-        formatted_doc = ' '.join(trim(obj.__doc__).split())
+        formatted_doc = " ".join(trim(obj.__doc__).split())
         wrappers_texts += f"""## {name}
 {formatted_doc}\n\n"""
 
