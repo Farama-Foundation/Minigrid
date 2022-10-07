@@ -29,7 +29,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 }
 ```
 
-List of publications & submissions using MiniGrid or BabyAI (please open a pull request to add missing entries):
+List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
 - [History Compression via Language Models in Reinforcement Learning.](https://proceedings.mlr.press/v162/paischer22a.html) (Johannes Kepler University Linz, PMLR 2022)
 - [Leveraging Approximate Symbolic Models for Reinforcement Learning via Skill Diversity](https://arxiv.org/abs/2202.02886) (Arizona State University, ICML 2022)
 - [How to Stay Curious while avoiding Noisy TVs using Aleatoric Uncertainty Estimation](https://proceedings.mlr.press/v162/mavor-parker22a.html) (University College London, Boston University, ICML 2022)
