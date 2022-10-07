@@ -175,3 +175,40 @@ for name, obj in inspect.getmembers(minigrid.wrappers):
 with open(wrappers_path, "w+") as f:
     f.write(wrappers_texts)
     f.close()
+
+
+# gen content/pubs.md
+
+pubs_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "content",
+    "pubs.md",
+)
+
+pubs_texts = """---
+layout: "contents"
+title: Publications
+firstpage:
+---\n#List of Publications\n""" + sections[1] + "\n"
+
+with open(pubs_path, "w+") as f:
+    f.write(pubs_texts)
+    f.close()
+
+# gen content/basic_usage.md
+
+pubs_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "content",
+    "basic_usage.md",
+)
+
+pubs_texts = """---
+layout: "contents"
+title: Basic Usage
+firstpage:
+---\n""" + sections[3] + "\n"
+
+with open(pubs_path, "w+") as f:
+    f.write(pubs_texts)
+    f.close()
