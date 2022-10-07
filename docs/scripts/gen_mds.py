@@ -185,11 +185,15 @@ pubs_path = os.path.join(
     "pubs.md",
 )
 
-pubs_texts = """---
+pubs_texts = (
+    """---
 layout: "contents"
 title: Publications
 firstpage:
----\n#List of Publications\n""" + sections[1] + "\n"
+---\n#List of Publications\n"""
+    + sections[1]
+    + "\n"
+)
 
 with open(pubs_path, "w+") as f:
     f.write(pubs_texts)
@@ -203,11 +207,15 @@ pubs_path = os.path.join(
     "basic_usage.md",
 )
 
-pubs_texts = """---
+pubs_texts = (
+    """---
 layout: "contents"
 title: Basic Usage
 firstpage:
----\n""" + sections[3] + "\n"
+---\n"""
+    + sections[3]
+    + "\n"
+)
 
 with open(pubs_path, "w+") as f:
     f.write(pubs_texts)
