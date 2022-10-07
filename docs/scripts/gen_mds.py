@@ -1,3 +1,4 @@
+import minigrid.wrappers
 __author__ = "Feng Gu"
 __email__ = "contact@fenggu.me"
 
@@ -5,6 +6,7 @@ __email__ = "contact@fenggu.me"
    isort:skip_file
 """
 
+import inspect
 import os
 import re
 
@@ -143,4 +145,28 @@ design_texts += sections[5]
 
 with open(design_path, "w+") as f:
     f.write(design_texts)
+    f.close()
+
+
+# gen /environments/wrappers.md
+
+wrappers_path = os.path.join(
+    os.path.dirname(os.path.dirname(__file__)),
+    "api",
+    "wrappers.md",
+)
+
+wrappers_texts = """---
+title: Wrappers
+lastpage:
+---\n""" + sections[4] + "\n"
+
+for name, obj in inspect.getmembers(minigrid.wrappers):
+    if inspect.isclass(obj) and obj.__doc__ is not None:
+        formatted_doc = ' '.join(trim(obj.__doc__).split())
+        wrappers_texts += f"""## {name}
+{formatted_doc}\n\n"""
+
+with open(wrappers_path, "w+") as f:
+    f.write(wrappers_texts)
     f.close()
