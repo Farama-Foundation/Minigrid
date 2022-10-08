@@ -4,3 +4,6 @@ _site
 __pycache__
 _build/
 .vscode/
+
+environments/
+!environments/index.md
