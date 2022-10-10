@@ -1,0 +1,9 @@
+.DS_Store
+_site
+.jekyll-cache
+__pycache__
+_build/
+.vscode/
+
+environments/
+!environments/index.md
