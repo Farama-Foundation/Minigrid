@@ -31,8 +31,14 @@ index_toctree = """
 
 content/installation
 content/basic_usage
-api/wrappers
 content/pubs
+```
+
+```{toctree}
+:hidden:
+:caption: Wrappers
+
+api/wrappers
 ```
 
 
