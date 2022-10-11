@@ -90,3 +90,5 @@ html_context["slug"] = "minigrid"
 
 html_static_path = ["_static"]
 html_css_files = []
+
+notfound_urls_prefix = None
