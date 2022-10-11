@@ -15,3 +15,6 @@ _site
 .jekyll-cache
 __pycache__
 .vscode/
+/docs/environments/*.md
+/docs/content/*.md
+/docs/api/*.md
