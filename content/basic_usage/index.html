@@ -3,14 +3,14 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Wrappers" href="../../api/wrappers/" /><link rel="prev" title="Installation" href="../installation/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="&lt;no title&gt;" href="../pubs/" /><link rel="prev" title="Minigrid (formerly gym-minigrid)" href="../../" />
         <link rel="canonical" href="https://minigrid.farama.org/content/basic_usage.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
         <title>Basic Usage - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=5791a8d218e5c4d0608b4fadc34fbc8cea77e3da" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=c2d5e51f39e130612d57e150aebc94239a19910f" />
     
     
 
@@ -41,7 +41,7 @@
     <header class="farama-header">
       <div class="farama-header__container">
         <div class="farama-header__left">
-          <a href="https://farama.org/">
+          <a href="../../">
               <img class="farama-header__logo only-light" src="../../_static/img/minigrid.png" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.png" alt="Dark Logo"/>
             <h1 class="farama-header__title">MiniGrid Documentation</h1>
@@ -210,7 +210,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -227,36 +227,55 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/">Wrappers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pubs/">List of publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#actionbonus">ActionBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#dictobservationspacewrapper">DictObservationSpaceWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#directionobswrapper">DirectionObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#flatobswrapper">FlatObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#fullyobswrapper">FullyObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#imgobswrapper">ImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#observationwrapper">ObservationWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#onehotpartialobswrapper">OneHotPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#rgbimgobswrapper">RGBImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#rgbimgpartialobswrapper">RGBImgPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#reseedwrapper">ReseedWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#statebonus">StateBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#symbolicobswrapper">SymbolicObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#viewsizewrapper">ViewSizeWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#wrapper">Wrapper</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">General Structure</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/empty/">Empty</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/four_rooms/">Four Rooms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">Design</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/boss_level_no_unlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing/">Simple Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/dist_shift/">Dist Shift</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/door_key/">Door Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/dynamic/">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/empty/">Empty</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/fetch/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/four_rooms/">Four Rooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_object/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/lava_gap/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/locked_room/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/memory/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/put_near/">Put Near</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/red_blue_doors/">Red Blue Doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/memory_s7/">Memory S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/locked_room/">Locked Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/key_corridor_s6_r3/">Key Corridor S6 R3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock/">Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_pickup/">Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dist_shift2/">Dist Shift2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/lava_gap_s7/">Lava Gap S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing_s11_n5/">Simple Crossing S11 N5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dynamic/">Dynamic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_object/">Go To Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
 </ul>
 </li>
 </ul>
@@ -285,9 +304,9 @@
         </a>
         <div class="content-icon-container">
           
-  
-  <div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Gymnasium/edit/master/docs/content/basic_usage.md" title="Edit this page">
+    
+    <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/content/basic_usage.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -303,7 +322,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -311,8 +330,6 @@
         <article role="main">
           <section id="basic-usage">
 <h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h1>
-<section id="id1">
-<h2>Basic Usage<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <p>There is a UI application which allows you to manually control the agent with the arrow keys:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">minigrid</span><span class="o">/</span><span class="n">manual_control</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -323,15 +340,14 @@
 </div>
 </section>
 <section id="reinforcement-learning">
-<h2>Reinforcement Learning<a class="headerlink" href="#reinforcement-learning" title="Permalink to this heading">#</a></h2>
+<h1>Reinforcement Learning<a class="headerlink" href="#reinforcement-learning" title="Permalink to this heading">#</a></h1>
 <p>If you want to train an agent with reinforcement learning, I recommend using the code found in the <a class="reference external" href="https://github.com/lcswillems/torch-rl">torch-rl</a> repository.
 This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.</p>
 <p>A sample training command is:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">torch</span><span class="o">-</span><span class="n">rl</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">torch</span><span class="o">-</span><span class="n">rl</span>
 <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">scripts</span><span class="o">.</span><span class="n">train</span> <span class="o">--</span><span class="n">env</span> <span class="n">MiniGrid</span><span class="o">-</span><span class="n">Empty</span><span class="o">-</span><span class="mi">8</span><span class="n">x8</span><span class="o">-</span><span class="n">v0</span> <span class="o">--</span><span class="n">algo</span> <span class="n">ppo</span>
 </pre></div>
 </div>
-</section>
 </section>
 
         </article>
@@ -339,12 +355,12 @@ This code has been tested and is known to work with this environment. The defaul
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../../api/wrappers/">
+          <a class="next-page" href="../pubs/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Wrappers</div>
+                <div class="title">&lt;no title&gt;</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -369,28 +385,8 @@ This code has been tested and is known to work with this environment. The defaul
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Basic Usage</a><ul>
-<li><a class="reference internal" href="#id1">Basic Usage</a></li>
-<li><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

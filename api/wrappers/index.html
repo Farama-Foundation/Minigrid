@@ -3,14 +3,14 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="List of publications" href="../../content/pubs/" /><link rel="prev" title="Basic Usage" href="../../content/basic_usage/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Design" href="../../environments/design/" /><link rel="prev" title="&lt;no title&gt;" href="../../content/pubs/" />
         <link rel="canonical" href="https://minigrid.farama.org/api/wrappers.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
         <title>Wrappers - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=5791a8d218e5c4d0608b4fadc34fbc8cea77e3da" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=c2d5e51f39e130612d57e150aebc94239a19910f" />
     
     
 
@@ -41,7 +41,7 @@
     <header class="farama-header">
       <div class="farama-header__container">
         <div class="farama-header__left">
-          <a href="https://farama.org/">
+          <a href="../../">
               <img class="farama-header__logo only-light" src="../../_static/img/minigrid.png" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.png" alt="Dark Logo"/>
             <h1 class="farama-header__title">MiniGrid Documentation</h1>
@@ -226,37 +226,56 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../content/installation/">Installation</a></li>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#reinforcement-learning">Reinforcement Learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
+<ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Wrappers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/pubs/">List of publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#actionbonus">ActionBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#dictobservationspacewrapper">DictObservationSpaceWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#directionobswrapper">DirectionObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#flatobswrapper">FlatObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#fullyobswrapper">FullyObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#imgobswrapper">ImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#observationwrapper">ObservationWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#onehotpartialobswrapper">OneHotPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#rgbimgobswrapper">RGBImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#rgbimgpartialobswrapper">RGBImgPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#reseedwrapper">ReseedWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#statebonus">StateBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#symbolicobswrapper">SymbolicObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#viewsizewrapper">ViewSizeWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#wrapper">Wrapper</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">General Structure</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/empty/">Empty</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/four_rooms/">Four Rooms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">Design</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/boss_level_no_unlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing/">Simple Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/dist_shift/">Dist Shift</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/door_key/">Door Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/dynamic/">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/empty/">Empty</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/fetch/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/four_rooms/">Four Rooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_object/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/lava_gap/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/locked_room/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/memory/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/put_near/">Put Near</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/red_blue_doors/">Red Blue Doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/memory_s7/">Memory S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/locked_room/">Locked Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/key_corridor_s6_r3/">Key Corridor S6 R3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock/">Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_pickup/">Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dist_shift2/">Dist Shift2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/lava_gap_s7/">Lava Gap S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing_s11_n5/">Simple Crossing S11 N5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dynamic/">Dynamic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_object/">Go To Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
 </ul>
 </li>
 </ul>
@@ -285,9 +304,9 @@
         </a>
         <div class="content-icon-container">
           
-  
-  <div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Gymnasium/edit/master/docs/api/wrappers.md" title="Edit this page">
+    
+    <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/api/wrappers.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -325,7 +344,7 @@ There is also an <code class="docutils literal notranslate"><span class="pre">Im
 compact and efficient encoding, with 3 input values per visible grid cell, 7x7x3 values total.
 These values are <strong>not pixels</strong>. If you want to obtain an array of RGB pixels as observations instead,
 use the <code class="docutils literal notranslate"><span class="pre">RGBImgPartialObsWrapper</span></code>. You can use it as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">,</span> <span class="n">ImgObsWrapper</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;MiniGrid-Empty-8x8-v0&#39;</span><span class="p">)</span>
@@ -335,6 +354,66 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
 </pre></div>
 </div>
 </section>
+<section id="actionbonus">
+<h1>ActionBonus<a class="headerlink" href="#actionbonus" title="Permalink to this heading">#</a></h1>
+<p>Wrapper which adds an exploration bonus. This is a reward to encourage exploration of less visited (state,action) pairs.</p>
+</section>
+<section id="dictobservationspacewrapper">
+<h1>DictObservationSpaceWrapper<a class="headerlink" href="#dictobservationspacewrapper" title="Permalink to this heading">#</a></h1>
+<p>Transforms the observation space (that has a textual component) to a fully numerical observation space, where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary. This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+</section>
+<section id="directionobswrapper">
+<h1>DirectionObsWrapper<a class="headerlink" href="#directionobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1) type = {slope , angle}</p>
+</section>
+<section id="flatobswrapper">
+<h1>FlatObsWrapper<a class="headerlink" href="#flatobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Encode mission strings using a one-hot scheme, and combine these with observed images into one flat array. This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+</section>
+<section id="fullyobswrapper">
+<h1>FullyObsWrapper<a class="headerlink" href="#fullyobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Fully observable gridworld using a compact grid encoding</p>
+</section>
+<section id="imgobswrapper">
+<h1>ImgObsWrapper<a class="headerlink" href="#imgobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Use the image as the only observation output, no language/mission.</p>
+</section>
+<section id="observationwrapper">
+<h1>ObservationWrapper<a class="headerlink" href="#observationwrapper" title="Permalink to this heading">#</a></h1>
+<p>Superclass of wrappers that can modify observations using :meth:<code class="docutils literal notranslate"><span class="pre">observation</span></code> for :meth:<code class="docutils literal notranslate"><span class="pre">reset</span></code> and :meth:<code class="docutils literal notranslate"><span class="pre">step</span></code>. If you would like to apply a function to the observation that is returned by the base environment before passing it to learning code, you can simply inherit from :class:<code class="docutils literal notranslate"><span class="pre">ObservationWrapper</span></code> and overwrite the method :meth:<code class="docutils literal notranslate"><span class="pre">observation</span></code> to implement that transformation. The transformation defined in that method must be defined on the base environment’s observation space. However, it may take values in a different space. In that case, you need to specify the new observation space of the wrapper by setting :attr:<code class="docutils literal notranslate"><span class="pre">self.observation_space</span></code> in the :meth:<code class="docutils literal notranslate"><span class="pre">__init__</span></code> method of your wrapper. For example, you might have a 2D navigation task where the environment returns dictionaries as observations with keys <code class="docutils literal notranslate"><span class="pre">&quot;agent_position&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;target_position&quot;</span></code>. A common thing to do might be to throw away some degrees of freedom and only consider the position of the target relative to the agent, i.e. <code class="docutils literal notranslate"><span class="pre">observation[&quot;target_position&quot;]</span> <span class="pre">-</span> <span class="pre">observation[&quot;agent_position&quot;]</span></code>. For this, you could implement an observation wrapper like this:: class RelativePosition(gym.ObservationWrapper): def <strong>init</strong>(self, env): super().<strong>init</strong>(env) self.observation_space = Box(shape=(2,), low=-np.inf, high=np.inf) def observation(self, obs): return obs[“target”] - obs[“agent”] Among others, Gymnasium provides the observation wrapper :class:<code class="docutils literal notranslate"><span class="pre">TimeAwareObservation</span></code>, which adds information about the index of the timestep to the observation.</p>
+</section>
+<section id="onehotpartialobswrapper">
+<h1>OneHotPartialObsWrapper<a class="headerlink" href="#onehotpartialobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Wrapper to get a one-hot encoding of a partially observable agent view as observation.</p>
+</section>
+<section id="rgbimgobswrapper">
+<h1>RGBImgObsWrapper<a class="headerlink" href="#rgbimgobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Wrapper to use fully observable RGB image as observation, This can be used to have the agent to solve the gridworld in pixel space.</p>
+</section>
+<section id="rgbimgpartialobswrapper">
+<h1>RGBImgPartialObsWrapper<a class="headerlink" href="#rgbimgpartialobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Wrapper to use partially observable RGB image as observation. This can be used to have the agent to solve the gridworld in pixel space.</p>
+</section>
+<section id="reseedwrapper">
+<h1>ReseedWrapper<a class="headerlink" href="#reseedwrapper" title="Permalink to this heading">#</a></h1>
+<p>Wrapper to always regenerate an environment with the same set of seeds. This can be used to force an environment to always keep the same configuration when reset.</p>
+</section>
+<section id="statebonus">
+<h1>StateBonus<a class="headerlink" href="#statebonus" title="Permalink to this heading">#</a></h1>
+<p>Adds an exploration bonus based on which positions are visited on the grid.</p>
+</section>
+<section id="symbolicobswrapper">
+<h1>SymbolicObsWrapper<a class="headerlink" href="#symbolicobswrapper" title="Permalink to this heading">#</a></h1>
+<p>Fully observable grid with a symbolic state representation. The symbol is a triple of (X, Y, IDX), where X and Y are the coordinates on the grid, and IDX is the id of the object.</p>
+</section>
+<section id="viewsizewrapper">
+<h1>ViewSizeWrapper<a class="headerlink" href="#viewsizewrapper" title="Permalink to this heading">#</a></h1>
+<p>Wrapper to customize the agent field of view size. This cannot be used with fully observable wrappers.</p>
+</section>
+<section id="wrapper">
+<h1>Wrapper<a class="headerlink" href="#wrapper" title="Permalink to this heading">#</a></h1>
+<p>Wraps an environment to allow a modular transformation of the :meth:<code class="docutils literal notranslate"><span class="pre">step</span></code> and :meth:<code class="docutils literal notranslate"><span class="pre">reset</span></code> methods. This class is the base class for all wrappers. The subclass could override some methods to change the behavior of the original environment without touching the original code. Note: Don’t forget to call <code class="docutils literal notranslate"><span class="pre">super().__init__(env)</span></code> if the subclass overrides :meth:<code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+</section>
 
         </article>
       </div>
@@ -342,14 +421,14 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
         
         <div class="related-pages">
           
-          <a class="prev-page" href="../../content/basic_usage/">
+          <a class="prev-page" href="../../content/pubs/">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Basic Usage</div>
+                <div class="title">&lt;no title&gt;</div>
                 
               </div>
             </a>

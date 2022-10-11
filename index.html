@@ -3,14 +3,14 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Installation" href="content/installation/" />
+<link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Basic Usage" href="content/basic_usage/" />
         <link rel="canonical" href="https://minigrid.farama.org/index.html" />
 
     <link rel="shortcut icon" href="_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
         <title>MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=5791a8d218e5c4d0608b4fadc34fbc8cea77e3da" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=c2d5e51f39e130612d57e150aebc94239a19910f" />
     
     
 
@@ -41,7 +41,7 @@
     <header class="farama-header">
       <div class="farama-header__container">
         <div class="farama-header__left">
-          <a href="https://farama.org/">
+          <a href="#">
               <img class="farama-header__logo only-light" src="_static/img/minigrid.png" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="_static/img/minigrid-white.png" alt="Dark Logo"/>
             <h1 class="farama-header__title">MiniGrid Documentation</h1>
@@ -227,36 +227,55 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="content/installation/">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content/basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content/basic_usage/#reinforcement-learning">Reinforcement Learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="api/wrappers/">Wrappers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="content/pubs/">List of publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#actionbonus">ActionBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#dictobservationspacewrapper">DictObservationSpaceWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#directionobswrapper">DirectionObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#flatobswrapper">FlatObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#fullyobswrapper">FullyObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#imgobswrapper">ImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#observationwrapper">ObservationWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#onehotpartialobswrapper">OneHotPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#rgbimgobswrapper">RGBImgObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#rgbimgpartialobswrapper">RGBImgPartialObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#reseedwrapper">ReseedWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#statebonus">StateBonus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#symbolicobswrapper">SymbolicObsWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#viewsizewrapper">ViewSizeWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/wrappers/#wrapper">Wrapper</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="environments/design/">General Structure</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="environments/">Included environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="environments/empty/">Empty</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/four_rooms/">Four Rooms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environments/design/">Design</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="environments/boss_level_no_unlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/simple_crossing/">Simple Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/dist_shift/">Dist Shift</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/door_key/">Door Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/dynamic/">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/empty/">Empty</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/fetch/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/four_rooms/">Four Rooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/go_to_object/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/lava_gap/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/locked_room/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/memory/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environments/playground/">Playground</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/put_near/">Put Near</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/red_blue_doors/">Red Blue Doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/memory_s7/">Memory S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/locked_room/">Locked Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/key_corridor_s6_r3/">Key Corridor S6 R3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/unlock/">Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="environments/unlock_pickup/">Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/dist_shift2/">Dist Shift2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/lava_gap_s7/">Lava Gap S7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/simple_crossing_s11_n5/">Simple Crossing S11 N5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/dynamic/">Dynamic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/go_to_object/">Go To Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="environments/playground/">Playground</a></li>
 </ul>
 </li>
 </ul>
@@ -285,9 +304,9 @@
         </a>
         <div class="content-icon-container">
           
-  
-  <div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Gymnasium/edit/master/docs/index.md" title="Edit this page">
+    
+    <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/index.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -309,11 +328,11 @@
           </label>
         </div>
         <article role="main">
-          <section id="minigrid-is-a-simple-and-easily-configurable-grid-world-environments-for-reinforcement-learning">
-<h1>MiniGrid is a simple and easily configurable grid world environments for reinforcement learning<a class="headerlink" href="#minigrid-is-a-simple-and-easily-configurable-grid-world-environments-for-reinforcement-learning" title="Permalink to this heading">#</a></h1>
+          <section id="minigrid-formerly-gym-minigrid">
+<h1>Minigrid (formerly gym-minigrid)<a class="headerlink" href="#minigrid-formerly-gym-minigrid" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://pre-commit.com/"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white" /></a>
 <a class="reference external" href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p>
-<p>There are other gridworld Gym environments out there, but this one is
+<p>There are other gridworld Gymnasium environments out there, but this one is
 designed to be particularly simple, lightweight and fast. The code has very few
 dependencies, making it less likely to break or fail to install. It loads no
 external sprites/textures, and it can run at up to 5000 FPS on a Core i7
@@ -322,7 +341,7 @@ implementation can be found <a class="reference external" href="https://github.c
 <p>Requirements:</p>
 <ul class="simple">
 <li><p>Python 3.7 to 3.10</p></li>
-<li><p>OpenAI Gym v0.26</p></li>
+<li><p>Gymnasium v0.26</p></li>
 <li><p>NumPy 1.18+</p></li>
 <li><p>Matplotlib (optional, only needed for display) - 3.0+</p></li>
 </ul>
@@ -337,12 +356,27 @@ implementation can be found <a class="reference external" href="https://github.c
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="toctree-wrapper compound">
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<p>There is now a <a class="reference external" href="https://pypi.org/project/minigrid/">pip package</a> available, which is updated periodically:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">minigrid</span>
+</pre></div>
+</div>
+<p>Alternatively, to get the latest version of MiniGrid, you can clone this repository and install the dependencies with <code class="docutils literal notranslate"><span class="pre">pip3</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Farama</span><span class="o">-</span><span class="n">Foundation</span><span class="o">/</span><span class="n">MiniGrid</span>
+<span class="n">cd</span> <span class="n">MiniGrid</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
 </div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
 </section>
 
         </article>
