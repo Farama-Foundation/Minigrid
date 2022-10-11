@@ -6,6 +6,8 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class EmptyEnv(MiniGridEnv):
     """
+    ![empty-env](../_static/img/figures/empty-env.png)
+
     ### Description
 
     This environment is an empty room, and the goal of the agent is to reach the

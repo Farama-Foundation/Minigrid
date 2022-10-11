@@ -5,6 +5,8 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockEnv(RoomGrid):
 
     """
+    ![Unlock](../_static/img/figures/Unlock.png)
+
     ### Description
 
     The agent has to open a locked door. This environment can be solved without

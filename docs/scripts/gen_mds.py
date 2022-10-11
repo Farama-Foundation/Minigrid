@@ -124,7 +124,7 @@ output_path = os.path.join(
     "index.md",
 )
 
-# output index.md
+# output envs/index.md
 with open(output_path, "w+") as f:
     f.write(index_texts)
     f.close()
@@ -164,16 +164,33 @@ lastpage:
 ---\n"""
     + sections[4]
     + "\n"
+    + """
+```{toctree}
+:hidden:
+"""
 )
 
 for name, obj in inspect.getmembers(minigrid.wrappers):
     if inspect.isclass(obj) and obj.__doc__ is not None:
         formatted_doc = " ".join(trim(obj.__doc__).split())
-        wrappers_texts += f"""## {name}
-{formatted_doc}\n\n"""
+        wrappers_texts += f"""{name}\n"""
+        path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "api",
+            name + ".md",
+        )
+        with open(path, "w+") as f:
+            f.write(
+                f"""---
+title: {name}
+lastpage:
+---\n## {name}\n\n{formatted_doc}\n"""
+            )
+
 
 with open(wrappers_path, "w+") as f:
     f.write(wrappers_texts)
+    f.write("""\n```\n""")
     f.close()
 
 

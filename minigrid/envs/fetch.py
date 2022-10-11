@@ -8,6 +8,8 @@ from minigrid.minigrid_env import MiniGridEnv
 class FetchEnv(MiniGridEnv):
 
     """
+    ![fetch-env](../_static/img/figures/fetch-env.png)
+
     ### Description
 
     This environment has multiple objects of assorted types and colors. The
