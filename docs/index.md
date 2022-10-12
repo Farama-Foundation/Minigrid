@@ -3,7 +3,7 @@ hide-toc: true
 firstpage:
 lastpage:
 ---
-# Minigrid (formerly gym-minigrid)
+## Minigrid (formerly gym-minigrid) contains simple and easily configurable grid world environments for reinforcement learning
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -57,14 +57,14 @@ pip install -e .
 
 content/installation
 content/basic_usage
-content/pubs
+content/publications
 ```
 
 ```{toctree}
 :hidden:
 :caption: Wrappers
 
-api/wrappers
+api/wrapper
 ```
 
 

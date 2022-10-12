@@ -28,7 +28,6 @@ Please use this bibtex if you want to cite this repository in your publications:
   howpublished = {\url{https://github.com/Farama-Foundation/MiniGrid}},
 }
 ```
-<br>
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
 - [History Compression via Language Models in Reinforcement Learning.](https://proceedings.mlr.press/v162/paischer22a.html) (Johannes Kepler University Linz, PMLR 2022)
@@ -73,7 +72,6 @@ List of publications & submissions using Minigrid or BabyAI (please open a pull 
 - [BabyAI: First Steps Towards Grounded Language Learning With a Human In the Loop](https://arxiv.org/abs/1810.08272) (Mila, ICLR, Oct 2018)
 
 This environment has been built as part of work done at [Mila](https://mila.quebec). The Dynamic obstacles environment has been added as part of work done at [IAS in TU Darmstadt](https://www.ias.informatik.tu-darmstadt.de/) and the University of Genoa for mobile robot navigation with dynamic obstacles.
-<br>
 
 ## Installation
 
@@ -90,7 +88,6 @@ git clone https://github.com/Farama-Foundation/MiniGrid
 cd MiniGrid
 pip install -e .
 ```
-<br>
 
 ## Basic Usage
 
@@ -117,7 +114,6 @@ A sample training command is:
 cd torch-rl
 python3 -m scripts.train --env MiniGrid-Empty-8x8-v0 --algo ppo
 ```
-<br>
 
 ## Wrappers
 
@@ -147,7 +143,6 @@ env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field
 obs, _ = env.reset() # This now produces an RGB tensor only
 ```
-<br>
 
 ## Design
 
@@ -182,7 +177,6 @@ You can define your own reward function by creating a class derived
 from `MiniGridEnv`. Extending the environment with new object types or new actions
 should be very easy. If you wish to do this, you should take a look at the
 [minigrid/minigrid.py](minigrid/minigrid.py) source file.
-<br>
 
 ## Included Environments
 
@@ -190,7 +184,6 @@ The environments listed below are implemented in the [minigrid/envs](/minigrid/e
 Each environment provides one or more configurations registered with OpenAI gym. Each environment
 is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning
 or to fine-tune difficulty.
-<br>
 
 ### Empty environment
 
