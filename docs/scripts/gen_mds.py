@@ -1,5 +1,3 @@
-import minigrid.wrappers
-
 __author__ = "Feng Gu"
 __email__ = "contact@fenggu.me"
 
@@ -7,7 +5,6 @@ __email__ = "contact@fenggu.me"
    isort:skip_file
 """
 
-import inspect
 import os
 import re
 

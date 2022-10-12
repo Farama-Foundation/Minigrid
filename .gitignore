@@ -16,3 +16,4 @@ _site
 __pycache__
 .vscode/
 /docs/environments/*.md
+!docs/environments/index.md
