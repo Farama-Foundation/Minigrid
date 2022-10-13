@@ -12,6 +12,7 @@ or to fine-tune difficulty.
 
 ```{toctree}
 :hidden:
+:caption: Minigrid Environments
 boss_level_no_unlock
 blocked_unlock_pickup
 simple_crossing
@@ -28,7 +29,6 @@ lava_gap
 locked_room
 memory
 multi_room
-obstructed_maze
 obstructed_maze
 playground
 put_near

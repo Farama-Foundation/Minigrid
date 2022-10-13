@@ -74,6 +74,7 @@ api/wrapper
 
 environments/design
 environments/index
+environments/babyAI_index
 ```
 
 ```{toctree}

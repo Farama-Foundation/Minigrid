@@ -1,5 +1,6 @@
 ---
 title: Wrappers
+tocdepth: 2
 lastpage:
 ---
 

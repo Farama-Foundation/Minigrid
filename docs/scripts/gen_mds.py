@@ -11,6 +11,7 @@ import re
 from gymnasium.envs.registration import registry
 from tqdm import tqdm
 from utils import trim
+from itertools import chain
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
@@ -25,6 +26,7 @@ all_envs = list(registry.values())
 
 filtered_envs_by_type = {}
 env_names = []
+babyai_envs = {}
 
 # Obtain filtered list
 for env_spec in tqdm(all_envs):
@@ -32,11 +34,18 @@ for env_spec in tqdm(all_envs):
     split = env_spec.entry_point.split(".")
     # ignore gymnasium.envs.env_type:Env
     env_module = split[0]
-    if env_module != "minigrid":
+
+    if len(split) > 2 and "babyai" in split[2]:
+        curr_babyai_env = split[2]
+        babyai_env_name = curr_babyai_env.split(":")[1]
+        babyai_envs[babyai_env_name] = env_spec
+    elif env_module == "minigrid":
+        env_name = split[1]
+        filtered_envs_by_type[env_name] = env_spec
+    # if env_module != "minigrid":
+    else:
         continue
 
-    env_name = split[1]
-    filtered_envs_by_type[env_name] = env_spec
 
 filtered_envs = {
     env[0]: env[1]
@@ -46,7 +55,15 @@ filtered_envs = {
     )
 }
 
-for env_name, env_spec in filtered_envs.items():
+filtered_babyai_envs = {
+    env[0]: env[1]
+    for env in sorted(
+        babyai_envs.items(),
+        key=lambda item: item[1].entry_point.split(".")[1],
+    )
+}
+
+for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.items()):
     made = env_spec.make()
 
     docstring = trim(made.unwrapped.__doc__)
@@ -58,6 +75,7 @@ for env_name, env_spec in filtered_envs.items():
 
     snake_env_name = pattern.sub("_", name).lower()
     env_names.append(snake_env_name)
+    print(snake_env_name)
     title_env_name = snake_env_name.replace("_", " ").title()
 
     v_path = os.path.join(
