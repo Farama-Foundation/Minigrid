@@ -1070,4 +1070,5 @@ def register_minigrid_envs():
         entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
     )
 
+
 __version__ = "2.0.0"

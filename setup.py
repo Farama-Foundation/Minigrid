@@ -2,6 +2,7 @@
 
 from setuptools import find_packages, setup
 
+
 def get_description():
     """Gets the description from the readme."""
     with open("README.md") as fh:
@@ -27,6 +28,7 @@ def get_version():
         if line.startswith("__version__"):
             return line.strip().split()[-1].strip().strip('"')
     raise RuntimeError("bad version data in __init__.py")
+
 
 # pytest is pinned to 7.0.1 as this is last version for python 3.6
 extras = {"testing": ["pytest==7.0.1"]}
