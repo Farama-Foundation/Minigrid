@@ -1,3 +1,5 @@
+"""Setups up the Minigrid module."""
+
 from setuptools import find_packages, setup
 
 def get_description():
