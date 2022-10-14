@@ -38,7 +38,7 @@ setup(
     author="Farama Foundation",
     author_email="contact@farama.org",
     description="Minimalistic gridworld reinforcement learning environments",
-    url="https://github.com/Farama-Foundation/MiniGrid",
+    url="https://minigrid.farama.org/",
     license_files=("LICENSE.txt",),
     long_description=long_description,
     long_description_content_type="text/markdown",
