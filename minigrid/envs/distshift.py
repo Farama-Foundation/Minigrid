@@ -12,8 +12,8 @@ class DistShiftEnv(MiniGridEnv):
 
     ### Description
 
-    This environment is based on one of ../_static/img/figures/the DeepMind [AI safety gridworlds]
-    (https://github.com/deepmind/ai-safety-gridworlds). The agent starts in the
+    This environment is based on one of the DeepMind [AI safety gridworlds](https://github.com/deepmind/ai-safety-gridworlds).
+    The agent starts in the
     top-left corner and must reach the goal which is in the top-right corner,
     but has to avoid stepping into lava on its way. The aim of this environment
     is to test an agent's ability to generalize. There are two slightly
