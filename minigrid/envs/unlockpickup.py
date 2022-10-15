@@ -7,7 +7,7 @@ class UnlockPickupEnv(RoomGrid):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/UnlockPickup.png" alt="UnlockPickup" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/UnlockPickup.png" alt="UnlockPickup" width="200px"/>
     </p>
 
     ### Description

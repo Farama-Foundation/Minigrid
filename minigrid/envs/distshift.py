@@ -8,8 +8,8 @@ class DistShiftEnv(MiniGridEnv):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
     </p>
 
     ### Description

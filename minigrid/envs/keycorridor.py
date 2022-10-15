@@ -7,15 +7,15 @@ class KeyCorridorEnv(RoomGrid):
 
     """
     <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R1.png" alt="KeyCorridorS3R1" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R2.png" alt="KeyCorridorS3R2" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R3.png" alt="KeyCorridorS3R3" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R1.png" alt="KeyCorridorS3R1" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R2.png" alt="KeyCorridorS3R2" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R3.png" alt="KeyCorridorS3R3" width="200px"/>
     </p>
 
     <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS4R3.png" alt="KeyCorridorS4R3" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS5R3.png" alt="KeyCorridorS5R3" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS6R3.png" alt="KeyCorridorS6R3" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS4R3.png" alt="KeyCorridorS4R3" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS5R3.png" alt="KeyCorridorS5R3" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS6R3.png" alt="KeyCorridorS6R3" width="200px"/>
     </p>
 
     ### Description

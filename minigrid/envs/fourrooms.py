@@ -8,7 +8,7 @@ class FourRoomsEnv(MiniGridEnv):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/four-rooms-env.png" alt="four-rooms-env" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/four-rooms-env.png" alt="four-rooms-env" width="200px"/>
     </p>
 
     ### Description

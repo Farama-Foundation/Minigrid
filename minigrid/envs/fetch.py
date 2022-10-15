@@ -9,7 +9,7 @@ class FetchEnv(MiniGridEnv):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/fetch-env.png" alt="fetch-env" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/fetch-env.png" alt="fetch-env" width="200px"/>
     </p>
 
     ### Description

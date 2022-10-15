@@ -8,8 +8,8 @@ class DoorKeyEnv(MiniGridEnv):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/door-key-curriculum.gif" alt="door-key-curriculum" width="200px"/>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/door-key-env.png" alt="door-key-env" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-curriculum.gif" alt="door-key-curriculum" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-env.png" alt="door-key-env" width="200px"/>
     </p>
 
     ### Description

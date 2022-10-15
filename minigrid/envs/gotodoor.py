@@ -8,9 +8,9 @@ from minigrid.minigrid_env import MiniGridEnv
 class GoToDoorEnv(MiniGridEnv):
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/gotodoor-6x6.png" alt="gotodoor-6x6" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.png" alt="gotodoor-6x6" width="200px"/>
         <video width="200px">
-            <source src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/gotodoor-6x6.mp4" type="video/mp4" />
+            <source src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.mp4" type="video/mp4" />
         </video>
     </p>
 

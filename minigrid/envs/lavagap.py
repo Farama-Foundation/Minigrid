@@ -10,7 +10,7 @@ class LavaGapEnv(MiniGridEnv):
 
     """
     <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/LavaGapS6.png" alt="LavaGapS6" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaGapS6.png" alt="LavaGapS6" width="200px"/>
     </p>
 
     ### Description

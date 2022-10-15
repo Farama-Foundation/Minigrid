@@ -8,21 +8,21 @@ class ObstructedMazeEnv(RoomGrid):
 
     """
     <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dl.png" alt="ObstructedMaze-1Dl" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dlh.png" alt="ObstructedMaze-1Dlh" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dlhb.png" alt="ObstructedMaze-1Dlhb" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Q.png" alt="ObstructedMaze-1Q" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dl.png" alt="ObstructedMaze-1Dl" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlh.png" alt="ObstructedMaze-1Dlh" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlhb.png" alt="ObstructedMaze-1Dlhb" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Q.png" alt="ObstructedMaze-1Q" width="200px"/>
     </p>
 
     <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dl.png" alt="ObstructedMaze-2Dl" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dlh.png" alt="ObstructedMaze-2Dlh" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dlhb.png" alt="ObstructedMaze-2Dlhb" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Q.png" alt="ObstructedMaze-2Q" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dl.png" alt="ObstructedMaze-2Dl" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlh.png" alt="ObstructedMaze-2Dlh" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlhb.png" alt="ObstructedMaze-2Dlhb" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Q.png" alt="ObstructedMaze-2Q" width="200px"/>
     </p>
 
     <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-4Q.png" alt="ObstructedMaze-4Q" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-4Q.png" alt="ObstructedMaze-4Q" width="200px"/>
     </p>
 
     ### Description
