@@ -36,9 +36,6 @@ jobs:
       - name: Remove .doctrees
         run: rm -r _build/.doctrees
 
-      - name: Move imgs
-        run: mkdir _build/_images && cp -r docs/_static/img/figures/. _build/_images
-
       - name: Upload to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
