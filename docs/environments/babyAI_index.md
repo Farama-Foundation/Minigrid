@@ -9,6 +9,7 @@ lastpage:
 :hidden:
 :caption: BabyAI Environments
 action_obj_door
+boss_level_no_unlock
 boss_level
 find_obj
 go_to_imp_unlock
