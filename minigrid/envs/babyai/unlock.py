@@ -4,9 +4,9 @@ Levels described in the Baby AI ICLR 2019 submission, with the `Unlock` instruct
 """
 
 from minigrid.core.constants import COLOR_NAMES
+from minigrid.core.world_object import Ball, Box, Key
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
 from minigrid.envs.babyai.core.verifier import ObjDesc, OpenInstr, PickupInstr
-from minigrid.minigrid_env import Ball, Box, Key
 
 
 class Unlock(RoomGridLevel):

@@ -1,4 +1,5 @@
 import math
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
@@ -22,7 +23,7 @@ class Grid:
     # Static cache of pre-renderer tiles
     tile_cache = {}
 
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int):
         assert width >= 3
         assert height >= 3
 
@@ -31,7 +32,7 @@ class Grid:
 
         self.grid = [None] * width * height
 
-    def __contains__(self, key):
+    def __contains__(self, key: Any) -> bool:
         if isinstance(key, WorldObj):
             for e in self.grid:
                 if e is key:
@@ -46,48 +47,52 @@ class Grid:
                     return True
         return False
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Grid") -> bool:
         grid1 = self.encode()
         grid2 = other.encode()
         return np.array_equal(grid2, grid1)
 
-    def __ne__(self, other):
+    def __ne__(self, other: "Grid") -> bool:
         return not self == other
 
-    def copy(self):
+    def copy(self) -> "Grid":
         from copy import deepcopy
 
         return deepcopy(self)
 
-    def set(self, i, j, v):
+    def set(self, i: int, j: int, v: WorldObj):
         assert i >= 0 and i < self.width
         assert j >= 0 and j < self.height
         self.grid[j * self.width + i] = v
 
-    def get(self, i, j):
+    def get(self, i: int, j: int) -> WorldObj:
         assert i >= 0 and i < self.width
         assert j >= 0 and j < self.height
         return self.grid[j * self.width + i]
 
-    def horz_wall(self, x, y, length=None, obj_type=Wall):
+    def horz_wall(
+        self, x: int, y: int, length: Optional[int] = None, obj_type: WorldObj = Wall
+    ):
         if length is None:
             length = self.width - x
         for i in range(0, length):
             self.set(x + i, y, obj_type())
 
-    def vert_wall(self, x, y, length=None, obj_type=Wall):
+    def vert_wall(
+        self, x: int, y: int, length: Optional[int] = None, obj_type: WorldObj = Wall
+    ):
         if length is None:
             length = self.height - y
         for j in range(0, length):
             self.set(x, y + j, obj_type())
 
-    def wall_rect(self, x, y, w, h):
+    def wall_rect(self, x: int, y: int, w: int, h: int):
         self.horz_wall(x, y, w)
         self.horz_wall(x, y + h - 1, w)
         self.vert_wall(x, y, h)
         self.vert_wall(x + w - 1, y, h)
 
-    def rotate_left(self):
+    def rotate_left(self) -> "Grid":
         """
         Rotate the grid to the left (counter-clockwise)
         """
@@ -101,7 +106,7 @@ class Grid:
 
         return grid
 
-    def slice(self, topX, topY, width, height):
+    def slice(self, topX: int, topY: int, width: int, height: int) -> "Grid":
         """
         Get a subset of the grid
         """
@@ -124,8 +129,13 @@ class Grid:
 
     @classmethod
     def render_tile(
-        cls, obj, agent_dir=None, highlight=False, tile_size=TILE_PIXELS, subdivs=3
-    ):
+        cls,
+        obj: "Grid",
+        agent_dir: Optional[int] = None,
+        highlight: bool = False,
+        tile_size: int = TILE_PIXELS,
+        subdivs: int = 3,
+    ) -> np.ndarray:
         """
         Render a tile and cache the result
         """
@@ -172,7 +182,13 @@ class Grid:
 
         return img
 
-    def render(self, tile_size, agent_pos, agent_dir=None, highlight_mask=None):
+    def render(
+        self,
+        tile_size: int,
+        agent_pos: Tuple[int, int],
+        agent_dir: Optional[int] = None,
+        highlight_mask: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
         """
         Render this grid at a given scale
         :param r: target renderer object
@@ -209,7 +225,7 @@ class Grid:
 
         return img
 
-    def encode(self, vis_mask=None):
+    def encode(self, vis_mask: Optional[np.ndarray] = None) -> np.ndarray:
         """
         Produce a compact numpy encoding of the grid
         """
@@ -235,7 +251,7 @@ class Grid:
         return array
 
     @staticmethod
-    def decode(array):
+    def decode(array: np.ndarray) -> Tuple["Grid", np.ndarray]:
         """
         Decode an array grid encoding back into a grid
         """
@@ -255,7 +271,7 @@ class Grid:
 
         return grid, vis_mask
 
-    def process_vis(self, agent_pos):
+    def process_vis(self, agent_pos: Tuple[int, int]) -> np.ndarray:
         mask = np.zeros(shape=(self.width, self.height), dtype=bool)
 
         mask[agent_pos[0], agent_pos[1]] = True
