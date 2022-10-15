@@ -64,7 +64,7 @@ class DoorKeyEnv(MiniGridEnv):
 
     def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
         if max_steps is None:
-            max_steps = 10 * size ** 2
+            max_steps = 10 * size**2
         mission_space = MissionSpace(
             mission_func=lambda: "use the key to open the door and then get to the goal"
         )
