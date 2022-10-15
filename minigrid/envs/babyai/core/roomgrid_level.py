@@ -55,8 +55,13 @@ class RoomGridLevel(RoomGrid):
         if max_steps is not None:
             self.fixed_max_steps = True
         else:
-            max_steps = 0 # only for initialization
-        super().__init__(room_size=room_size, mission_space=mission_space, max_steps=max_steps, **kwargs)
+            max_steps = 0  # only for initialization
+        super().__init__(
+            room_size=room_size,
+            mission_space=mission_space,
+            max_steps=max_steps,
+            **kwargs
+        )
 
     def reset(self, **kwargs):
         obs = super().reset(**kwargs)

@@ -102,7 +102,7 @@ class PickupAbove(RoomGridLevel):
     This task requires to use the compass to be solved effectively.
     """
 
-    def __init__(self,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: Optional[int] = None, **kwargs):
         room_size = 6
         if max_steps is None:
             max_steps = 8 * room_size**2

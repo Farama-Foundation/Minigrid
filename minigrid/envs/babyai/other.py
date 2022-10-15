@@ -56,7 +56,7 @@ class FindObjS5(RoomGridLevel):
     This level requires potentially exhaustive exploration
     """
 
-    def __init__(self, room_size=5,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, room_size=5, max_steps: Optional[int] = None, **kwargs):
 
         if max_steps is None:
             max_steps = 20 * room_size**2
@@ -80,13 +80,22 @@ class KeyCorridor(RoomGridLevel):
     random room.
     """
 
-    def __init__(self, num_rows=3, obj_type="ball", room_size=6,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(
+        self,
+        num_rows=3,
+        obj_type="ball",
+        room_size=6,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         self.obj_type = obj_type
 
         if max_steps is None:
             max_steps = 30 * room_size**2
 
-        super().__init__(room_size=room_size, num_rows=num_rows, max_steps=max_steps, **kwargs)
+        super().__init__(
+            room_size=room_size, num_rows=num_rows, max_steps=max_steps, **kwargs
+        )
 
     def gen_mission(self):
         # Connect the middle column rooms into a hallway
@@ -133,14 +142,18 @@ class MoveTwoAcross(RoomGridLevel):
     instructions.
     """
 
-    def __init__(self, room_size, objs_per_room,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(
+        self, room_size, objs_per_room, max_steps: Optional[int] = None, **kwargs
+    ):
         assert objs_per_room <= 9
         self.objs_per_room = objs_per_room
 
         if max_steps is None:
             max_steps = 16 * room_size**2
 
-        super().__init__(num_rows=1, num_cols=2, room_size=room_size, max_steps=max_steps, **kwargs)
+        super().__init__(
+            num_rows=1, num_cols=2, room_size=room_size, max_steps=max_steps, **kwargs
+        )
 
     def gen_mission(self):
         self.place_agent(0, 0)

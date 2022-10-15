@@ -98,14 +98,21 @@ class OpenTwoDoors(RoomGridLevel):
     This task requires memory (recurrent policy) to be solved effectively.
     """
 
-    def __init__(self, first_color=None, second_color=None, strict=False,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(
+        self,
+        first_color=None,
+        second_color=None,
+        strict=False,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         self.first_color = first_color
         self.second_color = second_color
         self.strict = strict
 
         room_size = 6
         if max_steps is None:
-            max_Steps = 20 * room_size**2
+            max_steps = 20 * room_size**2
 
         super().__init__(room_size=room_size, max_steps=max_steps, **kwargs)
 
@@ -135,7 +142,9 @@ class OpenDoorsOrder(RoomGridLevel):
     Open one or two doors in the order specified.
     """
 
-    def __init__(self, num_doors, debug=False,  max_steps: Optional[int] = None, **kwargs):
+    def __init__(
+        self, num_doors, debug=False, max_steps: Optional[int] = None, **kwargs
+    ):
         assert num_doors >= 2
         self.num_doors = num_doors
         self.debug = debug
