@@ -1371,9 +1371,6 @@ class MiniGridEnv(gym.Env):
             raise ValueError(f"Unknown action: {action}")
 
         if self.step_count >= self.max_steps:
-            print("INSIDE STEP FUNCTION")
-            print(self.step_count)
-            print(self.max_steps)
             truncated = True
 
         if self.render_mode == "human":

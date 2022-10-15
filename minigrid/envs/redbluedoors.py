@@ -66,7 +66,7 @@ class RedBlueDoorEnv(MiniGridEnv):
         )
 
         if max_steps is None:
-            max_steps = 20 * size * size
+            max_steps = 20 * size ** 2
 
         super().__init__(
             mission_space=mission_space,

@@ -52,7 +52,7 @@ class ActionObjDoor(RoomGridLevel):
 class FindObjS5(RoomGridLevel):
     """
     Pick up an object (in a random room)
-    Rooms have a size of 5f
+    Rooms have a size of 5
     This level requires potentially exhaustive exploration
     """
 
