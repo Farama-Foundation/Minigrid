@@ -2,6 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Unlock` instruction.
 """
+from typing import Optional
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
@@ -109,13 +110,13 @@ class UnlockPickup(RoomGridLevel):
     Unlock a door, then pick up a box in another room
     """
 
-    def __init__(self, distractors=False, **kwargs):
+    def __init__(self, distractors=False, max_steps: Optional[int] = None, **kwargs):
         self.distractors = distractors
         room_size = 6
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 8 * room_size**2
+        if max is None:
+            max_steps = 8 * room_size**2
 
-        super().__init__(num_rows=1, num_cols=2, room_size=6, **kwargs)
+        super().__init__(num_rows=1, num_cols=2, room_size=6, max_steps=max_steps, **kwargs)
 
     def gen_mission(self):
         # Add a random object to the room on the right
@@ -138,12 +139,12 @@ class BlockedUnlockPickup(RoomGridLevel):
     in another room
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self,  max_steps: Optional[int] = None, **kwargs):
         room_size = 6
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 16 * room_size**2
+        if max_steps is None:
+            max_steps = 16 * room_size**2
 
-        super().__init__(num_rows=1, num_cols=2, room_size=room_size, **kwargs)
+        super().__init__(num_rows=1, num_cols=2, room_size=room_size, max_steps=max_steps, **kwargs)
 
     def gen_mission(self):
         # Add a box to the room on the right
@@ -166,12 +167,12 @@ class UnlockToUnlock(RoomGridLevel):
     Unlock a door A that requires to unlock a door B before
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self,  max_steps: Optional[int] = None, **kwargs):
         room_size = 6
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 30 * room_size**2
+        if max_steps is None:
+            max_steps = 30 * room_size**2
 
-        super().__init__(num_rows=1, num_cols=3, room_size=room_size, **kwargs)
+        super().__init__(num_rows=1, num_cols=3, room_size=room_size, max_steps=max_steps, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, 2)

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -63,7 +65,7 @@ class GoToDoorEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=5, **kwargs):
+    def __init__(self, size=5, max_steps: Optional[int] = None, **kwargs):
         assert size >= 5
         self.size = size
         mission_space = MissionSpace(
@@ -71,8 +73,8 @@ class GoToDoorEnv(MiniGridEnv):
             ordered_placeholders=[COLOR_NAMES],
         )
 
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 4 * size**2
+        if max_steps is None:
+            max_steps = 4 * size**2
 
         super().__init__(
             mission_space=mission_space,
@@ -80,6 +82,7 @@ class GoToDoorEnv(MiniGridEnv):
             height=size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs,
         )
 

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -11,7 +13,7 @@ class GoToObjectEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(self, size=6, numObjs=2, **kwargs):
+    def __init__(self, size=6, numObjs=2, max_steps: Optional[int] = None, **kwargs):
 
         self.numObjs = numObjs
         self.size = size
@@ -23,8 +25,8 @@ class GoToObjectEnv(MiniGridEnv):
             ordered_placeholders=[COLOR_NAMES, self.obj_types],
         )
 
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 5 * size**2
+        if max_steps is None:
+            max_steps = 5 * size**2
 
         super().__init__(
             mission_space=mission_space,
@@ -32,6 +34,7 @@ class GoToObjectEnv(MiniGridEnv):
             height=size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs,
         )
 

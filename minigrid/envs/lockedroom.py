@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -74,11 +76,11 @@ class LockedRoomEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=19, **kwargs):
+    def __init__(self, size=19, max_steps: Optional[int] = None, **kwargs):
         self.size = size
 
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 10 * size
+        if max_steps is None:
+            max_steps = 10 * size
         mission_space = MissionSpace(
             mission_func=lambda lockedroom_color, keyroom_color, door_color: f"get the {lockedroom_color} key from the {keyroom_color} room, unlock the {door_color} door and go to the goal",
             ordered_placeholders=[COLOR_NAMES] * 3,
@@ -87,6 +89,7 @@ class LockedRoomEnv(MiniGridEnv):
             mission_space=mission_space,
             width=size,
             height=size,
+            max_steps=max_steps,
             **kwargs,
         )
 

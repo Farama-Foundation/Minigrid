@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -65,7 +67,7 @@ class PutNearEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=6, numObjs=2, **kwargs):
+    def __init__(self, size=6, numObjs=2, max_steps: Optional[int] = None, **kwargs):
         self.size = size
         self.numObjs = numObjs
         self.obj_types = ["key", "ball", "box"]
@@ -79,8 +81,8 @@ class PutNearEnv(MiniGridEnv):
             ],
         )
 
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 5 * size
+        if max_steps is None:
+            max_steps = 5 * size
 
         super().__init__(
             mission_space=mission_space,
@@ -88,6 +90,7 @@ class PutNearEnv(MiniGridEnv):
             height=size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs,
         )
 

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 
 from minigrid.core.grid import Grid
@@ -66,7 +68,9 @@ class LavaGapEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size, obstacle_type=Lava, **kwargs):
+    def __init__(
+        self, size, obstacle_type=Lava, max_steps: Optional[int] = None, **kwargs
+    ):
         self.obstacle_type = obstacle_type
         self.size = size
 
@@ -79,8 +83,8 @@ class LavaGapEnv(MiniGridEnv):
                 mission_func=lambda: "find the opening and get to the green goal square"
             )
 
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 4 * size**2
+        if max_steps is None:
+            max_steps = 4 * size**2
 
         super().__init__(
             mission_space=mission_space,
@@ -88,6 +92,7 @@ class LavaGapEnv(MiniGridEnv):
             height=size,
             # Set this to True for maximum speed
             see_through_walls=False,
+            max_steps=max_steps,
             **kwargs
         )
 
