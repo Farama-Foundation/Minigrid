@@ -22,10 +22,10 @@ class CrossingEnv(MiniGridEnv):
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N1.png" alt="SimpleCrossingS9N1" width="200px"/>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N2.png" alt="SimpleCrossingS9N2" width="200px"/>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N3.png" alt="SimpleCrossingS9N3" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/>
     </p>
     <br />
-    
+
     ### Description
 
     Depending on the `obstacle_type` parameter:
