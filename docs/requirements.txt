@@ -4,4 +4,3 @@ myst-parser
 git+https://github.com/Farama-Foundation/Celshast#egg=furo
 moviepy
 pygame
-pygments==2.11.2

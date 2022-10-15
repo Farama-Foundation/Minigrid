@@ -6,6 +6,8 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockPickupEnv(RoomGrid):
 
     """
+    ![UnlockPickup](../_static/figures/UnlockPickup.png)
+
     ### Description
 
     The agent has to pick up a box which is placed in another room, behind a

@@ -9,6 +9,8 @@ from minigrid.minigrid_env import MiniGridEnv
 class LavaGapEnv(MiniGridEnv):
 
     """
+    ![LavaGapS6](../_static/figures/LavaGapS6.png)
+
     ### Description
 
     The agent has to reach the green goal square at the opposite corner of the

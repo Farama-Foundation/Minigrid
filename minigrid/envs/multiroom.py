@@ -16,6 +16,8 @@ class MultiRoom:
 class MultiRoomEnv(MiniGridEnv):
 
     """
+    ![multi-room](../_static/figures/multi-room.gif)
+
     ### Description
 
     This environment has a series of connected rooms with doors that must be

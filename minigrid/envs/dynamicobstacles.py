@@ -10,6 +10,8 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
+    ![dynamic_obstacles](../_static/figures/dynamic_obstacles.gif)
+
     ### Description
 
     This environment is an empty room with moving obstacles.
