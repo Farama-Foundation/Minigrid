@@ -77,7 +77,7 @@ html_favicon = "_static/img/minigrid-white.png"
 html_theme_options = {
     "light_logo": "img/minigrid.png",
     "dark_logo": "img/minigrid-white.png",
-    "gtag": "",
+    "gtag": "G-FBXJQQLXKD",
 }
 html_context: Dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
