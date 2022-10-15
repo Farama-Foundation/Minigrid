@@ -1,23 +1,61 @@
+"""Setups up the Minigrid module."""
+
 from setuptools import find_packages, setup
 
-with open("README.md") as fh:
-    long_description = ""
-    header_count = 0
-    for line in fh:
-        if line.startswith("##"):
-            header_count += 1
-        if header_count < 2:
-            long_description += line
-        else:
-            break
+
+def get_description():
+    """Gets the description from the readme."""
+    with open("README.md") as fh:
+        long_description = ""
+        header_count = 0
+        for line in fh:
+            if line.startswith("##"):
+                header_count += 1
+            if header_count < 2:
+                long_description += line
+            else:
+                break
+    return header_count, long_description
+
+
+def get_version():
+    """Gets the minigrid version."""
+    path = "minigrid/__init__.py"
+    with open(path) as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if line.startswith("__version__"):
+            return line.strip().split()[-1].strip().strip('"')
+    raise RuntimeError("bad version data in __init__.py")
+
 
 # pytest is pinned to 7.0.1 as this is last version for python 3.6
 extras = {"testing": ["pytest==7.0.1"]}
 
+version = get_version()
+header_count, long_description = get_description()
+
 setup(
-    name="MiniGrid",
+    name="Minigrid",
+    version=version,
     author="Farama Foundation",
-    author_email="jkterry@farama.org",
+    author_email="contact@farama.org",
+    description="Minimalistic gridworld reinforcement learning environments",
+    url="https://minigrid.farama.org/",
+    license="Apache",
+    license_files=("LICENSE",),
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    keywords=["Memory, Environment, Agent, RL, Gymnasium"],
+    python_requires=">=3.7, <3.11",
+    packages=[package for package in find_packages() if package.startswith("minigrid")],
+    include_package_data=True,
+    install_requires=[
+        "gymnasium>=0.26",
+        "numpy>=1.18.0",
+        "matplotlib>=3.0",
+    ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
@@ -26,23 +64,9 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
-    version="2.0.0",
-    keywords="memory, environment, agent, rl, gymnasium",
-    url="https://github.com/Farama-Foundation/MiniGrid",
-    description="Minimalistic gridworld reinforcement learning environments",
     extras_require=extras,
-    packages=[package for package in find_packages() if package.startswith("minigrid")],
     entry_points={
         "gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]
     },
-    license="Apache",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    install_requires=[
-        "gymnasium>=0.26",
-        "numpy>=1.18.0",
-        "matplotlib>=3.0",
-    ],
-    python_requires=">=3.7",
     tests_require=extras["testing"],
 )
