@@ -7,8 +7,10 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
-    ![DistShift1](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift1.png)<br />
-    ![DistShift2](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift2.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
+    </p>
 
     ### Description
 

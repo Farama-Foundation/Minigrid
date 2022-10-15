@@ -16,7 +16,9 @@ class MultiRoom:
 class MultiRoomEnv(MiniGridEnv):
 
     """
-    ![multi-room](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/multi-room.gif)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/multi-room.gif" alt="multi-room" width="200px"/>
+    </p>
 
     ### Description
 

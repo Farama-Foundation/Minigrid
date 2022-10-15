@@ -10,7 +10,9 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
-    ![dynamic_obstacles](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/dynamic_obstacles.gif)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/tree/master/figures/dynamic_obstacles.gif" alt="dynamic_obstacles" width="200px"/>
+    </p>
 
     ### Description
 
