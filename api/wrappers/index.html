@@ -8,11 +8,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="" />
     <meta property="og:url" content="https://minigrid.farama.org/api/wrappers.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Design" href="../../environments/design/" /><link rel="prev" title="&lt;no title&gt;" href="../../content/pubs/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Included Environments" href="../../environments/" /><link rel="prev" title="Wrapper" href="../wrapper/" />
         <link rel="canonical" href="https://minigrid.farama.org/api/wrappers.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
-        <title>Wrappers - MiniGrid Documentation</title>
+        <title>Action Bonus - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=a9e5ba0c0bf3b12d8e0ea7b9febdea61fa484836" />
@@ -334,7 +334,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -352,31 +352,30 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Wrappers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#actionbonus">ActionBonus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#dictobservationspacewrapper">DictObservationSpaceWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#directionobswrapper">DirectionObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#flatobswrapper">FlatObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#fullyobswrapper">FullyObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#imgobswrapper">ImgObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#observationwrapper">ObservationWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#onehotpartialobswrapper">OneHotPartialObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#rgbimgobswrapper">RGBImgObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#rgbimgpartialobswrapper">RGBImgPartialObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#reseedwrapper">ReseedWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#statebonus">StateBonus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#symbolicobswrapper">SymbolicObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#viewsizewrapper">ViewSizeWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#wrapper">Wrapper</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../wrapper/">Wrapper</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Action Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dict-observation-space">Dict Observation Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direction-obs">Direction Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flatobs">FlatObs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#observation">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#one-hot-partial-obs">One Hot Partial Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reseed">Reseed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-bonus">State Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#view-size">View Size</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/boss_level_no_unlock/">Boss Level No Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing/">Simple Crossing</a></li>
@@ -394,12 +393,49 @@
 <li class="toctree-l2"><a class="reference internal" href="../../environments/memory/">Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/put_near/">Put Near</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/red_blue_doors/">Red Blue Doors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock/">Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_pickup/">Unlock Pickup</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/babyAI_index/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/action_obj_door/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/boss_level/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/find_obj/">Find Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_imp_unlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_local/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_obj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_obj_door/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_obj_maze/">Go To Obj Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_red_ball/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_red_ball_grey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_red_ball_no_dists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_red_blue_ball/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_seq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/key_in_box/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/mini_boss_level/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/move_two_across/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/one_room/">One Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/open/">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/open_door_loc/">Open Door Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/open_doors_order/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/open_red_blue_doors_debug/">Open Red Blue Doors Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/open_red_door/">Open Red Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/pickup_above/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/pickup_dist_debug/">Pickup Dist Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/pickup_loc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/put_next/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/put_next_local/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/synth_loc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/synth_seq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/unblock_pickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_local_dist/">Unlock Local Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_pickup_dist/">Unlock Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_to_unlock/">Unlock To Unlock</a></li>
 </ul>
 </li>
 </ul>
@@ -446,97 +482,157 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="wrappers">
-<h1>Wrappers<a class="headerlink" href="#wrappers" title="Permalink to this heading">#</a></h1>
-<p>MiniGrid is built to support tasks involving natural language and sparse rewards.
-The observations are dictionaries, with an ‘image’ field, partially observable
-view of the environment, a ‘mission’ field which is a textual string
-describing the objective the agent should reach to get a reward, and a ‘direction’
-field which can be used as an optional compass. Using dictionaries makes it
-easy for you to add additional information to observations
-if you need to, without having to encode everything into a single tensor.</p>
-<p>There are a variety of wrappers to change the observation format available in <span class="xref myst">minigrid/wrappers.py</span>.
-If your RL code expects one single tensor for observations, take a look at <code class="docutils literal notranslate"><span class="pre">FlatObsWrapper</span></code>.
-There is also an <code class="docutils literal notranslate"><span class="pre">ImgObsWrapper</span></code> that gets rid of the ‘mission’ field in observations, leaving only the image field tensor.</p>
-<p>Please note that the default observation format is a partially observable view of the environment using a
-compact and efficient encoding, with 3 input values per visible grid cell, 7x7x3 values total.
-These values are <strong>not pixels</strong>. If you want to obtain an array of RGB pixels as observations instead,
-use the <code class="docutils literal notranslate"><span class="pre">RGBImgPartialObsWrapper</span></code>. You can use it as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
-<span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">,</span> <span class="n">ImgObsWrapper</span>
+          
+          <section id="action-bonus">
+<h1>Action Bonus<a class="headerlink" href="#action-bonus" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ActionBonus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ActionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ActionBonus" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrapper which adds an exploration bonus.
+This is a reward to encourage exploration of less
+visited (state,action) pairs.</p>
+</dd></dl>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;MiniGrid-Empty-8x8-v0&#39;</span><span class="p">)</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># Get pixel observations</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">ImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="c1"># Get rid of the &#39;mission&#39; field</span>
-<span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> <span class="c1"># This now produces an RGB tensor only</span>
+</section>
+<section id="dict-observation-space">
+<h1>Dict Observation Space<a class="headerlink" href="#dict-observation-space" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.DictObservationSpaceWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DictObservationSpaceWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_words_in_mission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.DictObservationSpaceWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Transforms the observation space (that has a textual component) to a fully numerical observation space,
+where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.</p>
+<p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+</dd></dl>
+
+</section>
+<section id="direction-obs">
+<h1>Direction Obs<a class="headerlink" href="#direction-obs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.DirectionObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DirectionObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'slope'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.DirectionObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
+type = {slope , angle}</p>
+</dd></dl>
+
+</section>
+<section id="flatobs">
+<h1>FlatObs<a class="headerlink" href="#flatobs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.FlatObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FlatObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxStrLen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.FlatObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Encode mission strings using a one-hot scheme,
+and combine these with observed images into one flat array.</p>
+<p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+</dd></dl>
+
+</section>
+<section id="fully-obs">
+<h1>Fully Obs<a class="headerlink" href="#fully-obs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.FullyObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FullyObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.FullyObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Fully observable gridworld using a compact grid encoding</p>
+</dd></dl>
+
+</section>
+<section id="observation">
+<h1>Observation<a class="headerlink" href="#observation" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ObservationWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ObservationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ObservationWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Superclass of wrappers that can modify observations using <code class="xref py py-meth docutils literal notranslate"><span class="pre">observation()</span></code> for <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code>.</p>
+<p>If you would like to apply a function to the observation that is returned by the base environment before
+passing it to learning code, you can simply inherit from <a class="reference internal" href="#minigrid.wrappers.ObservationWrapper" title="minigrid.wrappers.ObservationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObservationWrapper</span></code></a> and overwrite the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">observation()</span></code> to implement that transformation. The transformation defined in that method must be
+defined on the base environment’s observation space. However, it may take values in a different space.
+In that case, you need to specify the new observation space of the wrapper by setting <code class="xref py py-attr docutils literal notranslate"><span class="pre">self.observation_space</span></code>
+in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">__init__()</span></code> method of your wrapper.</p>
+<p>For example, you might have a 2D navigation task where the environment returns dictionaries as observations with
+keys <code class="docutils literal notranslate"><span class="pre">&quot;agent_position&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;target_position&quot;</span></code>. A common thing to do might be to throw away some degrees of
+freedom and only consider the position of the target relative to the agent, i.e.
+<code class="docutils literal notranslate"><span class="pre">observation[&quot;target_position&quot;]</span> <span class="pre">-</span> <span class="pre">observation[&quot;agent_position&quot;]</span></code>. For this, you could implement an
+observation wrapper like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RelativePosition</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">ObservationWrapper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>Among others, Gymnasium provides the observation wrapper <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeAwareObservation</span></code>, which adds information about the
+index of the timestep to the observation.</p>
+</dd></dl>
+
 </section>
-<section id="actionbonus">
-<h1>ActionBonus<a class="headerlink" href="#actionbonus" title="Permalink to this heading">#</a></h1>
-<p>Wrapper which adds an exploration bonus. This is a reward to encourage exploration of less visited (state,action) pairs.</p>
+<section id="one-hot-partial-obs">
+<h1>One Hot Partial Obs<a class="headerlink" href="#one-hot-partial-obs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.OneHotPartialObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">OneHotPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.OneHotPartialObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrapper to get a one-hot encoding of a partially observable
+agent view as observation.</p>
+</dd></dl>
+
 </section>
-<section id="dictobservationspacewrapper">
-<h1>DictObservationSpaceWrapper<a class="headerlink" href="#dictobservationspacewrapper" title="Permalink to this heading">#</a></h1>
-<p>Transforms the observation space (that has a textual component) to a fully numerical observation space, where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary. This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+<section id="reseed">
+<h1>Reseed<a class="headerlink" href="#reseed" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ReseedWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ReseedWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ReseedWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrapper to always regenerate an environment with the same set of seeds.
+This can be used to force an environment to always keep the same
+configuration when reset.</p>
+</dd></dl>
+
 </section>
-<section id="directionobswrapper">
-<h1>DirectionObsWrapper<a class="headerlink" href="#directionobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1) type = {slope , angle}</p>
+<section id="rgb-img-obs">
+<h1>RGB Img Obs<a class="headerlink" href="#rgb-img-obs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.RGBImgObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.RGBImgObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrapper to use fully observable RGB image as observation,
+This can be used to have the agent to solve the gridworld in pixel space.</p>
+</dd></dl>
+
 </section>
-<section id="flatobswrapper">
-<h1>FlatObsWrapper<a class="headerlink" href="#flatobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Encode mission strings using a one-hot scheme, and combine these with observed images into one flat array. This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+<section id="state-bonus">
+<h1>State Bonus<a class="headerlink" href="#state-bonus" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.StateBonus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">StateBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.StateBonus" title="Permalink to this definition">#</a></dt>
+<dd><p>Adds an exploration bonus based on which positions
+are visited on the grid.</p>
+</dd></dl>
+
 </section>
-<section id="fullyobswrapper">
-<h1>FullyObsWrapper<a class="headerlink" href="#fullyobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Fully observable gridworld using a compact grid encoding</p>
+<section id="symbolic-obs">
+<h1>Symbolic Obs<a class="headerlink" href="#symbolic-obs" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.SymbolicObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">SymbolicObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.SymbolicObsWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Fully observable grid with a symbolic state representation.
+The symbol is a triple of (X, Y, IDX), where X and Y are
+the coordinates on the grid, and IDX is the id of the object.</p>
+</dd></dl>
+
 </section>
-<section id="imgobswrapper">
-<h1>ImgObsWrapper<a class="headerlink" href="#imgobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Use the image as the only observation output, no language/mission.</p>
-</section>
-<section id="observationwrapper">
-<h1>ObservationWrapper<a class="headerlink" href="#observationwrapper" title="Permalink to this heading">#</a></h1>
-<p>Superclass of wrappers that can modify observations using :meth:<code class="docutils literal notranslate"><span class="pre">observation</span></code> for :meth:<code class="docutils literal notranslate"><span class="pre">reset</span></code> and :meth:<code class="docutils literal notranslate"><span class="pre">step</span></code>. If you would like to apply a function to the observation that is returned by the base environment before passing it to learning code, you can simply inherit from :class:<code class="docutils literal notranslate"><span class="pre">ObservationWrapper</span></code> and overwrite the method :meth:<code class="docutils literal notranslate"><span class="pre">observation</span></code> to implement that transformation. The transformation defined in that method must be defined on the base environment’s observation space. However, it may take values in a different space. In that case, you need to specify the new observation space of the wrapper by setting :attr:<code class="docutils literal notranslate"><span class="pre">self.observation_space</span></code> in the :meth:<code class="docutils literal notranslate"><span class="pre">__init__</span></code> method of your wrapper. For example, you might have a 2D navigation task where the environment returns dictionaries as observations with keys <code class="docutils literal notranslate"><span class="pre">&quot;agent_position&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;target_position&quot;</span></code>. A common thing to do might be to throw away some degrees of freedom and only consider the position of the target relative to the agent, i.e. <code class="docutils literal notranslate"><span class="pre">observation[&quot;target_position&quot;]</span> <span class="pre">-</span> <span class="pre">observation[&quot;agent_position&quot;]</span></code>. For this, you could implement an observation wrapper like this:: class RelativePosition(gym.ObservationWrapper): def <strong>init</strong>(self, env): super().<strong>init</strong>(env) self.observation_space = Box(shape=(2,), low=-np.inf, high=np.inf) def observation(self, obs): return obs[“target”] - obs[“agent”] Among others, Gymnasium provides the observation wrapper :class:<code class="docutils literal notranslate"><span class="pre">TimeAwareObservation</span></code>, which adds information about the index of the timestep to the observation.</p>
-</section>
-<section id="onehotpartialobswrapper">
-<h1>OneHotPartialObsWrapper<a class="headerlink" href="#onehotpartialobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Wrapper to get a one-hot encoding of a partially observable agent view as observation.</p>
-</section>
-<section id="rgbimgobswrapper">
-<h1>RGBImgObsWrapper<a class="headerlink" href="#rgbimgobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Wrapper to use fully observable RGB image as observation, This can be used to have the agent to solve the gridworld in pixel space.</p>
-</section>
-<section id="rgbimgpartialobswrapper">
-<h1>RGBImgPartialObsWrapper<a class="headerlink" href="#rgbimgpartialobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Wrapper to use partially observable RGB image as observation. This can be used to have the agent to solve the gridworld in pixel space.</p>
-</section>
-<section id="reseedwrapper">
-<h1>ReseedWrapper<a class="headerlink" href="#reseedwrapper" title="Permalink to this heading">#</a></h1>
-<p>Wrapper to always regenerate an environment with the same set of seeds. This can be used to force an environment to always keep the same configuration when reset.</p>
-</section>
-<section id="statebonus">
-<h1>StateBonus<a class="headerlink" href="#statebonus" title="Permalink to this heading">#</a></h1>
-<p>Adds an exploration bonus based on which positions are visited on the grid.</p>
-</section>
-<section id="symbolicobswrapper">
-<h1>SymbolicObsWrapper<a class="headerlink" href="#symbolicobswrapper" title="Permalink to this heading">#</a></h1>
-<p>Fully observable grid with a symbolic state representation. The symbol is a triple of (X, Y, IDX), where X and Y are the coordinates on the grid, and IDX is the id of the object.</p>
-</section>
-<section id="viewsizewrapper">
-<h1>ViewSizeWrapper<a class="headerlink" href="#viewsizewrapper" title="Permalink to this heading">#</a></h1>
-<p>Wrapper to customize the agent field of view size. This cannot be used with fully observable wrappers.</p>
-</section>
-<section id="wrapper">
-<h1>Wrapper<a class="headerlink" href="#wrapper" title="Permalink to this heading">#</a></h1>
-<p>Wraps an environment to allow a modular transformation of the :meth:<code class="docutils literal notranslate"><span class="pre">step</span></code> and :meth:<code class="docutils literal notranslate"><span class="pre">reset</span></code> methods. This class is the base class for all wrappers. The subclass could override some methods to change the behavior of the original environment without touching the original code. Note: Don’t forget to call <code class="docutils literal notranslate"><span class="pre">super().__init__(env)</span></code> if the subclass overrides :meth:<code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+<section id="view-size">
+<h1>View Size<a class="headerlink" href="#view-size" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ViewSizeWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ViewSizeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_view_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ViewSizeWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Wrapper to customize the agent field of view size.
+This cannot be used with fully observable wrappers.</p>
+</dd></dl>
+
 </section>
 
         </article>
@@ -545,14 +641,14 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
         
         <div class="related-pages">
           
-          <a class="prev-page" href="../../content/pubs/">
+            <a class="prev-page" href="../wrapper/">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">&lt;no title&gt;</div>
+                <div class="title">Wrapper</div>
                 
               </div>
             </a>
@@ -562,22 +658,90 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
             <div class="copyright">
                 Copyright &#169; 2022
             </div>
+            <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
-            
+            -->
           </div>
           <div class="right-details">
             <div class="icons">
-              
+              <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Action Bonus</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ActionBonus"><code class="docutils literal notranslate"><span class="pre">ActionBonus</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dict-observation-space">Dict Observation Space</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.DictObservationSpaceWrapper"><code class="docutils literal notranslate"><span class="pre">DictObservationSpaceWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#direction-obs">Direction Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.DirectionObsWrapper"><code class="docutils literal notranslate"><span class="pre">DirectionObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#flatobs">FlatObs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.FlatObsWrapper"><code class="docutils literal notranslate"><span class="pre">FlatObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fully-obs">Fully Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.FullyObsWrapper"><code class="docutils literal notranslate"><span class="pre">FullyObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#observation">Observation</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ObservationWrapper"><code class="docutils literal notranslate"><span class="pre">ObservationWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#one-hot-partial-obs">One Hot Partial Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.OneHotPartialObsWrapper"><code class="docutils literal notranslate"><span class="pre">OneHotPartialObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reseed">Reseed</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ReseedWrapper"><code class="docutils literal notranslate"><span class="pre">ReseedWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rgb-img-obs">RGB Img Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.RGBImgObsWrapper"><code class="docutils literal notranslate"><span class="pre">RGBImgObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#state-bonus">State Bonus</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.StateBonus"><code class="docutils literal notranslate"><span class="pre">StateBonus</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.SymbolicObsWrapper"><code class="docutils literal notranslate"><span class="pre">SymbolicObsWrapper</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#view-size">View Size</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ViewSizeWrapper"><code class="docutils literal notranslate"><span class="pre">ViewSizeWrapper</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -646,41 +810,5 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
-    
-
-<script>
-    (() => {
-        if (!localStorage.getItem("shownCookieAlert")) {
-            const boxElem = document.createElement("div");
-            boxElem.classList.add("cookie_alert");
-            const containerElem = document.createElement("div");
-            containerElem.classList.add("cookie_container");
-            const textElem = document.createElement("p");
-            textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
-                                Google Analytics</a> to collect statistics. You can disable it by blocking
-                                the JavaScript coming from www.google-analytics.com.`;
-                                containerElem.appendChild(textElem);
-            const closeBtn = document.createElement("button");
-            closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
-            closeBtn.onclick = () => {
-                localStorage.setItem("shownCookieAlert", "true");
-                boxElem.style.display = "none";
-            }
-            containerElem.appendChild(closeBtn);
-            boxElem.appendChild(containerElem);
-            document.body.appendChild(boxElem);
-        }
-    })()
-
-</script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JGXSLW7N06"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JGXSLW7N06');
-</script></body>
+    </body>
 </html>

@@ -7,12 +7,12 @@
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="" />
-    <meta property="og:url" content="https://minigrid.farama.org/content/pubs.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Wrappers" href="../../api/wrappers/" /><link rel="prev" title="Basic Usage" href="../basic_usage/" />
-        <link rel="canonical" href="https://minigrid.farama.org/content/pubs.html" />
+    <meta property="og:url" content="https://minigrid.farama.org/environments/unlock_pickup_dist.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Unlock To Unlock" href="../unlock_to_unlock/" /><link rel="prev" title="Unlock Local Dist" href="../unlock_local_dist/" />
+        <link rel="canonical" href="https://minigrid.farama.org/environments/unlock_pickup_dist.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
-        <title>&lt;no title&gt; - MiniGrid Documentation</title>
+        <title>Unlock Pickup Dist - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=a9e5ba0c0bf3b12d8e0ea7b9febdea61fa484836" />
@@ -351,55 +351,91 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../basic_usage/#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/">Wrappers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#actionbonus">ActionBonus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#dictobservationspacewrapper">DictObservationSpaceWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#directionobswrapper">DirectionObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#flatobswrapper">FlatObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#fullyobswrapper">FullyObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#imgobswrapper">ImgObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#observationwrapper">ObservationWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#onehotpartialobswrapper">OneHotPartialObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#rgbimgobswrapper">RGBImgObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#rgbimgpartialobswrapper">RGBImgPartialObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#reseedwrapper">ReseedWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#statebonus">StateBonus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#symbolicobswrapper">SymbolicObsWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#viewsizewrapper">ViewSizeWrapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/wrappers/#wrapper">Wrapper</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/wrapper/">Wrapper</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/">Action Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#dict-observation-space">Dict Observation Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#direction-obs">Direction Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#flatobs">FlatObs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#observation">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#reseed">Reseed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#state-bonus">State Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#symbolic-obs">Symbolic Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#view-size">View Size</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../environments/design/">Design</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/boss_level_no_unlock/">Boss Level No Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/simple_crossing/">Simple Crossing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dist_shift/">Dist Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/door_key/">Door Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/dynamic/">Dynamic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/empty/">Empty</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/fetch/">Fetch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/four_rooms/">Four Rooms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_door/">Go To Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/go_to_object/">Go To Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/key_corridor/">Key Corridor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/lava_gap/">Lava Gap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/locked_room/">Locked Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/memory/">Memory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/multi_room/">Multi Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/obstructed_maze/">Obstructed Maze</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/playground/">Playground</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/put_near/">Put Near</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/red_blue_doors/">Red Blue Doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/unlock/">Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/unlock_pickup/">Unlock Pickup</a></li>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../">Included Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../boss_level_no_unlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../simple_crossing/">Simple Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dist_shift/">Dist Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../door_key/">Door Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic/">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../empty/">Empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fetch/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../four_rooms/">Four Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_object/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lava_gap/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../locked_room/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../playground/">Playground</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../put_near/">Put Near</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../red_blue_doors/">Red Blue Doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock_pickup/">Unlock Pickup</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../babyAI_index/">BabyAI Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../action_obj_door/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../boss_level/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../find_obj/">Find Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_imp_unlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_local/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_obj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_obj_door/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_obj_maze/">Go To Obj Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_red_ball/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_red_ball_grey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_red_ball_no_dists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_red_blue_ball/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_seq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../key_in_box/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mini_boss_level/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../move_two_across/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../one_room/">One Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../open/">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../open_door_loc/">Open Door Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../open_doors_order/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../open_red_blue_doors_debug/">Open Red Blue Doors Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../open_red_door/">Open Red Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pickup_above/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pickup_dist_debug/">Pickup Dist Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pickup_loc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../put_next/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../put_next_local/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../synth_loc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../synth_seq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unblock_pickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock_local_dist/">Unlock Local Dist</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Unlock Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock_to_unlock/">Unlock To Unlock</a></li>
 </ul>
 </li>
 </ul>
@@ -427,18 +463,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-    
-    <div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/content/pubs.md" title="Edit this page">
-    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-    </svg>
-    <span class="visually-hidden">Edit this page</span>
-  </a>
-</div><div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -452,81 +477,56 @@
           </label>
         </div>
         <article role="main">
-          <p>#List of Publications</p>
-<p>List of publications &amp; submissions using Minigrid or BabyAI (please open a pull request to add missing entries):</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://proceedings.mlr.press/v162/paischer22a.html">History Compression via Language Models in Reinforcement Learning.</a> (Johannes Kepler University Linz, PMLR 2022)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2202.02886">Leveraging Approximate Symbolic Models for Reinforcement Learning via Skill Diversity</a> (Arizona State University, ICML 2022)</p></li>
-<li><p><a class="reference external" href="https://proceedings.mlr.press/v162/mavor-parker22a.html">How to Stay Curious while avoiding Noisy TVs using Aleatoric Uncertainty Estimation</a> (University College London, Boston University, ICML 2022)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/pdf?id=rUwm9wCjURV">In a Nutshell, the Human Asked for This: Latent Goals for Following Temporal Specifications</a> (Imperial College London, ICLR 2022)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2111.13119">Interesting Object, Curious Agent: Learning Task-Agnostic Exploration</a> (Meta AI Research, NeurIPS 2021)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2111.04894">Safe Policy Optimization with Local Generalized Linear Function Approximations</a> (IBM Research, Tsinghua University, NeurIPS 2021)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2106.02097">A Consciousness-Inspired Planning Agent for Model-Based Reinforcement Learning</a> (Mila, McGill University, NeurIPS 2021)</p></li>
-<li><p><a class="reference external" href="http://www.ifaamas.org/Proceedings/aamas2021/pdfs/p1118.pdf">SPOTTER: Extending Symbolic Planning Operators through Targeted Reinforcement Learning</a> (Tufts University, SIFT, AAMAS 2021)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2102.04220">Grid-to-Graph: Flexible Spatial Relational Inductive Biases for Reinforcement Learning</a> (UCL, AAMAS 2021)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/forum?id=MtEE0CktZht">Rank the Episodes: A Simple Approach for Exploration in Procedurally-Generated Environments</a> (Texas A&amp;M University, Kuai Inc., ICLR 2021)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/forum?id=_mQp5cr_iNy">Adversarially Guided Actor-Critic</a> (INRIA, Google Brain, ICLR 2021)</p></li>
-<li><p><a class="reference external" href="https://papers.nips.cc/paper/2020/file/ec3183a7f107d1b8dbb90cb3c01ea7d5-Paper.pdf">Information-theoretic Task Selection for Meta-Reinforcement Learning</a> (University of Leeds, NeurIPS 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/2012.08621.pdf">BeBold: Exploration Beyond the Boundary of Explored Regions</a> (UCB, December 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/2010.08843">Approximate Information State for Approximate Planning and Reinforcement Learning in Partially Observed Systems</a> (McGill, October 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/2010.03934.pdf">Prioritized Level Replay</a> (FAIR, October 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/2008.12760.pdf">AllenAct: A Framework for Embodied AI Research</a> (Allen Institute for AI, August 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/2006.12122.pdf">Learning with AMIGO: Adversarially Motivated Intrinsic Goals</a> (MIT, FAIR, ICLR 2021)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/forum?id=rkg-TJBFPB">RIDE: Rewarding Impact-Driven Exploration for Procedurally-Generated Environments</a> (FAIR, ICLR 2020)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/1912.05525.pdf">Learning to Request Guidance in Emergent Communication</a> (University of Amsterdam, Dec 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1911.07141">Working Memory Graphs</a> (MSR, Nov 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/1910.04040.pdf">Fast Task-Adaptation for Tasks Labeled Using Natural Language in Reinforcement Learning</a> (Oct 2019, University of Antwerp)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1910.12911">Generalization in Reinforcement Learning with Selective Noise Injection and Information Bottleneck</a> (MSR, NeurIPS, Oct 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/1909.10893.pdf">Recurrent Independent Mechanisms</a> (Mila, Sept 2019)</p></li>
-<li><p><a class="reference external" href="http://surl.tirl.info/proceedings/SURL-2019_paper_10.pdf">Learning Effective Subgoals with Multi-Task Hierarchical Reinforcement Learning</a> (Tsinghua University, August 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1908.05135">Mastering emergent language: learning to guide in simulated navigation</a> (University of Amsterdam, Aug 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1906.03574">Transfer Learning by Modeling a Distribution over Policies</a> (Mila, June 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1906.10667">Reinforcement Learning with Competitive Ensembles of Information-Constrained Primitives</a> (Mila, June 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1905.11589">Learning distant cause and effect using only local and immediate credit assignment</a> (Incubator 491, May 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1904.04700">Practical Open-Loop Optimistic Planning</a> (INRIA, April 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1907.00664">Learning World Graphs to Accelerate Hierarchical Reinforcement Learning</a> (Salesforce Research, 2019)</p></li>
-<li><p><a class="reference external" href="https://mila.quebec/wp-content/uploads/2019/05/WebPage.pdf">Variational State Encoding as Intrinsic Motivation in Reinforcement Learning</a> (Mila, TARL 2019)</p></li>
-<li><p><a class="reference external" href="https://tarl2019.github.io/assets/papers/modhe2019unsupervised.pdf">Unsupervised Discovery of Decision States Through Intrinsic Control</a> (Georgia Tech, TARL 2019)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/forum?id=SkgQBn0cF7">Modeling the Long Term Future in Model-Based Reinforcement Learning</a> (Mila, ICLR 2019)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/pdf/1902.10646.pdf">Unifying Ensemble Methods for Q-learning via Social Choice Theory</a> (Max Planck Institute, Feb 2019)</p></li>
-<li><p><a class="reference external" href="https://personalrobotics.cs.washington.edu/workshops/mlmp2018/assets/docs/18_CameraReadySubmission.pdf">Planning Beyond The Sensing Horizon Using a Learned Context</a> (MLMP&#64;IROS, 2018)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1811.07882">Guiding Policies with Language via Meta-Learning</a> (UC Berkeley, Nov 2018)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1811.06889">On the Complexity of Exploration in Goal-Driven Navigation</a> (CMU, NeurIPS, Nov 2018)</p></li>
-<li><p><a class="reference external" href="https://openreview.net/forum?id=rJg8yhAqKm">Transfer and Exploration via the Information Bottleneck</a> (Mila, Nov 2018)</p></li>
-<li><p><a class="reference external" href="https://gupea.ub.gu.se/bitstream/2077/62445/1/gupea_2077_62445_1.pdf">Creating safer reward functions for reinforcement learning agents in the gridworld</a> (University of Gothenburg, 2018)</p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1810.08272">BabyAI: First Steps Towards Grounded Language Learning With a Human In the Loop</a> (Mila, ICLR, Oct 2018)</p></li>
-</ul>
-<p>This environment has been built as part of work done at <a class="reference external" href="https://mila.quebec">Mila</a>. The Dynamic obstacles environment has been added as part of work done at <a class="reference external" href="https://www.ias.informatik.tu-darmstadt.de/">IAS in TU Darmstadt</a> and the University of Genoa for mobile robot navigation with dynamic obstacles.</p>
+          
+          <section id="unlock-pickup-dist">
+<h1>Unlock Pickup Dist<a class="headerlink" href="#unlock-pickup-dist" title="Permalink to this heading">#</a></h1>
+<p>Unlock a door, then pick up a box in another room</p>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../../api/wrappers/">
+          <a class="next-page" href="../unlock_to_unlock/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Wrappers</div>
+                <div class="title">Unlock To Unlock</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          
+            <a class="prev-page" href="../unlock_local_dist/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Unlock Local Dist</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
                 Copyright &#169; 2022
             </div>
+            <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
-            
+            -->
           </div>
           <div class="right-details">
             <div class="icons">
-              
+              <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
@@ -603,41 +603,5 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
-    
-
-<script>
-    (() => {
-        if (!localStorage.getItem("shownCookieAlert")) {
-            const boxElem = document.createElement("div");
-            boxElem.classList.add("cookie_alert");
-            const containerElem = document.createElement("div");
-            containerElem.classList.add("cookie_container");
-            const textElem = document.createElement("p");
-            textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
-                                Google Analytics</a> to collect statistics. You can disable it by blocking
-                                the JavaScript coming from www.google-analytics.com.`;
-                                containerElem.appendChild(textElem);
-            const closeBtn = document.createElement("button");
-            closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
-            closeBtn.onclick = () => {
-                localStorage.setItem("shownCookieAlert", "true");
-                boxElem.style.display = "none";
-            }
-            containerElem.appendChild(closeBtn);
-            boxElem.appendChild(containerElem);
-            document.body.appendChild(boxElem);
-        }
-    })()
-
-</script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JGXSLW7N06"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JGXSLW7N06');
-</script></body>
+    </body>
 </html>
