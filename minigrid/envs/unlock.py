@@ -5,7 +5,7 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockEnv(RoomGrid):
 
     """
-    ![Unlock](../_static/figures/Unlock.png)
+    ![Unlock](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresUnlock.png)
 
     ### Description
 

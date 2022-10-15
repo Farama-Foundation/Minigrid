@@ -7,7 +7,7 @@ from minigrid.minigrid_env import MiniGridEnv
 class FourRoomsEnv(MiniGridEnv):
 
     """
-    ![four-rooms-env](../_static/figures/four-rooms-env.png)
+    ![four-rooms-env](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresfour-rooms-env.png)
 
     ### Description
 

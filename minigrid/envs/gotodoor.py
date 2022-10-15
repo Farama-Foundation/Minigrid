@@ -7,8 +7,8 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class GoToDoorEnv(MiniGridEnv):
     """
-    ![gotodoor-6x6](../_static/figures/gotodoor-6x6.png)<br />
-    [Video](../_static/figures/gotodoor-6x6.mp4)
+    ![gotodoor-6x6](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresgotodoor-6x6.png)<br />
+    [Video](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresgotodoor-6x6.mp4)
     ### Description
 
     This environment is a room with four doors, one on each wall. The agent

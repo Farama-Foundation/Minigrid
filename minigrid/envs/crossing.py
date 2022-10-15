@@ -11,14 +11,16 @@ from minigrid.minigrid_env import MiniGridEnv
 class CrossingEnv(MiniGridEnv):
 
     """
-    <img src="../_static/figures/LavaCrossingS9N1.png" alt="LavaCrossingS9N1" width="200"/><br />
-    <img src="../_static/figures/LavaCrossingS9N2.png" alt="LavaCrossingS9N2" width="200"/><br />
-    <img src="../_static/figures/LavaCrossingS9N3.png" alt="LavaCrossingS9N3" width="200"/><br />
-    <img src="../_static/figures/LavaCrossingS11N5.png" alt="LavaCrossingS11N5" width="200"/><br />
-    <img src="../_static/figures/SimpleCrossingS9N1.png" alt="SimpleCrossingS9N1" width="200"/><br />
-    <img src="../_static/figures/SimpleCrossingS9N2.png" alt="SimpleCrossingS9N2" width="200"/><br />
-    <img src="../_static/figures/SimpleCrossingS9N3.png" alt="SimpleCrossingS9N3" width="200"/><br />
-    <img src="../_static/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200"/><br />
+    <p align="center">
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresLavaCrossingS9N1.png" alt="LavaCrossingS9N1" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresLavaCrossingS9N2.png" alt="LavaCrossingS9N2" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresLavaCrossingS9N3.png" alt="LavaCrossingS9N3" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresLavaCrossingS11N5.png" alt="LavaCrossingS11N5" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresSimpleCrossingS9N1.png" alt="SimpleCrossingS9N1" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresSimpleCrossingS9N2.png" alt="SimpleCrossingS9N2" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresSimpleCrossingS9N3.png" alt="SimpleCrossingS9N3" width="200px"/><br />
+        <img src="https://github.com/Farama-Foundation/Minigrid/tree/master/figuresSimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/><br />
+    </p>
     ### Description
 
     Depending on the `obstacle_type` parameter:
