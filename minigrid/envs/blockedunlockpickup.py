@@ -8,7 +8,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     """
     ![BlockedUnlockPickup](../_static/figures/BlockedUnlockPickup.png)
-    
+
     ### Description
 
     The agent has to pick up a box which is placed in another room, behind a
