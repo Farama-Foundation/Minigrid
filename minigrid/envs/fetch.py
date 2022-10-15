@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -71,7 +73,7 @@ class FetchEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, numObjs=3, **kwargs):
+    def __init__(self, size=8, numObjs=3, max_steps: Optional[int] = None, **kwargs):
         self.numObjs = numObjs
         self.obj_types = ["key", "ball"]
 
@@ -87,13 +89,17 @@ class FetchEnv(MiniGridEnv):
             mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
             ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
         )
+
+        if max_steps is None:
+            max_steps = 5 * size**2
+
         super().__init__(
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs,
         )
 

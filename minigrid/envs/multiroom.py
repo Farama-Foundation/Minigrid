@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -72,7 +74,14 @@ class MultiRoomEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, minNumRooms, maxNumRooms, maxRoomSize=10, **kwargs):
+    def __init__(
+        self,
+        minNumRooms,
+        maxNumRooms,
+        maxRoomSize=10,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         assert minNumRooms > 0
         assert maxNumRooms >= minNumRooms
         assert maxRoomSize >= 4
@@ -89,11 +98,14 @@ class MultiRoomEnv(MiniGridEnv):
 
         self.size = 25
 
+        if max_steps is None:
+            max_steps = maxNumRooms * 20
+
         super().__init__(
             mission_space=mission_space,
             width=self.size,
             height=self.size,
-            max_steps=self.maxNumRooms * 20,
+            max_steps=max_steps,
             **kwargs
         )
 

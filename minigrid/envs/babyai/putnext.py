@@ -2,6 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Put Next` instruction.
 """
+from typing import Optional
 
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
 from minigrid.envs.babyai.core.verifier import ObjDesc, PutNextInstr
@@ -35,18 +36,24 @@ class PutNext(RoomGridLevel):
     instructions.
     """
 
-    def __init__(self, room_size, objs_per_room, start_carrying=False, **kwargs):
+    def __init__(
+        self,
+        room_size,
+        objs_per_room,
+        start_carrying=False,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         assert room_size >= 4
         assert objs_per_room <= 9
         self.objs_per_room = objs_per_room
         self.start_carrying = start_carrying
 
+        if max_steps is None:
+            max_steps = 8 * room_size**2
+
         super().__init__(
-            num_rows=1,
-            num_cols=2,
-            room_size=room_size,
-            max_steps=8 * room_size**2,
-            **kwargs
+            num_rows=1, num_cols=2, room_size=room_size, max_steps=max_steps, **kwargs
         )
 
     def gen_mission(self):

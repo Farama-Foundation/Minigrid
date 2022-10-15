@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Door, Goal, Key
@@ -60,13 +62,15 @@ class DoorKeyEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, **kwargs):
-        if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 10 * size * size
+    def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
+        if max_steps is None:
+            max_steps = 10 * size**2
         mission_space = MissionSpace(
             mission_func=lambda: "use the key to open the door and then get to the goal"
         )
-        super().__init__(mission_space=mission_space, grid_size=size, **kwargs)
+        super().__init__(
+            mission_space=mission_space, grid_size=size, max_steps=max_steps, **kwargs
+        )
 
     def _gen_grid(self, width, height):
         # Create an empty grid

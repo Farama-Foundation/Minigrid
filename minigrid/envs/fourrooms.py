@@ -57,7 +57,7 @@ class FourRoomsEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, agent_pos=None, goal_pos=None, **kwargs):
+    def __init__(self, agent_pos=None, goal_pos=None, max_steps=100, **kwargs):
         self._agent_default_pos = agent_pos
         self._goal_default_pos = goal_pos
 
@@ -68,7 +68,7 @@ class FourRoomsEnv(MiniGridEnv):
             mission_space=mission_space,
             width=self.size,
             height=self.size,
-            max_steps=100,
+            max_steps=max_steps,
             **kwargs
         )
 

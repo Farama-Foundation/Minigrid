@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
 from minigrid.core.mission import MissionSpace
 from minigrid.core.roomgrid import RoomGrid
@@ -79,9 +81,18 @@ class ObstructedMazeEnv(RoomGrid):
 
     """
 
-    def __init__(self, num_rows, num_cols, num_rooms_visited, **kwargs):
+    def __init__(
+        self,
+        num_rows,
+        num_cols,
+        num_rooms_visited,
+        max_steps: Optional[int] = None,
+        **kwargs,
+    ):
         room_size = 6
-        max_steps = 4 * num_rooms_visited * room_size**2
+
+        if max_steps is None:
+            max_steps = 4 * num_rooms_visited * room_size**2
 
         mission_space = MissionSpace(
             mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
