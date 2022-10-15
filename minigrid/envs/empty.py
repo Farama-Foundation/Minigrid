@@ -6,7 +6,7 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class EmptyEnv(MiniGridEnv):
     """
-    ![empty-env](../_images/empty-env.png)
+    ![empty-env](../_static/figures/empty-env.png)
 
     ### Description
 

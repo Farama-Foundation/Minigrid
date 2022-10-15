@@ -68,6 +68,8 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
 
     docstring = trim(made.unwrapped.__doc__)
 
+    print(docstring)
+
     pascal_env_name = env_spec.id.split("-")[1]
     # remove suffix
     p = re.compile(r"([A-Z][a-z]+)*")

@@ -7,8 +7,8 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
-    ![DistShift1](../_images/DistShift1.png)<br />
-    ![DistShift2](../_images/DistShift2.png)
+    ![DistShift1](../_static/figures/DistShift1.png)<br />
+    ![DistShift2](../_static/figures/DistShift2.png)
 
     ### Description
 

@@ -7,15 +7,15 @@ from minigrid.core.world_object import Ball, Box, Key
 class ObstructedMazeEnv(RoomGrid):
 
     """
-    ![ObstructedMaze-1Dl](../_images/ObstructedMaze-1Dl.png)<br />
-    ![ObstructedMaze-1Dlh](../_images/ObstructedMaze-1Dlh.png)<br />
-    ![ObstructedMaze-1Dlhb](../_images/ObstructedMaze-1Dlhb.png)<br />
-    ![ObstructedMaze-1Q](../_images/ObstructedMaze-1Q.png)<br />
-    ![ObstructedMaze-2Dl](../_images/ObstructedMaze-2Dl.png)<br />
-    ![ObstructedMaze-2Dlh](../_images/ObstructedMaze-2Dlh.png)<br />
-    ![ObstructedMaze-2Dlhb](../_images/ObstructedMaze-2Dlhb.png)<br />
-    ![ObstructedMaze-2Q](../_images/ObstructedMaze-2Q.png)<br />
-    ![ObstructedMaze-4Q](../_images/ObstructedMaze-4Q.png)<br />
+    ![ObstructedMaze-1Dl](../_static/figures/ObstructedMaze-1Dl.png)<br />
+    ![ObstructedMaze-1Dlh](../_static/figures/ObstructedMaze-1Dlh.png)<br />
+    ![ObstructedMaze-1Dlhb](../_static/figures/ObstructedMaze-1Dlhb.png)<br />
+    ![ObstructedMaze-1Q](../_static/figures/ObstructedMaze-1Q.png)<br />
+    ![ObstructedMaze-2Dl](../_static/figures/ObstructedMaze-2Dl.png)<br />
+    ![ObstructedMaze-2Dlh](../_static/figures/ObstructedMaze-2Dlh.png)<br />
+    ![ObstructedMaze-2Dlhb](../_static/figures/ObstructedMaze-2Dlhb.png)<br />
+    ![ObstructedMaze-2Q](../_static/figures/ObstructedMaze-2Q.png)<br />
+    ![ObstructedMaze-4Q](../_static/figures/ObstructedMaze-4Q.png)<br />
 
     ### Description
 
