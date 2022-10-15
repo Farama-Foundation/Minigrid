@@ -265,6 +265,7 @@ class RoomGrid(MiniGridEnv):
         self.grid.set(pos[0], pos[1], door)
         door.cur_pos = pos
 
+        assert door_idx is not None
         neighbor = room.neighbors[door_idx]
         room.doors[door_idx] = door
         neighbor.doors[(door_idx + 2) % 4] = door
