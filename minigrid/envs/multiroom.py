@@ -16,7 +16,7 @@ class MultiRoom:
 class MultiRoomEnv(MiniGridEnv):
 
     """
-    ![multi-room](../_static/img/figures/multi-room.gif)
+    ![multi-room](../_images/multi-room.gif)
 
     ### Description
 
