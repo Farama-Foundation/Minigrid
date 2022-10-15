@@ -11,9 +11,7 @@ class GoToObjectEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(
-        self, size=6, numObjs=2, **kwargs
-    ):
+    def __init__(self, size=6, numObjs=2, **kwargs):
 
         self.numObjs = numObjs
         self.size = size
@@ -26,7 +24,7 @@ class GoToObjectEnv(MiniGridEnv):
         )
 
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 5 * size ** 2
+            kwargs["max_steps"] = 5 * size**2
 
         super().__init__(
             mission_space=mission_space,

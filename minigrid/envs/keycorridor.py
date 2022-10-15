@@ -77,9 +77,7 @@ class KeyCorridorEnv(RoomGrid):
 
     """
 
-    def __init__(
-        self, num_rows=3, obj_type="ball", room_size=6, **kwargs
-    ):
+    def __init__(self, num_rows=3, obj_type="ball", room_size=6, **kwargs):
         self.obj_type = obj_type
         mission_space = MissionSpace(
             mission_func=lambda color: f"pick up the {color} {obj_type}",
@@ -87,7 +85,7 @@ class KeyCorridorEnv(RoomGrid):
         )
 
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 30 * room_size ** 2
+            kwargs["max_steps"] = 30 * room_size**2
 
         super().__init__(
             mission_space=mission_space,

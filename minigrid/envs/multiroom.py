@@ -93,10 +93,7 @@ class MultiRoomEnv(MiniGridEnv):
             kwargs["max_steps"] = maxNumRooms * 20
 
         super().__init__(
-            mission_space=mission_space,
-            width=self.size,
-            height=self.size,
-            **kwargs
+            mission_space=mission_space, width=self.size, height=self.size, **kwargs
         )
 
     def _gen_grid(self, width, height):

@@ -25,7 +25,7 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-LavaCrossingS9N2-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 2}
+        kwargs={"size": 9, "num_crossings": 2},
     )
 
     register(

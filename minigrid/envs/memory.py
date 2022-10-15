@@ -70,7 +70,7 @@ class MemoryEnv(MiniGridEnv):
         self.random_length = random_length
 
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 5 * size ** 2
+            kwargs["max_steps"] = 5 * size**2
 
         mission_space = MissionSpace(
             mission_func=lambda: "go to the matching object at the end of the hallway"

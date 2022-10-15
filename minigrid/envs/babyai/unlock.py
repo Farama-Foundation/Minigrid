@@ -109,17 +109,13 @@ class UnlockPickup(RoomGridLevel):
     Unlock a door, then pick up a box in another room
     """
 
-    def __init__(
-        self, distractors=False, **kwargs
-    ):
+    def __init__(self, distractors=False, **kwargs):
         self.distractors = distractors
         room_size = 6
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 8 * room_size ** 2
+            kwargs["max_steps"] = 8 * room_size**2
 
-        super().__init__(
-            num_rows=1, num_cols=2, room_size=6, **kwargs
-        )
+        super().__init__(num_rows=1, num_cols=2, room_size=6, **kwargs)
 
     def gen_mission(self):
         # Add a random object to the room on the right
@@ -145,11 +141,9 @@ class BlockedUnlockPickup(RoomGridLevel):
     def __init__(self, **kwargs):
         room_size = 6
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 16 * room_size ** 2
+            kwargs["max_steps"] = 16 * room_size**2
 
-        super().__init__(
-            num_rows=1, num_cols=2, room_size=room_size, **kwargs
-        )
+        super().__init__(num_rows=1, num_cols=2, room_size=room_size, **kwargs)
 
     def gen_mission(self):
         # Add a box to the room on the right
@@ -175,11 +169,9 @@ class UnlockToUnlock(RoomGridLevel):
     def __init__(self, **kwargs):
         room_size = 6
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 30 * room_size ** 2
+            kwargs["max_steps"] = 30 * room_size**2
 
-        super().__init__(
-            num_rows=1, num_cols=3, room_size=room_size, **kwargs
-        )
+        super().__init__(num_rows=1, num_cols=3, room_size=room_size, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, 2)

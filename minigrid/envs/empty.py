@@ -65,13 +65,7 @@ class EmptyEnv(MiniGridEnv):
 
     """
 
-    def __init__(
-        self,
-        size=8,
-        agent_start_pos=(1, 1),
-        agent_start_dir=0,
-        **kwargs
-    ):
+    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, **kwargs):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 

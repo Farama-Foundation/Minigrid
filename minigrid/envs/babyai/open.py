@@ -104,7 +104,7 @@ class OpenTwoDoors(RoomGridLevel):
 
         room_size = 6
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 20 * room_size ** 2
+            kwargs["max_steps"] = 20 * room_size**2
 
         super().__init__(room_size=room_size, **kwargs)
 
@@ -141,7 +141,7 @@ class OpenDoorsOrder(RoomGridLevel):
 
         room_size = 6
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 20 * room_size ** 2
+            kwargs["max_steps"] = 20 * room_size**2
 
         super().__init__(room_size=room_size, **kwargs)
 

@@ -58,7 +58,7 @@ class UnlockEnv(RoomGrid):
         mission_space = MissionSpace(mission_func=lambda: "open the door")
 
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 8 * room_size ** 2
+            kwargs["max_steps"] = 8 * room_size**2
 
         super().__init__(
             mission_space=mission_space,

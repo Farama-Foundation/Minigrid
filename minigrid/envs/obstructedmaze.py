@@ -83,7 +83,7 @@ class ObstructedMazeEnv(RoomGrid):
         room_size = 6
 
         if "max_steps" not in kwargs:
-            kwargs["max_steps"] = 4 * num_rooms_visited * room_size ** 2
+            kwargs["max_steps"] = 4 * num_rooms_visited * room_size**2
 
         mission_space = MissionSpace(
             mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",

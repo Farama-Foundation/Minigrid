@@ -35,9 +35,7 @@ class PutNext(RoomGridLevel):
     instructions.
     """
 
-    def __init__(
-        self, room_size, objs_per_room, start_carrying=False, **kwargs
-    ):
+    def __init__(self, room_size, objs_per_room, start_carrying=False, **kwargs):
         assert room_size >= 4
         assert objs_per_room <= 9
         self.objs_per_room = objs_per_room
@@ -46,9 +44,7 @@ class PutNext(RoomGridLevel):
         if "max_steps" not in kwargs:
             kwargs["max_steps"] = 8 * room_size**2
 
-        super().__init__(
-            num_rows=1, num_cols=2, room_size=room_size, **kwargs
-        )
+        super().__init__(num_rows=1, num_cols=2, room_size=room_size, **kwargs)
 
     def gen_mission(self):
         self.place_agent(0, 0)

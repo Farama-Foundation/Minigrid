@@ -90,13 +90,7 @@ class CrossingEnv(MiniGridEnv):
 
     """
 
-    def __init__(
-        self,
-        size=9,
-        num_crossings=1,
-        obstacle_type=Lava,
-        **kwargs
-    ):
+    def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, **kwargs):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
 

@@ -46,6 +46,12 @@ class RoomGridLevel(RoomGrid):
 
     def __init__(self, room_size=8, **kwargs):
         mission_space = BabyAIMissionSpace()
+
+        # If `max_steps` arg is passed it will be fixed for every episode,
+        # if not it will vary after reset depending on the maze size.
+        self.fixed_max_steps = False
+        if "max_steps" in kwargs:
+            self.fixed_max_steps = True
         super().__init__(room_size=room_size, mission_space=mission_space, **kwargs)
 
     def reset(self, **kwargs):
@@ -58,7 +64,9 @@ class RoomGridLevel(RoomGrid):
         nav_time_room = self.room_size**2
         nav_time_maze = nav_time_room * self.num_rows * self.num_cols
         num_navs = self.num_navs_needed(self.instrs)
-        self.max_steps = num_navs * nav_time_maze
+
+        if not self.fixed_max_steps:
+            self.max_steps = num_navs * nav_time_maze
 
         return obs
 
