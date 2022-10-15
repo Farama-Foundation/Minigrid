@@ -7,8 +7,8 @@ from minigrid.minigrid_env import MiniGridEnv
 class DoorKeyEnv(MiniGridEnv):
 
     """
-    ![door-key-curriculum](../../_static/img/figures/door-key-curriculum.gif)<br />
-    ![door-key-env](../../_static/img/figures/door-key-env.png)
+    ![door-key-curriculum](../_static/img/figures/door-key-curriculum.gif)<br />
+    ![door-key-env](../_static/img/figures/door-key-env.png)
     ### Description
 
     This environment has a key that the agent must pick up in order to unlock a
