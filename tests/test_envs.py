@@ -144,8 +144,8 @@ def test_agent_sees_method(env_id):
 )
 def test_max_steps_argument(env_spec):
     """
-    Test that when initializing an environment with a fixed number of stpes per episode (`max_steps` argument),
-    the episode will be truncated after that number of episodes
+    Test that when initializing an environment with a fixed number of steps per episode (`max_steps` argument),
+    the episode will be truncated after taking that number of steps.
     """
     max_steps = 50
     env = env_spec.make(max_steps=max_steps)
