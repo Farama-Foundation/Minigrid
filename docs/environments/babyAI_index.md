@@ -29,6 +29,7 @@ open
 open_door_loc
 open_doors_order
 open_red_blue_doors_debug
+open_red_door
 pickup
 pickup_above
 pickup_dist_debug
@@ -38,6 +39,8 @@ put_next_local
 synth
 synth_loc
 synth_seq
+unblock_pickup
 unlock_local_dist
+unlock_pickup_dist
 unlock_to_unlock
 ```

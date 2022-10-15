@@ -55,7 +55,6 @@ pip install -e .
 :hidden:
 :caption: Introduction
 
-content/installation
 content/basic_usage
 content/publications
 ```

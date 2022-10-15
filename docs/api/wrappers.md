@@ -34,12 +34,6 @@ lastpage:
 .. autoclass:: minigrid.wrappers.FullyObsWrapper
 ```
 
-# Img Obs
-
-```{eval-rst}
-.. autoclass:: minigrid.wrappers.ImgObsWrapper
-```
-
 # Observation
 
 ```{eval-rst}
