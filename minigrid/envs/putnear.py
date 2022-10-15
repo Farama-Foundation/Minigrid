@@ -78,11 +78,14 @@ class PutNearEnv(MiniGridEnv):
                 self.obj_types,
             ],
         )
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 5 * size
+
         super().__init__(
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=5 * size,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs,

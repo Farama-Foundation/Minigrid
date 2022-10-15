@@ -903,7 +903,10 @@ class MiniGridEnv(gym.Env):
         # Environment configuration
         self.width = width
         self.height = height
+        
+        assert isinstance(max_steps, int), f"The argument max_steps must be an integer, got: {type(max_steps)}"
         self.max_steps = max_steps
+
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
@@ -1364,8 +1367,11 @@ class MiniGridEnv(gym.Env):
 
         else:
             raise ValueError(f"Unknown action: {action}")
-
+        
         if self.step_count >= self.max_steps:
+            print('INSIDE STEP FUNCTION')
+            print(self.step_count)
+            print(self.max_steps)
             truncated = True
 
         if self.render_mode == "human":

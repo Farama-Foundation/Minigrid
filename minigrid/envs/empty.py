@@ -65,7 +65,13 @@ class EmptyEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, **kwargs):
+    def __init__(
+        self,
+        size=8,
+        agent_start_pos=(1, 1),
+        agent_start_dir=0,
+        **kwargs
+    ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
@@ -73,10 +79,12 @@ class EmptyEnv(MiniGridEnv):
             mission_func=lambda: "get to the green goal square"
         )
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 4 * size * size
+
         super().__init__(
             mission_space=mission_space,
             grid_size=size,
-            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs

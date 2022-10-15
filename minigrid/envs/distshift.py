@@ -81,11 +81,13 @@ class DistShiftEnv(MiniGridEnv):
             mission_func=lambda: "get to the green goal square"
         )
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 4 * width * height
+
         super().__init__(
             mission_space=mission_space,
             width=width,
             height=height,
-            max_steps=4 * width * height,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs

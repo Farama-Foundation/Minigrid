@@ -68,6 +68,10 @@ class MemoryEnv(MiniGridEnv):
     def __init__(self, size=8, random_length=False, **kwargs):
         self.size = size
         self.random_length = random_length
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 5 * size ** 2
+
         mission_space = MissionSpace(
             mission_func=lambda: "go to the matching object at the end of the hallway"
         )
@@ -75,7 +79,6 @@ class MemoryEnv(MiniGridEnv):
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=False,
             **kwargs

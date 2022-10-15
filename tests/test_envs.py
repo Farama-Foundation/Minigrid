@@ -142,6 +142,13 @@ def test_agent_sees_method(env_id):
 @pytest.mark.parametrize(
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
+def test_max_steps_argument(env_spec):
+    env = env_spec.make(max_steps=50)
+
+
+@pytest.mark.parametrize(
+    "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
 def old_run_test(env_spec):
     # Load the gym environment
     env = env_spec.make()

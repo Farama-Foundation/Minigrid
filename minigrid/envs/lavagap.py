@@ -69,7 +69,7 @@ class LavaGapEnv(MiniGridEnv):
     def __init__(self, size, obstacle_type=Lava, **kwargs):
         self.obstacle_type = obstacle_type
         self.size = size
-
+        
         if obstacle_type == Lava:
             mission_space = MissionSpace(
                 mission_func=lambda: "avoid the lava and get to the green goal square"
@@ -79,11 +79,13 @@ class LavaGapEnv(MiniGridEnv):
                 mission_func=lambda: "find the opening and get to the green goal square"
             )
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 4 * size ** 2
+
         super().__init__(
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
             **kwargs

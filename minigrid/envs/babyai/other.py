@@ -51,12 +51,18 @@ class ActionObjDoor(RoomGridLevel):
 class FindObjS5(RoomGridLevel):
     """
     Pick up an object (in a random room)
-    Rooms have a size of 5
+    Rooms have a size of 5f
     This level requires potentially exhaustive exploration
     """
 
-    def __init__(self, room_size=5, **kwargs):
-        super().__init__(room_size=room_size, max_steps=20 * room_size**2, **kwargs)
+    def __init__(self,
+        room_size=5,  
+        **kwargs):
+        
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 20 * room_size ** 2
+
+        super().__init__(room_size=room_size, **kwargs)
 
     def gen_mission(self):
         # Add a random object to a random room
@@ -75,14 +81,16 @@ class KeyCorridor(RoomGridLevel):
     random room.
     """
 
-    def __init__(self, num_rows=3, obj_type="ball", room_size=6, **kwargs):
+    def __init__(
+        self, num_rows=3, obj_type="ball", room_size=6, **kwargs
+    ):
         self.obj_type = obj_type
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 30 * room_size ** 2
+
         super().__init__(
-            room_size=room_size,
-            num_rows=num_rows,
-            max_steps=30 * room_size**2,
-            **kwargs
+            room_size=room_size, num_rows=num_rows, **kwargs
         )
 
     def gen_mission(self):
@@ -134,12 +142,11 @@ class MoveTwoAcross(RoomGridLevel):
         assert objs_per_room <= 9
         self.objs_per_room = objs_per_room
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 16 * room_size ** 2
+                
         super().__init__(
-            num_rows=1,
-            num_cols=2,
-            room_size=room_size,
-            max_steps=16 * room_size**2,
-            **kwargs
+            num_rows=1, num_cols=2, room_size=room_size, **kwargs
         )
 
     def gen_mission(self):

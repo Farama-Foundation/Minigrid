@@ -89,11 +89,13 @@ class MultiRoomEnv(MiniGridEnv):
 
         self.size = 25
 
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = maxNumRooms * 20
+
         super().__init__(
             mission_space=mission_space,
             width=self.size,
             height=self.size,
-            max_steps=self.maxNumRooms * 20,
             **kwargs
         )
 

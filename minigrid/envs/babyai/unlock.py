@@ -109,16 +109,16 @@ class UnlockPickup(RoomGridLevel):
     Unlock a door, then pick up a box in another room
     """
 
-    def __init__(self, distractors=False, **kwargs):
+    def __init__(
+        self, distractors=False, **kwargs
+    ):
         self.distractors = distractors
-
         room_size = 6
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 8 * room_size ** 2
+
         super().__init__(
-            num_rows=1,
-            num_cols=2,
-            room_size=room_size,
-            max_steps=8 * room_size**2,
-            **kwargs
+            num_rows=1, num_cols=2, room_size=6, **kwargs
         )
 
     def gen_mission(self):
@@ -144,12 +144,11 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     def __init__(self, **kwargs):
         room_size = 6
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 16 * room_size ** 2
+
         super().__init__(
-            num_rows=1,
-            num_cols=2,
-            room_size=room_size,
-            max_steps=16 * room_size**2,
-            **kwargs
+            num_rows=1, num_cols=2, room_size=room_size, **kwargs
         )
 
     def gen_mission(self):
@@ -175,12 +174,11 @@ class UnlockToUnlock(RoomGridLevel):
 
     def __init__(self, **kwargs):
         room_size = 6
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 30 * room_size ** 2
+
         super().__init__(
-            num_rows=1,
-            num_cols=3,
-            room_size=room_size,
-            max_steps=30 * room_size**2,
-            **kwargs
+            num_rows=1, num_cols=3, room_size=room_size, **kwargs
         )
 
     def gen_mission(self):

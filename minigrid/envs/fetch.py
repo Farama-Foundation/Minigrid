@@ -71,7 +71,9 @@ class FetchEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, numObjs=3, **kwargs):
+    def __init__(
+        self, size=8, numObjs=3, **kwargs
+    ):
         self.numObjs = numObjs
         self.obj_types = ["key", "ball"]
 
@@ -87,11 +89,14 @@ class FetchEnv(MiniGridEnv):
             mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
             ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
         )
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 5 * size ** 2
+
         super().__init__(
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=5 * size**2,
             # Set this to True for maximum speed
             see_through_walls=True,
             **kwargs,

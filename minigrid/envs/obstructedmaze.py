@@ -81,7 +81,9 @@ class ObstructedMazeEnv(RoomGrid):
 
     def __init__(self, num_rows, num_cols, num_rooms_visited, **kwargs):
         room_size = 6
-        max_steps = 4 * num_rooms_visited * room_size**2
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 4 * num_rooms_visited * room_size ** 2
 
         mission_space = MissionSpace(
             mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
@@ -91,7 +93,6 @@ class ObstructedMazeEnv(RoomGrid):
             room_size=room_size,
             num_rows=num_rows,
             num_cols=num_cols,
-            max_steps=max_steps,
             **kwargs,
         )
         self.obj = Ball()  # initialize the obj attribute, that will be changed later on

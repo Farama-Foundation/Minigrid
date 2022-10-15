@@ -103,7 +103,10 @@ class PickupAbove(RoomGridLevel):
 
     def __init__(self, **kwargs):
         room_size = 6
-        super().__init__(room_size=room_size, max_steps=8 * room_size**2, **kwargs)
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 8 * room_size**2
+
+        super().__init__(room_size=room_size, **kwargs)
 
     def gen_mission(self):
         # Add a random object to the top-middle room

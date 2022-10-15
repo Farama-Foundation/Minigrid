@@ -62,11 +62,14 @@ class RedBlueDoorEnv(MiniGridEnv):
         mission_space = MissionSpace(
             mission_func=lambda: "open the red door then the blue door"
         )
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 20 * size * size
+
         super().__init__(
             mission_space=mission_space,
             width=2 * size,
             height=size,
-            max_steps=20 * size * size,
             **kwargs
         )
 

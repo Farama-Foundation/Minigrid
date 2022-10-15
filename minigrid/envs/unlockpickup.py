@@ -63,12 +63,15 @@ class UnlockPickupEnv(RoomGrid):
             mission_func=lambda color: f"pick up the {color} box",
             ordered_placeholders=[COLOR_NAMES],
         )
+
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 8 * room_size ** 2
+
         super().__init__(
             mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,
-            max_steps=8 * room_size**2,
             **kwargs,
         )
 

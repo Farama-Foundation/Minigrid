@@ -103,7 +103,10 @@ class OpenTwoDoors(RoomGridLevel):
         self.strict = strict
 
         room_size = 6
-        super().__init__(room_size=room_size, max_steps=20 * room_size**2, **kwargs)
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 20 * room_size ** 2
+
+        super().__init__(room_size=room_size, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, 2)
@@ -137,7 +140,10 @@ class OpenDoorsOrder(RoomGridLevel):
         self.debug = debug
 
         room_size = 6
-        super().__init__(room_size=room_size, max_steps=20 * room_size**2, **kwargs)
+        if "max_steps" not in kwargs:
+            kwargs["max_steps"] = 20 * room_size ** 2
+
+        super().__init__(room_size=room_size, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, self.num_doors)
