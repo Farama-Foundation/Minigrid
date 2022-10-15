@@ -7,7 +7,7 @@ from minigrid.core.world_object import Ball
 class BlockedUnlockPickupEnv(RoomGrid):
 
     """
-    ![BlockedUnlockPickup](../_static/img/figures/BlockedUnlockPickup.png)
+    ![BlockedUnlockPickup](../../_static/img/figures/BlockedUnlockPickup.png)
     ### Description
 
     The agent has to pick up a box which is placed in another room, behind a

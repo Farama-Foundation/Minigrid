@@ -6,12 +6,12 @@ from minigrid.core.roomgrid import RoomGrid
 class KeyCorridorEnv(RoomGrid):
 
     """
-    ![KeyCorridorS3R1](../_static/img/figures/KeyCorridorS3R1.png)<br />
-    ![KeyCorridorS3R2](../_static/img/figures/KeyCorridorS3R2.png)<br />
-    ![KeyCorridorS3R3](../_static/img/figures/KeyCorridorS3R3.png)<br />
-    ![KeyCorridorS4R3](../_static/img/figures/KeyCorridorS4R3.png)<br />
-    ![KeyCorridorS5R3](../_static/img/figures/KeyCorridorS5R3.png)<br />
-    ![KeyCorridorS6R3](../_static/img/figures/KeyCorridorS6R3.png)
+    ![KeyCorridorS3R1](../../_static/img/figures/KeyCorridorS3R1.png)<br />
+    ![KeyCorridorS3R2](../../_static/img/figures/KeyCorridorS3R2.png)<br />
+    ![KeyCorridorS3R3](../../_static/img/figures/KeyCorridorS3R3.png)<br />
+    ![KeyCorridorS4R3](../../_static/img/figures/KeyCorridorS4R3.png)<br />
+    ![KeyCorridorS5R3](../../_static/img/figures/KeyCorridorS5R3.png)<br />
+    ![KeyCorridorS6R3](../../_static/img/figures/KeyCorridorS6R3.png)
 
     ### Description
 

@@ -9,7 +9,7 @@ from minigrid.minigrid_env import MiniGridEnv
 class LavaGapEnv(MiniGridEnv):
 
     """
-    ![LavaGapS6](../_static/img/figures/LavaGapS6.png)
+    ![LavaGapS6](../../_static/img/figures/LavaGapS6.png)
 
     ### Description
 
