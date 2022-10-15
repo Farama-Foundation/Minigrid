@@ -7,15 +7,15 @@ from minigrid.core.world_object import Ball, Box, Key
 class ObstructedMazeEnv(RoomGrid):
 
     """
-    ![ObstructedMaze-1Dl](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-1Dl.png)<br />
-    ![ObstructedMaze-1Dlh](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-1Dlh.png)<br />
-    ![ObstructedMaze-1Dlhb](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-1Dlhb.png)<br />
-    ![ObstructedMaze-1Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-1Q.png)<br />
-    ![ObstructedMaze-2Dl](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-2Dl.png)<br />
-    ![ObstructedMaze-2Dlh](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-2Dlh.png)<br />
-    ![ObstructedMaze-2Dlhb](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-2Dlhb.png)<br />
-    ![ObstructedMaze-2Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-2Q.png)<br />
-    ![ObstructedMaze-4Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresObstructedMaze-4Q.png)<br />
+    ![ObstructedMaze-1Dl](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dl.png)<br />
+    ![ObstructedMaze-1Dlh](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dlh.png)<br />
+    ![ObstructedMaze-1Dlhb](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Dlhb.png)<br />
+    ![ObstructedMaze-1Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-1Q.png)<br />
+    ![ObstructedMaze-2Dl](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dl.png)<br />
+    ![ObstructedMaze-2Dlh](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dlh.png)<br />
+    ![ObstructedMaze-2Dlhb](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Dlhb.png)<br />
+    ![ObstructedMaze-2Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-2Q.png)<br />
+    ![ObstructedMaze-4Q](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/ObstructedMaze-4Q.png)<br />
 
     ### Description
 

@@ -7,7 +7,7 @@ from minigrid.core.world_object import Ball
 class BlockedUnlockPickupEnv(RoomGrid):
 
     """
-    ![BlockedUnlockPickup](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresBlockedUnlockPickup.png)
+    ![BlockedUnlockPickup](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/BlockedUnlockPickup.png)
 
     ### Description
 

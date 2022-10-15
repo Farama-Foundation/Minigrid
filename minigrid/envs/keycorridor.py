@@ -6,12 +6,12 @@ from minigrid.core.roomgrid import RoomGrid
 class KeyCorridorEnv(RoomGrid):
 
     """
-    ![KeyCorridorS3R1](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS3R1.png)<br />
-    ![KeyCorridorS3R2](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS3R2.png)<br />
-    ![KeyCorridorS3R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS3R3.png)<br />
-    ![KeyCorridorS4R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS4R3.png)<br />
-    ![KeyCorridorS5R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS5R3.png)<br />
-    ![KeyCorridorS6R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figuresKeyCorridorS6R3.png)
+    ![KeyCorridorS3R1](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R1.png)<br />
+    ![KeyCorridorS3R2](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R2.png)<br />
+    ![KeyCorridorS3R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS3R3.png)<br />
+    ![KeyCorridorS4R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS4R3.png)<br />
+    ![KeyCorridorS5R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS5R3.png)<br />
+    ![KeyCorridorS6R3](https://github.com/Farama-Foundation/Minigrid/tree/master/figures/KeyCorridorS6R3.png)
 
     ### Description
 
