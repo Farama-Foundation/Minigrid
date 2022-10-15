@@ -68,7 +68,6 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
 
     docstring = trim(made.unwrapped.__doc__)
 
-    print(docstring)
 
     pascal_env_name = env_spec.id.split("-")[1]
     # remove suffix
@@ -77,7 +76,6 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
 
     snake_env_name = pattern.sub("_", name).lower()
     env_names.append(snake_env_name)
-    print(snake_env_name)
     title_env_name = snake_env_name.replace("_", " ").title()
 
     v_path = os.path.join(
