@@ -219,6 +219,7 @@ class Grid:
                 cell = self.get(i, j)
 
                 agent_here = np.array_equal(agent_pos, (i, j))
+                assert highlight_mask is not None
                 tile_img = Grid.render_tile(
                     cell,
                     agent_dir=agent_dir if agent_here else None,
@@ -246,6 +247,7 @@ class Grid:
 
         for i in range(self.width):
             for j in range(self.height):
+                assert vis_mask is not None
                 if vis_mask[i, j]:
                     v = self.get(i, j)
 
