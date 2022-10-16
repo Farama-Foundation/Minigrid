@@ -9,16 +9,11 @@ from minigrid.minigrid_env import MiniGridEnv
 class DoorKeyEnv(MiniGridEnv):
 
     """
-<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-curriculum.gif" alt="door-key-curriculum" width="200px"/>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-env.png" alt="door-key-env" width="200px"/>
     </p>
 
-=======
-    ![door-key-curriculum](../_static/figures/door-key-curriculum.gif)<br />
-    ![door-key-env](../_static/figures/door-key-env.png)
->>>>>>> Farama-Foundation-master
     ### Description
 
     This environment has a key that the agent must pick up in order to unlock a

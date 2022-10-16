@@ -12,7 +12,6 @@ from minigrid.minigrid_env import MiniGridEnv
 class CrossingEnv(MiniGridEnv):
 
     """
-<<<<<<< HEAD
     <p>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N1.png" alt="LavaCrossingS9N1" width="200px"/>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N2.png" alt="LavaCrossingS9N2" width="200px"/>
@@ -27,16 +26,6 @@ class CrossingEnv(MiniGridEnv):
     <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/>
     </p>
 
-=======
-    ![LavaCrossingS9N1](../_static/figures/LavaCrossingS9N1.png)<br />
-    ![LavaCrossingS9N2](../_static/figures/LavaCrossingS9N2.png)<br />
-    ![LavaCrossingS9N3](../_static/figures/LavaCrossingS9N3.png)<br />
-    ![LavaCrossingS11N5](../_static/figures/LavaCrossingS11N5.png)<br />
-    ![SimpleCrossingS9N1](../_static/figures/SimpleCrossingS9N1.png)<br />
-    ![SimpleCrossingS9N2](../_static/figures/SimpleCrossingS9N2.png)<br />
-    ![SimpleCrossingS9N3](../_static/figures/SimpleCrossingS9N3.png)<br />
-    ![SimpleCrossingS11N5](../_static/figures/SimpleCrossingS11N5.png)<br />
->>>>>>> Farama-Foundation-master
     ### Description
 
     Depending on the `obstacle_type` parameter:

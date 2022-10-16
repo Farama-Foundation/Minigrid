@@ -11,13 +11,9 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
-<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/dynamic_obstacles.gif" alt="dynamic_obstacles" width="200px"/>
     </p>
-=======
-    ![dynamic_obstacles](../_static/figures/dynamic_obstacles.gif)
->>>>>>> Farama-Foundation-master
 
     ### Description
 

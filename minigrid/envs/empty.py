@@ -8,13 +8,9 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class EmptyEnv(MiniGridEnv):
     """
-<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/empty-env.png" alt="dempty-env" width="200px"/>
     </p>
-=======
-    ![empty-env](../_static/figures/empty-env.png)
->>>>>>> Farama-Foundation-master
 
     ### Description
 

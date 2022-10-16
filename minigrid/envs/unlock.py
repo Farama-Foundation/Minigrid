@@ -7,13 +7,9 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockEnv(RoomGrid):
 
     """
-<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/Unlock.png" alt="Unlock" width="200px"/>
     </p>
-=======
-    ![Unlock](../_static/figures/Unlock.png)
->>>>>>> Farama-Foundation-master
 
     ### Description
 

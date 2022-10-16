@@ -9,7 +9,6 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class GoToDoorEnv(MiniGridEnv):
     """
-<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.png" alt="gotodoor-6x6" width="200px"/>
         <video width="200px">
@@ -17,10 +16,6 @@ class GoToDoorEnv(MiniGridEnv):
         </video>
     </p>
 
-=======
-    ![gotodoor-6x6](../_static/figures/gotodoor-6x6.png)<br />
-    [Video](../_static/figures/gotodoor-6x6.mp4)
->>>>>>> Farama-Foundation-master
     ### Description
 
     This environment is a room with four doors, one on each wall. The agent
