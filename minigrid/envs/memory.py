@@ -76,9 +76,7 @@ class MemoryEnv(MiniGridEnv):
         if max_steps is None:
             max_steps = 5 * size**2
 
-        mission_space = MissionSpace(
-            mission_func=lambda: "go to the matching object at the end of the hallway"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
         super().__init__(
             mission_space=mission_space,
             width=size,
@@ -88,6 +86,10 @@ class MemoryEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "go to the matching object at the end of the hallway"
 
     def _gen_grid(self, width, height):
         self.grid = Grid(width, height)

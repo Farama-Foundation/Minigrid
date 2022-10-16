@@ -1,3 +1,4 @@
+from types import LambdaType
 from typing import Optional
 
 from minigrid.core.constants import COLOR_NAMES
@@ -72,7 +73,7 @@ class PutNearEnv(MiniGridEnv):
         self.numObjs = numObjs
         self.obj_types = ["key", "ball", "box"]
         mission_space = MissionSpace(
-            mission_func=lambda move_color, move_type, target_color, target_type: f"put the {move_color} {move_type} near the {target_color} {target_type}",
+            mission_func=self._gen_mission,
             ordered_placeholders=[
                 COLOR_NAMES,
                 self.obj_types,
@@ -93,6 +94,12 @@ class PutNearEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(
+        move_color: str, move_type: str, target_color: str, target_type: str
+    ):
+        return f"put the {move_color} {move_type} near the {target_color} {target_type}"
 
     def _gen_grid(self, width, height):
         self.grid = Grid(width, height)

@@ -102,9 +102,7 @@ class ObstructedMazeEnv(RoomGrid):
         if max_steps is None:
             max_steps = 4 * num_rooms_visited * room_size**2
 
-        mission_space = MissionSpace(
-            mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
         super().__init__(
             mission_space=mission_space,
             room_size=room_size,
@@ -114,6 +112,10 @@ class ObstructedMazeEnv(RoomGrid):
             **kwargs,
         )
         self.obj = Ball()  # initialize the obj attribute, that will be changed later on
+
+    @staticmethod
+    def _gen_mission():
+        return "pick up the ball"
 
     def _gen_grid(self, width, height):
         super()._gen_grid(width, height)

@@ -74,7 +74,7 @@ class GoToDoorEnv(MiniGridEnv):
         assert size >= 5
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda color: f"go to the {color} door",
+            mission_func=self._gen_mission,
             ordered_placeholders=[COLOR_NAMES],
         )
 
@@ -90,6 +90,10 @@ class GoToDoorEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(color: str):
+        return f"go to the {color} door"
 
     def _gen_grid(self, width, height):
         # Create the grid

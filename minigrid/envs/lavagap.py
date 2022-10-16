@@ -76,14 +76,10 @@ class LavaGapEnv(MiniGridEnv):
         self.obstacle_type = obstacle_type
         self.size = size
 
-        if obstacle_type == Lava:
-            mission_space = MissionSpace(
-                mission_func=lambda: "avoid the lava and get to the green goal square"
-            )
-        else:
-            mission_space = MissionSpace(
-                mission_func=lambda: "find the opening and get to the green goal square"
-            )
+        mission_space = MissionSpace(
+            mission_func=self._gen_mission,
+            ordered_placeholders=[[obstacle_type]],
+        )
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -97,6 +93,13 @@ class LavaGapEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission(obstacle_type):
+        if obstacle_type == Lava:
+            return "avoid the lava and get to the green goal square"
+        else:
+            return "find the opening and get to the green goal square"
 
     def _gen_grid(self, width, height):
         assert width >= 5 and height >= 5
