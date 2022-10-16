@@ -10,7 +10,9 @@ from minigrid.minigrid_env import MiniGridEnv
 class FetchEnv(MiniGridEnv):
 
     """
-    ![fetch-env](../_static/figures/fetch-env.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/fetch-env.png" alt="fetch-env" width="200px"/>
+    </p>
 
     ### Description
 

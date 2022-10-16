@@ -8,7 +8,9 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockPickupEnv(RoomGrid):
 
     """
-    ![UnlockPickup](../_static/figures/UnlockPickup.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/UnlockPickup.png" alt="UnlockPickup" width="200px"/>
+    </p>
 
     ### Description
 

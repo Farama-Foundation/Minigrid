@@ -68,7 +68,9 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
 
     docstring = trim(made.unwrapped.__doc__)
 
+    print(env_name)
     pascal_env_name = env_spec.id.split("-")[1]
+    print(pascal_env_name)
     # remove suffix
     p = re.compile(r"([A-Z][a-z]+)*")
     name = p.search(pascal_env_name).group()
@@ -77,10 +79,17 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
     env_names.append(snake_env_name)
     title_env_name = snake_env_name.replace("_", " ").title()
 
+    path_name = ""
+
+    if env_name.startswith("envs:"):
+        path_name = snake_env_name + ".md"
+    else:
+        path_name = "babyai_" + snake_env_name + ".md"
+
     v_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
         "environments",
-        snake_env_name + ".md",
+        path_name,
     )
 
     front_matter = f"""---

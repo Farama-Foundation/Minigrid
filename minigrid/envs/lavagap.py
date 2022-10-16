@@ -11,7 +11,9 @@ from minigrid.minigrid_env import MiniGridEnv
 class LavaGapEnv(MiniGridEnv):
 
     """
-    ![LavaGapS6](../_static/figures/LavaGapS6.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaGapS6.png" alt="LavaGapS6" width="200px"/>
+    </p>
 
     ### Description
 
