@@ -382,7 +382,9 @@ class RoomGrid(MiniGridEnv):
             if not room.door_pos[k] or room.doors[k]:
                 continue
 
-            if room.locked or room.neighbors[k].locked:
+            neighbor_room = room.neighbors[k]
+            assert neighbor_room is not None
+            if room.locked or neighbor_room.locked:
                 continue
 
             color = self._rand_elem(door_colors)
