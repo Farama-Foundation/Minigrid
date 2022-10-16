@@ -14,7 +14,6 @@ or to fine-tune difficulty.
 :hidden:
 :caption: Minigrid Environments
 blocked_unlock_pickup
-simple_crossing
 dist_shift
 door_key
 dynamic
@@ -32,7 +31,8 @@ obstructed_maze
 playground
 put_near
 red_blue_doors
-unlock
+simple_crossing
 unlock_pickup
+unlock
 
 ```
