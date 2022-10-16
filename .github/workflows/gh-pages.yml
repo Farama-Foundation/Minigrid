@@ -16,7 +16,10 @@ jobs:
       - uses: actions/setup-python@v4
 
       - name: Install dependencies
-        run: pip install -r docs/requirements.txt && git clone https://github.com/Farama-Foundation/MiniGrid.git && pip install ./MiniGrid
+        run: pip install -r docs/requirements.txt
+
+      - name: Register Envs
+        run: pip install -e .
 
       - name: Build Envs Docs
         run: python docs/scripts/gen_mds.py

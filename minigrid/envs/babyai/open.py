@@ -2,6 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Open` instruction.
 """
+from typing import Optional
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
@@ -97,13 +98,23 @@ class OpenTwoDoors(RoomGridLevel):
     This task requires memory (recurrent policy) to be solved effectively.
     """
 
-    def __init__(self, first_color=None, second_color=None, strict=False, **kwargs):
+    def __init__(
+        self,
+        first_color=None,
+        second_color=None,
+        strict=False,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         self.first_color = first_color
         self.second_color = second_color
         self.strict = strict
 
         room_size = 6
-        super().__init__(room_size=room_size, max_steps=20 * room_size**2, **kwargs)
+        if max_steps is None:
+            max_steps = 20 * room_size**2
+
+        super().__init__(room_size=room_size, max_steps=max_steps, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, 2)
@@ -131,13 +142,18 @@ class OpenDoorsOrder(RoomGridLevel):
     Open one or two doors in the order specified.
     """
 
-    def __init__(self, num_doors, debug=False, **kwargs):
+    def __init__(
+        self, num_doors, debug=False, max_steps: Optional[int] = None, **kwargs
+    ):
         assert num_doors >= 2
         self.num_doors = num_doors
         self.debug = debug
 
         room_size = 6
-        super().__init__(room_size=room_size, max_steps=20 * room_size**2, **kwargs)
+        if max_steps is None:
+            max_steps = 20 * room_size**2
+
+        super().__init__(room_size=room_size, max_steps=max_steps, **kwargs)
 
     def gen_mission(self):
         colors = self._rand_subset(COLOR_NAMES, self.num_doors)

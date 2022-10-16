@@ -903,7 +903,12 @@ class MiniGridEnv(gym.Env):
         # Environment configuration
         self.width = width
         self.height = height
+
+        assert isinstance(
+            max_steps, int
+        ), f"The argument max_steps must be an integer, got: {type(max_steps)}"
         self.max_steps = max_steps
+
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent

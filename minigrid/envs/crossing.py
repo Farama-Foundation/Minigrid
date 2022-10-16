@@ -1,4 +1,5 @@
 import itertools as itt
+from typing import Optional
 
 import numpy as np
 
@@ -11,6 +12,14 @@ from minigrid.minigrid_env import MiniGridEnv
 class CrossingEnv(MiniGridEnv):
 
     """
+    ![LavaCrossingS9N1](../_static/figures/LavaCrossingS9N1.png)<br />
+    ![LavaCrossingS9N2](../_static/figures/LavaCrossingS9N2.png)<br />
+    ![LavaCrossingS9N3](../_static/figures/LavaCrossingS9N3.png)<br />
+    ![LavaCrossingS11N5](../_static/figures/LavaCrossingS11N5.png)<br />
+    ![SimpleCrossingS9N1](../_static/figures/SimpleCrossingS9N1.png)<br />
+    ![SimpleCrossingS9N2](../_static/figures/SimpleCrossingS9N2.png)<br />
+    ![SimpleCrossingS9N3](../_static/figures/SimpleCrossingS9N3.png)<br />
+    ![SimpleCrossingS11N5](../_static/figures/SimpleCrossingS11N5.png)<br />
     ### Description
 
     Depending on the `obstacle_type` parameter:
@@ -82,7 +91,14 @@ class CrossingEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=9, num_crossings=1, obstacle_type=Lava, **kwargs):
+    def __init__(
+        self,
+        size=9,
+        num_crossings=1,
+        obstacle_type=Lava,
+        max_steps: Optional[int] = None,
+        **kwargs
+    ):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
 
@@ -95,12 +111,14 @@ class CrossingEnv(MiniGridEnv):
                 mission_func=lambda: "find the opening and get to the green goal square"
             )
 
+        if max_steps is None:
+            max_steps = 4 * size**2
+
         super().__init__(
             mission_space=mission_space,
             grid_size=size,
-            max_steps=4 * size * size,
-            # Set this to True for maximum speed
-            see_through_walls=False,
+            see_through_walls=False,  # Set this to True for maximum speed
+            max_steps=max_steps,
             **kwargs
         )
 

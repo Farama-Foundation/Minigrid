@@ -43,7 +43,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "myst_parser",
-    "notfound.extension",
 ]
 
 source_suffix = {
@@ -78,7 +77,7 @@ html_favicon = "_static/img/minigrid-white.png"
 html_theme_options = {
     "light_logo": "img/minigrid.png",
     "dark_logo": "img/minigrid-white.png",
-    "gtag": "",
+    "gtag": "G-FBXJQQLXKD",
 }
 html_context: Dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
@@ -90,5 +89,3 @@ html_context["slug"] = "minigrid"
 
 html_static_path = ["_static"]
 html_css_files = []
-
-notfound_urls_prefix = None
