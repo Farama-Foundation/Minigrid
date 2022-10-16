@@ -163,6 +163,13 @@ def test_max_steps_argument(env_spec):
     env.close()
 
 
+@pytest.mark.parametrize("env_id", [spec.id for spec in all_testing_env_specs])
+def test_env_picklable(env_id):
+    """Test that all environments are picklable."""
+    env = gym.make(env_id)
+    pickle.dumps(env)
+
+
 @pytest.mark.parametrize(
     "env_spec",
     all_testing_env_specs,
