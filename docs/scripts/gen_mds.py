@@ -79,17 +79,17 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
     env_names.append(snake_env_name)
     title_env_name = snake_env_name.replace("_", " ").title()
 
+    path_name = ""
+
     if env_name.startswith("envs:"):
-        v_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
-            "environments",
-            snake_env_name + ".md",
-        )
+        path_name = snake_env_name + ".md",
     else:
-        v_path = os.path.join(
+        path_name = "babyai_" + snake_env_name + ".md",
+
+    v_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "environments",
-            "babyai_" + snake_env_name + ".md",
+            path_name,
         )
 
     front_matter = f"""---
