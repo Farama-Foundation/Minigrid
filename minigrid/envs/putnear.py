@@ -1,4 +1,3 @@
-from types import LambdaType
 from typing import Optional
 
 from minigrid.core.constants import COLOR_NAMES
