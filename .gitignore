@@ -20,5 +20,5 @@ __pycache__
 !docs/environments/babyAI_index.md
 
 # Virtual environments
-venv
 .env
+venv
