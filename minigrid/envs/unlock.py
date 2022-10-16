@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.mission import MissionSpace
 from minigrid.core.roomgrid import RoomGrid
 
@@ -5,6 +7,8 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockEnv(RoomGrid):
 
     """
+    ![Unlock](../_static/figures/Unlock.png)
+
     ### Description
 
     The agent has to open a locked door. This environment can be solved without
@@ -51,15 +55,19 @@ class UnlockEnv(RoomGrid):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, max_steps: Optional[int] = None, **kwargs):
         room_size = 6
         mission_space = MissionSpace(mission_func=lambda: "open the door")
+
+        if max_steps is None:
+            max_steps = 8 * room_size**2
+
         super().__init__(
             mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,
-            max_steps=8 * room_size**2,
+            max_steps=max_steps,
             **kwargs
         )
 

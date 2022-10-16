@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal, Lava
@@ -7,10 +9,13 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
+    ![DistShift1](../_static/figures/DistShift1.png)<br />
+    ![DistShift2](../_static/figures/DistShift2.png)
+
     ### Description
 
-    This environment is based on one of the DeepMind [AI safety gridworlds]
-    (https://github.com/deepmind/ai-safety-gridworlds). The agent starts in the
+    This environment is based on one of the DeepMind [AI safety gridworlds](https://github.com/deepmind/ai-safety-gridworlds).
+    The agent starts in the
     top-left corner and must reach the goal which is in the top-right corner,
     but has to avoid stepping into lava on its way. The aim of this environment
     is to test an agent's ability to generalize. There are two slightly
@@ -67,6 +72,7 @@ class DistShiftEnv(MiniGridEnv):
         agent_start_pos=(1, 1),
         agent_start_dir=0,
         strip2_row=2,
+        max_steps: Optional[int] = None,
         **kwargs
     ):
         self.agent_start_pos = agent_start_pos
@@ -78,13 +84,16 @@ class DistShiftEnv(MiniGridEnv):
             mission_func=lambda: "get to the green goal square"
         )
 
+        if max_steps is None:
+            max_steps = 4 * width * height
+
         super().__init__(
             mission_space=mission_space,
             width=width,
             height=height,
-            max_steps=4 * width * height,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs
         )
 

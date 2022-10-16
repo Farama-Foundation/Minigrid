@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Door
@@ -57,16 +59,20 @@ class RedBlueDoorEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, **kwargs):
+    def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
         self.size = size
         mission_space = MissionSpace(
             mission_func=lambda: "open the red door then the blue door"
         )
+
+        if max_steps is None:
+            max_steps = 20 * size**2
+
         super().__init__(
             mission_space=mission_space,
             width=2 * size,
             height=size,
-            max_steps=20 * size * size,
+            max_steps=max_steps,
             **kwargs
         )
 

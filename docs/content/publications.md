@@ -3,7 +3,7 @@ layout: "contents"
 title: Publications
 firstpage:
 ---
-#List of Publications
+# List of Publications
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):

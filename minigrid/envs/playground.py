@@ -11,14 +11,14 @@ class PlaygroundEnv(MiniGridEnv):
     This environment has no specific goals or rewards.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, max_steps=100, **kwargs):
         mission_space = MissionSpace(mission_func=lambda: "")
         self.size = 19
         super().__init__(
             mission_space=mission_space,
             width=self.size,
             height=self.size,
-            max_steps=100,
+            max_steps=max_steps,
             **kwargs
         )
 

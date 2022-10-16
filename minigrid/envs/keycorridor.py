@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.mission import MissionSpace
 from minigrid.core.roomgrid import RoomGrid
@@ -6,6 +8,13 @@ from minigrid.core.roomgrid import RoomGrid
 class KeyCorridorEnv(RoomGrid):
 
     """
+    ![KeyCorridorS3R1](../_static/figures/KeyCorridorS3R1.png)<br />
+    ![KeyCorridorS3R2](../_static/figures/KeyCorridorS3R2.png)<br />
+    ![KeyCorridorS3R3](../_static/figures/KeyCorridorS3R3.png)<br />
+    ![KeyCorridorS4R3](../_static/figures/KeyCorridorS4R3.png)<br />
+    ![KeyCorridorS5R3](../_static/figures/KeyCorridorS5R3.png)<br />
+    ![KeyCorridorS6R3](../_static/figures/KeyCorridorS6R3.png)
+
     ### Description
 
     This environment is similar to the locked room environment, but there are
@@ -70,17 +79,28 @@ class KeyCorridorEnv(RoomGrid):
 
     """
 
-    def __init__(self, num_rows=3, obj_type="ball", room_size=6, **kwargs):
+    def __init__(
+        self,
+        num_rows=3,
+        obj_type="ball",
+        room_size=6,
+        max_steps: Optional[int] = None,
+        **kwargs,
+    ):
         self.obj_type = obj_type
         mission_space = MissionSpace(
             mission_func=lambda color: f"pick up the {color} {obj_type}",
             ordered_placeholders=[COLOR_NAMES],
         )
+
+        if max_steps is None:
+            max_steps = 30 * room_size**2
+
         super().__init__(
             mission_space=mission_space,
             room_size=room_size,
             num_rows=num_rows,
-            max_steps=30 * room_size**2,
+            max_steps=max_steps,
             **kwargs,
         )
 
