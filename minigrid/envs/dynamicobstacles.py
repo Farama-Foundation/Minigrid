@@ -1,4 +1,5 @@
 from operator import add
+from typing import Optional
 
 from gymnasium.spaces import Discrete
 
@@ -10,9 +11,13 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class DynamicObstaclesEnv(MiniGridEnv):
     """
+<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/dynamic_obstacles.gif" alt="dynamic_obstacles" width="200px"/>
     </p>
+=======
+    ![dynamic_obstacles](../_static/figures/dynamic_obstacles.gif)
+>>>>>>> Farama-Foundation-master
 
     ### Description
 
@@ -72,7 +77,13 @@ class DynamicObstaclesEnv(MiniGridEnv):
     """
 
     def __init__(
-        self, size=8, agent_start_pos=(1, 1), agent_start_dir=0, n_obstacles=4, **kwargs
+        self,
+        size=8,
+        agent_start_pos=(1, 1),
+        agent_start_dir=0,
+        n_obstacles=4,
+        max_steps: Optional[int] = None,
+        **kwargs
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
@@ -87,12 +98,15 @@ class DynamicObstaclesEnv(MiniGridEnv):
             mission_func=lambda: "get to the green goal square"
         )
 
+        if max_steps is None:
+            max_steps = 4 * size**2
+
         super().__init__(
             mission_space=mission_space,
             grid_size=size,
-            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs
         )
         # Allow only 3 actions permitted: left, right, forward

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal, Lava
@@ -7,10 +9,15 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
+<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
     </p>
+=======
+    ![DistShift1](../_static/figures/DistShift1.png)<br />
+    ![DistShift2](../_static/figures/DistShift2.png)
+>>>>>>> Farama-Foundation-master
 
     ### Description
 
@@ -72,6 +79,7 @@ class DistShiftEnv(MiniGridEnv):
         agent_start_pos=(1, 1),
         agent_start_dir=0,
         strip2_row=2,
+        max_steps: Optional[int] = None,
         **kwargs
     ):
         self.agent_start_pos = agent_start_pos
@@ -83,13 +91,16 @@ class DistShiftEnv(MiniGridEnv):
             mission_func=lambda: "get to the green goal square"
         )
 
+        if max_steps is None:
+            max_steps = 4 * width * height
+
         super().__init__(
             mission_space=mission_space,
             width=width,
             height=height,
-            max_steps=4 * width * height,
             # Set this to True for maximum speed
             see_through_walls=True,
+            max_steps=max_steps,
             **kwargs
         )
 

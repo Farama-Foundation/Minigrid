@@ -1,6 +1,8 @@
 """
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
+from typing import Optional
+
 from minigrid.core.roomgrid import RoomGrid
 from minigrid.envs.babyai.core.verifier import (
     ActionInstr,
@@ -44,9 +46,22 @@ class RoomGridLevel(RoomGrid):
     of approximately similar difficulty.
     """
 
-    def __init__(self, room_size=8, **kwargs):
+    def __init__(self, room_size=8, max_steps: Optional[int] = None, **kwargs):
         mission_space = BabyAIMissionSpace()
-        super().__init__(room_size=room_size, mission_space=mission_space, **kwargs)
+
+        # If `max_steps` arg is passed it will be fixed for every episode,
+        # if not it will vary after reset depending on the maze size.
+        self.fixed_max_steps = False
+        if max_steps is not None:
+            self.fixed_max_steps = True
+        else:
+            max_steps = 0  # only for initialization
+        super().__init__(
+            room_size=room_size,
+            mission_space=mission_space,
+            max_steps=max_steps,
+            **kwargs
+        )
 
     def reset(self, **kwargs):
         obs = super().reset(**kwargs)
@@ -58,7 +73,9 @@ class RoomGridLevel(RoomGrid):
         nav_time_room = self.room_size**2
         nav_time_maze = nav_time_room * self.num_rows * self.num_cols
         num_navs = self.num_navs_needed(self.instrs)
-        self.max_steps = num_navs * nav_time_maze
+
+        if not self.fixed_max_steps:
+            self.max_steps = num_navs * nav_time_maze
 
         return obs
 

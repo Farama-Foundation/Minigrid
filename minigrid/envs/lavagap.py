@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 
 from minigrid.core.grid import Grid
@@ -9,9 +11,13 @@ from minigrid.minigrid_env import MiniGridEnv
 class LavaGapEnv(MiniGridEnv):
 
     """
+<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaGapS6.png" alt="LavaGapS6" width="200px"/>
     </p>
+=======
+    ![LavaGapS6](../_static/figures/LavaGapS6.png)
+>>>>>>> Farama-Foundation-master
 
     ### Description
 
@@ -68,7 +74,9 @@ class LavaGapEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size, obstacle_type=Lava, **kwargs):
+    def __init__(
+        self, size, obstacle_type=Lava, max_steps: Optional[int] = None, **kwargs
+    ):
         self.obstacle_type = obstacle_type
         self.size = size
 
@@ -81,13 +89,16 @@ class LavaGapEnv(MiniGridEnv):
                 mission_func=lambda: "find the opening and get to the green goal square"
             )
 
+        if max_steps is None:
+            max_steps = 4 * size**2
+
         super().__init__(
             mission_space=mission_space,
             width=size,
             height=size,
-            max_steps=4 * size * size,
             # Set this to True for maximum speed
             see_through_walls=False,
+            max_steps=max_steps,
             **kwargs
         )
 

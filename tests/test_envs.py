@@ -142,6 +142,29 @@ def test_agent_sees_method(env_id):
 @pytest.mark.parametrize(
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
+def test_max_steps_argument(env_spec):
+    """
+    Test that when initializing an environment with a fixed number of steps per episode (`max_steps` argument),
+    the episode will be truncated after taking that number of steps.
+    """
+    max_steps = 50
+    env = env_spec.make(max_steps=max_steps)
+    env.reset()
+    step_count = 0
+    while True:
+        _, _, terminated, truncated, _ = env.step(4)
+        step_count += 1
+        if truncated:
+            assert step_count == max_steps
+            step_count = 0
+            break
+
+    env.close()
+
+
+@pytest.mark.parametrize(
+    "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
 def old_run_test(env_spec):
     # Load the gym environment
     env = env_spec.make()

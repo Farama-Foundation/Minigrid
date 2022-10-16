@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.mission import MissionSpace
 from minigrid.core.roomgrid import RoomGrid
@@ -6,9 +8,13 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockPickupEnv(RoomGrid):
 
     """
+<<<<<<< HEAD
     <p>
         <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/UnlockPickup.png" alt="UnlockPickup" width="200px"/>
     </p>
+=======
+    ![UnlockPickup](../_static/figures/UnlockPickup.png)
+>>>>>>> Farama-Foundation-master
 
     ### Description
 
@@ -59,18 +65,22 @@ class UnlockPickupEnv(RoomGrid):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, max_steps: Optional[int] = None, **kwargs):
         room_size = 6
         mission_space = MissionSpace(
             mission_func=lambda color: f"pick up the {color} box",
             ordered_placeholders=[COLOR_NAMES],
         )
+
+        if max_steps is None:
+            max_steps = 8 * room_size**2
+
         super().__init__(
             mission_space=mission_space,
             num_rows=1,
             num_cols=2,
             room_size=room_size,
-            max_steps=8 * room_size**2,
+            max_steps=max_steps,
             **kwargs,
         )
 

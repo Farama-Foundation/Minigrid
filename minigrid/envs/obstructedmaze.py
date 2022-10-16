@@ -1,3 +1,5 @@
+from typing import Optional
+
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
 from minigrid.core.mission import MissionSpace
 from minigrid.core.roomgrid import RoomGrid
@@ -7,6 +9,7 @@ from minigrid.core.world_object import Ball, Box, Key
 class ObstructedMazeEnv(RoomGrid):
 
     """
+<<<<<<< HEAD
     <p>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dl.png" alt="ObstructedMaze-1Dl" width="200px"/>
     <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlh.png" alt="ObstructedMaze-1Dlh" width="200px"/>
@@ -24,6 +27,17 @@ class ObstructedMazeEnv(RoomGrid):
     <p>
     <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-4Q.png" alt="ObstructedMaze-4Q" width="200px"/>
     </p>
+=======
+    ![ObstructedMaze-1Dl](../_static/figures/ObstructedMaze-1Dl.png)<br />
+    ![ObstructedMaze-1Dlh](../_static/figures/ObstructedMaze-1Dlh.png)<br />
+    ![ObstructedMaze-1Dlhb](../_static/figures/ObstructedMaze-1Dlhb.png)<br />
+    ![ObstructedMaze-1Q](../_static/figures/ObstructedMaze-1Q.png)<br />
+    ![ObstructedMaze-2Dl](../_static/figures/ObstructedMaze-2Dl.png)<br />
+    ![ObstructedMaze-2Dlh](../_static/figures/ObstructedMaze-2Dlh.png)<br />
+    ![ObstructedMaze-2Dlhb](../_static/figures/ObstructedMaze-2Dlhb.png)<br />
+    ![ObstructedMaze-2Q](../_static/figures/ObstructedMaze-2Q.png)<br />
+    ![ObstructedMaze-4Q](../_static/figures/ObstructedMaze-4Q.png)<br />
+>>>>>>> Farama-Foundation-master
 
     ### Description
 
@@ -87,9 +101,18 @@ class ObstructedMazeEnv(RoomGrid):
 
     """
 
-    def __init__(self, num_rows, num_cols, num_rooms_visited, **kwargs):
+    def __init__(
+        self,
+        num_rows,
+        num_cols,
+        num_rooms_visited,
+        max_steps: Optional[int] = None,
+        **kwargs,
+    ):
         room_size = 6
-        max_steps = 4 * num_rooms_visited * room_size**2
+
+        if max_steps is None:
+            max_steps = 4 * num_rooms_visited * room_size**2
 
         mission_space = MissionSpace(
             mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
