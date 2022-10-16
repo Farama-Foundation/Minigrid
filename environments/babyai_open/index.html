@@ -1,0 +1,610 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="">
+    <meta property="og:title" content="MiniGrid Documentation" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="" />
+    <meta property="og:url" content="https://minigrid.farama.org/environments/babyai_open.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Pickup Above" href="../babyai_pickup_above/" /><link rel="prev" title="Open Red Blue Doors Debug" href="../babyai_open_red_blue_doors_debug/" />
+        <link rel="canonical" href="https://minigrid.farama.org/environments/babyai_open.html" />
+
+    <link rel="shortcut icon" href="../../_static/minigrid-white.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
+        <title>Open - MiniGrid Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=a9e5ba0c0bf3b12d8e0ea7b9febdea61fa484836" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <header class="farama-header">
+      <div class="farama-header__container">
+        <div class="farama-header__left">
+          <a href="../../">
+              <img class="farama-header__logo only-light" src="../../_static/img/minigrid.png" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.png" alt="Dark Logo"/>
+            <h1 class="farama-header__title">MiniGrid Documentation</h1>
+          </a>
+        </div>
+        <div class="farama-header__right">
+          <div class="farama-header-menu">
+            <div class="farama-header-menu__btn">
+              <span class="farama-header-menu__btn-name">
+                The Farama Foundation
+              </span>
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+                  <defs></defs>
+                  <path d="M 3 4.677 C 3 3.751 3.659 3 4.474 3 L 27.526 3 C 28.341 3 29 3.751 29 4.677 C 29 5.603 28.341 6.354 27.526 6.354 L 4.474 6.354 C 3.659 6.354 3 5.603 3 4.677 Z" bx:origin="0.622825 3.875593"></path>
+                  <path d="M 3 16 C 3 15.074 3.659 14.323 4.474 14.323 L 27.526 14.323 C 28.341 14.323 29 15.074 29 16 C 29 16.926 28.341 17.677 27.526 17.677 L 4.474 17.677 C 3.659 17.677 3 16.926 3 16 Z" bx:origin="0.622825 0.5"></path>
+                  <path d="M 3 27.323 C 3 26.397 3.659 25.646 4.474 25.646 L 27.526 25.646 C 28.341 25.646 29 26.397 29 27.323 C 29 28.249 28.341 29 27.526 29 L 4.474 29 C 3.659 29 3 28.249 3 27.323 Z" bx:origin="0.622825 -2.875591"></path>
+              </svg>
+            </div>
+            <div class="farama-header-menu-container">
+              <div class="farama-header-menu__header">
+                <a href="https://farama.org">
+                  <img class="farama-header-menu__logo" src="../../_static/img/farama_solid_white.svg" alt="The Farama Foundation">
+                  <span>The Farama Foundation</span>
+                </a>
+                <button id="farama-close-menu">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+                    <line x1="3" y1="21" x2="21" y2="3"></line>
+                    <line x1="3" y1="3" x2="21" y2="21"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="farama-header-menu__body">
+                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
+                  <span class="farama-header-menu__section-title">Documentation</span>
+                  <ul class="farama-header-menu-list">
+                    <li>
+                      <a href="https://gymnasium.farama.org">
+                        
+                        <img src="../../_static/img/gymnasium-white.svg">
+                        
+                        Gymnasium
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://pettingzoo.farama.org">
+                        
+                        <img src="../../_static/img/pettingzoo-white.svg">
+                        
+                        PettingZoo
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://minigrid.farama.org">
+                        
+                        <img src="../../_static/img/minigrid-white.svg">
+                        
+                        MiniGrid
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
+                  <span class="farama-header-menu__section-title">Mature Projects</span>
+                  <ul class="farama-header-menu-list">
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/SuperSuit">
+                        
+                        <img src="../../_static/img/supersuit-white.svg">
+                        
+                        SuperSuit
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/gym-robotics">
+                        
+                        <img src="../../_static/img/gymrobotics-white.svg">
+                        
+                        Gymnasium-Robotics
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/tinyscaler">
+                        
+                        <img src="../../_static/img/tinyscaler-white.svg">
+                        
+                        Tinyscaler
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/AutoROM">
+                        
+                        <img src="../../_static/img/autorom-white.svg">
+                        
+                        AutoROM
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/Jumpy">
+                        
+                        <img src="../../_static/img/jumpy-white.svg">
+                        
+                        JumPy
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
+                  <span class="farama-header-menu__section-title">Incubating Projects</span>
+                  <ul class="farama-header-menu-list">
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/MAgent2">
+                        
+                        <img src="../../_static/img/MAgent2-white.svg">
+                        
+                        MAgent2
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/procgen2">
+                        
+                        <img src="../../_static/img/procgen2-white.svg">
+                        
+                        Procgen2
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/MiniWorld">
+                        
+                        <img src="../../_static/img/miniworld-white.svg">
+                        
+                        Miniworld
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/D4RL">
+                        
+                        <img src="../../_static/img/d4rl-white.svg">
+                        
+                        D4RL
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/Farama-Foundation/Kabuki">
+                        
+                        <img src="../../_static/img/kabuki-white.svg">
+                        
+                        Kabuki
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
+                  <span class="farama-header-menu__section-title">Foundation</span>
+                  <ul class="farama-header-menu-list">
+                    <li>
+                      <a href="https://farama.org/about">
+                        
+                        About
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://farama.org/project_standards">
+                        
+                        Standards
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://farama.org/donations">
+                        
+                        Donate
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+                
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="farama-header-menu__overlay"></div>
+
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../"><div class="brand">MiniGrid Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><form class="sidebar-search-container" method="get" action="../../search/" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/wrapper/">Wrapper</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/">Action Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#dict-observation-space">Dict Observation Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#direction-obs">Direction Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#flatobs">FlatObs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#observation">Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#reseed">Reseed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#state-bonus">State Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#symbolic-obs">Symbolic Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#view-size">View Size</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dist_shift/">Dist Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../door_key/">Door Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic/">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../empty/">Empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fetch/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../four_rooms/">Four Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../go_to_object/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lava_gap/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../locked_room/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multi_room/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../obstructed_maze/">Obstructed Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../playground/">Playground</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../put_near/">Put Near</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../red_blue_doors/">Red Blue Doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../simple_crossing/">Simple Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock_pickup/">Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unlock/">Unlock</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../babyAI_index/">BabyAI Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../babyai_action_obj_door/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_blocked_unlock_pickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_boss_level_no_unlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_boss_level/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_find_obj/">Find Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_door/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_imp_unlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_local/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_obj_door/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_obj_maze/">Go To Obj Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_obj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_red_ball_grey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_red_ball_no_dists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_red_ball/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_red_blue_ball/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_go_to_seq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_key_corridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_key_in_box/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_mini_boss_level/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_move_two_across/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_one_room/">One Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_open_door_loc/">Open Door Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_open_doors_order/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_open_red_blue_doors_debug/">Open Red Blue Doors Debug</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_pickup_above/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_pickup_dist_debug/">Pickup Dist Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_pickup_loc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_put_next_local/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_put_next/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_synth_loc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_synth_seq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_unblock_pickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_unlock_local_dist/">Unlock Local Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_unlock_pickup_dist/">Unlock Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_unlock_to_unlock/">Unlock To Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai_unlock/">Unlock</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/MiniGrid">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://farama.org/donations">Donate</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/MiniGrid/blob/master/.github/PULL_REQUEST_TEMPLATE.md">Contribute to the Docs</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+          <section id="open">
+<h1>Open<a class="headerlink" href="#open" title="Permalink to this heading">#</a></h1>
+<p>Open a door, which may be in another room</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../babyai_pickup_above/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Pickup Above</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+            <a class="prev-page" href="../babyai_open_red_blue_doors_debug/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Open Red Blue Doors Debug</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022
+            </div>
+            <!--
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            -->
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div>
+    <script>
+      let toggleMenu = () => {
+        document.querySelector(".farama-header-menu").classList.toggle("active");
+        document.querySelector(".farama-header-menu__overlay").classList.toggle("active");
+      }
+
+      document.querySelector(".farama-header-menu__btn").addEventListener("click", toggleMenu);
+      document.getElementById("farama-close-menu").addEventListener("click", toggleMenu);
+      document.querySelector(".farama-header-menu__overlay").addEventListener("click", toggleMenu);
+
+      window.onclick = function(event) {
+        if (!event.target.matches('.farama-header-menu__btn')) {
+          const dropdown = document.querySelector(".farama-header-menu-container");
+          if (dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            document.querySelector(".farama-header-menu__overlay").classList.remove("active");
+          }
+        }
+      }
+    </script>
+
+    
+    <script>
+          (() => {
+              if (!localStorage.getItem("shownCookieAlert")) {
+                  const boxElem = document.createElement("div");
+                  boxElem.classList.add("cookie-alert");
+                  const containerElem = document.createElement("div");
+                  containerElem.classList.add("cookie-alert__container");
+                  const textElem = document.createElement("p");
+                  textElem.innerHTML = `This page uses <a href="https://analytics.google.com/">
+                                      Google Analytics</a> to collect statistics. You can disable it by blocking
+                                      the JavaScript coming from www.google-analytics.com.`;
+                                      containerElem.appendChild(textElem);
+                  const closeBtn = document.createElement("button");
+                  closeBtn.innerHTML = `<?xml version="1.0" ?><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style></defs><title/><g id="cross"><line class="cls-1" x1="7" x2="25" y1="7" y2="25"/><line class="cls-1" x1="7" x2="25" y1="25" y2="7"/></g></svg>`
+                  closeBtn.onclick = () => {
+                      localStorage.setItem("shownCookieAlert", "true");
+                      boxElem.style.display = "none";
+                  }
+                  containerElem.appendChild(closeBtn);
+                  boxElem.appendChild(containerElem);
+                  document.body.appendChild(boxElem);
+              }
+          })()
+      </script>
+
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBXJQQLXKD"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-FBXJQQLXKD');
+      </script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    </body>
+</html>
