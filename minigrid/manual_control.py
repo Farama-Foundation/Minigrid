@@ -24,10 +24,9 @@ class ManualControl:
         self.window = window
         self.window.reg_key_handler(self.key_handler)
 
-        self.reset(self.seed)
-
     def start(self):
         """Start the window display with blocking event loop"""
+        self.reset(self.seed)
         self.window.show(block=True)
 
     def step(self, action: MiniGridEnv.Actions):
@@ -50,7 +49,7 @@ class ManualControl:
     def reset(self, seed=None):
         self.env.reset(seed=seed)
 
-        if hasattr(env, "mission"):
+        if hasattr(self.env, "mission"):
             print("Mission: %s" % self.env.mission)
             self.window.set_caption(self.env.mission)
 
