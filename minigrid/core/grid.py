@@ -1,5 +1,5 @@
 import math
-from typing import Any, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Type
 
 import numpy as np
 
@@ -27,10 +27,10 @@ class Grid:
         assert width >= 3
         assert height >= 3
 
-        self.width = width
-        self.height = height
+        self.width: int = width
+        self.height: int = height
 
-        self.grid = [None] * width * height
+        self.grid: List[Optional[WorldObj]] = [None] * width * height
 
     def __contains__(self, key: Any) -> bool:
         if isinstance(key, WorldObj):
@@ -60,18 +60,23 @@ class Grid:
 
         return deepcopy(self)
 
-    def set(self, i: int, j: int, v: WorldObj):
-        assert i >= 0 and i < self.width
-        assert j >= 0 and j < self.height
+    def set(self, i: int, j: int, v: Optional[WorldObj]):
+        assert 0 <= i < self.width
+        assert 0 <= j < self.height
         self.grid[j * self.width + i] = v
 
-    def get(self, i: int, j: int) -> WorldObj:
-        assert i >= 0 and i < self.width
-        assert j >= 0 and j < self.height
+    def get(self, i: int, j: int) -> Optional[WorldObj]:
+        assert 0 <= i < self.width
+        assert 0 <= j < self.height
+        assert self.grid is not None
         return self.grid[j * self.width + i]
 
     def horz_wall(
-        self, x: int, y: int, length: Optional[int] = None, obj_type: WorldObj = Wall
+        self,
+        x: int,
+        y: int,
+        length: Optional[int] = None,
+        obj_type: Type[WorldObj] = Wall,
     ):
         if length is None:
             length = self.width - x
@@ -79,7 +84,11 @@ class Grid:
             self.set(x + i, y, obj_type())
 
     def vert_wall(
-        self, x: int, y: int, length: Optional[int] = None, obj_type: WorldObj = Wall
+        self,
+        x: int,
+        y: int,
+        length: Optional[int] = None,
+        obj_type: Type[WorldObj] = Wall,
     ):
         if length is None:
             length = self.height - y
@@ -118,7 +127,7 @@ class Grid:
                 x = topX + i
                 y = topY + j
 
-                if x >= 0 and x < self.width and y >= 0 and y < self.height:
+                if 0 <= x < self.width and 0 <= y < self.height:
                     v = self.get(x, y)
                 else:
                     v = Wall()
@@ -130,7 +139,7 @@ class Grid:
     @classmethod
     def render_tile(
         cls,
-        obj: "Grid",
+        obj: WorldObj,
         agent_dir: Optional[int] = None,
         highlight: bool = False,
         tile_size: int = TILE_PIXELS,

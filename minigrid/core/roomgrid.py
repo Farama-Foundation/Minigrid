@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -21,25 +21,25 @@ def reject_next_to(env: MiniGridEnv, pos: Tuple[int, int]):
 
 
 class Room:
-    def __init__(self, top: int, size: Tuple[int, int]):
+    def __init__(self, top: Tuple[int, int], size: Tuple[int, int]):
         # Top-left corner and size (tuples)
         self.top = top
         self.size = size
 
         # List of door objects and door positions
         # Order of the doors is right, down, left, up
-        self.doors = [None] * 4
-        self.door_pos = [None] * 4
+        self.doors: List[Optional[Union[bool, Door]]] = [None] * 4
+        self.door_pos: List[Optional[Tuple[int, int]]] = [None] * 4
 
         # List of rooms adjacent to this one
         # Order of the neighbors is right, down, left, up
-        self.neighbors = [None] * 4
+        self.neighbors: List[Optional[Room]] = [None] * 4
 
         # Indicates if this room is behind a locked door
-        self.locked = False
+        self.locked: bool = False
 
         # List of objects contained
-        self.objs = []
+        self.objs: List[WorldObj] = []
 
     def rand_pos(self, env: MiniGridEnv) -> Tuple[int, int]:
         topX, topY = self.top
@@ -267,6 +267,7 @@ class RoomGrid(MiniGridEnv):
 
         assert door_idx is not None
         neighbor = room.neighbors[door_idx]
+        assert neighbor is not None
         room.doors[door_idx] = door
         neighbor.doors[(door_idx + 2) % 4] = door
 
@@ -279,7 +280,7 @@ class RoomGrid(MiniGridEnv):
 
         room = self.get_room(i, j)
 
-        assert wall_idx >= 0 and wall_idx < 4
+        assert 0 <= wall_idx < 4
         assert room.doors[wall_idx] is None, "door exists on this wall"
         assert room.neighbors[wall_idx], "invalid wall"
 
@@ -306,11 +307,12 @@ class RoomGrid(MiniGridEnv):
 
         # Mark the rooms as connected
         room.doors[wall_idx] = True
+        assert neighbor is not None
         neighbor.doors[(wall_idx + 2) % 4] = True
 
     def place_agent(
         self, i: Optional[int] = None, j: Optional[int] = None, rand_dir: bool = True
-    ) -> Tuple[int, int]:
+    ) -> np.ndarray:
         """
         Place the agent in a room
         """

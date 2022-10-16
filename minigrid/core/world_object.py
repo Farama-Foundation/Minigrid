@@ -62,7 +62,7 @@ class WorldObj:
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], 0)
 
     @staticmethod
-    def decode(type_idx: int, color_idx: int, state: int) -> "WorldObj":
+    def decode(type_idx: int, color_idx: int, state: int) -> Optional["WorldObj"]:
         """Create an object from a 3-tuple state description"""
 
         obj_type = IDX_TO_OBJECT[type_idx]
