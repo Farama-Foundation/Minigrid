@@ -20,6 +20,7 @@ from gym_minigrid.rendering import (
     point_in_triangle,
     rotate_fn,
 )
+from gym_minigrid.rule import update_ruleset
 from gym_minigrid.window import Window
 
 TILE_PIXELS = 32
@@ -287,8 +288,18 @@ class WorldObj:
         # Current position of the object
         self.cur_pos = None
 
+    def is_goal(self):
+        return False
+
+    def is_defeat(self):
+        return False
+
     def can_overlap(self):
         """Can the agent overlap with this?"""
+        return False
+
+    def can_push(self):
+        """Can the agent push this?"""
         return False
 
     def can_pickup(self):
@@ -355,6 +366,9 @@ class Goal(WorldObj):
     def __init__(self):
         super().__init__("goal", "green")
 
+    def is_goal(self):
+        return True
+
     def can_overlap(self):
         return True
 
@@ -384,6 +398,9 @@ class Lava(WorldObj):
         super().__init__("lava", "red")
 
     def can_overlap(self):
+        return True
+
+    def is_defeat(self):
         return True
 
     def render(self, img):
@@ -931,6 +948,9 @@ class MiniGridEnv(gym.Env):
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
 
+        # Compute the ruleset for the generated grid
+        update_ruleset(self.grid)
+
         # These fields should be defined by _gen_grid
         assert (
             self.agent_pos >= (0, 0)
@@ -1333,11 +1353,31 @@ class MiniGridEnv(gym.Env):
         elif action == self.actions.forward:
             if fwd_cell is None or fwd_cell.can_overlap():
                 self.agent_pos = tuple(fwd_pos)
-            if fwd_cell is not None and fwd_cell.type == "goal":
+            if fwd_cell is not None and fwd_cell.is_goal():
                 terminated = True
                 reward = self._reward()
-            if fwd_cell is not None and fwd_cell.type == "lava":
+            # if fwd_cell is not None and fwd_cell.type == "lava":  # used in the original version of minigrid
+            if fwd_cell is not None and fwd_cell.is_defeat():
                 terminated = True
+                reward = -1
+
+            # move non-overlapable, pushable objects forward
+            # TODO: babaisyou? overlap and push
+            if fwd_cell is not None and not fwd_cell.can_overlap() and fwd_cell.can_push():
+                fwd_fwd_pos = fwd_pos + self.dir_vec
+                fwd_fwd_cell = self.grid.get(*fwd_fwd_pos)
+                # None cell = empty cell (can be overlapped)
+                if fwd_fwd_cell is None or fwd_fwd_cell.can_overlap():
+                    # move the object
+                    self.grid.set(*fwd_fwd_pos, self.grid.get(*fwd_pos))
+                    self.grid.set(*fwd_pos, None)
+                    # move the agent
+                    self.agent_pos = tuple(fwd_pos)
+                    # update ruleset if rule block pushed
+                    update_ruleset(self.grid)
+
+        # TODO: pushing objects destroy other objects
+        # TODO: contains
 
         # Pick up an object
         elif action == self.actions.pickup:
