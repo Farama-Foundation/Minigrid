@@ -24,7 +24,7 @@ class PlaygroundEnv(MiniGridEnv):
 
     @staticmethod
     def _gen_mission():
-        return "have fun!"
+        return ""
 
     def _gen_grid(self, width, height):
         # Create the grid

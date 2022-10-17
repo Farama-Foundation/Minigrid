@@ -1,12 +1,12 @@
 import itertools as itt
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal, Lava
-from minigrid.minigrid_env import MiniGridEnv
+from minigrid.minigrid_env import MiniGridEnv, WorldObj
 
 
 class CrossingEnv(MiniGridEnv):
@@ -108,10 +108,10 @@ class CrossingEnv(MiniGridEnv):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
 
-        mission_space = MissionSpace(
-            mission_func=self._gen_mission,
-            ordered_placeholders=[[obstacle_type]],
-        )
+        if obstacle_type == Lava:
+            mission_space = MissionSpace(mission_func=self._gen_mission_lava)
+        else:
+            mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -125,11 +125,12 @@ class CrossingEnv(MiniGridEnv):
         )
 
     @staticmethod
-    def _gen_mission(obstacle_type):
-        if obstacle_type == Lava:
-            return "avoid the lava and get to the green goal square"
-        else:
-            return "find the opening and get to the green goal square"
+    def _gen_mission_lava():
+        return "avoid the lava and get to the green goal square"
+
+    @staticmethod
+    def _gen_mission():
+        return "find the opening and get to the green goal square"
 
     def _gen_grid(self, width, height):
         assert width % 2 == 1 and height % 2 == 1  # odd size
