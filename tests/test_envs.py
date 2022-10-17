@@ -1,12 +1,13 @@
 import warnings
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pytest
-from gym.envs.registration import EnvSpec
-from gym.utils.env_checker import check_env
+from gymnasium.envs.registration import EnvSpec
+from gymnasium.utils.env_checker import check_env
 
-from gym_minigrid.minigrid import Grid, MissionSpace
+from minigrid.core.grid import Grid
+from minigrid.core.mission import MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals
 
 CHECK_ENV_IGNORE_WARNINGS = [
@@ -15,9 +16,6 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space minimum value is -infinity. This is probably too low.",
         "A Box observation space maximum value is -infinity. This is probably too high.",
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
-        "Initializing wrapper in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
-        "Initializing environment in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.",
-        "Core environment is written in old step API which returns one bool instead of two. It is recommended to  norewrite the environment with new step API. ",
     ]
 ]
 
@@ -61,8 +59,8 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     if env_spec.nondeterministic is True:
         return
 
-    env_1 = env_spec.make(disable_env_checker=True, new_step_api=True)
-    env_2 = env_spec.make(disable_env_checker=True, new_step_api=True)
+    env_1 = env_spec.make(disable_env_checker=True)
+    env_2 = env_spec.make(disable_env_checker=True)
 
     initial_obs_1 = env_1.reset(seed=SEED)
     initial_obs_2 = env_2.reset(seed=SEED)
@@ -105,28 +103,27 @@ def test_env_determinism_rollout(env_spec: EnvSpec):
     "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
 def test_render_modes(spec):
-    env = spec.make(new_step_api=True)
+    env = spec.make()
 
     for mode in env.metadata.get("render_modes", []):
         if mode != "human":
-            new_env = spec.make(new_step_api=True)
+            new_env = spec.make(render_mode=mode)
 
             new_env.reset()
             new_env.step(new_env.action_space.sample())
-            new_env.render(mode=mode)
+            new_env.render()
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
-    env = gym.make(env_id, new_step_api=True)
+    env = gym.make(env_id)
     goal_pos = (env.grid.width - 2, env.grid.height - 2)
-
-    # Test the "in" operator on grid objects
-    assert ("green", "goal") in env.grid
-    assert ("blue", "key") not in env.grid
 
     # Test the env.agent_sees() function
     env.reset()
+    # Test the "in" operator on grid objects
+    assert ("green", "goal") in env.grid
+    assert ("blue", "key") not in env.grid
     for i in range(0, 500):
         action = env.action_space.sample()
         obs, reward, terminated, truncated, info = env.step(action)
@@ -145,9 +142,32 @@ def test_agent_sees_method(env_id):
 @pytest.mark.parametrize(
     "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
 )
+def test_max_steps_argument(env_spec):
+    """
+    Test that when initializing an environment with a fixed number of steps per episode (`max_steps` argument),
+    the episode will be truncated after taking that number of steps.
+    """
+    max_steps = 50
+    env = env_spec.make(max_steps=max_steps)
+    env.reset()
+    step_count = 0
+    while True:
+        _, _, terminated, truncated, _ = env.step(4)
+        step_count += 1
+        if truncated:
+            assert step_count == max_steps
+            step_count = 0
+            break
+
+    env.close()
+
+
+@pytest.mark.parametrize(
+    "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
 def old_run_test(env_spec):
     # Load the gym environment
-    env = env_spec.make(new_step_api=True)
+    env = env_spec.make()
     env.max_steps = min(env.max_steps, 200)
     env.reset()
     env.render()
@@ -200,7 +220,7 @@ def old_run_test(env_spec):
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-8x8-v0"])
 def test_interactive_mode(env_id):
-    env = gym.make(env_id, new_step_api=True)
+    env = gym.make(env_id)
     env.reset()
 
     for i in range(0, 100):

@@ -7,3 +7,14 @@ trained_models
 build/*
 dist/*
 .idea/
+
+#docs
+_build/*
+.DS_Store
+_site
+.jekyll-cache
+__pycache__
+.vscode/
+/docs/environments/*.md
+!docs/environments/index.md
+!docs/environments/babyAI_index.md
