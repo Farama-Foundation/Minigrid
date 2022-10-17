@@ -90,9 +90,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
         else:
             self.n_obstacles = int(size / 2)
 
-        mission_space = MissionSpace(
-            mission_func=lambda: "get to the green goal square"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -108,6 +106,10 @@ class DynamicObstaclesEnv(MiniGridEnv):
         # Allow only 3 actions permitted: left, right, forward
         self.action_space = Discrete(self.actions.forward + 1)
         self.reward_range = (-1, 1)
+
+    @staticmethod
+    def _gen_mission():
+        return "get to the green goal square"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

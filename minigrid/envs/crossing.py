@@ -109,13 +109,9 @@ class CrossingEnv(MiniGridEnv):
         self.obstacle_type = obstacle_type
 
         if obstacle_type == Lava:
-            mission_space = MissionSpace(
-                mission_func=lambda: "avoid the lava and get to the green goal square"
-            )
+            mission_space = MissionSpace(mission_func=self._gen_mission_lava)
         else:
-            mission_space = MissionSpace(
-                mission_func=lambda: "find the opening and get to the green goal square"
-            )
+            mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -127,6 +123,14 @@ class CrossingEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission_lava():
+        return "avoid the lava and get to the green goal square"
+
+    @staticmethod
+    def _gen_mission():
+        return "find the opening and get to the green goal square"
 
     def _gen_grid(self, width, height):
         assert width % 2 == 1 and height % 2 == 1  # odd size

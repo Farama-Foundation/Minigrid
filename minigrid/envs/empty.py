@@ -80,9 +80,7 @@ class EmptyEnv(MiniGridEnv):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
 
-        mission_space = MissionSpace(
-            mission_func=lambda: "get to the green goal square"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -95,6 +93,10 @@ class EmptyEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "get to the green goal square"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

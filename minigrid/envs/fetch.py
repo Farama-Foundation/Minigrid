@@ -88,7 +88,7 @@ class FetchEnv(MiniGridEnv):
         ]
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
+            mission_func=self._gen_mission,
             ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
         )
 
@@ -104,6 +104,10 @@ class FetchEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(syntax: str, color: str, obj_type: str):
+        return f"{syntax} {color} {obj_type}"
 
     def _gen_grid(self, width, height):
         self.grid = Grid(width, height)

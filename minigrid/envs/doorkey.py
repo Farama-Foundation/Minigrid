@@ -68,12 +68,14 @@ class DoorKeyEnv(MiniGridEnv):
     def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
         if max_steps is None:
             max_steps = 10 * size**2
-        mission_space = MissionSpace(
-            mission_func=lambda: "use the key to open the door and then get to the goal"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
         super().__init__(
             mission_space=mission_space, grid_size=size, max_steps=max_steps, **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "use the key to open the door and then get to the goal"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

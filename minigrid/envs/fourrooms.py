@@ -64,7 +64,7 @@ class FourRoomsEnv(MiniGridEnv):
         self._goal_default_pos = goal_pos
 
         self.size = 19
-        mission_space = MissionSpace(mission_func=lambda: "reach the goal")
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         super().__init__(
             mission_space=mission_space,
@@ -73,6 +73,10 @@ class FourRoomsEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "reach the goal"
 
     def _gen_grid(self, width, height):
         # Create the grid

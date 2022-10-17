@@ -84,17 +84,22 @@ def check_if_no_duplicate(duplicate_list: list) -> bool:
 
 
 class MissionSpace(spaces.Space[str]):
-    r"""A space representing a mission for the Gym-Minigrid environments.
+    r"""A space representing a mission for the Minigrid environments.
     The space allows generating random mission strings constructed with an input placeholder list.
     Example Usage::
-        >>> observation_space = MissionSpace(mission_func=lambda color: f"Get the {color} ball.",
-                                                ordered_placeholders=[["green", "blue"]])
-        >>> observation_space.sample()
-            "Get the green ball."
-        >>> observation_space = MissionSpace(mission_func=lambda : "Get the ball.".,
-                                                ordered_placeholders=None)
+        >>> def _gen_mission() -> str:
+        >>>     return "Get the ball."
+        >>> observation_space = MissionSpace(mission_func=_gen_mission)
         >>> observation_space.sample()
             "Get the ball."
+        >>> def _gen_mission(color: str, object_type:str) -> str:
+        >>>     return f"Get the {color} {object_type}."
+        >>> observation_space = MissionSpace(
+        >>>     mission_func=_gen_mission,
+        >>>     ordered_placeholders=[["green", "blue"], ["ball", "key"]],
+        >>> )
+        >>> observation_space.sample()
+            "Get the green ball."
     """
 
     def __init__(

@@ -32,7 +32,11 @@ class BabyAIMissionSpace(MissionSpace):
     """
 
     def __init__(self):
-        super().__init__(mission_func=lambda: "go")
+        super().__init__(mission_func=self._gen_mission)
+
+    @staticmethod
+    def _gen_mission():
+        return "go"
 
     def contains(self, x: str):
         return True

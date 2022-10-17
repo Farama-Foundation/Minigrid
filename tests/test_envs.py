@@ -1,10 +1,11 @@
+import pickle
 import warnings
 
 import gymnasium as gym
 import numpy as np
 import pytest
 from gymnasium.envs.registration import EnvSpec
-from gymnasium.utils.env_checker import check_env
+from gymnasium.utils.env_checker import check_env, data_equivalence
 
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -163,7 +164,26 @@ def test_max_steps_argument(env_spec):
 
 
 @pytest.mark.parametrize(
-    "env_spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+    "env_spec",
+    all_testing_env_specs,
+    ids=[spec.id for spec in all_testing_env_specs],
+)
+def test_pickle_env(env_spec):
+    env: gym.Env = env_spec.make()
+    pickled_env: gym.Env = pickle.loads(pickle.dumps(env))
+
+    data_equivalence(env.reset(), pickled_env.reset())
+
+    action = env.action_space.sample()
+    data_equivalence(env.step(action), pickled_env.step(action))
+    env.close()
+    pickled_env.close()
+
+
+@pytest.mark.parametrize(
+    "env_spec",
+    all_testing_env_specs,
+    ids=[spec.id for spec in all_testing_env_specs],
 )
 def old_run_test(env_spec):
     # Load the gym environment

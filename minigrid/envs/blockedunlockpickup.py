@@ -69,7 +69,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     def __init__(self, max_steps: Optional[int] = None, **kwargs):
         mission_space = MissionSpace(
-            mission_func=lambda color, type: f"pick up the {color} {type}",
+            mission_func=self._gen_mission,
             ordered_placeholders=[COLOR_NAMES, ["box", "key"]],
         )
 
@@ -85,6 +85,10 @@ class BlockedUnlockPickupEnv(RoomGrid):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(color: str, obj_type: str):
+        return f"pick up the {color} {obj_type}"
 
     def _gen_grid(self, width, height):
         super()._gen_grid(width, height)
