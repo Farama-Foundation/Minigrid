@@ -1,12 +1,12 @@
 import itertools as itt
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal, Lava
-from minigrid.minigrid_env import MiniGridEnv
+from minigrid.minigrid_env import MiniGridEnv, WorldObj
 
 
 class CrossingEnv(MiniGridEnv):
