@@ -20,7 +20,7 @@ from minigrid.utils.rendering import (
     point_in_triangle,
     rotate_fn,
 )
-from gym_minigrid.rule import update_ruleset
+from minigrid.rule import update_ruleset
 from minigrid.utils.window import Window
 
 

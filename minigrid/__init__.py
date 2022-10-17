@@ -6,6 +6,17 @@ from minigrid.core.world_object import Wall
 
 
 def register_minigrid_envs():
+    # register BabaIsYou envs
+    register(
+        id="BabaIsYou-GoToObj-v0",
+        entry_point="minigrid.envs.babaisyou:GoToObjEnv"
+    )
+    register(
+        id="BabaIsYou-GoToWinObj-v0",
+        entry_point="minigrid.envs.babaisyou:GoToWinObjEnv"
+    )
+
+
     # BlockedUnlockPickup
     # ----------------------------------------
 
