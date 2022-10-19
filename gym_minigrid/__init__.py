@@ -4,6 +4,20 @@ from gym_minigrid.minigrid import Wall
 
 
 def register_minigrid_envs():
+    # register BabaIsYou envs
+    register(
+        id="BabaIsYou-GoToObj-v0",
+        entry_point="gym_minigrid.envs.babaisyou:GoToObjEnv"
+    )
+    register(
+        id="BabaIsYou-GoToWinObj-v0",
+        entry_point="gym_minigrid.envs.babaisyou:GoToWinObjEnv"
+    )
+    register(
+        id="BabaIsYou-ChangeRule-v0",
+        entry_point="gym_minigrid.envs.babaisyou:ChangeRuleEnv"
+    )
+
     # BlockedUnlockPickup
     # ----------------------------------------
 

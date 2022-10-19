@@ -21,6 +21,8 @@ from gym_minigrid.rendering import (
     rotate_fn,
 )
 from gym_minigrid.window import Window
+from gym_minigrid.rule import extract_ruleset
+
 
 TILE_PIXELS = 32
 
@@ -83,7 +85,7 @@ def check_if_no_duplicate(duplicate_list: list) -> bool:
     return len(set(duplicate_list)) == len(duplicate_list)
 
 
-class MissionSpace(spaces.Space[str]):
+class MissionSpace(spaces.Space):
     r"""A space representing a mission for the Gym-Minigrid environments.
     The space allows generating random mission strings constructed with an input placeholder list.
     Example Usage::
@@ -287,8 +289,18 @@ class WorldObj:
         # Current position of the object
         self.cur_pos = None
 
+    def is_goal(self):
+        return False
+
+    def is_defeat(self):
+        return False
+
     def can_overlap(self):
         """Can the agent overlap with this?"""
+        return False
+
+    def can_push(self):
+        """Can the agent push this?"""
         return False
 
     def can_pickup(self):
@@ -355,6 +367,9 @@ class Goal(WorldObj):
     def __init__(self):
         super().__init__("goal", "green")
 
+    def is_goal(self):
+        return True
+
     def can_overlap(self):
         return True
 
@@ -384,6 +399,9 @@ class Lava(WorldObj):
         super().__init__("lava", "red")
 
     def can_overlap(self):
+        return True
+
+    def is_defeat(self):
         return True
 
     def render(self, img):
@@ -534,7 +552,7 @@ class Box(WorldObj):
 
     def toggle(self, env, pos):
         # Replace the box by its contents
-        env.grid.set(*pos, self.contains)
+        env.grid.set(pos[0], pos[1], self.contains)
         return True
 
 
@@ -917,6 +935,11 @@ class MiniGridEnv(gym.Env):
         # Initialize the state
         self.reset()
 
+        self._ruleset = {}
+
+    def get_ruleset(self):
+        return self._ruleset
+
     def reset(self, *, seed=None, return_info=False, options=None):
         super().reset(seed=seed)
         # Current position and direction of the agent
@@ -925,6 +948,13 @@ class MiniGridEnv(gym.Env):
 
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
+
+        # Compute the ruleset for the generated grid
+        self._ruleset = extract_ruleset(self.grid)
+        # make the ruleset accessible to all FlexibleWorlObj (not working for objects added after reset is called)
+        for e in self.grid.grid:
+            if hasattr(e, "set_ruleset_getter"):
+                e.set_ruleset_getter(self.get_ruleset)
 
         # These fields should be defined by _gen_grid
         assert self.agent_pos is not None
@@ -1298,7 +1328,7 @@ class MiniGridEnv(gym.Env):
         self.step_count += 1
 
         reward = 0
-        done = False
+        terminated = False
 
         # Get the position in front of the agent
         fwd_pos = self.front_pos
@@ -1319,12 +1349,33 @@ class MiniGridEnv(gym.Env):
         # Move forward
         elif action == self.actions.forward:
             if fwd_cell is None or fwd_cell.can_overlap():
-                self.agent_pos = fwd_pos
-            if fwd_cell is not None and fwd_cell.type == "goal":
-                done = True
+                self.agent_pos = tuple(fwd_pos)
+            if fwd_cell is not None and fwd_cell.is_goal():
+                terminated = True
                 reward = self._reward()
-            if fwd_cell is not None and fwd_cell.type == "lava":
-                done = True
+            # if fwd_cell is not None and fwd_cell.type == "lava":  # used in the original version of minigrid
+            if fwd_cell is not None and fwd_cell.is_defeat():
+                terminated = True
+                reward = -1
+
+            # move non-overlapable, pushable objects forward
+            # TODO: babaisyou? overlap and push
+            if fwd_cell is not None and not fwd_cell.can_overlap() and fwd_cell.can_push():
+                fwd_fwd_pos = fwd_pos + self.dir_vec
+                fwd_fwd_cell = self.grid.get(*fwd_fwd_pos)
+                # None cell = empty cell (can be overlapped)
+                if fwd_fwd_cell is None or fwd_fwd_cell.can_overlap():
+                    # move the object
+                    self.grid.set(*fwd_fwd_pos, self.grid.get(*fwd_pos))
+                    self.grid.set(*fwd_pos, None)
+                    # move the agent
+                    self.agent_pos = tuple(fwd_pos)
+                    # update ruleset if rule block pushed
+                    self._ruleset = extract_ruleset(self.grid)
+
+        # TODO: pushing objects destroy other objects
+        # TODO: contains
+
         # Pick up an object
         elif action == self.actions.pickup:
             if fwd_cell and fwd_cell.can_pickup():
@@ -1357,6 +1408,7 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
+        done = terminated
         return obs, reward, done, {}
 
     def gen_obs_grid(self, agent_view_size=None):
