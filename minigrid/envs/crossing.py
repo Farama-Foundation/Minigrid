@@ -12,14 +12,20 @@ from minigrid.minigrid_env import MiniGridEnv
 class CrossingEnv(MiniGridEnv):
 
     """
-    ![LavaCrossingS9N1](../_static/figures/LavaCrossingS9N1.png)<br />
-    ![LavaCrossingS9N2](../_static/figures/LavaCrossingS9N2.png)<br />
-    ![LavaCrossingS9N3](../_static/figures/LavaCrossingS9N3.png)<br />
-    ![LavaCrossingS11N5](../_static/figures/LavaCrossingS11N5.png)<br />
-    ![SimpleCrossingS9N1](../_static/figures/SimpleCrossingS9N1.png)<br />
-    ![SimpleCrossingS9N2](../_static/figures/SimpleCrossingS9N2.png)<br />
-    ![SimpleCrossingS9N3](../_static/figures/SimpleCrossingS9N3.png)<br />
-    ![SimpleCrossingS11N5](../_static/figures/SimpleCrossingS11N5.png)<br />
+    <p>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N1.png" alt="LavaCrossingS9N1" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N2.png" alt="LavaCrossingS9N2" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N3.png" alt="LavaCrossingS9N3" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS11N5.png" alt="LavaCrossingS11N5" width="200px"/>
+    </p>
+
+    <p>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N1.png" alt="SimpleCrossingS9N1" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N2.png" alt="SimpleCrossingS9N2" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N3.png" alt="SimpleCrossingS9N3" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/>
+    </p>
+
     ### Description
 
     Depending on the `obstacle_type` parameter:
@@ -103,13 +109,9 @@ class CrossingEnv(MiniGridEnv):
         self.obstacle_type = obstacle_type
 
         if obstacle_type == Lava:
-            mission_space = MissionSpace(
-                mission_func=lambda: "avoid the lava and get to the green goal square"
-            )
+            mission_space = MissionSpace(mission_func=self._gen_mission_lava)
         else:
-            mission_space = MissionSpace(
-                mission_func=lambda: "find the opening and get to the green goal square"
-            )
+            mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * size**2
@@ -121,6 +123,14 @@ class CrossingEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission_lava():
+        return "avoid the lava and get to the green goal square"
+
+    @staticmethod
+    def _gen_mission():
+        return "find the opening and get to the green goal square"
 
     def _gen_grid(self, width, height):
         assert width % 2 == 1 and height % 2 == 1  # odd size

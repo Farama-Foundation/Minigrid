@@ -18,7 +18,9 @@ class MultiRoom:
 class MultiRoomEnv(MiniGridEnv):
 
     """
-    ![multi-room](../_static/figures/multi-room.gif)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/multi-room.gif" alt="multi-room" width="200px"/>
+    </p>
 
     ### Description
 
@@ -92,9 +94,7 @@ class MultiRoomEnv(MiniGridEnv):
 
         self.rooms = []
 
-        mission_space = MissionSpace(
-            mission_func=lambda: "traverse the rooms to get to the goal"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         self.size = 25
 
@@ -108,6 +108,10 @@ class MultiRoomEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "traverse the rooms to get to the goal"
 
     def _gen_grid(self, width, height):
         roomList = []

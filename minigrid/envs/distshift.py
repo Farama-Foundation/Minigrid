@@ -9,8 +9,10 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
-    ![DistShift1](../_static/figures/DistShift1.png)<br />
-    ![DistShift2](../_static/figures/DistShift2.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
+    </p>
 
     ### Description
 
@@ -80,9 +82,7 @@ class DistShiftEnv(MiniGridEnv):
         self.goal_pos = (width - 2, 1)
         self.strip2_row = strip2_row
 
-        mission_space = MissionSpace(
-            mission_func=lambda: "get to the green goal square"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 4 * width * height
@@ -96,6 +96,10 @@ class DistShiftEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "get to the green goal square"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

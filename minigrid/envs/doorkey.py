@@ -9,8 +9,11 @@ from minigrid.minigrid_env import MiniGridEnv
 class DoorKeyEnv(MiniGridEnv):
 
     """
-    ![door-key-curriculum](../_static/figures/door-key-curriculum.gif)<br />
-    ![door-key-env](../_static/figures/door-key-env.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-curriculum.gif" alt="door-key-curriculum" width="200px"/>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-env.png" alt="door-key-env" width="200px"/>
+    </p>
+
     ### Description
 
     This environment has a key that the agent must pick up in order to unlock a
@@ -65,12 +68,14 @@ class DoorKeyEnv(MiniGridEnv):
     def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
         if max_steps is None:
             max_steps = 10 * size**2
-        mission_space = MissionSpace(
-            mission_func=lambda: "use the key to open the door and then get to the goal"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
         super().__init__(
             mission_space=mission_space, grid_size=size, max_steps=max_steps, **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "use the key to open the door and then get to the goal"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

@@ -10,7 +10,9 @@ from minigrid.minigrid_env import MiniGridEnv
 class FetchEnv(MiniGridEnv):
 
     """
-    ![fetch-env](../_static/figures/fetch-env.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/fetch-env.png" alt="fetch-env" width="200px"/>
+    </p>
 
     ### Description
 
@@ -86,7 +88,7 @@ class FetchEnv(MiniGridEnv):
         ]
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda syntax, color, type: f"{syntax} {color} {type}",
+            mission_func=self._gen_mission,
             ordered_placeholders=[MISSION_SYNTAX, COLOR_NAMES, self.obj_types],
         )
 
@@ -102,6 +104,10 @@ class FetchEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(syntax: str, color: str, obj_type: str):
+        return f"{syntax} {color} {obj_type}"
 
     def _gen_grid(self, width, height):
         self.grid = Grid(width, height)

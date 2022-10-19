@@ -7,7 +7,9 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockEnv(RoomGrid):
 
     """
-    ![Unlock](../_static/figures/Unlock.png)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/Unlock.png" alt="Unlock" width="200px"/>
+    </p>
 
     ### Description
 
@@ -57,7 +59,7 @@ class UnlockEnv(RoomGrid):
 
     def __init__(self, max_steps: Optional[int] = None, **kwargs):
         room_size = 6
-        mission_space = MissionSpace(mission_func=lambda: "open the door")
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 8 * room_size**2
@@ -70,6 +72,10 @@ class UnlockEnv(RoomGrid):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "open the door"
 
     def _gen_grid(self, width, height):
         super()._gen_grid(width, height)

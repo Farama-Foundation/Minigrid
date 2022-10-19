@@ -61,9 +61,7 @@ class RedBlueDoorEnv(MiniGridEnv):
 
     def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
         self.size = size
-        mission_space = MissionSpace(
-            mission_func=lambda: "open the red door then the blue door"
-        )
+        mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if max_steps is None:
             max_steps = 20 * size**2
@@ -73,8 +71,12 @@ class RedBlueDoorEnv(MiniGridEnv):
             width=2 * size,
             height=size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission():
+        return "open the red door then the blue door"
 
     def _gen_grid(self, width, height):
         # Create an empty grid

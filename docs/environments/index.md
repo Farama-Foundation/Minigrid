@@ -3,7 +3,7 @@ firstpage:
 lastpage:
 ---
 
-## Included Environments
+## Minigrid Environments
 
 The environments listed below are implemented in the [minigrid/envs](/minigrid/envs) directory.
 Each environment provides one or more configurations registered with OpenAI gym. Each environment
@@ -13,9 +13,7 @@ or to fine-tune difficulty.
 ```{toctree}
 :hidden:
 :caption: Minigrid Environments
-boss_level_no_unlock
 blocked_unlock_pickup
-simple_crossing
 dist_shift
 door_key
 dynamic
@@ -33,7 +31,8 @@ obstructed_maze
 playground
 put_near
 red_blue_doors
-unlock
+simple_crossing
 unlock_pickup
+unlock
 
 ```

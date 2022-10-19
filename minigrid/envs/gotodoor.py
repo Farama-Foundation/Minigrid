@@ -9,8 +9,13 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class GoToDoorEnv(MiniGridEnv):
     """
-    ![gotodoor-6x6](../_static/figures/gotodoor-6x6.png)<br />
-    [Video](../_static/figures/gotodoor-6x6.mp4)
+    <p>
+        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.png" alt="gotodoor-6x6" width="200px"/>
+        <video width="200px">
+            <source src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.mp4" type="video/mp4" />
+        </video>
+    </p>
+
     ### Description
 
     This environment is a room with four doors, one on each wall. The agent
@@ -69,7 +74,7 @@ class GoToDoorEnv(MiniGridEnv):
         assert size >= 5
         self.size = size
         mission_space = MissionSpace(
-            mission_func=lambda color: f"go to the {color} door",
+            mission_func=self._gen_mission,
             ordered_placeholders=[COLOR_NAMES],
         )
 
@@ -85,6 +90,10 @@ class GoToDoorEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+    @staticmethod
+    def _gen_mission(color: str):
+        return f"go to the {color} door"
 
     def _gen_grid(self, width, height):
         # Create the grid

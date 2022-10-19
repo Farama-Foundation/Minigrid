@@ -9,15 +9,23 @@ from minigrid.core.world_object import Ball, Box, Key
 class ObstructedMazeEnv(RoomGrid):
 
     """
-    ![ObstructedMaze-1Dl](../_static/figures/ObstructedMaze-1Dl.png)<br />
-    ![ObstructedMaze-1Dlh](../_static/figures/ObstructedMaze-1Dlh.png)<br />
-    ![ObstructedMaze-1Dlhb](../_static/figures/ObstructedMaze-1Dlhb.png)<br />
-    ![ObstructedMaze-1Q](../_static/figures/ObstructedMaze-1Q.png)<br />
-    ![ObstructedMaze-2Dl](../_static/figures/ObstructedMaze-2Dl.png)<br />
-    ![ObstructedMaze-2Dlh](../_static/figures/ObstructedMaze-2Dlh.png)<br />
-    ![ObstructedMaze-2Dlhb](../_static/figures/ObstructedMaze-2Dlhb.png)<br />
-    ![ObstructedMaze-2Q](../_static/figures/ObstructedMaze-2Q.png)<br />
-    ![ObstructedMaze-4Q](../_static/figures/ObstructedMaze-4Q.png)<br />
+    <p>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dl.png" alt="ObstructedMaze-1Dl" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlh.png" alt="ObstructedMaze-1Dlh" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlhb.png" alt="ObstructedMaze-1Dlhb" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Q.png" alt="ObstructedMaze-1Q" width="200px"/>
+    </p>
+
+    <p>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dl.png" alt="ObstructedMaze-2Dl" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlh.png" alt="ObstructedMaze-2Dlh" width="200px"/>
+    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlhb.png" alt="ObstructedMaze-2Dlhb" width="200px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Q.png" alt="ObstructedMaze-2Q" width="200px"/>
+    </p>
+
+    <p>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-4Q.png" alt="ObstructedMaze-4Q" width="200px"/>
+    </p>
 
     ### Description
 
@@ -95,7 +103,8 @@ class ObstructedMazeEnv(RoomGrid):
             max_steps = 4 * num_rooms_visited * room_size**2
 
         mission_space = MissionSpace(
-            mission_func=lambda: f"pick up the {COLOR_NAMES[0]} ball",
+            mission_func=self._gen_mission,
+            ordered_placeholders=[[COLOR_NAMES[0]]],
         )
         super().__init__(
             mission_space=mission_space,
@@ -106,6 +115,10 @@ class ObstructedMazeEnv(RoomGrid):
             **kwargs,
         )
         self.obj = Ball()  # initialize the obj attribute, that will be changed later on
+
+    @staticmethod
+    def _gen_mission(color: str):
+        return f"pick up the {color} ball"
 
     def _gen_grid(self, width, height):
         super()._gen_grid(width, height)

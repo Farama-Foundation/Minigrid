@@ -82,7 +82,7 @@ class LockedRoomEnv(MiniGridEnv):
         if max_steps is None:
             max_steps = 10 * size
         mission_space = MissionSpace(
-            mission_func=lambda lockedroom_color, keyroom_color, door_color: f"get the {lockedroom_color} key from the {keyroom_color} room, unlock the {door_color} door and go to the goal",
+            mission_func=self._gen_mission,
             ordered_placeholders=[COLOR_NAMES] * 3,
         )
         super().__init__(
@@ -91,6 +91,13 @@ class LockedRoomEnv(MiniGridEnv):
             height=size,
             max_steps=max_steps,
             **kwargs,
+        )
+
+    @staticmethod
+    def _gen_mission(lockedroom_color: str, keyroom_color: str, door_color: str):
+        return (
+            f"get the {lockedroom_color} key from the {keyroom_color} room,"
+            f" unlock the {door_color} door and go to the goal"
         )
 
     def _gen_grid(self, width, height):

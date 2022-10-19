@@ -12,7 +12,7 @@ class PlaygroundEnv(MiniGridEnv):
     """
 
     def __init__(self, max_steps=100, **kwargs):
-        mission_space = MissionSpace(mission_func=lambda: "")
+        mission_space = MissionSpace(mission_func=self._gen_mission)
         self.size = 19
         super().__init__(
             mission_space=mission_space,
@@ -21,6 +21,10 @@ class PlaygroundEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs
         )
+
+    @staticmethod
+    def _gen_mission():
+        return ""
 
     def _gen_grid(self, width, height):
         # Create the grid
