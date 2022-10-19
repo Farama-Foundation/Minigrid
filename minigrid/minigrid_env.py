@@ -9,6 +9,7 @@ import numpy as np
 from gymnasium import spaces
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
+from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.utils.window import Window
 
@@ -110,8 +111,6 @@ class MiniGridEnv(gym.Env):
         self.agent_dir: int = None
 
         # Current grid and mission and carrying
-        from minigrid.core.grid import Grid  # avoid circular import
-
         self.grid = Grid(width, height)
         self.carrying = None
 
@@ -498,7 +497,6 @@ class MiniGridEnv(gym.Env):
         vx, vy = coordinates
 
         obs = self.gen_obs()
-        from minigrid.core.grid import Grid  # avoid circular import
 
         obs_grid, _ = Grid.decode(obs["image"])
         obs_cell = obs_grid.get(vx, vy)

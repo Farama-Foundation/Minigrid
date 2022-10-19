@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple
 
 import numpy as np
 
@@ -9,13 +9,15 @@ from minigrid.core.constants import (
     IDX_TO_OBJECT,
     OBJECT_TO_IDX,
 )
-from minigrid.minigrid_env import MiniGridEnv
 from minigrid.utils.rendering import (
     fill_coords,
     point_in_circle,
     point_in_line,
     point_in_rect,
 )
+
+if TYPE_CHECKING:
+    from minigrid.minigrid_env import MiniGridEnv
 
 
 class WorldObj:
@@ -53,7 +55,7 @@ class WorldObj:
         """Can the agent see behind this object?"""
         return True
 
-    def toggle(self, env: MiniGridEnv, pos: Tuple[int, int]) -> bool:
+    def toggle(self, env: "MiniGridEnv", pos: Tuple[int, int]) -> bool:
         """Method to trigger/toggle an action this object performs"""
         return False
 
