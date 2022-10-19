@@ -1,6 +1,5 @@
 from minigrid.minigrid_env import WorldObj, COLORS, OBJECT_TO_IDX
 from minigrid.utils.rendering import fill_coords, point_in_circle, point_in_rect
-from minigrid.rule import get_ruleset
 
 from .rule_block import properties
 
@@ -20,7 +19,7 @@ def make_prop_fn(prop, typ):
     Make a method that retrieve the property of a FlexibleWorldObj in the ruleset
     """
     def get_prop(self):
-        ruleset = get_ruleset()
+        ruleset = self.get_ruleset()
         return ruleset[prop].get(typ, False)
     return get_prop
 
@@ -31,6 +30,13 @@ class FlexibleWorldObj(WorldObj):
 
         for prop in properties:
             setattr(self.__class__, prop, make_prop_fn(prop, self.type))
+
+    # TODO: might be better to use a Ruleset object
+    def set_ruleset_getter(self, get_ruleset):
+        self._get_ruleset = get_ruleset
+
+    def get_ruleset(self):
+        return self._get_ruleset()
 
     # compatibility with WorldObj
     def can_overlap(self):

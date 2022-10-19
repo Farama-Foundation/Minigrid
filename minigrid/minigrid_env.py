@@ -20,7 +20,7 @@ from minigrid.utils.rendering import (
     point_in_triangle,
     rotate_fn,
 )
-from minigrid.rule import update_ruleset
+from minigrid.rule import extract_ruleset
 from minigrid.utils.window import Window
 
 
@@ -943,6 +943,11 @@ class MiniGridEnv(gym.Env):
         self.tile_size = tile_size
         self.agent_pov = agent_pov
 
+        self._ruleset = {}
+
+    def get_ruleset(self):
+        return self._ruleset
+
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
 
@@ -954,7 +959,11 @@ class MiniGridEnv(gym.Env):
         self._gen_grid(self.width, self.height)
 
         # Compute the ruleset for the generated grid
-        update_ruleset(self.grid)
+        self._ruleset = extract_ruleset(self.grid)
+        # make the ruleset accessible to all FlexibleWorlObj (not working for objects added after reset is called)
+        for e in self.grid.grid:
+            if hasattr(e, "set_ruleset_getter"):
+                e.set_ruleset_getter(self.get_ruleset)
 
         # These fields should be defined by _gen_grid
         assert (
@@ -1379,7 +1388,7 @@ class MiniGridEnv(gym.Env):
                     # move the agent
                     self.agent_pos = tuple(fwd_pos)
                     # update ruleset if rule block pushed
-                    update_ruleset(self.grid)
+                    self._ruleset = extract_ruleset(self.grid)
 
         # TODO: pushing objects destroy other objects
         # TODO: contains

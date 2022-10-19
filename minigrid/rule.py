@@ -1,13 +1,13 @@
 from collections import defaultdict
 
-ruleset = defaultdict(dict)
-
-def get_ruleset():
-    return ruleset
-
-def set_ruleset(_ruleset):
-    global ruleset
-    ruleset = _ruleset
+# ruleset = defaultdict(dict)
+#
+# def get_ruleset():
+#     return ruleset
+#
+# def set_ruleset(_ruleset):
+#     global ruleset
+#     ruleset = _ruleset
 
 
 def extract_rule(block_list):
@@ -42,7 +42,7 @@ def add_rule(block_list, ruleset):
         ruleset[rule['property']][rule['object']] = True
 
 
-def update_ruleset(grid):
+def extract_ruleset(grid):
     """
     Construct the ruleset from the grid. Called every time a RuleBlock is pushed.
     """
@@ -63,4 +63,5 @@ def update_ruleset(grid):
             add_rule([left_cell, e, right_cell], ruleset)
             add_rule([up_cell, e, down_cell], ruleset)
             # overwrite the global ruleset
-    set_ruleset(ruleset)
+    # set_ruleset(ruleset)
+    return ruleset

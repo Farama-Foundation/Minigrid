@@ -15,6 +15,10 @@ def register_minigrid_envs():
         id="BabaIsYou-GoToWinObj-v0",
         entry_point="minigrid.envs.babaisyou:GoToWinObjEnv"
     )
+    register(
+        id="BabaIsYou-ChangeRule-v0",
+        entry_point="minigrid.envs.babaisyou:ChangeRuleEnv"
+    )
 
 
     # BlockedUnlockPickup
