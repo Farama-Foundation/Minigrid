@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, Optional, Tuple
+
 import numpy as np
 
 from minigrid.core.constants import (
@@ -14,13 +16,17 @@ from minigrid.utils.rendering import (
     point_in_rect,
 )
 
+if TYPE_CHECKING:
+    from minigrid.minigrid_env import MiniGridEnv
+
 
 class WorldObj:
+
     """
     Base class for grid world objects
     """
 
-    def __init__(self, type, color):
+    def __init__(self, type: str, color: str):
         assert type in OBJECT_TO_IDX, type
         assert color in COLOR_TO_IDX, color
         self.type = type
@@ -33,32 +39,32 @@ class WorldObj:
         # Current position of the object
         self.cur_pos = None
 
-    def can_overlap(self):
+    def can_overlap(self) -> bool:
         """Can the agent overlap with this?"""
         return False
 
-    def can_pickup(self):
+    def can_pickup(self) -> bool:
         """Can the agent pick this up?"""
         return False
 
-    def can_contain(self):
+    def can_contain(self) -> bool:
         """Can this contain another object?"""
         return False
 
-    def see_behind(self):
+    def see_behind(self) -> bool:
         """Can the agent see behind this object?"""
         return True
 
-    def toggle(self, env, pos):
+    def toggle(self, env: "MiniGridEnv", pos: Tuple[int, int]) -> bool:
         """Method to trigger/toggle an action this object performs"""
         return False
 
-    def encode(self):
+    def encode(self) -> Tuple[int, int, int]:
         """Encode the a description of this object as a 3-tuple of integers"""
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], 0)
 
     @staticmethod
-    def decode(type_idx, color_idx, state):
+    def decode(type_idx: int, color_idx: int, state: int) -> Optional["WorldObj"]:
         """Create an object from a 3-tuple state description"""
 
         obj_type = IDX_TO_OBJECT[type_idx]
@@ -92,7 +98,7 @@ class WorldObj:
 
         return v
 
-    def render(self, r):
+    def render(self, r: np.ndarray) -> np.ndarray:
         """Draw this object with the given renderer"""
         raise NotImplementedError
 
@@ -113,7 +119,7 @@ class Floor(WorldObj):
     Colored floor tile the agent can walk over
     """
 
-    def __init__(self, color="blue"):
+    def __init__(self, color: str = "blue"):
         super().__init__("floor", color)
 
     def can_overlap(self):
@@ -149,7 +155,7 @@ class Lava(WorldObj):
 
 
 class Wall(WorldObj):
-    def __init__(self, color="grey"):
+    def __init__(self, color: str = "grey"):
         super().__init__("wall", color)
 
     def see_behind(self):
@@ -160,7 +166,7 @@ class Wall(WorldObj):
 
 
 class Door(WorldObj):
-    def __init__(self, color, is_open=False, is_locked=False):
+    def __init__(self, color: str, is_open: bool = False, is_locked: bool = False):
         super().__init__("door", color)
         self.is_open = is_open
         self.is_locked = is_locked
@@ -228,7 +234,7 @@ class Door(WorldObj):
 
 
 class Key(WorldObj):
-    def __init__(self, color="blue"):
+    def __init__(self, color: str = "blue"):
         super().__init__("key", color)
 
     def can_pickup(self):
@@ -261,7 +267,7 @@ class Ball(WorldObj):
 
 
 class Box(WorldObj):
-    def __init__(self, color, contains=None):
+    def __init__(self, color, contains: Optional[WorldObj] = None):
         super().__init__("box", color)
         self.contains = contains
 

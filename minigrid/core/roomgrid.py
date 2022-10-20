@@ -1,12 +1,14 @@
+from typing import List, Optional, Tuple, Union
+
 import numpy as np
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
-from minigrid.core.world_object import Ball, Box, Door, Key
+from minigrid.core.world_object import Ball, Box, Door, Key, WorldObj
 from minigrid.minigrid_env import MiniGridEnv
 
 
-def reject_next_to(env, pos):
+def reject_next_to(env: MiniGridEnv, pos: Tuple[int, int]):
     """
     Function to filter out object positions that are right next to
     the agent's starting point
@@ -19,32 +21,32 @@ def reject_next_to(env, pos):
 
 
 class Room:
-    def __init__(self, top, size):
+    def __init__(self, top: Tuple[int, int], size: Tuple[int, int]):
         # Top-left corner and size (tuples)
         self.top = top
         self.size = size
 
         # List of door objects and door positions
         # Order of the doors is right, down, left, up
-        self.doors = [None] * 4
-        self.door_pos = [None] * 4
+        self.doors: List[Optional[Union[bool, Door]]] = [None] * 4
+        self.door_pos: List[Optional[Tuple[int, int]]] = [None] * 4
 
         # List of rooms adjacent to this one
         # Order of the neighbors is right, down, left, up
-        self.neighbors = [None] * 4
+        self.neighbors: List[Optional[Room]] = [None] * 4
 
         # Indicates if this room is behind a locked door
-        self.locked = False
+        self.locked: bool = False
 
         # List of objects contained
-        self.objs = []
+        self.objs: List[WorldObj] = []
 
-    def rand_pos(self, env):
+    def rand_pos(self, env: MiniGridEnv) -> Tuple[int, int]:
         topX, topY = self.top
         sizeX, sizeY = self.size
         return env._randPos(topX + 1, topX + sizeX - 1, topY + 1, topY + sizeY - 1)
 
-    def pos_inside(self, x, y):
+    def pos_inside(self, x: int, y: int) -> bool:
         """
         Check if a position is within the bounds of this room
         """
@@ -69,11 +71,11 @@ class RoomGrid(MiniGridEnv):
 
     def __init__(
         self,
-        room_size=7,
-        num_rows=3,
-        num_cols=3,
-        max_steps=100,
-        agent_view_size=7,
+        room_size: int = 7,
+        num_rows: int = 3,
+        num_cols: int = 3,
+        max_steps: int = 100,
+        agent_view_size: int = 7,
         **kwargs,
     ):
         assert room_size > 0
@@ -99,7 +101,7 @@ class RoomGrid(MiniGridEnv):
             **kwargs,
         )
 
-    def room_from_pos(self, x, y):
+    def room_from_pos(self, x: int, y: int) -> Room:
         """Get the room a given position maps to"""
 
         assert x >= 0
@@ -113,7 +115,7 @@ class RoomGrid(MiniGridEnv):
 
         return self.room_grid[j][i]
 
-    def get_room(self, i, j):
+    def get_room(self, i: int, j: int) -> Room:
         assert i < self.num_cols
         assert j < self.num_rows
         return self.room_grid[j][i]
@@ -176,7 +178,9 @@ class RoomGrid(MiniGridEnv):
         )
         self.agent_dir = 0
 
-    def place_in_room(self, i, j, obj):
+    def place_in_room(
+        self, i: int, j: int, obj: WorldObj
+    ) -> Tuple[WorldObj, Tuple[int, int]]:
         """
         Add an existing object to room (i, j)
         """
@@ -191,7 +195,13 @@ class RoomGrid(MiniGridEnv):
 
         return obj, pos
 
-    def add_object(self, i, j, kind=None, color=None):
+    def add_object(
+        self,
+        i: int,
+        j: int,
+        kind: Optional[str] = None,
+        color: Optional[str] = None,
+    ) -> Tuple[WorldObj, Tuple[int, int]]:
         """
         Add a new object to room (i, j)
         """
@@ -217,7 +227,14 @@ class RoomGrid(MiniGridEnv):
 
         return self.place_in_room(i, j, obj)
 
-    def add_door(self, i, j, door_idx=None, color=None, locked=None):
+    def add_door(
+        self,
+        i: int,
+        j: int,
+        door_idx: Optional[int] = None,
+        color: Optional[str] = None,
+        locked: Optional[bool] = None,
+    ) -> Tuple[Door, Tuple[int, int]]:
         """
         Add a door to a room, connecting it to a neighbor
         """
@@ -244,23 +261,26 @@ class RoomGrid(MiniGridEnv):
         door = Door(color, is_locked=locked)
 
         pos = room.door_pos[door_idx]
+        assert pos is not None
         self.grid.set(pos[0], pos[1], door)
         door.cur_pos = pos
 
+        assert door_idx is not None
         neighbor = room.neighbors[door_idx]
+        assert neighbor is not None
         room.doors[door_idx] = door
         neighbor.doors[(door_idx + 2) % 4] = door
 
         return door, pos
 
-    def remove_wall(self, i, j, wall_idx):
+    def remove_wall(self, i: int, j: int, wall_idx: int):
         """
         Remove a wall between two rooms
         """
 
         room = self.get_room(i, j)
 
-        assert wall_idx >= 0 and wall_idx < 4
+        assert 0 <= wall_idx < 4
         assert room.doors[wall_idx] is None, "door exists on this wall"
         assert room.neighbors[wall_idx], "invalid wall"
 
@@ -287,9 +307,12 @@ class RoomGrid(MiniGridEnv):
 
         # Mark the rooms as connected
         room.doors[wall_idx] = True
+        assert neighbor is not None
         neighbor.doors[(wall_idx + 2) % 4] = True
 
-    def place_agent(self, i=None, j=None, rand_dir=True):
+    def place_agent(
+        self, i: Optional[int] = None, j: Optional[int] = None, rand_dir: bool = True
+    ) -> np.ndarray:
         """
         Place the agent in a room
         """
@@ -310,7 +333,9 @@ class RoomGrid(MiniGridEnv):
 
         return self.agent_pos
 
-    def connect_all(self, door_colors=COLOR_NAMES, max_itrs=5000):
+    def connect_all(
+        self, door_colors: List[str] = COLOR_NAMES, max_itrs: int = 5000
+    ) -> List[Door]:
         """
         Make sure that all rooms are reachable by the agent from its
         starting position
@@ -357,7 +382,9 @@ class RoomGrid(MiniGridEnv):
             if not room.door_pos[k] or room.doors[k]:
                 continue
 
-            if room.locked or room.neighbors[k].locked:
+            neighbor_room = room.neighbors[k]
+            assert neighbor_room is not None
+            if room.locked or neighbor_room.locked:
                 continue
 
             color = self._rand_elem(door_colors)
@@ -366,7 +393,13 @@ class RoomGrid(MiniGridEnv):
 
         return added_doors
 
-    def add_distractors(self, i=None, j=None, num_distractors=10, all_unique=True):
+    def add_distractors(
+        self,
+        i: Optional[int] = None,
+        j: Optional[int] = None,
+        num_distractors: int = 10,
+        all_unique: bool = True,
+    ) -> List[WorldObj]:
         """
         Add random objects that can potentially distract/confuse the agent.
         """
