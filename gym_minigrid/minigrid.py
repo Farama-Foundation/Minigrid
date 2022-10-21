@@ -1328,7 +1328,7 @@ class MiniGridEnv(gym.Env):
         self.step_count += 1
 
         reward = 0
-        terminated = False
+        done = False
 
         # Get the position in front of the agent
         fwd_pos = self.front_pos
@@ -1351,11 +1351,11 @@ class MiniGridEnv(gym.Env):
             if fwd_cell is None or fwd_cell.can_overlap():
                 self.agent_pos = tuple(fwd_pos)
             if fwd_cell is not None and fwd_cell.is_goal():
-                terminated = True
+                done = True
                 reward = self._reward()
             # if fwd_cell is not None and fwd_cell.type == "lava":  # used in the original version of minigrid
             if fwd_cell is not None and fwd_cell.is_defeat():
-                terminated = True
+                done = True
                 reward = -1
 
             # move non-overlapable, pushable objects forward
@@ -1408,7 +1408,6 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
-        done = terminated
         return obs, reward, done, {}
 
     def gen_obs_grid(self, agent_view_size=None):
