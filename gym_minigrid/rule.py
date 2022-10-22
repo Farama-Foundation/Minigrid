@@ -24,6 +24,7 @@ def extract_rule(block_list):
         block_list[0].type == 'rule_object' and \
         block_list[1].type == 'rule_is' and \
         block_list[2].type == 'rule_property'
+
     if is_valid:
         return {
             'object': block_list[0].object,
@@ -36,10 +37,22 @@ def extract_rule(block_list):
 def add_rule(block_list, ruleset):
     """
     If the blocks form a valid rule, add it to the ruleset
+    Args:
+        block_list: list of 3 blocks
+        ruleset: dict with the active rules
     """
     rule = extract_rule(block_list)
     if rule is not None:
         ruleset[rule['property']][rule['object']] = True
+
+
+def inside_grid(grid, pos):
+    """
+    Return true if pos is outside the boundaries of the grid
+    """
+    i, j = pos
+    inside_grid = (i >= 0 and i < grid.width) and (j >= 0 and j < grid.height)
+    return inside_grid
 
 
 def extract_ruleset(grid):
@@ -48,20 +61,22 @@ def extract_ruleset(grid):
     """
     ruleset = defaultdict(dict)
     # loop through all 'is' blocks
-    for k, e in enumerate(grid.grid):
+    # for k, e in enumerate(grid.grid):
+    for k, e in enumerate(grid):
         if e is not None and e.type == 'rule_is':
             i, j = k % grid.width, k // grid.width
             assert k == j * grid.width + i
 
-            # get neighboring cells
-            left_cell = grid.get(i-1, j)
-            right_cell = grid.get(i+1, j)
-            up_cell = grid.get(i, j-1)
-            down_cell = grid.get(i, j+1)
+            # check for horizontal
+            if inside_grid(grid, (i-1, j)) and inside_grid(grid, (i+1, j)):
+                left_cell = grid.get(i-1, j)
+                right_cell = grid.get(i+1, j)
+                add_rule([left_cell, e, right_cell], ruleset)
 
-            # check for horizontal and vertical rules
-            add_rule([left_cell, e, right_cell], ruleset)
-            add_rule([up_cell, e, down_cell], ruleset)
-            # overwrite the global ruleset
-    # set_ruleset(ruleset)
+            # check for vertical rules
+            if inside_grid(grid, (i, j-1)) and inside_grid(grid, (i, j+1)):
+                up_cell = grid.get(i, j-1)
+                down_cell = grid.get(i, j+1)
+                add_rule([up_cell, e, down_cell], ruleset)
+
     return ruleset

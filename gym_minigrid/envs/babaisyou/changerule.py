@@ -1,5 +1,8 @@
+from gym_minigrid.babaisyou import BabaIsYouEnv, BabaIsYouGrid
 from gym_minigrid.envs.babaisyou.core.flexible_world_object import FBall, FWall
 from gym_minigrid.envs.babaisyou.core.rule_block import RuleObject, RuleIs, RuleProperty
+from gym_minigrid.envs.babaisyou.core.utils import grid_random_position
+from gym_minigrid.envs.babaisyou.goto import BaseGridEnv
 from gym_minigrid.minigrid import Grid, MissionSpace, MiniGridEnv
 
 
@@ -52,3 +55,34 @@ class ChangeRuleEnv(MiniGridEnv):
             self.agent_dir = self.agent_start_dir
         else:
             self.place_agent()
+
+
+class TestRuleEnv(BabaIsYouEnv):
+    def __init__(self, **kwargs):
+        self.blocks = [
+            RuleObject('fwall'),
+            RuleObject('fball'),
+            RuleIs(),
+            RuleIs(),
+            RuleIs(),
+            RuleProperty('is_block'),
+            RuleProperty('is_goal'),
+            RuleProperty('can_push'),
+            RuleProperty('is_defeat'),
+            FBall(),
+            FWall()
+        ]
+        self.size = 14
+        super().__init__(grid_size=self.size, **kwargs)
+
+    def _gen_grid(self, width, height):
+        self.grid = BabaIsYouGrid(width, height)
+        # self.grid = Grid(width, height)
+        self.grid.wall_rect(0, 0, width, height)
+
+        positions = grid_random_position(self.size, n_samples=len(self.blocks), margin=2)
+
+        for pos, block in zip(positions, self.blocks):
+            self.put_obj(block, *pos)
+
+        self.place_agent()

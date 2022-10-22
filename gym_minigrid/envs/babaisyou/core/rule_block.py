@@ -13,13 +13,19 @@ properties = [
     'is_defeat'
 ]
 
+objects = [
+    'fball',
+    'fwall'
+]
+
 name_mapping = {
     'fwall': 'wall',
     'fball': 'ball',
     'can_push': 'push',
     'is_block': 'stop',
     'is_goal': 'win',
-    'is_defeat': 'lose'
+    'is_defeat': 'lose',
+    'is': 'is'
 }
 
 
@@ -30,7 +36,7 @@ def add_color_types(color_types):
     for i, t in enumerate(color_types)})
 
 
-add_color_types(['wall', 'is', 'stop', 'win', 'ball', 'lose'])
+add_color_types(name_mapping.values())
 
 
 class RuleBlock(WorldObj):
@@ -64,15 +70,16 @@ class RuleBlock(WorldObj):
 
 
 class RuleObject(RuleBlock):
-    def __init__(self, object, can_push=True):
-        super().__init__(object, 'rule_object', 'purple', can_push=can_push)
-        self.object = object
+    def __init__(self, obj, can_push=True):
+        super().__init__(obj, 'rule_object', 'purple', can_push=can_push)
+        assert obj in objects, "{} not in {}".format(obj, objects)
+        self.object = obj
 
 
 class RuleProperty(RuleBlock):
     def __init__(self, property, can_push=True):
         super().__init__(property, 'rule_property', 'purple', can_push=can_push)
-        assert property in properties, property
+        assert property in properties, "{} not in {}".format(property, properties)
         self.property = property
 
 

@@ -3,5 +3,7 @@ from gym_minigrid.envs.babaisyou.goto import (
     GoToWinObjEnv
 )
 from gym_minigrid.envs.babaisyou.changerule import (
-    ChangeRuleEnv
+    ChangeRuleEnv,
+    TestRuleEnv
 )
+from gym_minigrid.envs.babaisyou.test import TestEnv

@@ -573,20 +573,21 @@ class Grid:
 
         self.grid = [None] * width * height
 
-    def __contains__(self, key):
-        if isinstance(key, WorldObj):
-            for e in self.grid:
-                if e is key:
-                    return True
-        elif isinstance(key, tuple):
-            for e in self.grid:
-                if e is None:
-                    continue
-                if (e.color, e.type) == key:
-                    return True
-                if key[0] is None and key[1] == e.type:
-                    return True
-        return False
+    # TODO: needed?
+    # def __contains__(self, key):
+    #     if isinstance(key, WorldObj):
+    #         for e in self.grid:
+    #             if e is key:
+    #                 return True
+    #     elif isinstance(key, tuple):
+    #         for e in self.grid:
+    #             if e is None:
+    #                 continue
+    #             if (e.color, e.type) == key:
+    #                 return True
+    #             if key[0] is None and key[1] == e.type:
+    #                 return True
+    #     return False
 
     def __eq__(self, other):
         grid1 = self.encode()
@@ -607,6 +608,7 @@ class Grid:
         self.grid[j * self.width + i] = v
 
     def get(self, i, j):
+        # print(i, j, self.width, self.height)
         assert i >= 0 and i < self.width
         assert j >= 0 and j < self.height
         return self.grid[j * self.width + i]
@@ -933,6 +935,7 @@ class MiniGridEnv(gym.Env):
         self.agent_dir: int = None
 
         # Initialize the state
+        self.grid = None
         self.reset()
 
         self._ruleset = {}
@@ -1324,6 +1327,35 @@ class MiniGridEnv(gym.Env):
 
         return obs_cell is not None and obs_cell.type == world_cell.type
 
+    def change_obj_pos(self, pos, new_pos):
+        """
+        Change the position of an object in the grid
+        """
+        if np.any(pos != new_pos):
+            # move the object
+            self.grid.set(*new_pos, self.grid.get(*pos))
+            self.grid.set(*pos, None)
+
+    def move_fwd(self, pos):
+        """
+        Return fwd_pos if can move, otherwise return pos
+        """
+        # TODO NC: assume that the object is moving in the direction of the agent
+        fwd_pos = pos + self.dir_vec
+        # if fwd_cell can be pushed, try to move it
+        fwd_cell = self.grid.get(*fwd_pos)
+        if fwd_cell is not None and fwd_cell.can_push():
+            new_fwd_pos = self.move_fwd(fwd_pos)
+            self.change_obj_pos(fwd_pos, new_fwd_pos)
+
+        fwd_cell = self.grid.get(*fwd_pos)
+        if fwd_cell is None or fwd_cell.can_overlap():
+            new_pos = tuple(fwd_pos)
+        else:
+            new_pos = pos
+
+        return new_pos
+
     def step(self, action):
         self.step_count += 1
 
@@ -1348,30 +1380,18 @@ class MiniGridEnv(gym.Env):
 
         # Move forward
         elif action == self.actions.forward:
-            if fwd_cell is None or fwd_cell.can_overlap():
-                self.agent_pos = tuple(fwd_pos)
+            # move the agent if the forward cell is empty or can overlap or can be pushed
+            self.agent_pos = self.move_fwd(self.agent_pos)
+
             if fwd_cell is not None and fwd_cell.is_goal():
                 done = True
                 reward = self._reward()
-            # if fwd_cell is not None and fwd_cell.type == "lava":  # used in the original version of minigrid
             if fwd_cell is not None and fwd_cell.is_defeat():
                 done = True
                 reward = -1
 
-            # move non-overlapable, pushable objects forward
-            # TODO: babaisyou? overlap and push
-            if fwd_cell is not None and not fwd_cell.can_overlap() and fwd_cell.can_push():
-                fwd_fwd_pos = fwd_pos + self.dir_vec
-                fwd_fwd_cell = self.grid.get(*fwd_fwd_pos)
-                # None cell = empty cell (can be overlapped)
-                if fwd_fwd_cell is None or fwd_fwd_cell.can_overlap():
-                    # move the object
-                    self.grid.set(*fwd_fwd_pos, self.grid.get(*fwd_pos))
-                    self.grid.set(*fwd_pos, None)
-                    # move the agent
-                    self.agent_pos = tuple(fwd_pos)
-                    # update ruleset if rule block pushed
-                    self._ruleset = extract_ruleset(self.grid)
+            self._ruleset = extract_ruleset(self.grid)
+
 
         # TODO: pushing objects destroy other objects
         # TODO: contains

@@ -17,6 +17,14 @@ def register_minigrid_envs():
         id="BabaIsYou-ChangeRule-v0",
         entry_point="gym_minigrid.envs.babaisyou:ChangeRuleEnv"
     )
+    register(
+        id="BabaIsYou-TestRule-v0",
+        entry_point="gym_minigrid.envs.babaisyou:TestRuleEnv"
+    )
+    register(
+        id="BabaIsYou-Test-v0",
+        entry_point="gym_minigrid.envs.babaisyou:TestEnv"
+    )
 
     # BlockedUnlockPickup
     # ----------------------------------------
