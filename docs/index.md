@@ -81,7 +81,5 @@ environments/babyAI_index
 :caption: Development
 
 Github <https://github.com/Farama-Foundation/MiniGrid>
-Donate <https://farama.org/donations>
-Contribute to the Docs <https://github.com/Farama-Foundation/MiniGrid/blob/master/.github/PULL_REQUEST_TEMPLATE.md>
 ```
 
