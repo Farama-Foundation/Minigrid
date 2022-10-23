@@ -9,7 +9,7 @@ dist/*
 .idea/
 
 #docs
-_build/*
+_build/
 .DS_Store
 _site
 .jekyll-cache
