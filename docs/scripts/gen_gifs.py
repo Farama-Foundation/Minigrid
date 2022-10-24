@@ -1,11 +1,9 @@
 import os
 import re
 
+import gymnasium
 from PIL import Image
 from tqdm import tqdm
-from utils import kill_strs
-
-import gymnasium
 
 # snake to camel case: https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case # noqa: E501
 pattern = re.compile(r"(?<!^)(?=[A-Z])")
@@ -56,7 +54,9 @@ for env_spec in tqdm(gymnasium.envs.registry.values()):
 
                     # Avoid to much movement
                     if t % 10 == 0:
-                        state_next, reward, terminated, truncated, info = env.step(action)
+                        state_next, reward, terminated, truncated, info = env.step(
+                            action
+                        )
                     t += 1
 
                 if len(frames) > LENGTH:

@@ -15,8 +15,7 @@ _site
 .jekyll-cache
 __pycache__
 .vscode/
-/docs/environments/**/*
-/docs/environments/**/*
+docs/environments/**/*.*
 !docs/environments/**/index.md
 
 # Virtual environments

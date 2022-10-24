@@ -1,7 +1,7 @@
 import os
-import sys
 
 import gymnasium
+
 
 def create_grid_cell(type_id, env_id, base_path):
     return f"""
@@ -68,13 +68,14 @@ if __name__ == "__main__":
             if env_name not in type_dict[env_type]:
                 type_dict[env_type].append(env_name)
 
-
     for key, value in type_dict.items():
         env_type = key
 
         page = generate_page({"id": key, "list": value})
         fp = open(
-            os.path.join(os.path.dirname(__file__), "..", "environments", env_type, "list.html"),
+            os.path.join(
+                os.path.dirname(__file__), "..", "environments", env_type, "list.html"
+            ),
             "w",
             encoding="utf-8",
         )

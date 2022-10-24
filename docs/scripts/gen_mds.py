@@ -76,11 +76,12 @@ for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.item
     env_type = env_module if len(split) == 2 else split[-1].split(":")[0]
 
     path_name = ""
-    os.makedirs(os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        "environments",
-        env_type),
-        exist_ok=True)
+    os.makedirs(
+        os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "environments", env_type
+        ),
+        exist_ok=True,
+    )
 
     v_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
@@ -95,11 +96,14 @@ title: {env_name}
 ---
 """
     title = f"# {env_name}"
-    gif = "```{figure} " + f"""/_static/videos/{env_type}/{env_name}.gif
+    gif = (
+        "```{figure} "
+        + f"""/_static/videos/{env_type}/{env_name}.gif
 :alt: {env_name}
 :width: 200px
 ```
 """
+    )
 
     if docstring is None:
         docstring = "No information provided"

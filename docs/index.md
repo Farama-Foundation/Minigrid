@@ -71,7 +71,6 @@ api/wrapper
 :hidden:
 :caption: Environments
 
-environments/design
 environments/minigrid/index
 environments/babyai/index
 ```
