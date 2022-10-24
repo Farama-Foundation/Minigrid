@@ -10,18 +10,14 @@ from minigrid.minigrid_env import MiniGridEnv
 class FetchEnv(MiniGridEnv):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/fetch-env.png" alt="fetch-env" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment has multiple objects of assorted types and colors. The
     agent receives a textual string as part of its observation telling it which
     object to pick up. Picking up the wrong object terminates the episode with
     zero reward.
 
-    ### Mission Space
+    ## Mission Space
 
     "{syntax} {color} {type}"
 
@@ -33,7 +29,7 @@ class FetchEnv(MiniGridEnv):
 
     {type} is the type of the object. Can be "key" or "ball".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action               |
     |-----|--------------|----------------------|
@@ -45,7 +41,7 @@ class FetchEnv(MiniGridEnv):
     | 5   | toggle       | Unused               |
     | 6   | done         | Unused               |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -53,11 +49,11 @@ class FetchEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -65,7 +61,7 @@ class FetchEnv(MiniGridEnv):
     2. The agent picks up the wrong object.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     N: number of objects to be generated.
 

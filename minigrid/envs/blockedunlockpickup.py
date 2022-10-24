@@ -9,11 +9,8 @@ from minigrid.core.world_object import Ball
 class BlockedUnlockPickupEnv(RoomGrid):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/BlockedUnlockPickup.png" alt="BlockedUnlockPickup" width="200px"/>
-    </p>
 
-    ### Description
+    ## Description
 
     The agent has to pick up a box which is placed in another room, behind a
     locked door. The door is also blocked by a ball which the agent has to move
@@ -21,7 +18,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
     ball, pick up the key, open the door and pick up the object in the other
     room. This environment can be solved without relying on language.
 
-    ### Mission Space
+    ## Mission Space
 
     "pick up the {color} {type}"
 
@@ -30,7 +27,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     {type} is the type of the object. Can be "box" or "key".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action            |
     |-----|--------------|-------------------|
@@ -42,7 +39,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
     | 5   | toggle       | Unused            |
     | 6   | done         | Unused            |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -50,18 +47,18 @@ class BlockedUnlockPickupEnv(RoomGrid):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent picks up the correct box.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-BlockedUnlockPickup-v0`
 

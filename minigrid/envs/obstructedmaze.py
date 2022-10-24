@@ -9,35 +9,17 @@ from minigrid.core.world_object import Ball, Box, Key
 class ObstructedMazeEnv(RoomGrid):
 
     """
-    <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dl.png" alt="ObstructedMaze-1Dl" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlh.png" alt="ObstructedMaze-1Dlh" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Dlhb.png" alt="ObstructedMaze-1Dlhb" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-1Q.png" alt="ObstructedMaze-1Q" width="200px"/>
-    </p>
-
-    <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dl.png" alt="ObstructedMaze-2Dl" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlh.png" alt="ObstructedMaze-2Dlh" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Dlhb.png" alt="ObstructedMaze-2Dlhb" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-2Q.png" alt="ObstructedMaze-2Q" width="200px"/>
-    </p>
-
-    <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/ObstructedMaze-4Q.png" alt="ObstructedMaze-4Q" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     The agent has to pick up a box which is placed in a corner of a 3x3 maze.
     The doors are locked, the keys are hidden in boxes and doors are obstructed
     by balls. This environment can be solved without relying on language.
 
-    ### Mission Space
+    ## Mission Space
 
     "pick up the {COLOR_NAMES[0]} ball"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -49,7 +31,7 @@ class ObstructedMazeEnv(RoomGrid):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -57,18 +39,18 @@ class ObstructedMazeEnv(RoomGrid):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent picks up the blue ball.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     "NDl" are the number of doors locked.
     "h" if the key is hidden in a box.

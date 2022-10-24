@@ -15,9 +15,8 @@ _site
 .jekyll-cache
 __pycache__
 .vscode/
-/docs/environments/*.md
-!docs/environments/index.md
-!docs/environments/babyAI_index.md
+docs/environments/**/*.*
+!docs/environments/**/index.md
 
 # Virtual environments
 .env

@@ -8,19 +8,7 @@ from minigrid.core.roomgrid import RoomGrid
 class KeyCorridorEnv(RoomGrid):
 
     """
-    <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R1.png" alt="KeyCorridorS3R1" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R2.png" alt="KeyCorridorS3R2" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS3R3.png" alt="KeyCorridorS3R3" width="200px"/>
-    </p>
-
-    <p>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS4R3.png" alt="KeyCorridorS4R3" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS5R3.png" alt="KeyCorridorS5R3" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/KeyCorridorS6R3.png" alt="KeyCorridorS6R3" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment is similar to the locked room environment, but there are
     multiple registered environment configurations of increasing size,
@@ -30,7 +18,7 @@ class KeyCorridorEnv(RoomGrid):
     it. The mission string does not give the agent any clues as to where the
     key is placed. This environment can be solved without relying on language.
 
-    ### Mission Space
+    ## Mission Space
 
     "pick up the {color} {obj_type}"
 
@@ -39,7 +27,7 @@ class KeyCorridorEnv(RoomGrid):
 
     {type} is the type of the object. Can be "ball" or "key".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action            |
     |-----|--------------|-------------------|
@@ -51,7 +39,7 @@ class KeyCorridorEnv(RoomGrid):
     | 5   | toggle       | Unused            |
     | 6   | done         | Unused            |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -59,18 +47,18 @@ class KeyCorridorEnv(RoomGrid):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent picks up the correct object.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     S: room size.
     R: Number of rows.
