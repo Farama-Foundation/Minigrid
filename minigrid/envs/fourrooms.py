@@ -7,22 +7,18 @@ from minigrid.minigrid_env import MiniGridEnv
 class FourRoomsEnv(MiniGridEnv):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/four-rooms-env.png" alt="four-rooms-env" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     Classic four room reinforcement learning environment. The agent must
     navigate in a maze composed of four rooms interconnected by 4 gaps in the
     walls. To obtain a reward, the agent must reach the green goal square. Both
     the agent and the goal square are randomly placed in any of the four rooms.
 
-    ### Mission Space
+    ## Mission Space
 
     "reach the goal"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action       |
     |-----|--------------|--------------|
@@ -34,7 +30,7 @@ class FourRoomsEnv(MiniGridEnv):
     | 5   | toggle       | Unused       |
     | 6   | done         | Unused       |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -42,18 +38,18 @@ class FourRoomsEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent reaches the goal.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-FourRooms-v0`
 

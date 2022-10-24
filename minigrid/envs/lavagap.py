@@ -11,24 +11,20 @@ from minigrid.minigrid_env import MiniGridEnv
 class LavaGapEnv(MiniGridEnv):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaGapS6.png" alt="LavaGapS6" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     The agent has to reach the green goal square at the opposite corner of the
     room, and must pass through a narrow gap in a vertical strip of deadly lava.
     Touching the lava terminate the episode with a zero reward. This environment
     is useful for studying safety and safe exploration.
 
-    ### Mission Space
+    ## Mission Space
 
     Depending on the `obstacle_type` parameter:
     - `Lava`: "avoid the lava and get to the green goal square"
     - otherwise: "find the opening and get to the green goal square"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action       |
     |-----|--------------|--------------|
@@ -40,7 +36,7 @@ class LavaGapEnv(MiniGridEnv):
     | 5   | toggle       | Unused       |
     | 6   | done         | Unused       |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -48,11 +44,11 @@ class LavaGapEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -60,7 +56,7 @@ class LavaGapEnv(MiniGridEnv):
     2. The agent falls into lava.
     3. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     S: size of map SxS.
 

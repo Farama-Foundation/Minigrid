@@ -24,7 +24,7 @@ class LockedRoom:
 class LockedRoomEnv(MiniGridEnv):
 
     """
-    ### Description
+    ## Description
 
     The environment has six rooms, one of which is locked. The agent receives
     a textual mission string as input, telling it which room to go to in order
@@ -32,14 +32,14 @@ class LockedRoomEnv(MiniGridEnv):
     room in order to reach the final goal. This environment is extremely
     difficult to solve with vanilla reinforcement learning alone.
 
-    ### Mission Space
+    ## Mission Space
 
     "get the {lockedroom_color} key from the {keyroom_color} room, unlock the {door_color} door and go to the goal"
 
     {lockedroom_color}, {keyroom_color}, and {door_color} can be "red", "green",
     "blue", "purple", "yellow" or "grey".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -51,7 +51,7 @@ class LockedRoomEnv(MiniGridEnv):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -59,18 +59,18 @@ class LockedRoomEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent reaches the goal.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-LockedRoom-v0`
 

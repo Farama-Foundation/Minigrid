@@ -9,18 +9,18 @@ from minigrid.minigrid_env import MiniGridEnv
 class RedBlueDoorEnv(MiniGridEnv):
 
     """
-    ### Description
+    ## Description
 
     The agent is randomly placed within a room with one red and one blue door
     facing opposite directions. The agent has to open the red door and then open
     the blue door, in that order. Note that, surprisingly, this environment is
     solvable without memory.
 
-    ### Mission Space
+    ## Mission Space
 
     "open the red door then the blue door"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -32,7 +32,7 @@ class RedBlueDoorEnv(MiniGridEnv):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -40,11 +40,11 @@ class RedBlueDoorEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -52,7 +52,7 @@ class RedBlueDoorEnv(MiniGridEnv):
     2. The agent opens the blue door without having opened the red door yet.
     3. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-RedBlueDoors-6x6-v0`
     - `MiniGrid-RedBlueDoors-8x8-v0`

@@ -9,12 +9,7 @@ from minigrid.minigrid_env import MiniGridEnv
 class DistShiftEnv(MiniGridEnv):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift1.png" alt="DistShift1" width="200px"/>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/DistShift2.png" alt="DistShift2" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment is based on one of the DeepMind [AI safety gridworlds](https://github.com/deepmind/ai-safety-gridworlds).
     The agent starts in the
@@ -24,11 +19,11 @@ class DistShiftEnv(MiniGridEnv):
     different variants of the environment, so that the agent can be trained on
     one variant and tested on the other.
 
-    ### Mission Space
+    ## Mission Space
 
     "get to the green goal square"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action       |
     |-----|--------------|--------------|
@@ -40,7 +35,7 @@ class DistShiftEnv(MiniGridEnv):
     | 5   | toggle       | Unused       |
     | 6   | done         | Unused       |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -48,11 +43,11 @@ class DistShiftEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -60,7 +55,7 @@ class DistShiftEnv(MiniGridEnv):
     2. The agent falls into lava.
     3. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-DistShift1-v0`
     - `MiniGrid-DistShift2-v0`

@@ -9,14 +9,7 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class GoToDoorEnv(MiniGridEnv):
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.png" alt="gotodoor-6x6" width="200px"/>
-        <video width="200px">
-            <source src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/gotodoor-6x6.mp4" type="video/mp4" />
-        </video>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment is a room with four doors, one on each wall. The agent
     receives a textual (mission) string as input, telling it which door to go
@@ -24,14 +17,14 @@ class GoToDoorEnv(MiniGridEnv):
     the `done` action next to the correct door, as indicated in the mission
     string.
 
-    ### Mission Space
+    ## Mission Space
 
     "go to the {color} door"
 
     {color} is the color of the door. Can be "red", "green", "blue", "purple",
     "yellow" or "grey".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action               |
     |-----|--------------|----------------------|
@@ -43,7 +36,7 @@ class GoToDoorEnv(MiniGridEnv):
     | 5   | toggle       | Unused               |
     | 6   | done         | Done completing task |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -51,18 +44,18 @@ class GoToDoorEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent stands next the correct door performing the `done` action.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-GoToDoor-5x5-v0`
     - `MiniGrid-GoToDoor-6x6-v0`

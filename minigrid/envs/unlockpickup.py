@@ -8,23 +8,19 @@ from minigrid.core.roomgrid import RoomGrid
 class UnlockPickupEnv(RoomGrid):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/UnlockPickup.png" alt="UnlockPickup" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     The agent has to pick up a box which is placed in another room, behind a
     locked door. This environment can be solved without relying on language.
 
-    ### Mission Space
+    ## Mission Space
 
     "pick up the {color} box"
 
     {color} is the color of the box. Can be "red", "green", "blue", "purple",
     "yellow" or "grey".
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -36,7 +32,7 @@ class UnlockPickupEnv(RoomGrid):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -44,18 +40,18 @@ class UnlockPickupEnv(RoomGrid):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent picks up the correct box.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-Unlock-v0`
 

@@ -12,7 +12,7 @@ from minigrid.minigrid_env import MiniGridEnv
 class MemoryEnv(MiniGridEnv):
 
     """
-    ### Description
+    ## Description
 
     This environment is a memory test. The agent starts in a small room where it
     sees an object. It then has to go through a narrow hallway which ends in a
@@ -20,11 +20,11 @@ class MemoryEnv(MiniGridEnv):
     as the object in the starting room. The agent has to remember the initial
     object, and go to the matching object at split.
 
-    ### Mission Space
+    ## Mission Space
 
     "go to the matching object at the end of the hallway"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -36,7 +36,7 @@ class MemoryEnv(MiniGridEnv):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -44,11 +44,11 @@ class MemoryEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -56,7 +56,7 @@ class MemoryEnv(MiniGridEnv):
     2. The agent reaches the wrong matching object.
     3. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     S: size of map SxS.
 

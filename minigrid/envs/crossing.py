@@ -12,21 +12,7 @@ from minigrid.minigrid_env import MiniGridEnv
 class CrossingEnv(MiniGridEnv):
 
     """
-    <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N1.png" alt="LavaCrossingS9N1" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N2.png" alt="LavaCrossingS9N2" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS9N3.png" alt="LavaCrossingS9N3" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/LavaCrossingS11N5.png" alt="LavaCrossingS11N5" width="200px"/>
-    </p>
-
-    <p>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N1.png" alt="SimpleCrossingS9N1" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N2.png" alt="SimpleCrossingS9N2" width="200px"/>
-    <img style="float:left" src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS9N3.png" alt="SimpleCrossingS9N3" width="200px"/>
-    <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/SimpleCrossingS11N5.png" alt="SimpleCrossingS11N5" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     Depending on the `obstacle_type` parameter:
     - `Lava` - The agent has to reach the green goal square on the other corner
@@ -40,12 +26,12 @@ class CrossingEnv(MiniGridEnv):
         lava is replaced by walls. This MDP is therefore much easier and maybe
         useful for quickly testing your algorithms.
 
-    ### Mission Space
+    ## Mission Space
     Depending on the `obstacle_type` parameter:
     - `Lava` - "avoid the lava and get to the green goal square"
     - otherwise - "find the opening and get to the green goal square"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action       |
     |-----|--------------|--------------|
@@ -57,7 +43,7 @@ class CrossingEnv(MiniGridEnv):
     | 5   | toggle       | Unused       |
     | 6   | done         | Unused       |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -65,11 +51,11 @@ class CrossingEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
@@ -77,7 +63,7 @@ class CrossingEnv(MiniGridEnv):
     2. The agent falls into lava.
     3. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     S: size of the map SxS.
     N: number of valid crossings across lava or walls from the starting position

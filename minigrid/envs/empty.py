@@ -8,11 +8,7 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class EmptyEnv(MiniGridEnv):
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/empty-env.png" alt="dempty-env" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment is an empty room, and the goal of the agent is to reach the
     green goal square, which provides a sparse reward. A small penalty is
@@ -23,11 +19,11 @@ class EmptyEnv(MiniGridEnv):
     at a random position for each episode, while the regular variants have the
     agent always starting in the corner opposite to the goal.
 
-    ### Mission Space
+    ## Mission Space
 
     "get to the green goal square"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action       |
     |-----|--------------|--------------|
@@ -39,7 +35,7 @@ class EmptyEnv(MiniGridEnv):
     | 5   | toggle       | Unused       |
     | 6   | done         | Unused       |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -47,18 +43,18 @@ class EmptyEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent reaches the goal.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-Empty-5x5-v0`
     - `MiniGrid-Empty-Random-5x5-v0`

@@ -9,23 +9,18 @@ from minigrid.minigrid_env import MiniGridEnv
 class DoorKeyEnv(MiniGridEnv):
 
     """
-    <p>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-curriculum.gif" alt="door-key-curriculum" width="200px"/>
-        <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/figures/door-key-env.png" alt="door-key-env" width="200px"/>
-    </p>
-
-    ### Description
+    ## Description
 
     This environment has a key that the agent must pick up in order to unlock a
     goal and then get to the green goal square. This environment is difficult,
     because of the sparse reward, to solve using classical RL algorithms. It is
     useful to experiment with curiosity or curriculum learning.
 
-    ### Mission Space
+    ## Mission Space
 
     "use the key to open the door and then get to the goal"
 
-    ### Action Space
+    ## Action Space
 
     | Num | Name         | Action                    |
     |-----|--------------|---------------------------|
@@ -37,7 +32,7 @@ class DoorKeyEnv(MiniGridEnv):
     | 5   | toggle       | Toggle/activate an object |
     | 6   | done         | Unused                    |
 
-    ### Observation Encoding
+    ## Observation Encoding
 
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
@@ -45,18 +40,18 @@ class DoorKeyEnv(MiniGridEnv):
         [minigrid/minigrid.py](minigrid/minigrid.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
-    ### Rewards
+    ## Rewards
 
     A reward of '1' is given for success, and '0' for failure.
 
-    ### Termination
+    ## Termination
 
     The episode ends if any one of the following conditions is met:
 
     1. The agent reaches the goal.
     2. Timeout (see `max_steps`).
 
-    ### Registered Configurations
+    ## Registered Configurations
 
     - `MiniGrid-DoorKey-5x5-v0`
     - `MiniGrid-DoorKey-6x6-v0`
