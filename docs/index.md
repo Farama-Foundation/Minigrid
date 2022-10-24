@@ -3,52 +3,29 @@ hide-toc: true
 firstpage:
 lastpage:
 ---
-## Minigrid (formerly gym-minigrid) contains simple and easily configurable grid world environments for reinforcement learning
+## Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research.
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-There are other gridworld Gymnasium environments out there, but this one is
-designed to be particularly simple, lightweight and fast. The code has very few
-dependencies, making it less likely to break or fail to install. It loads no
-external sprites/textures, and it can run at up to 5000 FPS on a Core i7
-laptop, which means you can run your experiments faster. A known-working RL
-implementation can be found [in this repository](https://github.com/lcswillems/torch-rl).
+This library contains a collection of 2D grid-world environments with goal-oriented tasks. The agent in these environments is a triangle-like agent with a discrete action space. The tasks involve solving different maze maps and interacting with different objects such as doors, keys, or boxes.  The design of the library is meant to be simple, fast, and easily customizable.
 
-Requirements:
-- Python 3.7 to 3.10
-- Gymnasium v0.26
-- NumPy 1.18+
-- Matplotlib (optional, only needed for display) - 3.0+
+In addition, the environments found in the [BabyAI](https://github.com/mila-iqia/babyai) repository have been included in Minigrid and will be further maintained under this library.
 
-Please use this bibtex if you want to cite this repository in your publications:
+The Gymnasium interface allows to initialize and interact with the Minigrid default environments as follows:
 
-```
-@misc{minigrid,
-  author = {Chevalier-Boisvert, Maxime and Willems, Lucas and Pal, Suman},
-  title = {Minimalistic Gridworld Environment for Gymnasium},
-  year = {2018},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/Farama-Foundation/MiniGrid}},
-}
-```
+```{code-block} python
 
+import gymnasium as gym
+env = gym.make("MiniGrid-Empty-5x5-v0", render_mode="human")
+observation, info = env.reset(seed=42)
+for _ in range(1000):
+   action = policy(observation)  # User-defined policy function
+   observation, reward, terminated, truncated, info = env.step(action)
 
-## Installation
-
-There is now a [pip package](https://pypi.org/project/minigrid/) available, which is updated periodically:
-
-```
-pip install minigrid
-```
-
-Alternatively, to get the latest version of MiniGrid, you can clone this repository and install the dependencies with `pip3`:
-
-```
-git clone https://github.com/Farama-Foundation/MiniGrid
-cd MiniGrid
-pip install -e .
+   if terminated or truncated:
+      observation, info = env.reset()
+env.close()
 ```
 
 ```{toctree}
