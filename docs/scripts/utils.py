@@ -1,3 +1,5 @@
+import re
+
 # stolen from python docs
 def trim(docstring):
     if not docstring:
@@ -25,20 +27,9 @@ def trim(docstring):
     return "\n".join(trimmed)
 
 
-# dont want envs which contain these
-kill_strs = [
-    "eterministic",
-    "ALE",
-    "-ram",
-    "Frameskip",
-    "Hard",
-    "LanderContinu",
-    "8x8",
-    "uessing",
-    "otter",
-    "oinflip",
-    "hain",
-    "oulette",
-    "DomainRandom",
-    "RacingDiscrete",
-]
+def env_name_format(str):
+    # KeyCorridorEnv
+    split = re.findall(r"[A-Z](?:[a-z]+|[A-Z]*(?=[A-Z]|$))", str)
+    # ['Key', 'Corridor', 'Env']
+    split = filter(lambda x: x.upper() != "ENV", split)
+    return " ".join(split)
