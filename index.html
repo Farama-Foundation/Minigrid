@@ -490,45 +490,23 @@
         </div>
         <article role="main">
           
-          <section id="minigrid-formerly-gym-minigrid-contains-simple-and-easily-configurable-grid-world-environments-for-reinforcement-learning">
-<h1>Minigrid (formerly gym-minigrid) contains simple and easily configurable grid world environments for reinforcement learning<a class="headerlink" href="#minigrid-formerly-gym-minigrid-contains-simple-and-easily-configurable-grid-world-environments-for-reinforcement-learning" title="Permalink to this heading">#</a></h1>
+          <section id="minigrid-contains-simple-and-easily-configurable-grid-world-environments-to-conduct-reinforcement-learning-research">
+<h1>Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research.<a class="headerlink" href="#minigrid-contains-simple-and-easily-configurable-grid-world-environments-to-conduct-reinforcement-learning-research" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://pre-commit.com/"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white" /></a>
 <a class="reference external" href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p>
-<p>There are other gridworld Gymnasium environments out there, but this one is
-designed to be particularly simple, lightweight and fast. The code has very few
-dependencies, making it less likely to break or fail to install. It loads no
-external sprites/textures, and it can run at up to 5000 FPS on a Core i7
-laptop, which means you can run your experiments faster. A known-working RL
-implementation can be found <a class="reference external" href="https://github.com/lcswillems/torch-rl">in this repository</a>.</p>
-<p>Requirements:</p>
-<ul class="simple">
-<li><p>Python 3.7 to 3.10</p></li>
-<li><p>Gymnasium v0.26</p></li>
-<li><p>NumPy 1.18+</p></li>
-<li><p>Matplotlib (optional, only needed for display) - 3.0+</p></li>
-</ul>
-<p>Please use this bibtex if you want to cite this repository in your publications:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@misc</span><span class="p">{</span><span class="n">minigrid</span><span class="p">,</span>
-  <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Chevalier</span><span class="o">-</span><span class="n">Boisvert</span><span class="p">,</span> <span class="n">Maxime</span> <span class="ow">and</span> <span class="n">Willems</span><span class="p">,</span> <span class="n">Lucas</span> <span class="ow">and</span> <span class="n">Pal</span><span class="p">,</span> <span class="n">Suman</span><span class="p">},</span>
-  <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Minimalistic</span> <span class="n">Gridworld</span> <span class="n">Environment</span> <span class="k">for</span> <span class="n">Gymnasium</span><span class="p">},</span>
-  <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2018</span><span class="p">},</span>
-  <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">GitHub</span><span class="p">},</span>
-  <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">GitHub</span> <span class="n">repository</span><span class="p">},</span>
-  <span class="n">howpublished</span> <span class="o">=</span> <span class="p">{</span>\<span class="n">url</span><span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Farama</span><span class="o">-</span><span class="n">Foundation</span><span class="o">/</span><span class="n">MiniGrid</span><span class="p">}},</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</section>
-<section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
-<p>There is now a <a class="reference external" href="https://pypi.org/project/minigrid/">pip package</a> available, which is updated periodically:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">minigrid</span>
-</pre></div>
-</div>
-<p>Alternatively, to get the latest version of MiniGrid, you can clone this repository and install the dependencies with <code class="docutils literal notranslate"><span class="pre">pip3</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Farama</span><span class="o">-</span><span class="n">Foundation</span><span class="o">/</span><span class="n">MiniGrid</span>
-<span class="n">cd</span> <span class="n">MiniGrid</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+<p>This library contains a collection of 2D grid-world environments with goal-oriented tasks. The agent in these environments is a triangle-like agent with a discrete action space. The tasks involve solving different maze maps and interacting with different objects such as doors, keys, or boxes.  The design of the library is meant to be simple, fast, and easily customizable.</p>
+<p>In addition, the environments found in the <a class="reference external" href="https://github.com/mila-iqia/babyai">BabyAI</a> repository have been included in Minigrid and will be further maintained under this library.</p>
+<p>The Gymnasium interface allows to initialize and interact with the Minigrid default environments as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+<span class="n">observation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+   <span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>  <span class="c1"># User-defined policy function</span>
+   <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+   <span class="k">if</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span><span class="p">:</span>
+      <span class="n">observation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
