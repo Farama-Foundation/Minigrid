@@ -1,5 +1,6 @@
 import re
 
+
 # stolen from python docs
 def trim(docstring):
     if not docstring:
