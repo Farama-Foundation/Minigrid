@@ -5,7 +5,7 @@ lastpage:
 ---
 ## Minigrid (formerly gym-minigrid) contains simple and easily configurable grid world environments for reinforcement learning
 
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/) 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 There are other gridworld Gymnasium environments out there, but this one is
@@ -72,8 +72,8 @@ api/wrapper
 :caption: Environments
 
 environments/design
-environments/index
-environments/babyAI_index
+environments/minigrid/index
+environments/babyai/index
 ```
 
 ```{toctree}
