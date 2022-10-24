@@ -26,7 +26,7 @@ We support Python 3.7, 3.8, 3.9 and 3.10 on Linux and macOS. We will accept PRs 
 The included environments can be divided in two groups. The original `Minigrid` environments and the `BabyAI` environments. 
 
 ## Minigrid
-Following is a list of the environments that were included in the original `Minigrid` library. Each environment provides one or more configurations registered with OpenAI gym. Each environment is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning or to fine-tune difficulty.
+Following is a list of the environments that were included in the original `Minigrid` library. Each environment provides one or more configurations registered with Gymansium. Each environment is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning or to fine-tune difficulty.
 
 * [Empty](https://minigrid.farama.org/environments/empty/) - The goal of the agent is to reach a locatin in an empty room. This environment is useful, with small rooms, to validate that your RL algorithm works correctly, and with large rooms to experiment with sparse rewards and exploration.
 
