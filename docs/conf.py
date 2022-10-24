@@ -73,10 +73,10 @@ html_theme = "furo"
 html_title = "MiniGrid Documentation"
 html_baseurl = "https://minigrid.farama.org/"
 html_copy_source = False
-html_favicon = "_static/img/minigrid-white.png"
+html_favicon = "_static/img/minigrid-favicon.png"
 html_theme_options = {
-    "light_logo": "img/minigrid.png",
-    "dark_logo": "img/minigrid-white.png",
+    "light_logo": "img/minigrid.svg",
+    "dark_logo": "img/minigrid-white.svg",
     "gtag": "G-FBXJQQLXKD",
 }
 html_context: Dict[str, Any] = {}
