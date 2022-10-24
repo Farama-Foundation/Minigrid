@@ -3,13 +3,14 @@ hide-toc: true
 firstpage:
 lastpage:
 ---
+
 ## Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.
 
 
 ```{figure} ../figures/door-key-curriculum.gif
-   :alt: door_key_gif
-   :width: 500
-   :height: 500
+   :alt: door key environment gif
+   :width: 350
+   :height: 350
 ```
 
 This library contains a collection of 2D grid-world environments with goal-oriented tasks. The agent in these environments is a triangle-like agent with a discrete action space. The tasks involve solving different maze maps and interacting with different objects such as doors, keys, or boxes.  The design of the library is meant to be simple, fast, and easily customizable.
