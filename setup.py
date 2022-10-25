@@ -30,8 +30,22 @@ def get_version():
     raise RuntimeError("bad version data in __init__.py")
 
 
+def get_requirements():
+    """Gets the description from the readme."""
+    with open("requirements.txt") as reqs_file:
+        reqs = reqs_file.readlines()
+    return reqs
+
+
+def get_tests_requirements():
+    """Gets the description from the readme."""
+    with open("test_requirements.txt") as test_reqs_file:
+        test_reqs = test_reqs_file.readlines()
+    return test_reqs
+
+
 # pytest is pinned to 7.0.1 as this is last version for python 3.6
-extras = {"testing": ["pytest==7.0.1"]}
+extras = {"testing": get_tests_requirements()}
 
 version = get_version()
 header_count, long_description = get_description()
@@ -51,11 +65,7 @@ setup(
     python_requires=">=3.7, <3.11",
     packages=[package for package in find_packages() if package.startswith("minigrid")],
     include_package_data=True,
-    install_requires=[
-        "gymnasium>=0.26",
-        "numpy>=1.18.0",
-        "matplotlib>=3.0",
-    ],
+    install_requires=get_requirements(),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",

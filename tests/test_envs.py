@@ -169,6 +169,7 @@ def test_max_steps_argument(env_spec):
     ids=[spec.id for spec in all_testing_env_specs],
 )
 def test_pickle_env(env_spec):
+    """Test that all environments are picklable."""
     env: gym.Env = env_spec.make()
     pickled_env: gym.Env = pickle.loads(pickle.dumps(env))
 
