@@ -22,6 +22,7 @@ class PedestrianEnv(MiniGridEnv):
     pass
 
     def _gen_grid(self, width, height):
+        print("running gen grid method")
         # Create an empty grid
         self.grid = Grid(width, height)
 
@@ -86,15 +87,15 @@ class PedestrianEnv20x80(PedestrianEnv):
         
 register(
     id='Pedestrian-Empty-9x16-v0',
-    entry_point='gym_minigrid.envs:PedestrianEnv9x16'
+    entry_point='gym_minigrid.envs.pedestrian:PedestrianEnv9x16'
 )
         
 register(
     id='Pedestrian-Empty-6x20-v0',
-    entry_point='gym_minigrid.envs:PedestrianEnv6x20'
+    entry_point='gym_minigrid.envs.pedestrian:PedestrianEnv6x20'
 )
 
 register(
     id='Pedestrian-Empty-20x80-v0',
-    entry_point='gym_minigrid.envs:PedestrianEnv20x80'
+    entry_point='gym_minigrid.envs.pedestrian:PedestrianEnv20x80'
 )
