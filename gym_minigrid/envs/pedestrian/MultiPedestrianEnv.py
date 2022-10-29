@@ -259,5 +259,5 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
 
 register(
     id='MultiPedestrian-Empty-20x80-v0',
-    entry_point='gym_minigrid.envs.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
 )

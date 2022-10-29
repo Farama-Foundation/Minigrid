@@ -3,7 +3,7 @@ import random
 import gym
 import gym_minigrid
 from gym_minigrid.wrappers import *
-from gym_minigrid.envs import MultiPedestrianEnv
+# from gym_minigrid.envs import MultiPedestrianEnv
 # %matplotlib auto
 # %load_ext autoreload
 # %autoreload 2
