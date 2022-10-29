@@ -11,4 +11,3 @@ class Agent:
         self.speed = speed
 
         pass
-    

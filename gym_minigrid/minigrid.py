@@ -579,7 +579,7 @@ class Grid:
     def process_vis(grid, agent_pos):
         mask = np.zeros(shape=(grid.width, grid.height), dtype=bool)
 
-        mask[agent_pos[0], agent_pos[1]] = True
+        mask[agent_pos, agent_pos] = True
 
         for j in reversed(range(0, grid.height)):
             for i in range(0, grid.width-1):
@@ -787,7 +787,7 @@ class MiniGridEnv(gym.Env):
         for j in range(self.grid.height):
 
             for i in range(self.grid.width):
-                if i == self.agent_pos[0] and j == self.agent_pos[1]:
+                if i == self.agent_pos and j == self.agent_pos:
                     str += 2 * AGENT_DIR_TO_STR[self.agent_dir]
                     continue
 
@@ -813,8 +813,8 @@ class MiniGridEnv(gym.Env):
 
         return str
 
-    def _gen_grid(self, width, height):
-        assert False, "_gen_grid needs to be implemented by each environment"
+    # def _gen_grid(self, width, height):
+    #     assert False, "_gen_grid needs to be implemented by each environment"
 
     def _reward(self):
         """
@@ -920,18 +920,19 @@ class MiniGridEnv(gym.Env):
 
             num_tries += 1
 
-            pos = np.array((
-                self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
-                self._rand_int(top[1], min(top[1] + size[1], self.grid.height))
-            ))
+            # pos = np.array((
+            #     self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
+            #     self._rand_int(top[1], min(top[1] + size[1], self.grid.height))
+            # ))
+            pos = top
 
             # Don't place the object on top of another object
             if self.grid.get(*pos) != None:
                 continue
 
             # Don't place the object where the agent is
-            if np.array_equal(pos, self.agent_pos):
-                continue
+            # if np.array_equal(pos, self.agent_pos):
+            #     continue
 
             # Check if there is a filtering criterion
             if reject_fn and reject_fn(self, pos):
@@ -960,7 +961,8 @@ class MiniGridEnv(gym.Env):
         self,
         top=None,
         size=None,
-        rand_dir=True,
+        # rand_dir=True,
+        dir=0,
         max_tries=math.inf
     ):
         """
@@ -971,8 +973,9 @@ class MiniGridEnv(gym.Env):
         pos = self.place_obj(None, top, size, max_tries=max_tries)
         self.agent_pos = pos
 
-        if rand_dir:
-            self.agent_dir = self._rand_int(0, 4)
+        self.agent_dir = dir
+        # if rand_dir:
+        #     self.agent_dir = self._rand_int(0, 4)
 
         return pos
 
@@ -1202,7 +1205,7 @@ class MiniGridEnv(gym.Env):
         grid, vis_mask = self.gen_obs_grid()
 
         # Encode the partially observable view into a numpy array
-        image = grid.encode(vis_mask)
+        # image = grid.encode(vis_mask)
 
         assert hasattr(self, 'mission'), "environments must define a textual mission string"
 
@@ -1211,8 +1214,9 @@ class MiniGridEnv(gym.Env):
         # - the agent's direction/orientation (acting as a compass)
         # - a textual mission string (instructions for the agent)
         obs = {
-            'image': image,
-            'direction': self.agent_dir,
+            # 'image': image,
+            'positions': self.agent_pos,
+            'directions': self.agent_dir,
             'mission': self.mission
         }
 

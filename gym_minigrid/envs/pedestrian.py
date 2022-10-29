@@ -22,6 +22,7 @@ class PedestrianEnv(MiniGridEnv):
     pass
 
     def _gen_grid(self, width, height):
+        print("running gen grid method")
         # Create an empty grid
         self.grid = Grid(width, height)
 
