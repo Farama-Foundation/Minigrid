@@ -13,11 +13,11 @@ import dgl
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
-from gym_minigrid.envs.multiroom_mod import MultiRoomEnv
+from .gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 
-from util import graph_metrics
-import util.transforms as tr
-import util.util as util
+from .util import graph_metrics
+from .util import transforms as tr
+from .util import util as util
 
 logger = logging.getLogger(__name__)
 

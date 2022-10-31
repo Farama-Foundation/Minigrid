@@ -11,7 +11,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
+from ..gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
 
 logger = logging.getLogger(__name__)
