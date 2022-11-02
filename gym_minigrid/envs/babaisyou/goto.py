@@ -1,27 +1,21 @@
 import numpy as np
 
-from .core.flexible_world_object import FBall, FWall, RuleProperty, RuleIs, RuleObject
+from .core.flexible_world_object import FBall, FWall, RuleProperty, RuleIs, RuleObject, Baba
 from .core.utils import grid_random_position
 from gym_minigrid.minigrid import MiniGridEnv, MissionSpace, Grid
-from ...babaisyou import BabaIsYouGrid
+from ...babaisyou import BabaIsYouGrid, BabaIsYouEnv
 
 RuleObjPos = tuple[int, int]
 RuleIsPos = tuple[int, int]
 RulePropPos = tuple[int, int]
 
 
-class BaseGridEnv(MiniGridEnv):
+class BaseGridEnv(BabaIsYouEnv):
     def __init__(self, size, **kwargs):
         self.size = size
-        mission_space = MissionSpace(
-            mission_func=lambda: ""
-        )
         super().__init__(
-            mission_space=mission_space,
             grid_size=size,
             max_steps=4 * size * size,
-            # Set this to True for maximum speed
-            see_through_walls=True,
             **kwargs
         )
 
@@ -66,23 +60,13 @@ class GoToObjEnv(BaseGridEnv):
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
-        # Place a goal square in the bottom-right corner
-        # self.put_obj(FBall(), width - 2, height - 2)
         self.put_obj(FBall(), *self.ball_pos)
 
-        # rule_y = 2
-        # self.put_obj(RuleObject('fball', can_push=self.push_rule_block), *self.rule_pos[0])
-        # self.put_obj(RuleIs(can_push=self.push_rule_block), *self.rule_pos[1])
-        # self.put_obj(RuleProperty('is_goal', can_push=self.push_rule_block), *self.rule_pos[2])
-        # self.put_obj(RuleProperty('is_defeat', can_push=self.push_rule_block), *self.rule_pos[2])
+        self.put_rule(obj='baba', property='is_agent', positions=[(1, 1), (2, 1), (3, 1)])
         self.put_rule(obj='fball', property='is_goal', positions=self.rule_pos, can_push=self.push_rule_block)
 
-        # Place the agent
-        if self.agent_start_pos is not None:
-            self.agent_pos = self.agent_start_pos
-            self.agent_dir = self.agent_start_dir
-        else:
-            self.place_agent()
+        self.place_obj(Baba())
+        self.place_agent()
 
 
 class GoToWinObjEnv(BaseGridEnv):

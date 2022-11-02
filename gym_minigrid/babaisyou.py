@@ -624,6 +624,9 @@ class BabaIsYouEnv(gym.Env):
             new_pos = pos
 
         # TODO: move the agent here or just compute the mvts and execute them later?
+        # check if win or lose before moving the agent
+        is_win = self.is_win_pos(new_pos)
+        is_lose = self.is_lose_pos(new_pos)
         self.change_obj_pos(pos, new_pos, dir_vec)
 
         # pull object in the cell behind
@@ -634,11 +637,6 @@ class BabaIsYouEnv(gym.Env):
             new_bwd_pos, _, _ = self.move(bwd_pos, dir_vec)
             # self.change_obj_pos(bwd_pos, new_bwd_pos)
 
-        # win if either the agent mvt or the mvt of pushed objects is win
-        # is_win = is_obj_win or self.is_win_pos(new_pos)
-        is_win = self.is_win_pos(new_pos)
-        # lose only applies to the current moving object, it doesn't propagate
-        is_lose = self.is_lose_pos(new_pos)
         return new_pos, is_win, is_lose
 
     def step(self, action):
@@ -700,34 +698,6 @@ class BabaIsYouEnv(gym.Env):
 
             self._ruleset = extract_ruleset(self.grid)
 
-
-        # Pick up an object
-        elif action == self.actions.pickup:
-            if fwd_cell and fwd_cell.can_pickup():
-                if self.carrying is None:
-                    self.carrying = fwd_cell
-                    self.carrying.cur_pos = np.array([-1, -1])
-                    self.grid.set(*fwd_pos, None)
-
-        # Drop an object
-        elif action == self.actions.drop:
-            if not fwd_cell and self.carrying:
-                self.grid.set(*fwd_pos, self.carrying)
-                self.carrying.cur_pos = fwd_pos
-                self.carrying = None
-
-        # Toggle/activate an object
-        elif action == self.actions.toggle:
-            if fwd_cell:
-                fwd_cell.toggle(self, fwd_pos)
-
-        # Done action (not used by default)
-        elif action == self.actions.done:
-            pass
-
-        else:
-            assert False, "unknown action"
-
         if self.step_count >= self.max_steps:
             done = True
 
@@ -769,7 +739,7 @@ class BabaIsYouEnv(gym.Env):
         )
 
         if mode == "human":
-            self.window.set_caption(self.mission)
+            # self.window.set_caption(self.mission)
             self.window.show_img(img)
         else:
             return img

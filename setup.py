@@ -39,7 +39,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
-        "gym>=0.25.0",
+        "gym==0.25.0",
         "numpy>=1.18.0",
         "matplotlib>=3.0",
     ],

@@ -93,5 +93,4 @@ class TestRuleEnv(BabaIsYouEnv):
             self.put_obj(block, *pos)
 
         self.place_obj(Baba())
-
         self.place_agent()
