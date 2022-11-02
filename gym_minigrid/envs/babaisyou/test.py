@@ -1,6 +1,6 @@
 from gym_minigrid.babaisyou import BabaIsYouEnv, BabaIsYouGrid
 from gym_minigrid.minigrid import Grid
-from .core.rule_block import RuleProperty, RuleIs, RuleObject
+from .core.flexible_world_object import RuleProperty, RuleIs, RuleObject
 
 
 class TestEnv(BabaIsYouEnv):

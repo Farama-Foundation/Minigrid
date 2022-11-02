@@ -1,6 +1,5 @@
 from gym_minigrid.babaisyou import BabaIsYouEnv, BabaIsYouGrid
-from gym_minigrid.envs.babaisyou.core.flexible_world_object import FBall, FWall
-from gym_minigrid.envs.babaisyou.core.rule_block import RuleObject, RuleIs, RuleProperty
+from gym_minigrid.envs.babaisyou.core.flexible_world_object import FBall, FWall, Baba, RuleObject, RuleIs, RuleProperty
 from gym_minigrid.envs.babaisyou.core.utils import grid_random_position
 from gym_minigrid.envs.babaisyou.goto import BaseGridEnv
 from gym_minigrid.minigrid import Grid, MissionSpace, MiniGridEnv
@@ -26,7 +25,7 @@ class ChangeRuleEnv(MiniGridEnv):
 
     def _gen_grid(self, width, height):
         # Create an empty grid
-        self.grid = Grid(width, height)
+        self.grid = BabaIsYouGrid(width, height)
 
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
@@ -68,21 +67,31 @@ class TestRuleEnv(BabaIsYouEnv):
             RuleProperty('is_block'),
             RuleProperty('is_goal'),
             RuleProperty('can_push'),
+            RuleProperty('is_pull'),
             RuleProperty('is_defeat'),
+            RuleProperty('is_move'),
+            FBall(),
+            FBall(),
             FBall(),
             FWall()
         ]
         self.size = 14
-        super().__init__(grid_size=self.size, **kwargs)
+        super().__init__(grid_size=self.size, max_steps=int(1e5), **kwargs)
 
     def _gen_grid(self, width, height):
         self.grid = BabaIsYouGrid(width, height)
-        # self.grid = Grid(width, height)
+        # self.grid = BabaIsYouGrid(width, height)
         self.grid.wall_rect(0, 0, width, height)
 
-        positions = grid_random_position(self.size, n_samples=len(self.blocks), margin=2)
+        self.put_obj(RuleObject('baba'), 2, 2)
+        self.put_obj(RuleIs(), 3, 2)
+        self.put_obj(RuleProperty('is_agent'), 4, 2)
+
+        positions = grid_random_position(self.size, n_samples=len(self.blocks), margin=3)
 
         for pos, block in zip(positions, self.blocks):
             self.put_obj(block, *pos)
+
+        self.place_obj(Baba())
 
         self.place_agent()

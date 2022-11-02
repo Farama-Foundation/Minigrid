@@ -1,9 +1,9 @@
 import numpy as np
 
-from .core.flexible_world_object import FBall, FWall
-from .core.rule_block import RuleProperty, RuleIs, RuleObject
+from .core.flexible_world_object import FBall, FWall, RuleProperty, RuleIs, RuleObject
 from .core.utils import grid_random_position
 from gym_minigrid.minigrid import MiniGridEnv, MissionSpace, Grid
+from ...babaisyou import BabaIsYouGrid
 
 RuleObjPos = tuple[int, int]
 RuleIsPos = tuple[int, int]
@@ -61,7 +61,7 @@ class GoToObjEnv(BaseGridEnv):
         self.agent_start_pos = agent_start_pos
 
         # Create an empty grid
-        self.grid = Grid(width, height)
+        self.grid = BabaIsYouGrid(width, height)
 
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
@@ -90,7 +90,7 @@ class GoToWinObjEnv(BaseGridEnv):
         super().__init__(size=size, **kwargs)
 
     def _gen_grid(self, width, height):
-        self.grid = Grid(width, height)
+        self.grid = BabaIsYouGrid(width, height)
         self.grid.wall_rect(0, 0, width, height)
 
         # randomly sample which object is win

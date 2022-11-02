@@ -39,7 +39,7 @@ COLORS = {
 COLOR_NAMES = sorted(list(COLORS.keys()))
 
 # Used to map colors to integers
-COLOR_TO_IDX = {"red": 0, "green": 1, "blue": 2, "purple": 3, "yellow": 4, "grey": 5}
+COLOR_TO_IDX = {"red": 0, "green": 1, "blue": 2, "purple": 3, "yellow": 4, "grey": 5, "white": 6}
 
 IDX_TO_COLOR = dict(zip(COLOR_TO_IDX.values(), COLOR_TO_IDX.keys()))
 
@@ -289,6 +289,12 @@ class WorldObj:
         # Current position of the object
         self.cur_pos = None
 
+    def is_agent(self):
+        return False
+
+    def is_move(self):
+        return False
+
     def is_goal(self):
         return False
 
@@ -301,6 +307,9 @@ class WorldObj:
 
     def can_push(self):
         """Can the agent push this?"""
+        return False
+
+    def is_pull(self):
         return False
 
     def can_pickup(self):
@@ -692,6 +701,7 @@ class Grid:
         if obj is not None:
             obj.render(img)
 
+        # TODO: make the agent a WorldObj
         # Overlay the agent on top
         if agent_dir is not None:
             tri_fn = point_in_triangle(

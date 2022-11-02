@@ -135,16 +135,16 @@ class BabaIsYouGrid:
             obj.render(img)
 
         # Overlay the agent on top
-        if agent_dir is not None:
-            tri_fn = point_in_triangle(
-                (0.12, 0.19),
-                (0.87, 0.50),
-                (0.12, 0.81),
-            )
-
-            # Rotate the agent based on its direction
-            tri_fn = rotate_fn(tri_fn, cx=0.5, cy=0.5, theta=0.5 * math.pi * agent_dir)
-            fill_coords(img, tri_fn, (255, 0, 0))
+        # if agent_dir is not None:
+        #     tri_fn = point_in_triangle(
+        #         (0.12, 0.19),
+        #         (0.87, 0.50),
+        #         (0.12, 0.81),
+        #     )
+        #
+        #     # Rotate the agent based on its direction
+        #     tri_fn = rotate_fn(tri_fn, cx=0.5, cy=0.5, theta=0.5 * math.pi * agent_dir)
+        #     fill_coords(img, tri_fn, (255, 0, 0))
 
         # Highlight the cell if needed
         if highlight:
@@ -180,7 +180,7 @@ class BabaIsYouGrid:
                 cell = self.get(i, j)
 
                 agent_here = np.array_equal(agent_pos, (i, j))
-                tile_img = Grid.render_tile(
+                tile_img = BabaIsYouGrid.render_tile(
                     cell,
                     agent_dir=agent_dir if agent_here else None,
                     highlight=highlight_mask[i, j],
@@ -336,8 +336,8 @@ class BabaIsYouEnv(gym.Env):
         self.max_steps = max_steps
 
         # Current position and direction of the agent
-        # self.agent_pos: np.ndarray = None
-        # self.agent_dir: int = None
+        self.agent_pos: np.ndarray = None
+        self.agent_dir: int = None
         self.agent_object = 'baba'
 
         # Initialize the state
@@ -392,7 +392,7 @@ class BabaIsYouEnv(gym.Env):
         :param size: Size of the hashing
         """
         sample_hash = hashlib.sha256()
-
+        # TODO: make the agent part of the grid encoding
         to_encode = [self.grid.encode().tolist(), self.agent_pos, self.agent_dir]
         for item in to_encode:
             sample_hash.update(str(item).encode("utf8"))
@@ -538,6 +538,7 @@ class BabaIsYouEnv(gym.Env):
         """
 
         self.agent_pos = None
+        # pos = self.place_obj(None, top, size, max_tries=max_tries)
         pos = self.place_obj(None, top, size, max_tries=max_tries)
         self.agent_pos = pos
 
@@ -573,38 +574,77 @@ class BabaIsYouEnv(gym.Env):
 
         return self.agent_pos + self.dir_vec
 
-    def change_obj_pos(self, pos, new_pos):
+    def change_obj_pos(self, pos, new_pos, mvt_dir=None):
         """
         Change the position of an object in the grid
         """
         if np.any(pos != new_pos):
             # move the object
-            self.grid.set(*new_pos, self.grid.get(*pos))
+            e = self.grid.get(*pos)
+            self.grid.set(*new_pos, e)
             self.grid.set(*pos, None)
+            # change the dir of the object
+            if mvt_dir is not None:
+                e.dir = np.argwhere(np.all(DIR_TO_VEC == mvt_dir, axis=1))[0][0]
 
-    def move_fwd(self, pos):
+    def is_win_pos(self, pos):
+        new_cell = self.grid.get(*pos)
+        return new_cell is not None and new_cell.is_goal()
+
+    def is_lose_pos(self, pos):
+        new_cell = self.grid.get(*pos)
+        return new_cell is not None and new_cell.is_defeat()
+
+    def move(self, pos, dir_vec):
         """
         Return fwd_pos if can move, otherwise return pos
         """
-        # TODO NC: assume that the object is moving in the direction of the agent
-        fwd_pos = pos + self.dir_vec
+        # TODO: win only if the agent is on a winning block? Win and lose rules apply only to the agent, not to the pushed objects
+        # if the agent pushes an obj on a winning block, win the game but if it is a losing block, just destroy the obj
+        # is_obj_win = False
+
+        fwd_pos = pos + dir_vec
         # if fwd_cell can be pushed, try to move it
         fwd_cell = self.grid.get(*fwd_pos)
-        if fwd_cell is not None and fwd_cell.can_push():
-            new_fwd_pos = self.move_fwd(fwd_pos)
-            self.change_obj_pos(fwd_pos, new_fwd_pos)
 
+        if fwd_cell is not None and fwd_cell.can_push():
+            # new_fwd_pos, is_obj_win, is_obj_lose = self.move(fwd_pos, dir_vec)
+            new_fwd_pos, _, _ = self.move(fwd_pos, dir_vec)
+            # TODO: hot and melt rules
+            # if is_obj_lose:
+            #     self.grid.set(*fwd_pos, None)  # destroy the obj
+            # else:
+            # self.change_obj_pos(fwd_pos, new_fwd_pos)  # move the obj
+
+        # move if the fwd cell is empty or can overlap
         fwd_cell = self.grid.get(*fwd_pos)
         if fwd_cell is None or fwd_cell.can_overlap():
             new_pos = tuple(fwd_pos)
         else:
             new_pos = pos
 
-        return new_pos
+        # TODO: move the agent here or just compute the mvts and execute them later?
+        self.change_obj_pos(pos, new_pos, dir_vec)
+
+        # pull object in the cell behind
+        bwd_pos = pos - dir_vec
+        bwd_cell = self.grid.get(*bwd_pos)
+        # the obj can be pulled if the agent has moved (i.e. new_pos = fwd_pos)
+        if bwd_cell is not None and bwd_cell.is_pull():
+            new_bwd_pos, _, _ = self.move(bwd_pos, dir_vec)
+            # self.change_obj_pos(bwd_pos, new_bwd_pos)
+
+        # win if either the agent mvt or the mvt of pushed objects is win
+        # is_win = is_obj_win or self.is_win_pos(new_pos)
+        is_win = self.is_win_pos(new_pos)
+        # lose only applies to the current moving object, it doesn't propagate
+        is_lose = self.is_lose_pos(new_pos)
+        return new_pos, is_win, is_lose
 
     def step(self, action):
         self.step_count += 1
 
+        is_win, is_lose = False, False
         reward = 0
         done = False
 
@@ -624,20 +664,42 @@ class BabaIsYouEnv(gym.Env):
 
         if action != self.actions.idle:
             # move the agent if the forward cell is empty or can overlap or can be pushed
-            self.agent_pos = self.move_fwd(self.agent_pos)
+            # self.agent_pos, is_win, is_lose = self.move(self.agent_pos, self.dir_vec)
 
-            if fwd_cell is not None and fwd_cell.is_goal():
+            for k, e in enumerate(self.grid):
+                if e is not None and (e.is_agent() or e.is_move()):
+                    e.has_moved = False
+
+            # movements = []
+            # the agent moves first
+            for k, e in enumerate(self.grid):
+                if e is not None and e.is_agent() and not e.has_moved:
+                    e.dir = self.agent_dir
+                    pos = (k % self.grid.width, k // self.grid.width)
+                    new_pos, is_win, is_lose = self.move(pos, self.dir_vec)
+                    # movements.append((pos, new_pos))
+                    e.has_moved = True
+
+            # move other objects
+            for k, e in enumerate(self.grid):
+                if e is not None and e.is_move() and not e.has_moved:
+                    pos = (k % self.grid.width, k // self.grid.width)
+                    new_pos, _, _ = self.move(pos, DIR_TO_VEC[e.dir])
+                    e.has_moved = True
+
+            # TODO: handle conflicts
+            # for (pos, new_pos) in movements:
+            #     self.change_obj_pos(pos, new_pos)
+
+            if is_win:
                 done = True
                 reward = self._reward()
-            if fwd_cell is not None and fwd_cell.is_defeat():
+            elif is_lose:
                 done = True
                 reward = -1
 
             self._ruleset = extract_ruleset(self.grid)
 
-
-        # TODO: pushing objects destroy other objects
-        # TODO: contains
 
         # Pick up an object
         elif action == self.actions.pickup:
