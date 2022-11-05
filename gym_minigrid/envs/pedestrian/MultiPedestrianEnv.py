@@ -52,7 +52,10 @@ class MultiPedestrianEnv(MiniGridEnv):
         # Place a goal square in the bottom-right corner
         for i in range(1, self.height-1):
             self.put_obj(Goal(), self.width - 2, i)
-        pass
+        
+        for i in range(1, self.height-1):
+            self.put_obj(Goal(), 1, i)
+        
 
 
 

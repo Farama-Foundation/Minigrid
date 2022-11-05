@@ -20,7 +20,6 @@ env.reset()
 for i in range(0, 20):
 #     print("step {}".format(i))
 
-
     obs, reward, done, info = env.step(None)
     # print(obs)
 #     print(obs["direction"])

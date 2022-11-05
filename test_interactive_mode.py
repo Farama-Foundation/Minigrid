@@ -16,7 +16,7 @@ for i in range(0, 100):
     action = random.randint(0, env.action_space.n - 1)
 
     obs, reward, done, info = env.step(action)
-
+    # print(env.step(action))
     env.render()
 
     time.sleep(0.05)
