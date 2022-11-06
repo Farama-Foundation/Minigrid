@@ -51,7 +51,7 @@ version = get_version()
 header_count, long_description = get_description()
 
 setup(
-    name="Minigrid",
+    name="minigrid",
     version=version,
     author="Farama Foundation",
     author_email="contact@farama.org",
