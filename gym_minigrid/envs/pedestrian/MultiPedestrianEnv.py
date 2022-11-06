@@ -3,6 +3,7 @@ from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 from gym_minigrid.agents import Agent, PedActions
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
+import numpy as np
 
 class MultiPedestrianEnv(MiniGridEnv):
     def __init__(
@@ -15,6 +16,13 @@ class MultiPedestrianEnv(MiniGridEnv):
             self.agents = []
         else:
             self.agents = agents
+        
+        # Terry - added an agents grid to easily check for overlap of agents
+        # and to be able to calculate the actions each agent should take
+        # some agents will need to share lanes, so this will allow us to consider that
+        self.agentsGrid = np.zeros((width, height))
+        for agent in self.agents:
+            self.agentsGrid[agent.position[0]][agent.position[1]] = 1
 
         super().__init__(
             width=width,
@@ -27,10 +35,26 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #region agent management
     def addAgents(self, agents: List[Agent]):
-        self.agents.extend(agents)
+        for agent in agents:
+            if self.canPlaceAgent(agent):
+                self.agents.append(agent)
+            else:
+                print("Can't place agent with position " + str(agent.position))
 
     def addAgent(self, agent: Agent):
-        self.agents.append(agent)
+        if self.canPlaceAgent(agent):
+            self.agents.append(agent)
+        else:
+            print("Can't place agent with position " + str(agent.position))
+
+    # Terry - We need to use this in the addAgent methods to make sure the given
+    # positions of the new agents won't overlap with existing ones
+    def canPlaceAgent(self, agent: Agent):
+        if self.agentsGrid[agent.position[0]][agent.position[1]] == 1:
+            return False
+            #Terry - ^ if an agent already exists there, we can't place a new agent there
+        else:
+            return True
         
     def getNumAgents(self):
         return len(self.agents)
@@ -40,21 +64,54 @@ class MultiPedestrianEnv(MiniGridEnv):
             agent.reset()
 
     def forwardAgent(self, agent: Agent):
-        # TODO 
+        # TODO DONE
+        
+        # Get the position in front of the agent
+        assert agent.direction >= 0 and agent.direction < 4
+        fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
+        # Terry - implemented speed ^ by multiplying speed with direction unit vector
+
+        # Get the contents of the cell in front of the agent
+        fwd_cell = self.grid.get(*fwd_pos)
+
+        # Move forward if no overlap
+        if fwd_cell == None or fwd_cell.can_overlap():
+                agent.position = fwd_pos
+        # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
+
+    # Terry - move left and right functions are below
+    def moveLeft(self, agent: Agent):
+        assert agent.direction >= 0 and agent.direction < 4
+        #Terry - uses the direction to left of agent to find vector to move left
+        left_dir = agent.direction - 1
+        if left_dir < 0:
+            left_dir += 4
+        left_pos = agent.position + DIR_TO_VEC[left_dir]
+
+        agent.position = left_pos
+
+    def moveRight(self, agent: Agent):
+        assert agent.direction >= 0 and agent.direction < 4
+        #Terry - uses the direction to left of agent to find vector to move left
+        right_dir = (agent.direction + 1) % 4
+        right_pos = agent.position + DIR_TO_VEC[right_dir]
+        
+        agent.position = right_pos
     #endregion
 
     #region sidewalk
 
     def genSidewalks(self):
-        
-        # TODO turn this into 2 side walks.
-        # Place a goal square in the bottom-right corner
+
+        # TODO turn this into 2 side walks. DONE
+
+        # Terry - added goals to the left side
+        # not sure if we are making the sidewalks go horizontally or vertically
         for i in range(1, self.height-1):
+            self.put_obj(Goal(), 1, i)
             self.put_obj(Goal(), self.width - 2, i)
         pass
-
-
 
     #endregion
 
@@ -62,12 +119,15 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def validateAgentPositions(self):
         # TODO iterate over our agents and make sure that they can be placed there
-        
-        # # Check that the agent doesn't overlap with an object
-        # start_cell = self.grid.get(*self.agent_pos)
-        # assert start_cell is None or start_cell.can_overlap()
-        pass
 
+        # Terry - Is this to validate after getting a list of actions for parallel update?
+        # If so, I have started part of that in the step function.
+
+        # Check that the agent doesn't overlap with an object
+        for agent in self.agents:
+            start_cell = self.grid.get(*agent.position)
+            assert start_cell is None or start_cell.can_overlap()
+        pass
 
     def reset(self):
         
@@ -89,8 +149,6 @@ class MultiPedestrianEnv(MiniGridEnv):
         obs = self.gen_obs()
         return obs
 
-
-
     def _gen_grid(self, width, height):
 
         # Create an empty grid
@@ -101,7 +159,6 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         self.genSidewalks()
         self.mission = "switch sidewalks"
-
 
     def render(self, mode='human', close=False, highlight=True, tile_size=TILE_PIXELS):
         """
@@ -133,35 +190,47 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         return img
 
-
     def step(self, action=None):
         self.step_count += 1
 
         reward = 0
         done = False
 
+        # TODO:
+        # 1. get the agent
+        # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
+        # 3. call the method that takes the action
+
+        actions = []
+        for agent in self.agents:
+            action = agent.getAction()
+            actions.append(action)
+
+        newAgentsGrid = np.zeros((self.width, self.height))
+        # Terry - create the new agentsGrid here before actually testing the actions
+        # We simulate the new positions here to check for an overlap of agents
+        # Change value at agent positions to 1 as we iterate over all the agents
+        # Check if value equals 1 before setting the value to check if there
+        # is already an agent there
+        # If yes, then we can't have the agent take that action because there would
+        # be 2 agents in the same position
+        # After simulating the new agents grid and there isn't any problems
+        # with all the actions, then set self.agentsGrid = newAgentsGrid
+        # to update the existing grid and proceed to taking the actions below
+        
+        index = 0
         for agent in self.agents:
 
-            # TODO:
-            # 1. get the agent
-
-            # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
-            action = agent.getAction()
-            # 3. call the method that takes the action
-            if action == PedActions.forward:
+            if actions[index] == PedActions.forward:
                 self.forwardAgent(agent)
-            # Rotate left # replace with rotation
-            elif action == PedActions.moveLeft:
-                agent.direction -= 1
-                if agent.direction < 0:
-                    agent.direction += 4
-            # Rotate right
-            elif action == PedActions.moveRight:
-                agent.direction = (agent.direction + 1) % 4
+            elif actions[index] == PedActions.moveLeft:
+                self.moveLeft(agent)
+            elif actions[index] == PedActions.moveRight:
+                self.moveRight(agent)
             else:
                 assert False, f"unknown action {action}"
-        
 
+            index += 1
 
         if self.step_count >= self.max_steps:
             done = True
@@ -169,8 +238,6 @@ class MultiPedestrianEnv(MiniGridEnv):
         obs = self.gen_obs()
 
         return obs, reward, done, {}
-
-
 
     def gen_obs(self):
         """
@@ -184,9 +251,6 @@ class MultiPedestrianEnv(MiniGridEnv):
         return obs
 
     #endregion
-
-
-
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):

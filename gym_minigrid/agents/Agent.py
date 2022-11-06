@@ -1,12 +1,12 @@
 from typing import Tuple
-
 import random
+
 class Agent:
     def __init__(
         self, 
         position: Tuple[int, int], 
         direction: int, 
-        speed = 2,
+        speed = 1,
         ):
 
         self.initPosition = position
