@@ -19,6 +19,8 @@ from minigrid.utils.rendering import (
 if TYPE_CHECKING:
     from minigrid.minigrid_env import MiniGridEnv
 
+Point = Tuple[int, int]
+
 
 class WorldObj:
 
@@ -34,10 +36,10 @@ class WorldObj:
         self.contains = None
 
         # Initial position of the object
-        self.init_pos = None
+        self.init_pos: Optional[Point] = None
 
         # Current position of the object
-        self.cur_pos = None
+        self.cur_pos: Optional[Point] = None
 
     def can_overlap(self) -> bool:
         """Can the agent overlap with this?"""

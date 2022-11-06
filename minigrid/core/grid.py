@@ -1,5 +1,5 @@
 import math
-from typing import Any, List, Optional, Tuple, Type
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type
 
 import numpy as np
 
@@ -15,13 +15,14 @@ from minigrid.utils.rendering import (
 )
 
 
+
 class Grid:
     """
     Represent a grid and operations on it
     """
 
     # Static cache of pre-renderer tiles
-    tile_cache = {}
+    tile_cache:Dict[Tuple[Any, ...], Any] = {}
 
     def __init__(self, width: int, height: int):
         assert width >= 3
@@ -30,7 +31,7 @@ class Grid:
         self.width: int = width
         self.height: int = height
 
-        self.grid: List[Optional[WorldObj]] = [None] * width * height
+        self.grid: List[Optional[WorldObj]] = [None] * (width * height)
 
     def __contains__(self, key: Any) -> bool:
         if isinstance(key, WorldObj):
@@ -76,7 +77,7 @@ class Grid:
         x: int,
         y: int,
         length: Optional[int] = None,
-        obj_type: Type[WorldObj] = Wall,
+        obj_type: Callable[[], WorldObj] = Wall,
     ):
         if length is None:
             length = self.width - x
@@ -88,7 +89,7 @@ class Grid:
         x: int,
         y: int,
         length: Optional[int] = None,
-        obj_type: Type[WorldObj] = Wall,
+        obj_type: Callable[[], WorldObj] = Wall,
     ):
         if length is None:
             length = self.height - y
@@ -139,7 +140,7 @@ class Grid:
     @classmethod
     def render_tile(
         cls,
-        obj: WorldObj,
+        obj: Optional[WorldObj],
         agent_dir: Optional[int] = None,
         highlight: bool = False,
         tile_size: int = TILE_PIXELS,
@@ -150,7 +151,7 @@ class Grid:
         """
 
         # Hash map lookup key for the cache
-        key = (agent_dir, highlight, tile_size)
+        key: Tuple[Any, ...] = (agent_dir, highlight, tile_size)
         key = obj.encode() + key if obj else key
 
         if key in cls.tile_cache:

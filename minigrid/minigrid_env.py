@@ -2,7 +2,7 @@ import hashlib
 import math
 from abc import abstractmethod
 from enum import IntEnum
-from typing import Optional
+from typing import Optional, Tuple, Union
 
 import gymnasium as gym
 import numpy as np
@@ -10,6 +10,7 @@ from gymnasium import spaces
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
 from minigrid.core.grid import Grid
+from minigrid.core.world_object import WorldObj, Point
 from minigrid.core.mission import MissionSpace
 from minigrid.utils.window import Window
 
@@ -43,9 +44,9 @@ class MiniGridEnv(gym.Env):
     def __init__(
         self,
         mission_space: MissionSpace,
-        grid_size: int = None,
-        width: int = None,
-        height: int = None,
+        grid_size: Optional[int] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
         max_steps: int = 100,
         see_through_walls: bool = False,
         agent_view_size: int = 7,
@@ -62,6 +63,7 @@ class MiniGridEnv(gym.Env):
             assert width is None and height is None
             width = grid_size
             height = grid_size
+        assert width is not None and height is not None
 
         # Action enumeration for this environment
         self.actions = MiniGridEnv.Actions
@@ -107,7 +109,7 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
-        self.agent_pos: np.ndarray = None
+        self.agent_pos: Union[np.ndarray, Tuple[int, int]] = None
         self.agent_dir: int = None
 
         # Current grid and mission and carrying
@@ -299,7 +301,14 @@ class MiniGridEnv(gym.Env):
             self.np_random.integers(yLow, yHigh),
         )
 
-    def place_obj(self, obj, top=None, size=None, reject_fn=None, max_tries=math.inf):
+    def place_obj(
+        self,
+        obj: Optional[WorldObj],
+        top: Point = None,
+        size: Tuple[int, int] = None,
+        reject_fn=None,
+        max_tries=math.inf,
+    ):
         """
         Place an object at an empty position in the grid
 
@@ -357,7 +366,7 @@ class MiniGridEnv(gym.Env):
 
         return pos
 
-    def put_obj(self, obj, i, j):
+    def put_obj(self, obj: WorldObj, i: int, j: int):
         """
         Put an object at a specific position in the grid
         """
