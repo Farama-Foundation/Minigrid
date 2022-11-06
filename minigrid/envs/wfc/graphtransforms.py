@@ -588,11 +588,14 @@ class Nav2DTransforms:
         graphs = []
         attr_init = OBJECT_TO_DENSE_GRAPH_ATTRIBUTE['empty']
         for m in range(layouts.shape[0]):
-            g = nx.grid_2d_graph(*dim_grid)
+            g_temp = nx.grid_2d_graph(*dim_grid)
             for i in range(len(node_attr)):
-                nx.set_node_attributes(g, attr_init[i], node_attr[i])
-            g.remove_nodes_from(object_locations['wall'][m])
-            g.add_nodes_from(object_locations['wall'][m], **dict(zip(node_attr, object_to_attr['wall'])))
+                nx.set_node_attributes(g_temp, attr_init[i], node_attr[i])
+            g_temp.remove_nodes_from(object_locations['wall'][m])
+            g_temp.add_nodes_from(object_locations['wall'][m], **dict(zip(node_attr, object_to_attr['wall'])))
+            g = nx.Graph()
+            g.add_nodes_from(sorted(g_temp.nodes(data=True)))
+            g.add_edges_from(g_temp.edges(data=True))
             assert len(object_locations['start'][m]) == 1, f"More than one start position in minigrid layout {m}."
             assert len(object_locations['goal'][m]) == 1, f"More than one goal position in minigrid layout {m}."
             assert g.nodes[object_locations['start'][m][0]]['active'] == 1, "Start node is not active"
