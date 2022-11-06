@@ -1,11 +1,14 @@
+import copy
 import logging
 
 import dgl
 import einops
 import networkx as nx
 import numpy as np
+import torchvision
 from mazelib import Maze
 from typing import Union, List, Dict, Any, Tuple
+from collections import defaultdict
 
 import torch
 import torch.nn.functional as F
@@ -15,6 +18,28 @@ from ..gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Mini
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
 
 logger = logging.getLogger(__name__)
+
+LEVEL_INFO = {
+            'numpy': True,
+            'dtype': np.uint8,
+            'shape': (15, 15, 3)
+            }
+
+MINIGRID_COLOR_CONFIG = {
+                'empty': None,
+                'wall' : 'grey',
+                'agent': 'blue',
+                'goal' : 'green',
+                }
+
+DENSE_GRAPH_NODE_ATTRIBUTES = ['active', 'start', 'goal']
+OBJECT_TO_DENSE_GRAPH_ATTRIBUTE = {
+    'empty': [1, 0, 0],
+    'wall' : [0, 0, 0],
+    'agent': [0, 1, 0],
+    'goal' : [0, 0, 1],
+    'start': [0, 1, 0],
+    }
 
 # Map of object type to channel and id used within that channel, used for grid and gridworld representations
 # Agent and Start are considered equivalent
@@ -508,6 +533,307 @@ class Nav2DTransforms:
         return gridworlds
 
     @staticmethod
+    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]])->List[dgl.DGLGraph]:
+        if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
+            if isinstance(minigrids[0], bytes):
+                raise NotImplementedError("Decoding from bytes not yet implemented.")
+                logger.info("Received minigrids as bytes. Decoding them using default LEVEL_INFO.")
+                dtype = LEVEL_INFO['dtype']
+                shape = LEVEL_INFO['shape']
+                minigrids = [np.frombuffer(level_bytes, dtype=dtype).reshape(*shape) for level_bytes in minigrids]
+            minigrids = np.array(minigrids)
+            layouts = minigrids[..., 0]
+            pass
+        elif isinstance(minigrids[0], MiniGridEnv) or issubclass(minigrids[0], MiniGridEnv):
+            layouts = [minigrid.grid.encode()[..., 0] for minigrid in minigrids]
+            for i in range(len(minigrids)):
+                layouts[i][tuple(minigrids[i].agent_pos)] = Minigrid_OBJECT_TO_IDX['agent']
+            layouts = np.array(layouts)
+        else:
+            raise TypeError(f"minigrids must be of type List[bytes], List[np.ndarray], List[MiniGridEnv], "
+                            f"List[MultiGridEnv], not {type(minigrids[0])}")
+        graphs = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts)
+        return graphs
+
+    @staticmethod
+    def minigrid_layout_to_dense_graph(layouts: np.ndarray, to_dgl=False, make_batch=False) -> \
+            Union[dgl.DGLGraph ,List[dgl.DGLGraph], List[nx.Graph]]:
+        # Graph feature shape [active, start, goal]
+        # Graph nodes: (gw_dim, gw_dim)
+        assert layouts.ndim == 3, f"Wrong dimensions for minigrid layout, expected 3 dimensions, got {layouts.ndim}."
+        layouts = layouts[:, 1:-1, 1:-1]  # remove edges
+        dim_grid = layouts.shape[1:]
+
+        objects_idx = np.unique(layouts)
+        object_instances = [Minigrid_IDX_TO_OBJECT[obj] for obj in objects_idx]
+
+        node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
+        object_to_attr = OBJECT_TO_DENSE_GRAPH_ATTRIBUTE
+
+        assert set(object_instances).issubset({"empty", "wall", "start", "goal", "agent"}), \
+            f"Unsupported object(s) in minigrid layout. Supported objects are: empty, wall, start, goal, agent. " \
+            f"Got {object_instances}."
+
+        object_locations = {}
+        for obj in object_instances:
+            object_locations[obj] = defaultdict(list)
+            ids = list(zip(*np.where(layouts == Minigrid_OBJECT_TO_IDX[obj])))
+            for tup in ids:
+                object_locations[obj][tup[0]].append(tup[1:])
+        if 'start' not in object_instances and 'agent' in object_instances:
+            object_locations['start'] = object_locations['agent']
+        if 'agent' not in object_instances and 'start' in object_instances:
+            object_locations['agent'] = object_locations['start']
+
+        graphs = []
+        attr_init = OBJECT_TO_DENSE_GRAPH_ATTRIBUTE['empty']
+        for m in range(layouts.shape[0]):
+            g = nx.grid_2d_graph(*dim_grid)
+            for i in range(len(node_attr)):
+                nx.set_node_attributes(g, attr_init[i], node_attr[i])
+            g.remove_nodes_from(object_locations['wall'][m])
+            g.add_nodes_from(object_locations['wall'][m], **dict(zip(node_attr, object_to_attr['wall'])))
+            assert len(object_locations['start'][m]) == 1, f"More than one start position in minigrid layout {m}."
+            assert len(object_locations['goal'][m]) == 1, f"More than one goal position in minigrid layout {m}."
+            assert g.nodes[object_locations['start'][m][0]]['active'] == 1, "Start node is not active"
+            assert g.nodes[object_locations['goal'][m][0]]['active'] == 1, "Goal node is not active"
+            g.nodes[object_locations['start'][m][0]]['start'] = 1
+            g.nodes[object_locations['goal'][m][0]]['goal'] = 1
+            # possibly convert to a Graph with normal indexing prior to converting to dgl -> should be done automatically by dgl
+            if to_dgl:
+                g = dgl.from_networkx(g, node_attrs=node_attr)
+            graphs.append(g)
+
+            if to_dgl and make_batch:
+                graphs = dgl.batch(graphs)
+
+        return graphs
+
+    @staticmethod
+    def dense_graph_to_minigrid(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], node_attr=None, level_info=None,
+                                color_config=None, device=None) -> np.ndarray:
+
+        if device is None:
+            device = "cpu"
+
+        if color_config is None:
+            color_config = MINIGRID_COLOR_CONFIG
+
+        if level_info is None:
+            level_info = LEVEL_INFO
+
+        if node_attr is None:
+            node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
+
+        if isinstance(graphs, dgl.DGLGraph):
+            device = graphs.device
+            graphs = dgl.unbatch(graphs)
+
+        shape_no_padding = (level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
+        grids = np.ones((len(graphs) ,*shape_no_padding), dtype=level_info['dtype']) * Minigrid_OBJECT_TO_IDX['empty']
+
+        minigrid_object_to_encoding_map = {} #[object_id, color, state]
+        for obj_type, color_str in color_config.items():
+            if obj_type == "empty":
+                minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX["empty"], 0, 0]
+            else:
+                minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX[obj_type],
+                                                             Minigrid_COLOR_TO_IDX[color_str], 0]
+        if 'start' not in minigrid_object_to_encoding_map.keys() and 'agent' in minigrid_object_to_encoding_map.keys():
+            minigrid_object_to_encoding_map['start'] = minigrid_object_to_encoding_map['agent']
+        if 'agent' not in minigrid_object_to_encoding_map.keys() and 'start' in minigrid_object_to_encoding_map.keys():
+            minigrid_object_to_encoding_map['agent'] = minigrid_object_to_encoding_map['start']
+
+
+        for m, g in enumerate(graphs):
+            if isinstance(g, nx.Graph):
+                g = dgl.from_networkx(g, node_attrs=node_attr).to(device)
+            f = g.ndata
+            f_grid = {}
+            for attr in node_attr:
+                f_grid[attr] = f[attr].reshape(level_info['shape'][0] - 2, level_info['shape'][1] - 2)
+                if attr == 'active':
+                    mapping = minigrid_object_to_encoding_map['wall']
+                    grids[m][f_grid['active'] == 0] = tuple(mapping)
+                else:
+                    mapping = minigrid_object_to_encoding_map[attr]
+                    grids[m, f_grid[attr] == 1] = tuple(mapping)
+
+
+        padding = torch.tensor(minigrid_object_to_encoding_map['wall'], dtype=torch.int)
+        padded_grid = einops.rearrange(torch.tensor(grids, dtype=torch.int).to(device), 'b h w c -> b c h w')
+        padded_grid = torchvision.transforms.Pad(1, fill=-1, padding_mode='constant')(padded_grid)
+        padded_grid = einops.rearrange(padded_grid, 'b c h w -> b h w c')
+        padded_grid[torch.where(padded_grid[..., 0] == -1)] = torch.tensor(list(padding), dtype=torch.int)
+        grids = padded_grid.cpu().numpy().astype(level_info['dtype'])
+
+        return grids
+
+    @staticmethod
+    def grid_graph_to_graph(grid_graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], to_dgl=False,
+                            rebatch=False, device = None) -> \
+            Union[List[dgl.DGLGraph], List[nx.Graph]]:
+        # However should not be necessary to use for dgl graphs as they get encoded as graphs anyway.
+        if device is None:
+            device = "cpu"
+
+        if isinstance(grid_graphs, dgl.DGLGraph):
+            device = grid_graphs.device
+            grid_graphs = dgl.unbatch(grid_graphs)
+            if to_dgl:
+                rebatch = True
+
+        if isinstance(grid_graphs[0], dgl.DGLGraph):
+            to_dgl = True
+
+        graphs = []
+        for g in grid_graphs:
+            if isinstance(g, dgl.DGLGraph):
+                g = dgl.to_networkx(g)
+            g = nx.convert_node_labels_to_integers(g) # however this should be done automatically by dgl
+            if to_dgl:
+                g = dgl.from_networkx(g)
+            else:
+                g = nx.Graph(g)
+            graphs.append(g)
+
+        if rebatch:
+            graphs = dgl.batch(graphs).to(device)
+
+        return graphs
+
+    @staticmethod
+    def graph_to_grid_graph(graphs:Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], level_info=None) -> \
+            List[nx.Graph]:
+
+        if level_info is None:
+            level_info = LEVEL_INFO
+
+        if isinstance(graphs, dgl.DGLGraph):
+            graphs = dgl.unbatch(graphs)
+
+        grid_graphs = []
+        for g in graphs:
+            if isinstance(g, dgl.DGLGraph):
+                g = dgl.to_networkx(g)
+                g = nx.Graph(g)
+            assert g.number_of_nodes() == (level_info['shape'][0] - 2) * (level_info['shape'][1] - 2), \
+                "Number of nodes does not match level info."
+            g = nx.convert_node_labels_to_integers(g)
+            g = nx.relabel_nodes(g, lambda x: (x // (level_info['shape'][1] - 2), x % (level_info['shape'][1] - 2)))
+            grid_graphs.append(g)
+
+        return grid_graphs
+
+    @staticmethod
+    def dense_graph_assert_valid(graph, level_info=None):
+
+        if level_info is None:
+            level_info = LEVEL_INFO
+
+        grid_graph_shape = (level_info['shape'][0] - 2, level_info['shape'][1] - 2)
+        assert graph.number_of_nodes() == grid_graph_shape[0] * grid_graph_shape[1], \
+            "Number of nodes does not match level info."
+
+        node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
+
+        if isinstance(graph, dgl.DGLGraph):
+            g = dgl.to_networkx(graph)
+        g = nx.Graph(g)
+        g = Nav2DTransforms.graph_to_grid_graph([g], level_info=level_info)[0]
+
+        assert issubclass(g, nx.Graph), "Graph is not a networkx graph."
+        assert nx.number_connected_components(g) == 1, f"Expected 1 connected component. " \
+                                                       f"Found {nx.number_connected_components(g)} "
+
+        count_start = 0
+        count_goal = 0
+        for node in g.nodes(data=True):
+            for attr in node_attr:
+                assert attr in node[1], f"Node {node[0]} is missing attribute {attr}."
+                if attr == 'active':
+                    assert node[1][attr] in [0, 1], f"Node {node[0]} has invalid value for attribute {attr}."
+                    if node[1][attr] == 0:
+                        assert g.degree[node[0]] == 0, f"Node {node[0]} of state {attr} has {g.degree[node[0]]} degree." \
+                                                       f"Allowed degree is 0."
+                        assert node[1]['start'] == 0,  f"Node {node[0]} of state {attr} has start value of " \
+                                                       f"{node[1]['start']}. Allowed value is 0."
+                        assert node[1]['goal'] == 0,  f"Node {node[0]} of state {attr} has goal value of " \
+                                                       f"{node[1]['goal']}. Allowed value is 0."
+                    elif node[1][attr] == 1:
+                        assert g.degree[node[0]] in [1, 2, 3, 4], f"Node {node[0]} of state {attr} has {g.degree[node[0]]} degree." \
+                                                      f"Allowed degree is 1 to 4."
+                        if g.degree[node[0]] < 4:
+                            i, j = node[0]
+                            if i < grid_graph_shape[0] - 1 and j < grid_graph_shape[1] - 1:
+                                if not g.has_edge((i, j), (i, j + 1)):
+                                    assert not g.has_edge((i+1, j), (i + 1, j + 1)), \
+                                        f"Invalid edge configuration between nodes ({node[0]})-({(i, j + 1)}) and " \
+                                        f"({(i+1, j)})-({(i + 1, j + 1)})."
+                                if not g.has_edge((i, j), (i + 1, j)):
+                                    assert not g.has_edge((i, j + 1), (i + 1, j + 1)), \
+                                        f"Invalid edge configuration between nodes ({node[0]})-({(i + 1, j)}) and " \
+                                        f"({(i, j + 1)})-({(i + 1, j + 1)})."
+                elif attr == 'start':
+                    assert node[1][attr] in [0, 1], f"Node {node[0]} has invalid value for attribute {attr}."
+                    if node[1][attr] == 1:
+                        assert node[1]['active'] == 1, f"Node {node[0]} of state {attr} has active value of " \
+                                                       f"{node[1]['active']}. Allowed value is 1."
+                        assert node[1]['goal'] == 0, f"Node {node[0]} of state {attr} has goal value of " \
+                                                       f"{node[1]['goal']}. Allowed value is 0."
+                        count_start += 1
+                        assert count_start <= 1, f"Graph has more than one start node. " \
+                                                 f"start nodes detected at {start_node_id, node[0]}."
+                        start_node_id = node[0]
+                elif attr == 'goal':
+                    assert node[1][attr] in [0, 1], f"Node {node[0]} has invalid value for attribute {attr}."
+                    if node[1][attr] == 1:
+                        assert node[1]['active'] == 1, f"Node {node[0]} of state {attr} has active value of " \
+                                                       f"{node[1]['active']}. Allowed value is 1."
+                        assert node[1]['start'] == 0, f"Node {node[0]} of state {attr} has start value of " \
+                                                       f"{node[1]['start']}. Allowed value is 0."
+                        count_goal += 1
+                        assert count_goal <= 1, f"Graph has more than one goal node. " \
+                                                f"goal nodes detected at {goal_node_id, node[0]}."
+                        goal_node_id = node[0]
+
+        assert count_start == 1, f"Graph has {count_start} start nodes. Expected 1."
+        assert count_goal == 1, f"Graph has {count_goal} goal nodes. Expected 1."
+
+        return True
+
+    #TODO: THIS SHOULD BE PART OF THE MODEL
+    @staticmethod
+    def to_dense_graph(logits_A: torch.Tensor, logits_Fx: torch.Tensor, decoder,
+                                     correct_A: bool = False):
+
+        mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx))
+
+        start_dim = decoder.attributes.index('start')
+        goal_dim = decoder.attributes.index('goal')
+        n_nodes = mode_Fx.shape[1]
+
+        # TODO correct_Fx
+        mode_A = mode_A.reshape(mode_A.shape[0], -1, 2)
+
+        start_nodes = mode_Fx[..., start_dim].argmax(dim=-1)
+        goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
+
+        is_valid, adj = Nav2DTransforms._check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
+
+        mode_Fx = mode_Fx.cpu()
+        adj = adj.cpu().numpy()
+
+        graphs = []
+        for m in range(adj.shape[0]):
+            src, dst = np.nonzero(adj[m])
+            g = dgl.graph((src, dst), num_nodes=len(mode_Fx[m]))
+            g.ndata['feat'] = mode_Fx[m]
+            graphs.append(g)
+
+        return graphs, start_nodes, goal_nodes, is_valid
+
+    @staticmethod
     def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor], layout_dim, probalistic_mode=False,
                                                prob_threshold=0.5):
 
@@ -735,4 +1061,3 @@ class Nav2DTransforms:
         goal_onehot = F.one_hot(goal_nodes, num_classes=probs_goal.shape[-1]).to(probs_goal)
 
         return start_onehot, goal_onehot, start_nodes.tolist(), goal_nodes.tolist(), is_valid
-
