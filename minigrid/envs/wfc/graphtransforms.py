@@ -533,7 +533,8 @@ class Nav2DTransforms:
         return gridworlds
 
     @staticmethod
-    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]])->List[dgl.DGLGraph]:
+    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]], to_dgl=False,
+                                make_batch=False)->List[dgl.DGLGraph]:
         if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
             if isinstance(minigrids[0], bytes):
                 raise NotImplementedError("Decoding from bytes not yet implemented.")
@@ -544,7 +545,7 @@ class Nav2DTransforms:
             minigrids = np.array(minigrids)
             layouts = minigrids[..., 0]
             pass
-        elif isinstance(minigrids[0], MiniGridEnv) or issubclass(minigrids[0], MiniGridEnv):
+        elif isinstance(minigrids[0], MiniGridEnv):
             layouts = [minigrid.grid.encode()[..., 0] for minigrid in minigrids]
             for i in range(len(minigrids)):
                 layouts[i][tuple(minigrids[i].agent_pos)] = Minigrid_OBJECT_TO_IDX['agent']
@@ -552,7 +553,7 @@ class Nav2DTransforms:
         else:
             raise TypeError(f"minigrids must be of type List[bytes], List[np.ndarray], List[MiniGridEnv], "
                             f"List[MultiGridEnv], not {type(minigrids[0])}")
-        graphs = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts)
+        graphs = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts, to_dgl, make_batch)
         return graphs
 
     @staticmethod
@@ -607,8 +608,8 @@ class Nav2DTransforms:
                 g = dgl.from_networkx(g, node_attrs=node_attr)
             graphs.append(g)
 
-            if to_dgl and make_batch:
-                graphs = dgl.batch(graphs)
+        if to_dgl and make_batch:
+            graphs = dgl.batch(graphs)
 
         return graphs
 
@@ -674,11 +675,12 @@ class Nav2DTransforms:
 
     @staticmethod
     def grid_graph_to_graph(grid_graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], to_dgl=False,
-                            rebatch=False, device = None) -> \
-            Union[List[dgl.DGLGraph], List[nx.Graph]]:
+                            rebatch=False, device=None, node_attr=None) -> Union[List[dgl.DGLGraph], List[nx.Graph]]:
         # However should not be necessary to use for dgl graphs as they get encoded as graphs anyway.
         if device is None:
             device = "cpu"
+        if node_attr is None:
+            node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
 
         if isinstance(grid_graphs, dgl.DGLGraph):
             device = grid_graphs.device
@@ -692,10 +694,10 @@ class Nav2DTransforms:
         graphs = []
         for g in grid_graphs:
             if isinstance(g, dgl.DGLGraph):
-                g = dgl.to_networkx(g)
+                g = dgl.to_networkx(g, node_attrs=g.ndata.keys())
             g = nx.convert_node_labels_to_integers(g) # however this should be done automatically by dgl
             if to_dgl:
-                g = dgl.from_networkx(g)
+                g = dgl.from_networkx(g, node_attrs=node_attr)
             else:
                 g = nx.Graph(g)
             graphs.append(g)
@@ -718,7 +720,7 @@ class Nav2DTransforms:
         grid_graphs = []
         for g in graphs:
             if isinstance(g, dgl.DGLGraph):
-                g = dgl.to_networkx(g)
+                g = dgl.to_networkx(g, node_attrs=g.ndata.keys())
                 g = nx.Graph(g)
             assert g.number_of_nodes() == (level_info['shape'][0] - 2) * (level_info['shape'][1] - 2), \
                 "Number of nodes does not match level info."
@@ -731,6 +733,12 @@ class Nav2DTransforms:
     @staticmethod
     def dense_graph_assert_valid(graph, level_info=None):
 
+        results = {
+            'valid': False,
+            'solvable': False,
+            'connected': False,
+            }
+
         if level_info is None:
             level_info = LEVEL_INFO
 
@@ -740,15 +748,15 @@ class Nav2DTransforms:
 
         node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
 
+        g = copy.deepcopy(graph) # ensures that the original graph is not changed.
         if isinstance(graph, dgl.DGLGraph):
-            g = dgl.to_networkx(graph)
+            g = dgl.to_networkx(graph, node_attrs=graph.ndata.keys())
+        assert isinstance(g, nx.Graph), "Graph is not a networkx graph." #Note: issubclass(type(g), nx.Graph) works as well here.
         g = nx.Graph(g)
         g = Nav2DTransforms.graph_to_grid_graph([g], level_info=level_info)[0]
 
-        assert issubclass(g, nx.Graph), "Graph is not a networkx graph."
-        assert nx.number_connected_components(g) == 1, f"Expected 1 connected component. " \
-                                                       f"Found {nx.number_connected_components(g)} "
 
+        # Check validity
         count_start = 0
         count_goal = 0
         for node in g.nodes(data=True):
@@ -764,19 +772,21 @@ class Nav2DTransforms:
                         assert node[1]['goal'] == 0,  f"Node {node[0]} of state {attr} has goal value of " \
                                                        f"{node[1]['goal']}. Allowed value is 0."
                     elif node[1][attr] == 1:
-                        assert g.degree[node[0]] in [1, 2, 3, 4], f"Node {node[0]} of state {attr} has {g.degree[node[0]]} degree." \
-                                                      f"Allowed degree is 1 to 4."
-                        if g.degree[node[0]] < 4:
+                        assert g.degree[node[0]] in [0, 1, 2, 3, 4], f"Node {node[0]} of state {attr} has {g.degree[node[0]]} degree." \
+                                                      f"Allowed degree is 0 to 4."
+                        if g.degree[node[0]] not in [0, 4]:
                             i, j = node[0]
                             if i < grid_graph_shape[0] - 1 and j < grid_graph_shape[1] - 1:
-                                if not g.has_edge((i, j), (i, j + 1)):
-                                    assert not g.has_edge((i+1, j), (i + 1, j + 1)), \
-                                        f"Invalid edge configuration between nodes ({node[0]})-({(i, j + 1)}) and " \
-                                        f"({(i+1, j)})-({(i + 1, j + 1)})."
-                                if not g.has_edge((i, j), (i + 1, j)):
-                                    assert not g.has_edge((i, j + 1), (i + 1, j + 1)), \
-                                        f"Invalid edge configuration between nodes ({node[0]})-({(i + 1, j)}) and " \
-                                        f"({(i, j + 1)})-({(i + 1, j + 1)})."
+                                if g.has_edge((i, j), (i, j + 1)) and g.has_edge((i + 1, j), (i + 1, j + 1)):
+                                    assert g.has_edge((i, j), (i + 1, j)), f"Node {node[0]} of state {attr} is missing edge " \
+                                                                           f"to {(i + 1, j)}."
+                                    assert g.has_edge((i, j + 1), (i + 1, j + 1)), f"Node {node[0]} of state {attr} is missing edge " \
+                                                                           f"to {(i + 1, j + 1)}."
+                                elif g.has_edge((i, j), (i + 1, j)) and g.has_edge((i, j + 1), (i + 1, j + 1)):
+                                    assert g.has_edge((i, j), (i, j + 1)), f"Node {node[0]} of state {attr} is missing edge " \
+                                                                           f"to {(i, j + 1)}."
+                                    assert g.has_edge((i + 1, j), (i + 1, j + 1)), f"Node {node[0]} of state {attr} is missing edge " \
+                                                                           f"to {(i + 1, j + 1)}."
                 elif attr == 'start':
                     assert node[1][attr] in [0, 1], f"Node {node[0]} has invalid value for attribute {attr}."
                     if node[1][attr] == 1:
@@ -803,7 +813,35 @@ class Nav2DTransforms:
         assert count_start == 1, f"Graph has {count_start} start nodes. Expected 1."
         assert count_goal == 1, f"Graph has {count_goal} goal nodes. Expected 1."
 
-        return True
+        results['valid'] = True
+
+        # Check solvability and connectivity
+        components = [g.subgraph(c).copy() for c in sorted(nx.connected_components(g), key=len, reverse=True) if
+                      len(c) > 1 or len(c) == 1 and g.nodes[list(c)[0]]['active'] == 1]
+        if len(components) != 1:
+            logger.warning(f"Expected 1 connected component. Found {len(components)} ")
+            results['connected'] = False
+            for k, c in enumerate(components):
+                if len(c.nodes) == 1 and c.nodes(data=True)[list(c.nodes)[0]]['active']:
+                    logger.warning("Found isolated active node.")
+                if start_node_id in c.nodes:
+                    start_node_component = k
+                if goal_node_id in c.nodes:
+                    goal_node_component = k
+            if start_node_component != goal_node_component:
+                logger.warning(f"Start node {start_node_id} and goal node {goal_node_id} are not in the same component."
+                               f"Start node is in component {start_node_component}, "
+                               f"length {len(components[start_node_component].nodes)} and goal node is in component "
+                               f"{goal_node_component}, length {len(components[goal_node_component].nodes)}.")
+                results['solvable'] = False
+            else:
+                results['solvable'] = True
+        else:
+            results['connected'] = True
+            results['solvable'] = True
+
+
+        return results
 
     #TODO: THIS SHOULD BE PART OF THE MODEL
     @staticmethod
