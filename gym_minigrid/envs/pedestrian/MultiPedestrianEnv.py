@@ -81,7 +81,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         pass
 
     # Terry - move left and right functions are below
-    def moveLeft(self, agent: Agent):
+    def shiftLeft(self, agent: Agent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
         left_dir = agent.direction - 1
@@ -91,7 +91,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         agent.position = left_pos
 
-    def moveRight(self, agent: Agent):
+    def shiftRight(self, agent: Agent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
         right_dir = (agent.direction + 1) % 4
@@ -122,6 +122,10 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Terry - Is this to validate after getting a list of actions for parallel update?
         # If so, I have started part of that in the step function.
+
+        # Will change whether they can move left or right
+        # Agent A has tile to the right, agent B has same tile to left
+        # One will have moveRight = true, other will have moveLeft = false
 
         # Check that the agent doesn't overlap with an object
         for agent in self.agents:
@@ -190,6 +194,17 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         return img
 
+    def parallel1():
+        #TODO Simulate lane change
+        pass
+
+    def parallel2():
+        #TODO What lane allows agent to move using max speed
+        pass
+
+    # One step after parallel1 and parallel2
+    # Save plans from parallel1 and parallel2 before actually executing it
+
     def step(self, action=None):
         self.step_count += 1
 
@@ -223,10 +238,10 @@ class MultiPedestrianEnv(MiniGridEnv):
 
             if actions[index] == PedActions.forward:
                 self.forwardAgent(agent)
-            elif actions[index] == PedActions.moveLeft:
-                self.moveLeft(agent)
-            elif actions[index] == PedActions.moveRight:
-                self.moveRight(agent)
+            elif actions[index] == PedActions.shiftLeft:
+                self.shiftLeft(agent)
+            elif actions[index] == PedActions.shiftRight:
+                self.shiftRight(agent)
             else:
                 assert False, f"unknown action {action}"
 

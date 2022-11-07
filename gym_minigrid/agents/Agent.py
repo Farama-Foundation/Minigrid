@@ -7,6 +7,7 @@ class Agent:
         position: Tuple[int, int], 
         direction: int, 
         speed = 1,
+        goal = Tuple[int, int] #enumerate this?
         ):
 
         self.initPosition = position
@@ -16,6 +17,12 @@ class Agent:
         self.position = position
         self.direction = direction
         self.speed = speed
+
+        self.moveLeft = True
+        self.moveRight = True
+        self.agentAction = 0 # Put this in PedAgent later, save agentActions here for execution
+        # Agents will save the actions we compute
+        # Once we execute, we get action from here
 
         pass
 
