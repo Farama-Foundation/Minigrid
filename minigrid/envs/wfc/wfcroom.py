@@ -111,7 +111,7 @@ class GridNavDatasetGenerator:
             'output_file'                      : 'dataset.meta',
             'seed'                             : self.config.seed,
             'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
-            'encoding'                         : self.config.encoding,  # types: minimal, full (only for graph)
+            'encoding'                         : self.config.encoding,  # types: minimal, dense (only for graph)
             'data_dim'                         : (self.config.gridworld_data_dim[-1],)*2,  # TODO: assert odd. Note: always in "gridworld" type
             'task_type'                        : self.config.task_type,
             'label_descriptors':                 self.config.label_descriptors,
