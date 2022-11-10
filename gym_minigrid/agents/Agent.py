@@ -17,6 +17,18 @@ class Agent:
         self.direction = direction
         self.speed = speed
 
+<<<<<<< Updated upstream
+=======
+        self.canShiftLeft = True
+        self.canShiftRight = True
+        self.agentAction = 0 # Put this in PedAgent later, save agentActions here for execution
+        # Agents will save the actions we compute
+        # Once we execute, we get action from here
+        
+        self.gapSame = 8
+        self.gapOpp = 4
+        
+>>>>>>> Stashed changes
         pass
 
     def reset(self):

@@ -952,7 +952,6 @@ class MiniGridEnv(gym.Env):
         """
         Put an object at a specific position in the grid
         """
-
         self.grid.set(i, j, obj)
         obj.init_pos = (i, j)
         obj.cur_pos = (i, j)
