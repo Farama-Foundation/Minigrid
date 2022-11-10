@@ -12,7 +12,6 @@ from gym_minigrid.agents import PedAgent
 
 # Load the gym environment
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
-env.addAgents([PedAgent((5, 5), 3, 2), PedAgent((7, 10), 3, 2), PedAgent((2, 5), 3, 2)])
 agents = []
 for i in range(50):
     xPos = np.random.randint(2, 18)

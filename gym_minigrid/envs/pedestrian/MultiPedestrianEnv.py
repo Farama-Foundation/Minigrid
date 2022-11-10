@@ -27,18 +27,8 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #region agent management
     def addAgents(self, agents: List[Agent]):
-<<<<<<< Updated upstream
         self.agents.extend(agents)
-=======
-        for agent in agents:
-            if self.canPlaceAgent(agent):
-                self.agents.append(agent)
-                self.grid.set(agent.position[0], agent.position[1], agent)
-             
-            else:
-                print("Can't place agent with position " + str(agent.position))
->>>>>>> Stashed changes
-
+            
     def addAgent(self, agent: Agent):
         self.agents.append(agent)
         
@@ -50,10 +40,6 @@ class MultiPedestrianEnv(MiniGridEnv):
             agent.reset()
 
     def forwardAgent(self, agent: Agent):
-<<<<<<< Updated upstream
-        # TODO 
-        pass
-=======
         # TODO DONE
         
         # Get the position in front of the agent
@@ -93,25 +79,11 @@ class MultiPedestrianEnv(MiniGridEnv):
         # agent.position = right_pos
         agent.position = (agent.position[0] + 1, agent.position[1])
         
->>>>>>> Stashed changes
     #endregion
 
     #region sidewalk
 
     def genSidewalks(self):
-<<<<<<< Updated upstream
-        
-        # TODO turn this into 2 side walks.
-        # Place a goal square in the bottom-right corner
-        for i in range(1, self.height-1):
-            self.put_obj(Goal(), self.width - 2, i)
-        
-        for i in range(1, self.height-1):
-            self.put_obj(Goal(), 1, i)
-        
-
-
-=======
 
         # TODO turn this into 2 side walks. DONE
 
@@ -121,7 +93,6 @@ class MultiPedestrianEnv(MiniGridEnv):
             self.put_obj(Goal(), i, 1)
             self.put_obj(Goal(), i, self.height - 2)
         pass
->>>>>>> Stashed changes
 
     #endregion
 
@@ -200,8 +171,6 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         return img
 
-<<<<<<< Updated upstream
-=======
     def eliminateConflict(self):
         for agent in self.agents:
             if agent.position[0] == 1:
@@ -229,7 +198,6 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
->>>>>>> Stashed changes
 
     def step(self, action=None):
         self.step_count += 1
@@ -237,30 +205,6 @@ class MultiPedestrianEnv(MiniGridEnv):
         reward = 0
         done = False
 
-<<<<<<< Updated upstream
-        for agent in self.agents:
-
-            # TODO:
-            # 1. get the agent
-
-            # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
-            action = agent.getAction()
-            # 3. call the method that takes the action
-            if action == PedActions.forward:
-                self.forwardAgent(agent)
-            # Rotate left # replace with rotation
-            elif action == PedActions.moveLeft:
-                agent.direction -= 1
-                if agent.direction < 0:
-                    agent.direction += 4
-            # Rotate right
-            elif action == PedActions.moveRight:
-                agent.direction = (agent.direction + 1) % 4
-            else:
-                assert False, f"unknown action {action}"
-        
-
-=======
         # TODO:
         # 1. get the agent
         # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
@@ -315,7 +259,6 @@ class MultiPedestrianEnv(MiniGridEnv):
         #         assert False, f"unknown action {action}"
 
         #     index += 1
->>>>>>> Stashed changes
 
         if self.step_count >= self.max_steps:
             done = True
@@ -339,12 +282,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #endregion
 
-<<<<<<< Updated upstream
-
-
-=======
     
->>>>>>> Stashed changes
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
