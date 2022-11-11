@@ -134,8 +134,6 @@ class MiniGridEnv(gym.Env):
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
 
-        assert isinstance(self.agent_pos, tuple)
-
         # These fields should be defined by _gen_grid
         assert (
             self.agent_pos >= (0, 0)
