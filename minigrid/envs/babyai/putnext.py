@@ -86,6 +86,7 @@ class PutNext(RoomGridLevel):
 
         # If the agent starts off carrying the object
         if self.start_carrying:
+            assert self.obj_a.init_pos is not None
             self.grid.set(*self.obj_a.init_pos, None)
             self.carrying = self.obj_a
 

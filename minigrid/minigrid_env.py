@@ -10,8 +10,8 @@ from gymnasium import spaces
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
 from minigrid.core.grid import Grid
-from minigrid.core.world_object import WorldObj, Point
 from minigrid.core.mission import MissionSpace
+from minigrid.core.world_object import Point, WorldObj
 from minigrid.utils.window import Window
 
 T = TypeVar("T")
@@ -103,7 +103,9 @@ class MiniGridEnv(gym.Env):
         self.width = width
         self.height = height
 
-        assert isinstance(max_steps, int), f"The argument max_steps must be an integer, got: {type(max_steps)}"
+        assert isinstance(
+            max_steps, int
+        ), f"The argument max_steps must be an integer, got: {type(max_steps)}"
         self.max_steps = max_steps
 
         self.see_through_walls = see_through_walls
@@ -293,7 +295,9 @@ class MiniGridEnv(gym.Env):
 
         return self._rand_elem(COLOR_NAMES)
 
-    def _rand_pos(self, x_low: int, x_high: int, y_low: int, y_high: int) -> Tuple[int, int]:
+    def _rand_pos(
+        self, x_low: int, x_high: int, y_low: int, y_high: int
+    ) -> Tuple[int, int]:
         """
         Generate a random (x,y) position tuple
         """
@@ -605,7 +609,9 @@ class MiniGridEnv(gym.Env):
         # Process occluders and visibility
         # Note that this incurs some performance cost
         if not self.see_through_walls:
-            vis_mask = grid.process_vis(agent_pos=(agent_view_size // 2, agent_view_size - 1))
+            vis_mask = grid.process_vis(
+                agent_pos=(agent_view_size // 2, agent_view_size - 1)
+            )
         else:
             vis_mask = np.ones(shape=(grid.width, grid.height), dtype=bool)
 
@@ -665,7 +671,11 @@ class MiniGridEnv(gym.Env):
         # of the agent's view area
         f_vec = self.dir_vec
         r_vec = self.right_vec
-        top_left = self.agent_pos + f_vec * (self.agent_view_size - 1) - r_vec * (self.agent_view_size // 2)
+        top_left = (
+            self.agent_pos
+            + f_vec * (self.agent_view_size - 1)
+            - r_vec * (self.agent_view_size // 2)
+        )
 
         # Mask of which cells to highlight
         highlight_mask = np.zeros(shape=(self.width, self.height), dtype=bool)
