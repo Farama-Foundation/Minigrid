@@ -2,7 +2,7 @@ import hashlib
 import math
 from abc import abstractmethod
 from enum import IntEnum
-from typing import Optional, Tuple, Union
+from typing import Iterable, List, Optional, Sequence, Tuple, TypeVar, Union
 
 import gymnasium as gym
 import numpy as np
@@ -13,6 +13,8 @@ from minigrid.core.grid import Grid
 from minigrid.core.world_object import WorldObj, Point
 from minigrid.core.mission import MissionSpace
 from minigrid.utils.window import Window
+
+T = TypeVar("T")
 
 
 class MiniGridEnv(gym.Env):
@@ -101,9 +103,7 @@ class MiniGridEnv(gym.Env):
         self.width = width
         self.height = height
 
-        assert isinstance(
-            max_steps, int
-        ), f"The argument max_steps must be an integer, got: {type(max_steps)}"
+        assert isinstance(max_steps, int), f"The argument max_steps must be an integer, got: {type(max_steps)}"
         self.max_steps = max_steps
 
         self.see_through_walls = see_through_walls
@@ -131,6 +131,8 @@ class MiniGridEnv(gym.Env):
 
         # Generate a new random grid at the start of each episode
         self._gen_grid(self.width, self.height)
+
+        assert isinstance(self.agent_pos, tuple)
 
         # These fields should be defined by _gen_grid
         assert (
@@ -230,35 +232,35 @@ class MiniGridEnv(gym.Env):
     def _gen_grid(self, width, height):
         pass
 
-    def _reward(self):
+    def _reward(self) -> float:
         """
         Compute the reward to be given upon success
         """
 
         return 1 - 0.9 * (self.step_count / self.max_steps)
 
-    def _rand_int(self, low, high):
+    def _rand_int(self, low: int, high: int) -> int:
         """
         Generate random integer in [low,high[
         """
 
         return self.np_random.integers(low, high)
 
-    def _rand_float(self, low, high):
+    def _rand_float(self, low: float, high: float) -> float:
         """
         Generate random float in [low,high[
         """
 
         return self.np_random.uniform(low, high)
 
-    def _rand_bool(self):
+    def _rand_bool(self) -> bool:
         """
         Generate random boolean value
         """
 
         return self.np_random.integers(0, 2) == 0
 
-    def _rand_elem(self, iterable):
+    def _rand_elem(self, iterable: Iterable[T]) -> T:
         """
         Pick a random element in a list
         """
@@ -267,7 +269,7 @@ class MiniGridEnv(gym.Env):
         idx = self._rand_int(0, len(lst))
         return lst[idx]
 
-    def _rand_subset(self, iterable, num_elems):
+    def _rand_subset(self, iterable: Iterable[T], num_elems: int) -> List[T]:
         """
         Sample a random subset of distinct elements of a list
         """
@@ -275,7 +277,7 @@ class MiniGridEnv(gym.Env):
         lst = list(iterable)
         assert num_elems <= len(lst)
 
-        out = []
+        out: List[T] = []
 
         while len(out) < num_elems:
             elem = self._rand_elem(lst)
@@ -284,21 +286,21 @@ class MiniGridEnv(gym.Env):
 
         return out
 
-    def _rand_color(self):
+    def _rand_color(self) -> str:
         """
         Generate a random color name (string)
         """
 
         return self._rand_elem(COLOR_NAMES)
 
-    def _rand_pos(self, xLow, xHigh, yLow, yHigh):
+    def _rand_pos(self, x_low: int, x_high: int, y_low: int, y_high: int) -> Tuple[int, int]:
         """
         Generate a random (x,y) position tuple
         """
 
         return (
-            self.np_random.integers(xLow, xHigh),
-            self.np_random.integers(yLow, yHigh),
+            self.np_random.integers(x_low, x_high),
+            self.np_random.integers(y_low, y_high),
         )
 
     def place_obj(
@@ -335,14 +337,10 @@ class MiniGridEnv(gym.Env):
 
             num_tries += 1
 
-            pos = np.array(
-                (
-                    self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
-                    self._rand_int(top[1], min(top[1] + size[1], self.grid.height)),
-                )
+            pos = (
+                self._rand_int(top[0], min(top[0] + size[0], self.grid.width)),
+                self._rand_int(top[1], min(top[1] + size[1], self.grid.height)),
             )
-
-            pos = tuple(pos)
 
             # Don't place the object on top of another object
             if self.grid.get(*pos) is not None:
@@ -396,7 +394,9 @@ class MiniGridEnv(gym.Env):
         of forward movement.
         """
 
-        assert self.agent_dir >= 0 and self.agent_dir < 4
+        assert (
+            self.agent_dir >= 0 and self.agent_dir < 4
+        ), f"Invalid agent_dir: {self.agent_dir} is not within range(0, 4)"
         return DIR_TO_VEC[self.agent_dir]
 
     @property
@@ -605,9 +605,7 @@ class MiniGridEnv(gym.Env):
         # Process occluders and visibility
         # Note that this incurs some performance cost
         if not self.see_through_walls:
-            vis_mask = grid.process_vis(
-                agent_pos=(agent_view_size // 2, agent_view_size - 1)
-            )
+            vis_mask = grid.process_vis(agent_pos=(agent_view_size // 2, agent_view_size - 1))
         else:
             vis_mask = np.ones(shape=(grid.width, grid.height), dtype=bool)
 
@@ -667,11 +665,7 @@ class MiniGridEnv(gym.Env):
         # of the agent's view area
         f_vec = self.dir_vec
         r_vec = self.right_vec
-        top_left = (
-            self.agent_pos
-            + f_vec * (self.agent_view_size - 1)
-            - r_vec * (self.agent_view_size // 2)
-        )
+        top_left = self.agent_pos + f_vec * (self.agent_view_size - 1) - r_vec * (self.agent_view_size // 2)
 
         # Mask of which cells to highlight
         highlight_mask = np.zeros(shape=(self.width, self.height), dtype=bool)

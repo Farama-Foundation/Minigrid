@@ -62,8 +62,8 @@ class Grid:
         return deepcopy(self)
 
     def set(self, i: int, j: int, v: Optional[WorldObj]):
-        assert 0 <= i < self.width
-        assert 0 <= j < self.height
+        assert 0 <= i < self.width, f"column index {j} outside of grid of width {self.width}"
+        assert 0 <= j < self.height, f"row index {j} outside of grid of height {self.height}"
         self.grid[j * self.width + i] = v
 
     def get(self, i: int, j: int) -> Optional[WorldObj]:
