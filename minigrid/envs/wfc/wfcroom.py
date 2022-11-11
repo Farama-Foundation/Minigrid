@@ -1,7 +1,12 @@
+__package__ = "maze_representations"
+
+import copy
 import logging
 
+import networkx as nx
+
 from omegaconf import DictConfig
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Union
 import numpy as np
 import torch
 import hydra
@@ -10,10 +15,12 @@ import pickle
 from pathlib import Path
 import os
 import dgl
+import imageio
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
 from .gym_minigrid.envs.multiroom_mod import MultiRoomEnv
+import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 
 from .util import graph_metrics
 from .util import transforms as tr
@@ -107,16 +114,19 @@ class GridNavDatasetGenerator:
                         / self.config.label_descriptors_config[key]['normalisation_factor']
 
     def get_dataset_metadata(self):
+        # TODO: would be easier to just instantiate all metadata as OmegaConf objects
         dataset_meta = {
             'output_file'                      : 'dataset.meta',
             'seed'                             : self.config.seed,
             'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
             'encoding'                         : self.config.encoding,  # types: minimal, dense (only for graph)
-            'data_dim'                         : (self.config.gridworld_data_dim[-1],)*2,  # TODO: assert odd. Note: always in "gridworld" type
+            'data_dim'                         : (self.config.gridworld_data_dim[-1],)*2,
             'task_type'                        : self.config.task_type,
             'label_descriptors':                 self.config.label_descriptors,
             'label_descriptors_config'         : self.config.label_descriptors_config,
-            'feature_descriptors'              : self.config.feature_descriptors,
+            'graph_feature_descriptors'        : self.config.graph_feature_descriptors,
+            'minigrid_feature_descriptors'     : self.config.minigrid_feature_descriptors,
+            'ensure_connected'                 : self.config.ensure_connected,
             }
 
         return dataset_meta
@@ -163,13 +173,16 @@ class GridNavDatasetGenerator:
                     batch_id = i + start_at_id
                     batch_ids.append(batch_id)
 
-                    if task_structures[i] == "maze":
-                        algo = "Prims"
-                    elif task_structures[i] == "rooms_unstructured_layout":
-                        algo = "Minigrid_Multiroom"
+                    if len(self.config.generating_algorithm) > 1:
+                        if task_structures[i] == "maze":
+                            algo = "Prims"
+                        elif task_structures[i] == "rooms_unstructured_layout":
+                            algo = "Minigrid_Multiroom"
+                        else:
+                            raise NotImplementedError(f'No task generation algorithm available for task structure '
+                                                      f'"{task_structures[i]}" ')
                     else:
-                        raise NotImplementedError(f'No task generation algorithm available for task structure '
-                                                  f'"{task_structures[i]}" ')
+                        algo = self.config.generating_algorithm[0]
 
                     if batch_id >= 90:
                         prefix = "test_"
@@ -199,7 +212,7 @@ class GridNavDatasetGenerator:
         if dir_name is None:
             task_structures = '-'.join(sorted(self.config.label_descriptors_config.task_structures))
             dir_name = f"ts={task_structures}-x={self.dataset_meta['data_type']}-s={self.config.size}" \
-                                f"-d={self.config.gridworld_data_dim[-1]}-f={len(self.config.feature_descriptors)}" \
+                                f"-d={self.config.gridworld_data_dim[-1]}-gf={len(self.config.graph_feature_descriptors)}" \
                                 f"-enc={self.config.encoding}"
         return base_dir + dir_name + '/'
 
@@ -238,7 +251,9 @@ class BatchGenerator:
 
     def __new__(cls, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
 
-        if batch_meta['task_structure'] == 'maze':
+        if batch_meta['generating_algorithm'] == 'wave_function_collapse':
+            instance = super().__new__(WaveCollapseBatch)
+        elif batch_meta['task_structure'] == 'maze':
             instance = super().__new__(MazeBatch)
         elif batch_meta['task_structure'] == 'rooms_unstructured_layout':
             instance = super().__new__(RoomsUnstructuredBatch)
@@ -295,8 +310,8 @@ class Batch:
         self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
         self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
 
-        start_dim, goal_dim = self.dataset_meta['feature_descriptors'].index('start'), \
-                              self.dataset_meta['feature_descriptors'].index('goal')
+        start_dim, goal_dim = self.dataset_meta['graph_feature_descriptors'].index('start'), \
+                              self.dataset_meta['graph_feature_descriptors'].index('goal')
         for i, graph in enumerate(features):
             start_node = int(graph.ndata["feat"][:,start_dim].argmax())
             goal_node = int(graph.ndata["feat"][:,goal_dim].argmax())
@@ -317,6 +332,110 @@ class Batch:
         self.label_contents["navigable_nodes"] = torch.tensor(self.label_contents["navigable_nodes"])
 
     #Note: Returns the gridworld in one given permutation
+
+
+class WaveCollapseBatch(Batch):
+
+        PATTERN_COLOR_CONFIG = {
+            "wall": (0, 0, 0), #black
+            "empty": (255, 255, 255), #white
+            }
+
+        def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
+            super().__init__(batch_meta, dataset_meta, seeds)
+
+            self.task_structure = self.batch_meta['task_structure']
+            base_dir = str(Path(__file__).resolve().parent)
+            task_structure_meta_path = base_dir + f"/conf/task_structure/{self.task_structure}.yaml"
+            self.task_structure_meta = OmegaConf.load(task_structure_meta_path)
+            template_path = base_dir + f"/{self.task_structure_meta.template_path}"
+            self.template = imageio.imread(template_path)[:, :, :3]
+            self.output_pattern_dim = (self.dataset_meta['data_dim'][0] - 2, self.dataset_meta['data_dim'][1] - 2)
+
+        def generate_data(self):
+            if self.seeds is None:
+                self.seeds = torch.randint(0, 2 ** 32 - 1, (self.batch_meta['batch_size'],), dtype=torch.int64)
+            features = []
+            for seed in self.seeds:
+                features.append(self._run_wfc(seed))
+
+            features = np.array(features)
+            features = self._pattern_to_minigrid_layout(features)
+            features = tr.Nav2DTransforms.minigrid_layout_to_dense_graph(features, to_dgl=False, remove_edges=False)
+
+            if self.dataset_meta['ensure_connected']:
+                features = self._get_largest_component(features, to_dgl=True)
+
+            features = self._place_start_and_goal(features)
+
+            return features
+
+        def _run_wfc(self, seed):
+            util.seed_everything(seed)
+
+            # TODO: handle failure (will require a new seed)
+            generated_pattern = wfc_control.execute_wfc(tile_size=1,
+                        pattern_width=self.task_structure_meta['pattern_width'],
+                                    rotations=self.task_structure_meta['rotations'],
+                                    output_size=self.output_pattern_dim,
+                                    attempt_limit=1,
+                                    output_periodic=self.task_structure_meta['output_periodic'],
+                                    input_periodic=self.task_structure_meta['input_periodic'],
+                                    loc_heuristic=self.task_structure_meta['loc_heuristic'],
+                                    choice_heuristic=self.task_structure_meta['choice_heuristic'],
+                                    backtracking=self.task_structure_meta['backtracking'],
+                                    image=self.template)
+
+            return generated_pattern
+
+        def _pattern_to_minigrid_layout(self, patterns):
+
+            assert patterns.ndim == 4
+            layouts = np.ones(patterns.shape, dtype=tr.LEVEL_INFO['dtype']) * tr.Minigrid_OBJECT_TO_IDX['empty']
+
+            wall_ids = np.where(patterns == self.PATTERN_COLOR_CONFIG['wall'])
+            layouts[wall_ids] = tr.Minigrid_OBJECT_TO_IDX['wall']
+            layouts = layouts[..., 0]
+
+            return layouts
+
+        def _place_start_and_goal(self, graphs: List[dgl.DGLGraph]):
+
+            for graph in graphs:
+                active_nodes = torch.where(graph.ndata['active'])
+                start_node = active_nodes[0][torch.randint(0, len(active_nodes[0]), (1,))]
+                graph.ndata['start'][start_node] = 1
+                #TODO randint on active nodes - start_node, or 2 randints without repetition
+
+
+            return graphs
+
+        def check_pattern_validity(self, pattern):
+            pass
+
+        def _get_largest_component(self, graphs: Union[List[nx.Graph], List[dgl.DGLGraph]], to_dgl: bool = False)\
+                -> Union[List[nx.Graph], List[dgl.DGLGraph]]:
+
+            wall_graph_attr = tr.OBJECT_TO_DENSE_GRAPH_ATTRIBUTE['wall']
+            for i, graph in enumerate(graphs):
+                component, _, _ = graph_metrics.prepare_graph(graph)
+                act = nx.get_node_attributes(component, 'active')
+                g = nx.Graph()
+                g.add_nodes_from(graph.nodes())
+                for j in range(len(self.dataset_meta['graph_feature_descriptors'])):
+                    nx.set_node_attributes(g, wall_graph_attr[j], self.dataset_meta['graph_feature_descriptors'][j])
+                nx.set_node_attributes(g, act, "active")
+                g.add_edges_from(component.edges(data=True))
+                if to_dgl:
+                    g = dgl.from_networkx(g, node_attrs=self.dataset_meta['graph_feature_descriptors'])
+                graphs[i] = copy.deepcopy(g)
+
+            return graphs
+
+
+
+
+
 
 
 class MazeBatch(Batch):

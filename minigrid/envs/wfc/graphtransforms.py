@@ -557,12 +557,14 @@ class Nav2DTransforms:
         return graphs
 
     @staticmethod
-    def minigrid_layout_to_dense_graph(layouts: np.ndarray, to_dgl=False, make_batch=False) -> \
+    def minigrid_layout_to_dense_graph(layouts: np.ndarray, to_dgl=False, make_batch=False, remove_edges=True) -> \
             Union[dgl.DGLGraph ,List[dgl.DGLGraph], List[nx.Graph]]:
         # Graph feature shape [active, start, goal]
         # Graph nodes: (gw_dim, gw_dim)
         assert layouts.ndim == 3, f"Wrong dimensions for minigrid layout, expected 3 dimensions, got {layouts.ndim}."
-        layouts = layouts[:, 1:-1, 1:-1]  # remove edges
+
+        if remove_edges:
+            layouts = layouts[:, 1:-1, 1:-1]  # remove edges
         dim_grid = layouts.shape[1:]
 
         objects_idx = np.unique(layouts)
@@ -597,12 +599,14 @@ class Nav2DTransforms:
             g = nx.Graph()
             g.add_nodes_from(sorted(g_temp.nodes(data=True)))
             g.add_edges_from(g_temp.edges(data=True))
-            assert len(object_locations['start'][m]) == 1, f"More than one start position in minigrid layout {m}."
-            assert len(object_locations['goal'][m]) == 1, f"More than one goal position in minigrid layout {m}."
-            assert g.nodes[object_locations['start'][m][0]]['active'] == 1, "Start node is not active"
-            assert g.nodes[object_locations['goal'][m][0]]['active'] == 1, "Goal node is not active"
-            g.nodes[object_locations['start'][m][0]]['start'] = 1
-            g.nodes[object_locations['goal'][m][0]]['goal'] = 1
+            if 'start' in object_instances:
+                assert len(object_locations['start'][m]) == 1, f"More than one start position in minigrid layout {m}."
+                assert g.nodes[object_locations['start'][m][0]]['active'] == 1, "Start node is not active"
+                g.nodes[object_locations['start'][m][0]]['start'] = 1
+            if 'goal' in object_instances:
+                assert len(object_locations['goal'][m]) == 1, f"More than one goal position in minigrid layout {m}."
+                assert g.nodes[object_locations['goal'][m][0]]['active'] == 1, "Goal node is not active"
+                g.nodes[object_locations['goal'][m][0]]['goal'] = 1
             # possibly convert to a Graph with normal indexing prior to converting to dgl -> should be done automatically by dgl
             if to_dgl:
                 g = dgl.from_networkx(g, node_attrs=node_attr)
@@ -842,37 +846,6 @@ class Nav2DTransforms:
 
 
         return results
-
-    #TODO: THIS SHOULD BE PART OF THE MODEL
-    @staticmethod
-    def to_dense_graph(logits_A: torch.Tensor, logits_Fx: torch.Tensor, decoder,
-                                     correct_A: bool = False):
-
-        mode_A, mode_Fx = decoder.param_m((logits_A, logits_Fx))
-
-        start_dim = decoder.attributes.index('start')
-        goal_dim = decoder.attributes.index('goal')
-        n_nodes = mode_Fx.shape[1]
-
-        # TODO correct_Fx
-        mode_A = mode_A.reshape(mode_A.shape[0], -1, 2)
-
-        start_nodes = mode_Fx[..., start_dim].argmax(dim=-1)
-        goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
-
-        is_valid, adj = Nav2DTransforms._check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
-
-        mode_Fx = mode_Fx.cpu()
-        adj = adj.cpu().numpy()
-
-        graphs = []
-        for m in range(adj.shape[0]):
-            src, dst = np.nonzero(adj[m])
-            g = dgl.graph((src, dst), num_nodes=len(mode_Fx[m]))
-            g.ndata['feat'] = mode_Fx[m]
-            graphs.append(g)
-
-        return graphs, start_nodes, goal_nodes, is_valid
 
     @staticmethod
     def encode_reduced_adj_to_gridworld_layout(A: Union[np.ndarray, torch.tensor], layout_dim, probalistic_mode=False,
