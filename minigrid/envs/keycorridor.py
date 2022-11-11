@@ -79,7 +79,7 @@ class KeyCorridorEnv(RoomGrid):
         num_rows=3,
         obj_type="ball",
         room_size=6,
-        max_steps: Optional[int] = None,
+        max_steps: int | None = None,
         **kwargs,
     ):
         self.obj_type = obj_type

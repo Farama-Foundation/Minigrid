@@ -61,7 +61,7 @@ class RedBlueDoorEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=8, max_steps: int | None = None, **kwargs):
         self.size = size
         mission_space = MissionSpace(mission_func=self._gen_mission)
 

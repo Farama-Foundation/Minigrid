@@ -38,10 +38,10 @@ class WorldObj:
         self.contains = None
 
         # Initial position of the object
-        self.init_pos: Optional[Point] = None
+        self.init_pos: Point | None = None
 
         # Current position of the object
-        self.cur_pos: Optional[Point] = None
+        self.cur_pos: Point | None = None
 
     def can_overlap(self) -> bool:
         """Can the agent overlap with this?"""
@@ -59,16 +59,16 @@ class WorldObj:
         """Can the agent see behind this object?"""
         return True
 
-    def toggle(self, env: "MiniGridEnv", pos: Tuple[int, int]) -> bool:
+    def toggle(self, env: MiniGridEnv, pos: tuple[int, int]) -> bool:
         """Method to trigger/toggle an action this object performs"""
         return False
 
-    def encode(self) -> Tuple[int, int, int]:
+    def encode(self) -> tuple[int, int, int]:
         """Encode the a description of this object as a 3-tuple of integers"""
         return (OBJECT_TO_IDX[self.type], COLOR_TO_IDX[self.color], 0)
 
     @staticmethod
-    def decode(type_idx: int, color_idx: int, state: int) -> Optional["WorldObj"]:
+    def decode(type_idx: int, color_idx: int, state: int) -> Optional[WorldObj]:
         """Create an object from a 3-tuple state description"""
 
         obj_type = IDX_TO_OBJECT[type_idx]
@@ -271,7 +271,7 @@ class Ball(WorldObj):
 
 
 class Box(WorldObj):
-    def __init__(self, color, contains: Optional[WorldObj] = None):
+    def __init__(self, color, contains: WorldObj | None = None):
         super().__init__("box", color)
         self.contains = contains
 

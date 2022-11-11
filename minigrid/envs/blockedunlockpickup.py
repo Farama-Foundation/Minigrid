@@ -66,7 +66,7 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         mission_space = MissionSpace(
             mission_func=self._gen_mission,
             ordered_placeholders=[COLOR_NAMES, ["box", "key"]],

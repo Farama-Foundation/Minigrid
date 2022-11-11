@@ -105,8 +105,8 @@ class OpenTwoDoors(RoomGridLevel):
         first_color=None,
         second_color=None,
         strict=False,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         self.first_color = first_color
         self.second_color = second_color
@@ -145,7 +145,7 @@ class OpenDoorsOrder(RoomGridLevel):
     """
 
     def __init__(
-        self, num_doors, debug=False, max_steps: Optional[int] = None, **kwargs
+        self, num_doors, debug=False, max_steps: int | None = None, **kwargs
     ):
         assert num_doors >= 2
         self.num_doors = num_doors

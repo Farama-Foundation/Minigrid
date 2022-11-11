@@ -78,7 +78,7 @@ class ObstructedMazeEnv(RoomGrid):
         num_rows,
         num_cols,
         num_rooms_visited,
-        max_steps: Optional[int] = None,
+        max_steps: int | None = None,
         **kwargs,
     ):
         room_size = 6

@@ -48,13 +48,13 @@ class MiniGridEnv(gym.Env):
     def __init__(
         self,
         mission_space: MissionSpace,
-        grid_size: Optional[int] = None,
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        grid_size: int | None = None,
+        width: int | None = None,
+        height: int | None = None,
         max_steps: int = 100,
         see_through_walls: bool = False,
         agent_view_size: int = 7,
-        render_mode: Optional[str] = None,
+        render_mode: str | None = None,
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
         agent_pov: bool = False,
@@ -113,7 +113,7 @@ class MiniGridEnv(gym.Env):
         self.see_through_walls = see_through_walls
 
         # Current position and direction of the agent
-        self.agent_pos: Union[np.ndarray, Tuple[int, int]] = None
+        self.agent_pos: np.ndarray | tuple[int, int] = None
         self.agent_dir: int = None
 
         # Current grid and mission and carrying
@@ -271,7 +271,7 @@ class MiniGridEnv(gym.Env):
         idx = self._rand_int(0, len(lst))
         return lst[idx]
 
-    def _rand_subset(self, iterable: Iterable[T], num_elems: int) -> List[T]:
+    def _rand_subset(self, iterable: Iterable[T], num_elems: int) -> list[T]:
         """
         Sample a random subset of distinct elements of a list
         """
@@ -279,7 +279,7 @@ class MiniGridEnv(gym.Env):
         lst = list(iterable)
         assert num_elems <= len(lst)
 
-        out: List[T] = []
+        out: list[T] = []
 
         while len(out) < num_elems:
             elem = self._rand_elem(lst)
@@ -297,7 +297,7 @@ class MiniGridEnv(gym.Env):
 
     def _rand_pos(
         self, x_low: int, x_high: int, y_low: int, y_high: int
-    ) -> Tuple[int, int]:
+    ) -> tuple[int, int]:
         """
         Generate a random (x,y) position tuple
         """
@@ -309,9 +309,9 @@ class MiniGridEnv(gym.Env):
 
     def place_obj(
         self,
-        obj: Optional[WorldObj],
+        obj: WorldObj | None,
         top: Point = None,
-        size: Tuple[int, int] = None,
+        size: tuple[int, int] = None,
         reject_fn=None,
         max_tries=math.inf,
     ):

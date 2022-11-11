@@ -30,7 +30,7 @@ class Synth(LevelGen):
             locations=False,
             unblocking=True,
             implicit_unlock=False,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -55,7 +55,7 @@ class SynthLoc(LevelGen):
             locations=True,
             unblocking=True,
             implicit_unlock=False,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -83,7 +83,7 @@ class MiniBossLevel(LevelGen):
             room_size=5,
             num_dists=7,
             locked_room_prob=0.25,
-            **kwargs
+            **kwargs,
         )
 
 

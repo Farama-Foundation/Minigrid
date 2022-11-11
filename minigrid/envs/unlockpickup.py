@@ -59,7 +59,7 @@ class UnlockPickupEnv(RoomGrid):
 
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         mission_space = MissionSpace(
             mission_func=self._gen_mission,

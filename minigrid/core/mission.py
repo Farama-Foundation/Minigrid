@@ -28,8 +28,8 @@ class MissionSpace(spaces.Space[str]):
     def __init__(
         self,
         mission_func: Callable[..., str],
-        ordered_placeholders: Optional["list[list[str]]"] = None,
-        seed: Optional[Union[int, seeding.RandomNumberGenerator]] = None,
+        ordered_placeholders: Optional[list[list[str]]] = None,
+        seed: int | seeding.RandomNumberGenerator | None = None,
     ):
         r"""Constructor of :class:`MissionSpace` space.
 

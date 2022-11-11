@@ -39,7 +39,7 @@ class LevelGen(RoomGridLevel):
         implicit_unlock=True,
         action_kinds=["goto", "pickup", "open", "putnext"],
         instr_kinds=["action", "and", "seq"],
-        **kwargs
+        **kwargs,
     ):
         self.num_dists = num_dists
         self.locked_room_prob = locked_room_prob

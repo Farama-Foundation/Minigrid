@@ -73,7 +73,7 @@ class FetchEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=8, numObjs=3, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=8, numObjs=3, max_steps: int | None = None, **kwargs):
         self.numObjs = numObjs
         self.obj_types = ["key", "ball"]
 

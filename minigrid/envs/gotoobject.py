@@ -15,7 +15,7 @@ class GoToObjectEnv(MiniGridEnv):
     named using an English text string
     """
 
-    def __init__(self, size=6, numObjs=2, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
 
         self.numObjs = numObjs
         self.size = size

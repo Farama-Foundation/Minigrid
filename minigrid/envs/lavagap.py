@@ -69,7 +69,7 @@ class LavaGapEnv(MiniGridEnv):
     """
 
     def __init__(
-        self, size, obstacle_type=Lava, max_steps: Optional[int] = None, **kwargs
+        self, size, obstacle_type=Lava, max_steps: int | None = None, **kwargs
     ):
         self.obstacle_type = obstacle_type
         self.size = size
@@ -89,7 +89,7 @@ class LavaGapEnv(MiniGridEnv):
             # Set this to True for maximum speed
             see_through_walls=False,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

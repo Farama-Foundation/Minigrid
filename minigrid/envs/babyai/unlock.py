@@ -112,7 +112,7 @@ class UnlockPickup(RoomGridLevel):
     Unlock a door, then pick up a box in another room
     """
 
-    def __init__(self, distractors=False, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, distractors=False, max_steps: int | None = None, **kwargs):
         self.distractors = distractors
         room_size = 6
         if max is None:
@@ -143,7 +143,7 @@ class BlockedUnlockPickup(RoomGridLevel):
     in another room
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         if max_steps is None:
             max_steps = 16 * room_size**2
@@ -173,7 +173,7 @@ class UnlockToUnlock(RoomGridLevel):
     Unlock a door A that requires to unlock a door B before
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         if max_steps is None:
             max_steps = 30 * room_size**2

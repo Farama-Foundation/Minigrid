@@ -55,7 +55,7 @@ class UnlockEnv(RoomGrid):
 
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         mission_space = MissionSpace(mission_func=self._gen_mission)
 
@@ -68,7 +68,7 @@ class UnlockEnv(RoomGrid):
             num_cols=2,
             room_size=room_size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

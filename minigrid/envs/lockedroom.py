@@ -78,7 +78,7 @@ class LockedRoomEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=19, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=19, max_steps: int | None = None, **kwargs):
         self.size = size
 
         if max_steps is None:

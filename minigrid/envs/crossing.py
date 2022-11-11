@@ -90,8 +90,8 @@ class CrossingEnv(MiniGridEnv):
         size=9,
         num_crossings=1,
         obstacle_type=Lava,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
@@ -109,7 +109,7 @@ class CrossingEnv(MiniGridEnv):
             grid_size=size,
             see_through_walls=False,  # Set this to True for maximum speed
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

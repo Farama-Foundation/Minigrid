@@ -65,7 +65,7 @@ class GoToDoorEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=5, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=5, max_steps: int | None = None, **kwargs):
         assert size >= 5
         self.size = size
         mission_space = MissionSpace(

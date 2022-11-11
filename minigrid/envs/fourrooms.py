@@ -69,7 +69,7 @@ class FourRoomsEnv(MiniGridEnv):
             width=self.size,
             height=self.size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

@@ -52,7 +52,7 @@ class RoomGridLevel(RoomGrid):
     of approximately similar difficulty.
     """
 
-    def __init__(self, room_size=8, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, room_size=8, max_steps: int | None = None, **kwargs):
         mission_space = BabyAIMissionSpace()
 
         # If `max_steps` arg is passed it will be fixed for every episode,
@@ -66,7 +66,7 @@ class RoomGridLevel(RoomGrid):
             room_size=room_size,
             mission_space=mission_space,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     def reset(self, **kwargs):

@@ -43,8 +43,8 @@ class PutNext(RoomGridLevel):
         room_size,
         objs_per_room,
         start_carrying=False,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         assert room_size >= 4
         assert objs_per_room <= 9

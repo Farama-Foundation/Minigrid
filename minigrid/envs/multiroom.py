@@ -79,8 +79,8 @@ class MultiRoomEnv(MiniGridEnv):
         minNumRooms,
         maxNumRooms,
         maxRoomSize=10,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         assert minNumRooms > 0
         assert maxNumRooms >= minNumRooms
@@ -104,7 +104,7 @@ class MultiRoomEnv(MiniGridEnv):
             width=self.size,
             height=self.size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

@@ -108,7 +108,7 @@ class GoTo(RoomGridLevel):
         num_cols=3,
         num_dists=18,
         doors_open=False,
-        **kwargs
+        **kwargs,
     ):
         self.num_dists = num_dists
         self.doors_open = doors_open
@@ -200,7 +200,7 @@ class GoToSeq(LevelGen):
             locked_room_prob=0,
             locations=False,
             unblocking=False,
-            **kwargs
+            **kwargs,
         )
 
 
