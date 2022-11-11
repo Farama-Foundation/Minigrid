@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace

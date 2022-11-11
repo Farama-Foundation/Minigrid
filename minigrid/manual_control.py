@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import gymnasium as gym
 
 from minigrid.minigrid_env import MiniGridEnv

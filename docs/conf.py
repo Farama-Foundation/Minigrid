@@ -18,6 +18,8 @@
 # TODO: change to minigrid version
 # from TODO import __version__ as minigrid_version
 
+from __future__ import annotations
+
 import os
 import sys
 from typing import Any, Dict

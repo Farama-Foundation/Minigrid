@@ -1,6 +1,8 @@
 """
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
+from __future__ import annotations
+
 import os
 from abc import ABC, abstractmethod
 

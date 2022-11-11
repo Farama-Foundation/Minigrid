@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC

@@ -1,6 +1,8 @@
 """
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
+from __future__ import annotations
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.roomgrid import Room
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
