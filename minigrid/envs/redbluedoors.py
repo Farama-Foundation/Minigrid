@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Door

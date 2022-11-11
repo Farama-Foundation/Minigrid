@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, Union
-
 import numpy as np
 
 from minigrid.core.constants import COLOR_NAMES

@@ -4,8 +4,6 @@ Levels described in the Baby AI ICLR 2019 submission, with the `Pick up` instruc
 """
 from __future__ import annotations
 
-from typing import Optional
-
 from minigrid.envs.babyai.core.levelgen import LevelGen
 from minigrid.envs.babyai.core.roomgrid_level import RejectSampling, RoomGridLevel
 from minigrid.envs.babyai.core.verifier import ObjDesc, PickupInstr

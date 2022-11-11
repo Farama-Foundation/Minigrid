@@ -3,8 +3,6 @@ Copied and adapted from https://github.com/mila-iqia/babyai
 """
 from __future__ import annotations
 
-from typing import Optional
-
 from minigrid.core.roomgrid import RoomGrid
 from minigrid.envs.babyai.core.verifier import (
     ActionInstr,

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from operator import add
-from typing import Optional
 
 from gymnasium.spaces import Discrete
 
