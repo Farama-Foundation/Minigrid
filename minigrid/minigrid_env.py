@@ -2,7 +2,7 @@ import hashlib
 import math
 from abc import abstractmethod
 from enum import IntEnum
-from typing import Iterable, List, Optional, Sequence, Tuple, TypeVar, Union
+from typing import Iterable, List, Optional, Tuple, TypeVar, Union
 
 import gymnasium as gym
 import numpy as np
