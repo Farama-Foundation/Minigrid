@@ -14,9 +14,9 @@ from gym_minigrid.agents import PedAgent
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
 agents = []
 for i in range(50):
-    xPos = np.random.randint(2, 18)
-    yPos = np.random.randint(10, 90)
-    direction = 1 if np.random.random() > 0.5 else 3
+    yPos = np.random.randint(2, 18)
+    xPos = np.random.randint(10, 18)
+    direction = 2 if np.random.random() > 0.5 else 0
     prob = np.random.random()
     if prob < 0.1:
         speed = 1
@@ -29,7 +29,7 @@ env.addAgents(agents)
 
 env.reset()
 
-for i in range(0, 100):
+for i in range(0, 20):
 
     obs, reward, done, info = env.step(None)
     
@@ -39,7 +39,7 @@ for i in range(0, 100):
 
     env.render()
 
-    time.sleep(0.05)
+    time.sleep(5)
 
 
 # Test the close method
