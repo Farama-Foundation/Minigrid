@@ -1,15 +1,5 @@
 ---
 repos:
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v2.32.0
-    hooks:
-      - id: pyupgrade
-        args: ["--py37-plus"]
-  - repo: https://github.com/PyCQA/autoflake
-    rev: v1.7.7
-    hooks:
-      - id: autoflake
-        args: ["--in-place", "--remove-all-unused-imports", "--ignore-init-module-imports", "--ignore-pass-after-docstring"]
   - repo: https://github.com/python/black
     rev: 22.3.0
     hooks:
@@ -35,8 +25,7 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: 
-          - --settings-file=pyproject.toml
+        args: ["--profile", "black"]
 #  - repo: https://github.com/pycqa/pydocstyle
 #    rev: 6.1.1
 #    hooks:
@@ -46,6 +35,11 @@ repos:
 #          - --explain
 #          - --convention=google
 #        additional_dependencies: ["toml"]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.32.0
+    hooks:
+      - id: pyupgrade
+        args: ["--py37-plus"]
   - repo: local
     hooks:
       - id: pyright
