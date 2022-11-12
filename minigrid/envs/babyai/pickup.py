@@ -2,7 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Pick up` instruction.
 """
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.envs.babyai.core.levelgen import LevelGen
 from minigrid.envs.babyai.core.roomgrid_level import RejectSampling, RoomGridLevel
@@ -63,7 +63,7 @@ class PickupLoc(LevelGen):
             locked_room_prob=0,
             locations=True,
             unblocking=False,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -102,7 +102,7 @@ class PickupAbove(RoomGridLevel):
     This task requires to use the compass to be solved effectively.
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         if max_steps is None:
             max_steps = 8 * room_size**2

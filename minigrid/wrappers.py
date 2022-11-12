@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import math
 import operator
 from functools import reduce

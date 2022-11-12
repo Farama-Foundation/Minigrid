@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal
@@ -67,7 +69,7 @@ class FourRoomsEnv(MiniGridEnv):
             width=self.size,
             height=self.size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

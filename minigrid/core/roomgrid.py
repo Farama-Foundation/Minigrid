@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, Union
+from __future__ import annotations
 
 import numpy as np
 
@@ -8,7 +8,7 @@ from minigrid.core.world_object import Ball, Box, Door, Key, WorldObj
 from minigrid.minigrid_env import MiniGridEnv
 
 
-def reject_next_to(env: MiniGridEnv, pos: Tuple[int, int]):
+def reject_next_to(env: MiniGridEnv, pos: tuple[int, int]):
     """
     Function to filter out object positions that are right next to
     the agent's starting point
@@ -21,27 +21,27 @@ def reject_next_to(env: MiniGridEnv, pos: Tuple[int, int]):
 
 
 class Room:
-    def __init__(self, top: Tuple[int, int], size: Tuple[int, int]):
+    def __init__(self, top: tuple[int, int], size: tuple[int, int]):
         # Top-left corner and size (tuples)
         self.top = top
         self.size = size
 
         # List of door objects and door positions
         # Order of the doors is right, down, left, up
-        self.doors: List[Optional[Union[bool, Door]]] = [None] * 4
-        self.door_pos: List[Optional[Tuple[int, int]]] = [None] * 4
+        self.doors: list[bool | Door | None] = [None] * 4
+        self.door_pos: list[tuple[int, int] | None] = [None] * 4
 
         # List of rooms adjacent to this one
         # Order of the neighbors is right, down, left, up
-        self.neighbors: List[Optional[Room]] = [None] * 4
+        self.neighbors: list[Room | None] = [None] * 4
 
         # Indicates if this room is behind a locked door
         self.locked: bool = False
 
         # List of objects contained
-        self.objs: List[WorldObj] = []
+        self.objs: list[WorldObj] = []
 
-    def rand_pos(self, env: MiniGridEnv) -> Tuple[int, int]:
+    def rand_pos(self, env: MiniGridEnv) -> tuple[int, int]:
         topX, topY = self.top
         sizeX, sizeY = self.size
         return env._randPos(topX + 1, topX + sizeX - 1, topY + 1, topY + sizeY - 1)
@@ -180,7 +180,7 @@ class RoomGrid(MiniGridEnv):
 
     def place_in_room(
         self, i: int, j: int, obj: WorldObj
-    ) -> Tuple[WorldObj, Tuple[int, int]]:
+    ) -> tuple[WorldObj, tuple[int, int]]:
         """
         Add an existing object to room (i, j)
         """
@@ -199,9 +199,9 @@ class RoomGrid(MiniGridEnv):
         self,
         i: int,
         j: int,
-        kind: Optional[str] = None,
-        color: Optional[str] = None,
-    ) -> Tuple[WorldObj, Tuple[int, int]]:
+        kind: str | None = None,
+        color: str | None = None,
+    ) -> tuple[WorldObj, tuple[int, int]]:
         """
         Add a new object to room (i, j)
         """
@@ -231,10 +231,10 @@ class RoomGrid(MiniGridEnv):
         self,
         i: int,
         j: int,
-        door_idx: Optional[int] = None,
-        color: Optional[str] = None,
-        locked: Optional[bool] = None,
-    ) -> Tuple[Door, Tuple[int, int]]:
+        door_idx: int | None = None,
+        color: str | None = None,
+        locked: bool | None = None,
+    ) -> tuple[Door, tuple[int, int]]:
         """
         Add a door to a room, connecting it to a neighbor
         """
@@ -311,7 +311,7 @@ class RoomGrid(MiniGridEnv):
         neighbor.doors[(wall_idx + 2) % 4] = True
 
     def place_agent(
-        self, i: Optional[int] = None, j: Optional[int] = None, rand_dir: bool = True
+        self, i: int | None = None, j: int | None = None, rand_dir: bool = True
     ) -> np.ndarray:
         """
         Place the agent in a room
@@ -334,8 +334,8 @@ class RoomGrid(MiniGridEnv):
         return self.agent_pos
 
     def connect_all(
-        self, door_colors: List[str] = COLOR_NAMES, max_itrs: int = 5000
-    ) -> List[Door]:
+        self, door_colors: list[str] = COLOR_NAMES, max_itrs: int = 5000
+    ) -> list[Door]:
         """
         Make sure that all rooms are reachable by the agent from its
         starting position
@@ -395,11 +395,11 @@ class RoomGrid(MiniGridEnv):
 
     def add_distractors(
         self,
-        i: Optional[int] = None,
-        j: Optional[int] = None,
+        i: int | None = None,
+        j: int | None = None,
         num_distractors: int = 10,
         all_unique: bool = True,
-    ) -> List[WorldObj]:
+    ) -> list[WorldObj]:
         """
         Add random objects that can potentially distract/confuse the agent.
         """

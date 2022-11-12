@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
@@ -67,7 +67,7 @@ class PutNearEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=6, numObjs=2, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
         self.size = size
         self.numObjs = numObjs
         self.obj_types = ["key", "ball", "box"]

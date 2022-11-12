@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -19,7 +21,7 @@ class PlaygroundEnv(MiniGridEnv):
             width=self.size,
             height=self.size,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

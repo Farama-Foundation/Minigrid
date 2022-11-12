@@ -1,4 +1,6 @@
-from typing import Any, Callable, Optional, Union
+from __future__ import annotations
+
+from typing import Any, Callable
 
 from gymnasium import spaces
 from gymnasium.utils import seeding
@@ -26,8 +28,8 @@ class MissionSpace(spaces.Space[str]):
     def __init__(
         self,
         mission_func: Callable[..., str],
-        ordered_placeholders: Optional["list[list[str]]"] = None,
-        seed: Optional[Union[int, seeding.RandomNumberGenerator]] = None,
+        ordered_placeholders: list[list[str]] | None = None,
+        seed: int | seeding.RandomNumberGenerator | None = None,
     ):
         r"""Constructor of :class:`MissionSpace` space.
 

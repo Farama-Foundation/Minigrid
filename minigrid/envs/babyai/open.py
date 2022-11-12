@@ -2,7 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Open` instruction.
 """
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
@@ -103,8 +103,8 @@ class OpenTwoDoors(RoomGridLevel):
         first_color=None,
         second_color=None,
         strict=False,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         self.first_color = first_color
         self.second_color = second_color
@@ -142,9 +142,7 @@ class OpenDoorsOrder(RoomGridLevel):
     Open one or two doors in the order specified.
     """
 
-    def __init__(
-        self, num_doors, debug=False, max_steps: Optional[int] = None, **kwargs
-    ):
+    def __init__(self, num_doors, debug=False, max_steps: int | None = None, **kwargs):
         assert num_doors >= 2
         self.num_doors = num_doors
         self.debug = debug

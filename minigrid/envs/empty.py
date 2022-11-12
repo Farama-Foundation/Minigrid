@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -70,8 +70,8 @@ class EmptyEnv(MiniGridEnv):
         size=8,
         agent_start_pos=(1, 1),
         agent_start_dir=0,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
@@ -87,7 +87,7 @@ class EmptyEnv(MiniGridEnv):
             # Set this to True for maximum speed
             see_through_walls=True,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

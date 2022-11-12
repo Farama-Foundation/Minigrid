@@ -2,7 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Put Next` instruction.
 """
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
 from minigrid.envs.babyai.core.verifier import ObjDesc, PutNextInstr
@@ -41,8 +41,8 @@ class PutNext(RoomGridLevel):
         room_size,
         objs_per_room,
         start_carrying=False,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         assert room_size >= 4
         assert objs_per_room <= 9
@@ -86,6 +86,7 @@ class PutNext(RoomGridLevel):
 
         # If the agent starts off carrying the object
         if self.start_carrying:
+            assert self.obj_a.init_pos is not None
             self.grid.set(*self.obj_a.init_pos, None)
             self.carrying = self.obj_a
 

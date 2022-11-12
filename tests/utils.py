@@ -1,4 +1,6 @@
 """Finds all the specs that we can test with"""
+from __future__ import annotations
+
 import gymnasium as gym
 import numpy as np
 

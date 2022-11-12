@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
 from minigrid.core.mission import MissionSpace
@@ -76,7 +76,7 @@ class ObstructedMazeEnv(RoomGrid):
         num_rows,
         num_cols,
         num_rooms_visited,
-        max_steps: Optional[int] = None,
+        max_steps: int | None = None,
         **kwargs,
     ):
         room_size = 6

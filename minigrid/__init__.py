@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from gymnasium.envs.registration import register
 
 from minigrid import minigrid_env, wrappers

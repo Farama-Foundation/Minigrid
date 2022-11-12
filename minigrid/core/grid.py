@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import math
-from typing import Any, List, Optional, Tuple, Type
+from typing import Any, Callable
 
 import numpy as np
 
@@ -21,7 +23,7 @@ class Grid:
     """
 
     # Static cache of pre-renderer tiles
-    tile_cache = {}
+    tile_cache: dict[tuple[Any, ...], Any] = {}
 
     def __init__(self, width: int, height: int):
         assert width >= 3
@@ -30,7 +32,7 @@ class Grid:
         self.width: int = width
         self.height: int = height
 
-        self.grid: List[Optional[WorldObj]] = [None] * width * height
+        self.grid: list[WorldObj | None] = [None] * (width * height)
 
     def __contains__(self, key: Any) -> bool:
         if isinstance(key, WorldObj):
@@ -47,25 +49,29 @@ class Grid:
                     return True
         return False
 
-    def __eq__(self, other: "Grid") -> bool:
+    def __eq__(self, other: Grid) -> bool:
         grid1 = self.encode()
         grid2 = other.encode()
         return np.array_equal(grid2, grid1)
 
-    def __ne__(self, other: "Grid") -> bool:
+    def __ne__(self, other: Grid) -> bool:
         return not self == other
 
-    def copy(self) -> "Grid":
+    def copy(self) -> Grid:
         from copy import deepcopy
 
         return deepcopy(self)
 
-    def set(self, i: int, j: int, v: Optional[WorldObj]):
-        assert 0 <= i < self.width
-        assert 0 <= j < self.height
+    def set(self, i: int, j: int, v: WorldObj | None):
+        assert (
+            0 <= i < self.width
+        ), f"column index {j} outside of grid of width {self.width}"
+        assert (
+            0 <= j < self.height
+        ), f"row index {j} outside of grid of height {self.height}"
         self.grid[j * self.width + i] = v
 
-    def get(self, i: int, j: int) -> Optional[WorldObj]:
+    def get(self, i: int, j: int) -> WorldObj | None:
         assert 0 <= i < self.width
         assert 0 <= j < self.height
         assert self.grid is not None
@@ -75,8 +81,8 @@ class Grid:
         self,
         x: int,
         y: int,
-        length: Optional[int] = None,
-        obj_type: Type[WorldObj] = Wall,
+        length: int | None = None,
+        obj_type: Callable[[], WorldObj] = Wall,
     ):
         if length is None:
             length = self.width - x
@@ -87,8 +93,8 @@ class Grid:
         self,
         x: int,
         y: int,
-        length: Optional[int] = None,
-        obj_type: Type[WorldObj] = Wall,
+        length: int | None = None,
+        obj_type: Callable[[], WorldObj] = Wall,
     ):
         if length is None:
             length = self.height - y
@@ -101,7 +107,7 @@ class Grid:
         self.vert_wall(x, y, h)
         self.vert_wall(x + w - 1, y, h)
 
-    def rotate_left(self) -> "Grid":
+    def rotate_left(self) -> Grid:
         """
         Rotate the grid to the left (counter-clockwise)
         """
@@ -115,7 +121,7 @@ class Grid:
 
         return grid
 
-    def slice(self, topX: int, topY: int, width: int, height: int) -> "Grid":
+    def slice(self, topX: int, topY: int, width: int, height: int) -> Grid:
         """
         Get a subset of the grid
         """
@@ -139,8 +145,8 @@ class Grid:
     @classmethod
     def render_tile(
         cls,
-        obj: WorldObj,
-        agent_dir: Optional[int] = None,
+        obj: WorldObj | None,
+        agent_dir: int | None = None,
         highlight: bool = False,
         tile_size: int = TILE_PIXELS,
         subdivs: int = 3,
@@ -150,7 +156,7 @@ class Grid:
         """
 
         # Hash map lookup key for the cache
-        key = (agent_dir, highlight, tile_size)
+        key: tuple[Any, ...] = (agent_dir, highlight, tile_size)
         key = obj.encode() + key if obj else key
 
         if key in cls.tile_cache:
@@ -194,9 +200,9 @@ class Grid:
     def render(
         self,
         tile_size: int,
-        agent_pos: Tuple[int, int],
-        agent_dir: Optional[int] = None,
-        highlight_mask: Optional[np.ndarray] = None,
+        agent_pos: tuple[int, int],
+        agent_dir: int | None = None,
+        highlight_mask: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Render this grid at a given scale
@@ -235,7 +241,7 @@ class Grid:
 
         return img
 
-    def encode(self, vis_mask: Optional[np.ndarray] = None) -> np.ndarray:
+    def encode(self, vis_mask: np.ndarray | None = None) -> np.ndarray:
         """
         Produce a compact numpy encoding of the grid
         """
@@ -262,7 +268,7 @@ class Grid:
         return array
 
     @staticmethod
-    def decode(array: np.ndarray) -> Tuple["Grid", np.ndarray]:
+    def decode(array: np.ndarray) -> tuple[Grid, np.ndarray]:
         """
         Decode an array grid encoding back into a grid
         """
@@ -282,7 +288,7 @@ class Grid:
 
         return grid, vis_mask
 
-    def process_vis(self, agent_pos: Tuple[int, int]) -> np.ndarray:
+    def process_vis(self, agent_pos: tuple[int, int]) -> np.ndarray:
         mask = np.zeros(shape=(self.width, self.height), dtype=bool)
 
         mask[agent_pos[0], agent_pos[1]] = True

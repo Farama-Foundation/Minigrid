@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 import numpy as np
 
@@ -68,7 +68,7 @@ class MemoryEnv(MiniGridEnv):
     """
 
     def __init__(
-        self, size=8, random_length=False, max_steps: Optional[int] = None, **kwargs
+        self, size=8, random_length=False, max_steps: int | None = None, **kwargs
     ):
         self.size = size
         self.random_length = random_length
@@ -84,7 +84,7 @@ class MemoryEnv(MiniGridEnv):
             # Set this to True for maximum speed
             see_through_walls=False,
             max_steps=max_steps,
-            **kwargs
+            **kwargs,
         )
 
     @staticmethod

@@ -2,7 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with different instructions than those in other files.
 """
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
 from minigrid.envs.babyai.core.verifier import (
@@ -56,7 +56,7 @@ class FindObjS5(RoomGridLevel):
     This level requires potentially exhaustive exploration
     """
 
-    def __init__(self, room_size=5, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, room_size=5, max_steps: int | None = None, **kwargs):
 
         if max_steps is None:
             max_steps = 20 * room_size**2
@@ -85,8 +85,8 @@ class KeyCorridor(RoomGridLevel):
         num_rows=3,
         obj_type="ball",
         room_size=6,
-        max_steps: Optional[int] = None,
-        **kwargs
+        max_steps: int | None = None,
+        **kwargs,
     ):
         self.obj_type = obj_type
 
@@ -143,7 +143,7 @@ class MoveTwoAcross(RoomGridLevel):
     """
 
     def __init__(
-        self, room_size, objs_per_room, max_steps: Optional[int] = None, **kwargs
+        self, room_size, objs_per_room, max_steps: int | None = None, **kwargs
     ):
         assert objs_per_room <= 9
         self.objs_per_room = objs_per_room

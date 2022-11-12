@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.mission import MissionSpace
@@ -57,7 +57,7 @@ class UnlockPickupEnv(RoomGrid):
 
     """
 
-    def __init__(self, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, max_steps: int | None = None, **kwargs):
         room_size = 6
         mission_space = MissionSpace(
             mission_func=self._gen_mission,

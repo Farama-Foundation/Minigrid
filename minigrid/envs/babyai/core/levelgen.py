@@ -1,6 +1,8 @@
 """
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
+from __future__ import annotations
+
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.roomgrid import Room
 from minigrid.envs.babyai.core.roomgrid_level import RoomGridLevel
@@ -37,7 +39,7 @@ class LevelGen(RoomGridLevel):
         implicit_unlock=True,
         action_kinds=["goto", "pickup", "open", "putnext"],
         instr_kinds=["action", "and", "seq"],
-        **kwargs
+        **kwargs,
     ):
         self.num_dists = num_dists
         self.locked_room_prob = locked_room_prob

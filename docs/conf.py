@@ -18,9 +18,11 @@
 # TODO: change to minigrid version
 # from TODO import __version__ as minigrid_version
 
+from __future__ import annotations
+
 import os
 import sys
-from typing import Any, Dict
+from typing import Any
 
 project = "MiniGrid"
 copyright = "2022"
@@ -79,7 +81,7 @@ html_theme_options = {
     "dark_logo": "img/minigrid-white.svg",
     "gtag": "G-FBXJQQLXKD",
 }
-html_context: Dict[str, Any] = {}
+html_context: dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
 html_context["display_github"] = True
 html_context["github_user"] = "Farama-Foundation"

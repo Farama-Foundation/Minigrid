@@ -2,6 +2,8 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Go to` instruction.
 """
+from __future__ import annotations
+
 from minigrid.envs.babyai.core.levelgen import LevelGen
 from minigrid.envs.babyai.core.roomgrid_level import RejectSampling, RoomGridLevel
 from minigrid.envs.babyai.core.verifier import GoToInstr, ObjDesc
@@ -106,7 +108,7 @@ class GoTo(RoomGridLevel):
         num_cols=3,
         num_dists=18,
         doors_open=False,
-        **kwargs
+        **kwargs,
     ):
         self.num_dists = num_dists
         self.doors_open = doors_open
@@ -198,7 +200,7 @@ class GoToSeq(LevelGen):
             locked_room_prob=0,
             locations=False,
             unblocking=False,
-            **kwargs
+            **kwargs,
         )
 
 

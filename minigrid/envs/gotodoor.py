@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.grid import Grid
@@ -63,7 +63,7 @@ class GoToDoorEnv(MiniGridEnv):
 
     """
 
-    def __init__(self, size=5, max_steps: Optional[int] = None, **kwargs):
+    def __init__(self, size=5, max_steps: int | None = None, **kwargs):
         assert size >= 5
         self.size = size
         mission_space = MissionSpace(
