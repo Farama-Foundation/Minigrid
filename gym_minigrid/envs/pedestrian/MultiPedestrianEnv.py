@@ -89,9 +89,9 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Terry - added goals to the left side
         # not sure if we are making the sidewalks go horizontally or vertically
-        for i in range(1, self.width-1):
-            self.put_obj(Goal(), i, 1)
-            self.put_obj(Goal(), i, self.height - 2)
+        for i in range(1, self.height-1):
+            self.put_obj(Goal(), 1, i)
+            self.put_obj(Goal(), self.width - 2, i)
         pass
 
     #endregion
@@ -287,7 +287,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
         width = 20
-        height = 100
+        height = 60
         super().__init__(
             width=width,
             height=height,
