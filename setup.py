@@ -1,7 +1,5 @@
 """Setups up the Minigrid module."""
 
-from __future__ import annotations
-
 from setuptools import find_packages, setup
 
 
@@ -53,7 +51,7 @@ version = get_version()
 header_count, long_description = get_description()
 
 setup(
-    name="minigrid",
+    name="Minigrid",
     version=version,
     author="Farama Foundation",
     author_email="contact@farama.org",
