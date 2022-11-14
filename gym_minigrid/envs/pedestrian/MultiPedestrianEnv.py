@@ -68,7 +68,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         # left_pos = agent.position + DIR_TO_VEC[left_dir]
 
         # agent.position[0] = left_pos
-        agent.position = (agent.position[0] - 1, agent.position[1])
+        agent.position = (agent.position[0], agent.position[1] - 1)
 
     def shiftRight(self, agent: Agent):
         # assert agent.direction >= 0 and agent.direction < 4
@@ -77,7 +77,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         # right_pos = agent.position + DIR_TO_VEC[right_dir]
         
         # agent.position = right_pos
-        agent.position = (agent.position[0] + 1, agent.position[1])
+        agent.position = (agent.position[0], agent.position[1] + 1)
         
     #endregion
 
@@ -173,20 +173,20 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def eliminateConflict(self):
         for agent in self.agents:
-            if agent.position[0] == 1:
+            if agent.position[1] == 1:
                 agent.canShiftLeft = False
-            if agent.position[0] == self.width - 2:
+            if agent.position[1] == self.height - 2:
                 agent.canShiftRight = False
         for agent1 in self.agents:
             for agent2 in self.agents:
-                if agent1 == agent2 or agent1.position[1] != agent2.position[1]:
+                if agent1 == agent2 or agent1.position[0] != agent2.position[0]:
                     continue
 
-                if (agent1.position[0] - agent2.position[0]) == 1:
+                if (agent1.position[1] - agent2.position[1]) == 1:
                     # they are adjacent
                     agent1.canShiftLeft = False
                     agent2.canShiftRight = False
-                elif (agent1.position[0] - agent2.position[0]) == 2 and agent1.canShiftLeft == True and agent2.canShiftRight == True:  
+                elif (agent1.position[1] - agent2.position[1]) == 2 and agent1.canShiftLeft == True and agent2.canShiftRight == True:  
                     # they have one cell between them
                     if np.random.random() > 0.5:
                         agent1.canShiftLeft = False 

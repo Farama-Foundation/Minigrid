@@ -39,7 +39,7 @@ for i in range(0, 20):
 
     env.render()
 
-    time.sleep(5)
+    time.sleep(0.05)
 
 
 # Test the close method

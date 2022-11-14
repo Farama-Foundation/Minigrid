@@ -70,19 +70,19 @@ class PedAgent(Agent):
         gap_opposite = 4
         gap_same = 8
         if lane == Lanes.leftLane:
-            postionX -= 1
+            postionY -= 1
         elif lane == Lanes.rightLane:
-            postionX += 1
+            postionY += 1
         for agent2 in agents:
             #sameGap, so direction must be same and they must be in same lane
-            if self.direction != agent2.direction or postionX != agent2.position[0]: 
+            if self.direction != agent2.direction or postionY != agent2.position[1]: 
                 continue
-            if self.direction == 3: #looking up
-                gap = postionY - agent2.position[1]
+            if self.direction == 2: #looking up
+                gap = postionX - agent2.position[0]
                 if gap > 0 and gap <= 8: # gap must not be negative and less than 8
                     gap_same = min(gap_same, gap)
-            elif self.direction == 1: #looking down
-                gap = agent2.position[1] - postionY
+            elif self.direction == 0: #looking down
+                gap = agent2.position[0] - postionY
                 if gap > 0 and gap <= 8: # gap must not be negative and less than 8
                     gap_same = min(gap_same, gap)
 
@@ -91,14 +91,14 @@ class PedAgent(Agent):
         # now oppGap
         for agent2 in agents:
             #oppGap, so direction must be different and they must be in same lane
-            if self.direction == agent2.direction or postionX != agent2.position[0]: 
+            if self.direction == agent2.direction or postionY != agent2.position[1]: 
                 continue
-            if self.direction == 3: #looking up
-                gap = postionY - agent2.position[1]
+            if self.direction == 2: #looking up
+                gap = postionY - agent2.position[0]
                 if gap > 0 and gap <= 8: # gap must not be negative and less than 4
                     gap_opposite = min(gap_opposite, gap/2)
-            elif self.direction == 1: #looking down
-                gap = agent2.position[1] - postionY
+            elif self.direction == 0: #looking down
+                gap = agent2.position[0] - postionY
                 if gap > 0 and gap <= 8: # gap must not be negative and less than 4
                     gap_opposite = min(gap_opposite, gap/2)
 
