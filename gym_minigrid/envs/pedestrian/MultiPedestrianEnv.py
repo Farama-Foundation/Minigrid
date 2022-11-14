@@ -68,6 +68,11 @@ class MultiPedestrianEnv(MiniGridEnv):
         agents = len(self.agents)
         return agents/cells
 
+    def getDensity(self):
+        cells = (self.width - 1) * (self.height - 1)
+        agents = len(self.agents)
+        return agents/cells
+
     def forwardAgent(self, agent: Agent):
         # TODO DONE
         
