@@ -45,7 +45,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
-        if fwd_pos[1] < 0 or fwd_pos[1] >= self.height:
+        if fwd_pos[0] < 0 or fwd_pos[0] >= self.width:
+            self.agents.remove(agent)
             return
         # Terry - implemented speed ^ by multiplying speed with direction unit vector
 
@@ -193,8 +194,10 @@ class MultiPedestrianEnv(MiniGridEnv):
                     else: 
                         agent2.canShiftRight = False
 
-        for agent in self.agents:
-            agent.position
+        # for agent in self.agents:
+        #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
+        #         self.agents.remove(agent)
+        #         print('removed')
 
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
