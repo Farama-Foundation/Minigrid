@@ -282,6 +282,10 @@ class Batch:
     def generate_batch(self):
 
         features = self.generate_data()
+        if isinstance(features[0], dgl.DGLGraph):
+            pass
+            #TODO : start from there
+
         if not util.check_unique(features).all():
             logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
         if self.data_type == 'gridworld':
@@ -402,9 +406,18 @@ class WaveCollapseBatch(Batch):
         def _place_start_and_goal(self, graphs: List[dgl.DGLGraph]):
 
             for graph in graphs:
-                active_nodes = torch.where(graph.ndata['active'])
-                start_node = active_nodes[0][torch.randint(0, len(active_nodes[0]), (1,))]
+                possible_nodes = torch.where(graph.ndata['active'])[0]
+                inds = torch.randperm(len(possible_nodes))[:2]
+                start_node, goal_node = possible_nodes[inds]
                 graph.ndata['start'][start_node] = 1
+                graph.ndata['goal'][goal_node] = 1
+                # start_node_idx = torch.randint(0, len(possible_nodes[0]), (1,))
+                # start_node = possible_nodes[0][start_node_idx]
+                # graph.ndata['start'][start_node] = 1
+                # possible_nodes = torch.cat([possible_nodes[0:start_node_idx], possible_nodes[start_node_idx+1:]])
+                # goal_node_idx = torch.randint(0, len(possible_nodes[0]), (1,))
+                # goal_node = possible_nodes[0][goal_node_idx]
+                # graph.ndata['goal'][goal_node] = 1
                 #TODO randint on active nodes - start_node, or 2 randints without repetition
 
 
@@ -431,11 +444,6 @@ class WaveCollapseBatch(Batch):
                 graphs[i] = copy.deepcopy(g)
 
             return graphs
-
-
-
-
-
 
 
 class MazeBatch(Batch):
