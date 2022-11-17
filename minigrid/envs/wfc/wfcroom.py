@@ -2,6 +2,7 @@ __package__ = "maze_representations"
 
 import copy
 import logging
+import time
 
 import networkx as nx
 
@@ -21,6 +22,7 @@ from mazelib import Maze
 from mazelib.generate.Prims import Prims
 from .gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
+import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
 
 from .util import graph_metrics
 from .util import transforms as tr
@@ -49,6 +51,8 @@ class GridNavDatasetGenerator:
     def __init__(self, dataset_config: DictConfig, dataset_dir_name=None):
         self.config = dataset_config
         self.dataset_meta = self.get_dataset_metadata()
+        self.config.size = int(self.config.num_train_batches * self.config.size_train_batch + \
+                               self.config.num_test_batches * self.config.size_test_batch)
         self.batches_meta = self.get_batches_metadata()
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(dataset_dir_name)
@@ -65,21 +69,31 @@ class GridNavDatasetGenerator:
             logger.info(f"Using seed {self.seed}")
 
         self._task_seeds = torch.randperm(int(1e7)) #10M possible seeds
+        self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
 
 
     def generate_dataset(self, normalise_metrics: bool = True):
 
         n_generated_samples = 0
+        seed_counter = 0
+        #TODO: consider using multiprocessing to generate batches in parallel
+        # TODO: consider using tqdm to show progress
         for i, batch_meta in enumerate(self.batches_meta):
-            logger.info(f"Generating Batch {i}/{len(self.batches_meta)}")
+            logger.info(f"Generating Batch {i+1}/{len(self.batches_meta)}. Task structure: {batch_meta['task_structure']}")
+            time_batch_start = time.perf_counter()
             batch_g = BatchGenerator(batch_meta, self.dataset_meta, seeds=
-                self._task_seeds[n_generated_samples:n_generated_samples+batch_meta['batch_size']])
+                self._task_seeds[seed_counter:seed_counter+self._seeds_per_batch])
             batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
             batch_label_ids += n_generated_samples
             n_generated_samples += len(batch_label_ids)
+            seed_counter += self._seeds_per_batch
             self.generated_batches.append(batch_features)
             self.generated_labels.append(batch_label_ids)
             self.generated_label_contents.append(batch_label_contents)
+            time_batch_end = time.perf_counter()
+            batch_generation_time = time_batch_end - time_batch_start
+            logger.info(f"Batch generated in {batch_generation_time:.2f} seconds. "
+                        f"Average time per sample: {batch_generation_time/len(batch_label_ids):.2f} seconds.")
 
         self.config.size = n_generated_samples
 
@@ -87,7 +101,6 @@ class GridNavDatasetGenerator:
 
         #update the dataset meta with the values automatically updated during generation
         self.dataset_meta = self.get_dataset_metadata()
-
         # creates folder if it does not exist.
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
@@ -159,10 +172,7 @@ class GridNavDatasetGenerator:
                 task_structures = []
                 assigned_batches = 0
                 for task, split in self.config.task_structure_split.items():
-                    assert num_batches % split == 0, \
-                        f"Cannot split provided num_{regime}_batches ({num_batches}) by split ratio " \
-                        f"{split} for task {task}. Adjust data_generation config."
-                    task_num_batches = int(split*num_batches)
+                    task_num_batches = int(split)
                     task_structures.extend([task]*task_num_batches)
                     assigned_batches += task_num_batches
 
@@ -203,18 +213,34 @@ class GridNavDatasetGenerator:
         for val in all_batches_meta.values():
             batches_meta.extend(val)
 
-
         return batches_meta
 
     def get_dataset_dir(self, dir_name=None):
         base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
 
         if dir_name is None:
-            task_structures = '-'.join(sorted(self.config.label_descriptors_config.task_structures))
+            task_structures = '-'.join(sorted(self.config.task_structure_split.keys()))
             dir_name = f"ts={task_structures}-x={self.dataset_meta['data_type']}-s={self.config.size}" \
                                 f"-d={self.config.gridworld_data_dim[-1]}-gf={len(self.config.graph_feature_descriptors)}" \
                                 f"-enc={self.config.encoding}"
-        return base_dir + dir_name + '/'
+
+            if len(base_dir + dir_name + '/') > 260:
+                task_structures = 'many'
+                dir_name = f"ts={task_structures}-x={self.dataset_meta['data_type']}-s={self.config.size}" \
+                           f"-d={self.config.gridworld_data_dim[-1]}-gf={len(self.config.graph_feature_descriptors)}" \
+                           f"-enc={self.config.encoding}"
+
+                logger.warning(f"Dataset directory name too long. Using {dir_name} instead.")
+
+        path = base_dir + dir_name + '/'
+
+        if len(path) > 260:
+            raise ValueError("Dataset dir path too long. Please use a shorter path.")
+
+        if os.path.exists(path):
+            raise FileExistsError(f"Dataset directory {path} already exists. Aborting.")
+
+        return path
 
     def save_batch(self, batch_data: List[Any], batch_labels: np.ndarray,
                    batch_label_contents: Dict[int, Any], batch_meta: Dict[str, Any]):
@@ -245,6 +271,10 @@ class GridNavDatasetGenerator:
         logger.info(f"Saving dataset metadata to {filename}.")
         with open(filename, 'wb') as f:
             pickle.dump(entry, f)
+
+    # TODO: check_unique function on entire dataset (look at scratch.py in X())
+
+    # TODO: generate_layouts.png (look at scratch.py in X())
 
 
 class BatchGenerator:
@@ -278,34 +308,43 @@ class Batch:
         self.label_ids = np.arange(self.batch_meta['batch_size'])
         self.label_contents = dict.fromkeys(self.dataset_meta['label_descriptors'])
         self.features = None
+        self.images = None
 
     def generate_batch(self):
 
-        features = self.generate_data()
-        if isinstance(features[0], dgl.DGLGraph):
-            pass
-            #TODO : start from there
+        batch_data = self.generate_data()
+        if isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph):
+            features, _ = util.get_node_features(batch_data, device=None) # TODO: add device?
+        else:
+            features = batch_data
 
         if not util.check_unique(features).all():
             logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
         if self.data_type == 'gridworld':
             pass
         elif self.data_type == 'grid':
-            features = tr.Nav2DTransforms.encode_gridworld_to_grid(features)
-            #TODO: cleanup and put as unit test
+            batch_data = tr.Nav2DTransforms.encode_gridworld_to_grid(batch_data)
+            # test
             # features3 = tr.Nav2DTransforms.encode_grid_to_gridworld(features2)
             # assert np.array_equal(features, features3)
         elif self.data_type == 'graph':
-            features = tr.Nav2DTransforms.encode_gridworld_to_graph(features)
-            self.generate_label_contents(features)
+            if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
+                batch_data = tr.Nav2DTransforms.encode_gridworld_to_graph(batch_data)
+            self.generate_label_contents(batch_data, features=features)
 
-        self.features = features
+        self.features = batch_data
         return self.features, self.label_ids, self.label_contents
 
     def generate_data(self):
         raise NotImplementedError
 
-    def generate_label_contents(self, features):
+    def generate_label_contents(self, data, features=None):
+
+        if features is None:
+            if isinstance(data, dgl.DGLGraph) or isinstance(data[0], dgl.DGLGraph):
+                features, _ = util.get_node_features(data, device=None)  # TODO: add device?
+            else:
+                features = data
 
         for key in self.label_contents.keys():
             self.label_contents[key] = []
@@ -313,12 +352,18 @@ class Batch:
         self.label_contents["seed"] = self.seeds if self.seeds is not None else [None] * self.batch_meta['batch_size']
         self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
         self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
+        if "images" in self.label_contents.keys():
+            self.label_contents["images"] = tr.Nav2DTransforms.graph_to_mingrid_render(data, tile_size=32)
 
-        start_dim, goal_dim = self.dataset_meta['graph_feature_descriptors'].index('start'), \
-                              self.dataset_meta['graph_feature_descriptors'].index('goal')
-        for i, graph in enumerate(features):
-            start_node = int(graph.ndata["feat"][:,start_dim].argmax())
-            goal_node = int(graph.ndata["feat"][:,goal_dim].argmax())
+        self.compute_graph_metrics(data, features)
+
+    def compute_graph_metrics(self, graphs, features):
+
+        start_nodes, goal_nodes = self._compute_start_goal_indices(features)
+
+        for i, graph in enumerate(graphs):
+            start_node = int(start_nodes[i])
+            goal_node = int(goal_nodes[i])
             graph, valid, solvable = graph_metrics.prepare_graph(graph, start_node, goal_node)
 
             shortest_paths = graph_metrics.shortest_paths(graph, start_node, goal_node, num_paths=1)
@@ -335,7 +380,15 @@ class Batch:
         self.label_contents["resistance"] = torch.tensor(self.label_contents["resistance"])
         self.label_contents["navigable_nodes"] = torch.tensor(self.label_contents["navigable_nodes"])
 
-    #Note: Returns the gridworld in one given permutation
+    def _compute_start_goal_indices(self, features):
+
+        start_dim, goal_dim = self.dataset_meta['graph_feature_descriptors'].index('start'), \
+                              self.dataset_meta['graph_feature_descriptors'].index('goal')
+
+        start_nodes = features[..., start_dim].argmax(dim=-1)
+        goal_nodes = features[..., goal_dim].argmax(dim=-1)
+
+        return start_nodes, goal_nodes
 
 
 class WaveCollapseBatch(Batch):
@@ -358,10 +411,24 @@ class WaveCollapseBatch(Batch):
 
         def generate_data(self):
             if self.seeds is None:
-                self.seeds = torch.randint(0, 2 ** 32 - 1, (self.batch_meta['batch_size'],), dtype=torch.int64)
+                self.seeds = torch.randint(0, 2 ** 32 - 1, (int(1e6),), dtype=torch.int64)
             features = []
-            for seed in self.seeds:
-                features.append(self._run_wfc(seed))
+            remove_seeds = torch.ones(self.seeds.shape, dtype=torch.bool)
+
+            i = 0
+            while len(features) < self.batch_meta['batch_size']:
+                seed = self.seeds[i]
+                pattern = self._run_wfc(seed)
+                if pattern is None:
+                    logger.info(f"Seed {seed} failed to generate a valid pattern at iteration {i}")
+                else:
+                    remove_seeds[i] = False
+                    features.append(pattern)
+                i += 1
+
+            self.seeds = self.seeds[~remove_seeds]
+            assert len(features) == len(self.seeds), "Number of generated patterns does not match number of seeds"
+
 
             features = np.array(features)
             features = self._pattern_to_minigrid_layout(features)
@@ -377,18 +444,21 @@ class WaveCollapseBatch(Batch):
         def _run_wfc(self, seed):
             util.seed_everything(seed)
 
-            # TODO: handle failure (will require a new seed)
-            generated_pattern = wfc_control.execute_wfc(tile_size=1,
-                        pattern_width=self.task_structure_meta['pattern_width'],
-                                    rotations=self.task_structure_meta['rotations'],
-                                    output_size=self.output_pattern_dim,
-                                    attempt_limit=1,
-                                    output_periodic=self.task_structure_meta['output_periodic'],
-                                    input_periodic=self.task_structure_meta['input_periodic'],
-                                    loc_heuristic=self.task_structure_meta['loc_heuristic'],
-                                    choice_heuristic=self.task_structure_meta['choice_heuristic'],
-                                    backtracking=self.task_structure_meta['backtracking'],
-                                    image=self.template)
+            try:
+                generated_pattern, stats = wfc_control.execute_wfc(tile_size=1,
+                            pattern_width=self.task_structure_meta['pattern_width'],
+                                        rotations=self.task_structure_meta['rotations'],
+                                        output_size=self.output_pattern_dim,
+                                        attempt_limit=1,
+                                        output_periodic=self.task_structure_meta['output_periodic'],
+                                        input_periodic=self.task_structure_meta['input_periodic'],
+                                        loc_heuristic=self.task_structure_meta['loc_heuristic'],
+                                        choice_heuristic=self.task_structure_meta['choice_heuristic'],
+                                        backtracking=self.task_structure_meta['backtracking'],
+                                        image=self.template)
+            except wfc_solver.TimedOut or wfc_solver.StopEarly or wfc_solver.Contradiction:
+                logger.info(f"WFC failed to generate a pattern. Outcome: {stats['outcome']}")
+                return None
 
             return generated_pattern
 
@@ -411,15 +481,6 @@ class WaveCollapseBatch(Batch):
                 start_node, goal_node = possible_nodes[inds]
                 graph.ndata['start'][start_node] = 1
                 graph.ndata['goal'][goal_node] = 1
-                # start_node_idx = torch.randint(0, len(possible_nodes[0]), (1,))
-                # start_node = possible_nodes[0][start_node_idx]
-                # graph.ndata['start'][start_node] = 1
-                # possible_nodes = torch.cat([possible_nodes[0:start_node_idx], possible_nodes[start_node_idx+1:]])
-                # goal_node_idx = torch.randint(0, len(possible_nodes[0]), (1,))
-                # goal_node = possible_nodes[0][goal_node_idx]
-                # graph.ndata['goal'][goal_node] = 1
-                #TODO randint on active nodes - start_node, or 2 randints without repetition
-
 
             return graphs
 

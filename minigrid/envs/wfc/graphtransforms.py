@@ -14,6 +14,8 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
+from envs.multigrid.adversarial import AdversarialEnv
+
 from ..gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
 
@@ -594,8 +596,9 @@ class Nav2DTransforms:
             g_temp = nx.grid_2d_graph(*dim_grid)
             for i in range(len(node_attr)):
                 nx.set_node_attributes(g_temp, attr_init[i], node_attr[i])
-            g_temp.remove_nodes_from(object_locations['wall'][m])
-            g_temp.add_nodes_from(object_locations['wall'][m], **dict(zip(node_attr, object_to_attr['wall'])))
+            if 'wall' in object_instances:
+                g_temp.remove_nodes_from(object_locations['wall'][m])
+                g_temp.add_nodes_from(object_locations['wall'][m], **dict(zip(node_attr, object_to_attr['wall'])))
             g = nx.Graph()
             g.add_nodes_from(sorted(g_temp.nodes(data=True)))
             g.add_edges_from(g_temp.edges(data=True))
@@ -659,7 +662,7 @@ class Nav2DTransforms:
             f = g.ndata
             f_grid = {}
             for attr in node_attr:
-                f_grid[attr] = f[attr].reshape(level_info['shape'][0] - 2, level_info['shape'][1] - 2)
+                f_grid[attr] = f[attr].reshape(level_info['shape'][0] - 2, level_info['shape'][1] - 2).cpu()
                 if attr == 'active':
                     mapping = minigrid_object_to_encoding_map['wall']
                     grids[m][f_grid['active'] == 0] = tuple(mapping)
@@ -668,14 +671,30 @@ class Nav2DTransforms:
                     grids[m, f_grid[attr] == 1] = tuple(mapping)
 
 
-        padding = torch.tensor(minigrid_object_to_encoding_map['wall'], dtype=torch.int)
+        padding = torch.tensor(minigrid_object_to_encoding_map['wall'], dtype=torch.int).to(device)
         padded_grid = einops.rearrange(torch.tensor(grids, dtype=torch.int).to(device), 'b h w c -> b c h w')
         padded_grid = torchvision.transforms.Pad(1, fill=-1, padding_mode='constant')(padded_grid)
         padded_grid = einops.rearrange(padded_grid, 'b c h w -> b h w c')
-        padded_grid[torch.where(padded_grid[..., 0] == -1)] = torch.tensor(list(padding), dtype=torch.int)
+        padded_grid[torch.where(padded_grid[..., 0] == -1)] = torch.tensor(list(padding), dtype=torch.int).to(device)
         grids = padded_grid.cpu().numpy().astype(level_info['dtype'])
 
         return grids
+
+    @staticmethod
+    def graph_to_mingrid_render(graphs, tile_size=32):
+        env = AdversarialEnv(size=15, n_clutter=0)
+        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs)
+
+        images = []
+        for i in range(len(grids)):
+            env.reset_to_level(grids[i])
+            img = env.grid.render(tile_size=tile_size)
+            #img = PILImage.fromarray(img, mode="RGB")
+            images.append(img)
+
+        images = np.array(images)
+        images = torch.from_numpy(images).permute(0, 3, 1, 2)
+        return images
 
     @staticmethod
     def grid_graph_to_graph(grid_graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], to_dgl=False,
