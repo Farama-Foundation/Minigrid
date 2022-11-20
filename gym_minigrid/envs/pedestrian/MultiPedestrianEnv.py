@@ -27,28 +27,10 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #region agent management
     def addAgents(self, agents: List[Agent]):
-        for agent in agents:
-            if self.canPlaceAgent(agent):
-                self.agents.append(agent)
-            else:
-                print("Can't place agent with position " + str(agent.position))
-
         self.agents.extend(agents)
             
     def addAgent(self, agent: Agent):
-        if self.canPlaceAgent(agent):
-            self.agents.append(agent)
-        else:
-            print("Can't place agent with position " + str(agent.position))
-
-    # Terry - We need to use this in the addAgent methods to make sure the given
-    # positions of the new agents won't overlap with existing ones
-    def canPlaceAgent(self, agent: Agent):
-        if self.agentsGrid[agent.position[0]][agent.position[1]] == 1:
-            return False
-            #Terry - ^ if an agent already exists there, we can't place a new agent there
-        else:
-            return True
+        self.agents.append(agent)
         
     def getNumAgents(self):
         return len(self.agents)
