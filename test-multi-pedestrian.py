@@ -1,6 +1,7 @@
 import time
 import random
 import gym
+import numpy as np
 import gym_minigrid
 from gym_minigrid.wrappers import *
 from gym_minigrid.agents import PedAgent
@@ -11,19 +12,19 @@ from gym_minigrid.agents import PedAgent
 
 # Load the gym environment
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
-env.addAgents([PedAgent((5, 5), 3, 2), PedAgent((5, 6), 3, 2), PedAgent((5, 4), 3, 2)])
-# env = FullyObsWrapper(env)
-# env = RGBImgPartialObsWrapper(env) # Get pixel observations
-# env = ImgObsWrapper(env) # Get rid of the 'mission' field
+agents = []
+for i in range(50):
+    yPos = np.random.randint(2, 18)
+    xPos = np.random.randint(10, 18)
+    direction = 2 if np.random.random() > 0.5 else 0
+    agents.append(PedAgent((xPos, yPos), direction))
+env.addAgents(agents)
+
 env.reset()
 
 for i in range(0, 20):
-#     print("step {}".format(i))
 
     obs, reward, done, info = env.step(None)
-    # print(obs)
-#     print(obs["direction"])
-#     print(obs["position"])
     
     if done:
         "Reached the goal"
@@ -31,9 +32,8 @@ for i in range(0, 20):
 
     env.render()
 
-    time.sleep(0.25)
+    time.sleep(0.05)
 
-#     time.sleep(0.05)
 
 # Test the close method
 env.close()

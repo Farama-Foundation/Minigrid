@@ -1,9 +1,8 @@
 from typing import List
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
-from gym_minigrid.agents import Agent, PedActions
+from gym_minigrid.agents import Agent, PedActions, PedAgent
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
-import numpy as np
 
 class MultiPedestrianEnv(MiniGridEnv):
     def __init__(
@@ -16,18 +15,11 @@ class MultiPedestrianEnv(MiniGridEnv):
             self.agents = []
         else:
             self.agents = agents
-        
-        # Terry - added an agents grid to easily check for overlap of agents
-        # and to be able to calculate the actions each agent should take
-        # some agents will need to share lanes, so this will allow us to consider that
-        self.agentsGrid = np.zeros((width, height))
-        for agent in self.agents:
-            self.agentsGrid[agent.position[0]][agent.position[1]] = 1
 
         super().__init__(
             width=width,
             height=height,
-            max_steps=4*width*height,
+            max_steps=1000, #4*width*height,
             # Set this to True for maximum speed
             see_through_walls=True
         )
@@ -41,6 +33,8 @@ class MultiPedestrianEnv(MiniGridEnv):
             else:
                 print("Can't place agent with position " + str(agent.position))
 
+        self.agents.extend(agents)
+            
     def addAgent(self, agent: Agent):
         if self.canPlaceAgent(agent):
             self.agents.append(agent)
@@ -62,11 +56,6 @@ class MultiPedestrianEnv(MiniGridEnv):
     def resetAgents(self):
         for agent in self.agents:
             agent.reset()
-    
-    def getDensity(self):
-        cells = (self.width - 1) * (self.height - 1)
-        agents = len(self.agents)
-        return agents/cells
 
     def getDensity(self):
         cells = (self.width - 1) * (self.height - 1)
@@ -79,6 +68,9 @@ class MultiPedestrianEnv(MiniGridEnv):
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
+        if fwd_pos[0] < 0 or fwd_pos[0] >= self.width:
+            self.agents.remove(agent)
+            return
         # Terry - implemented speed ^ by multiplying speed with direction unit vector
 
         # Get the contents of the cell in front of the agent
@@ -94,20 +86,23 @@ class MultiPedestrianEnv(MiniGridEnv):
     def shiftLeft(self, agent: Agent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
-        left_dir = agent.direction - 1
-        if left_dir < 0:
-            left_dir += 4
-        left_pos = agent.position + DIR_TO_VEC[left_dir]
+        # left_dir = agent.direction - 1
+        # if left_dir < 0:
+        #     left_dir += 4
+        # left_pos = agent.position + DIR_TO_VEC[left_dir]
 
-        agent.position = left_pos
+        # agent.position[0] = left_pos
+        agent.position = (agent.position[0], agent.position[1] - 1)
 
     def shiftRight(self, agent: Agent):
-        assert agent.direction >= 0 and agent.direction < 4
-        #Terry - uses the direction to left of agent to find vector to move left
-        right_dir = (agent.direction + 1) % 4
-        right_pos = agent.position + DIR_TO_VEC[right_dir]
+        # assert agent.direction >= 0 and agent.direction < 4
+        # #Terry - uses the direction to left of agent to find vector to move left
+        # right_dir = (agent.direction + 1) % 4
+        # right_pos = agent.position + DIR_TO_VEC[right_dir]
         
-        agent.position = right_pos
+        # agent.position = right_pos
+        agent.position = (agent.position[0], agent.position[1] + 1)
+        
     #endregion
 
     #region sidewalk
@@ -129,19 +124,12 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def validateAgentPositions(self):
         # TODO iterate over our agents and make sure that they can be placed there
-
-        # Terry - Is this to validate after getting a list of actions for parallel update?
-        # If so, I have started part of that in the step function.
-
-        # Will change whether they can move left or right
-        # Agent A has tile to the right, agent B has same tile to left
-        # One will have moveRight = true, other will have moveLeft = false
-
-        # Check that the agent doesn't overlap with an object
-        for agent in self.agents:
-            start_cell = self.grid.get(*agent.position)
-            assert start_cell is None or start_cell.can_overlap()
+        
+        # # Check that the agent doesn't overlap with an object
+        # start_cell = self.grid.get(*self.agent_pos)
+        # assert start_cell is None or start_cell.can_overlap()
         pass
+
 
     def reset(self):
         
@@ -163,6 +151,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         obs = self.gen_obs()
         return obs
 
+
+
     def _gen_grid(self, width, height):
 
         # Create an empty grid
@@ -173,6 +163,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         self.genSidewalks()
         self.mission = "switch sidewalks"
+
 
     def render(self, mode='human', close=False, highlight=True, tile_size=TILE_PIXELS):
         """
@@ -204,13 +195,32 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         return img
 
-    def parallel1():
-        #TODO Simulate lane change
-        pass
+    def eliminateConflict(self):
+        for agent in self.agents:
+            if agent.position[1] == 1:
+                agent.canShiftLeft = False
+            if agent.position[1] == self.height - 2:
+                agent.canShiftRight = False
+        for agent1 in self.agents:
+            for agent2 in self.agents:
+                if agent1 == agent2 or agent1.position[0] != agent2.position[0]:
+                    continue
 
-    def parallel2():
-        #TODO What lane allows agent to move using max speed
-        pass
+                if (agent1.position[1] - agent2.position[1]) == 1:
+                    # they are adjacent
+                    agent1.canShiftLeft = False
+                    agent2.canShiftRight = False
+                elif (agent1.position[1] - agent2.position[1]) == 2 and agent1.canShiftLeft == True and agent2.canShiftRight == True:  
+                    # they have one cell between them
+                    if np.random.random() > 0.5:
+                        agent1.canShiftLeft = False 
+                    else: 
+                        agent2.canShiftRight = False
+
+        # for agent in self.agents:
+        #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
+        #         self.agents.remove(agent)
+        #         print('removed')
 
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
@@ -225,12 +235,34 @@ class MultiPedestrianEnv(MiniGridEnv):
         # 1. get the agent
         # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
         # 3. call the method that takes the action
-
-        actions = []
+        self.eliminateConflict()
+        LaneActions = []
         for agent in self.agents:
-            action = agent.getAction()
-            actions.append(action)
+            lane = agent.parallel1(self.agents)
+            print(lane, agent.speed, agent.gapSame, agent.gapOpp)
+            LaneActions.append(lane)
+        
+        for i, laneAction in enumerate(LaneActions):
+            if laneAction == 1:
+                self.shiftLeft(self.agents[i])
+            elif laneAction == 2:
+                self.shiftRight(self.agents[i])
+                
+        print('done')
 
+        for agent in self.agents:
+            agent.parallel2(self.agents)
+
+        for agent in self.agents:
+            self.forwardAgent(agent)
+            agent.canShiftLeft = True
+            agent.canShiftRight = True
+        # actions = []
+        # for agent in self.agents:
+        #     action = agent.getAction()
+        #     actions.append(action)
+
+        #TODO remove this grid later, we aren't using it
         newAgentsGrid = np.zeros((self.width, self.height))
         # Terry - create the new agentsGrid here before actually testing the actions
         # We simulate the new positions here to check for an overlap of agents
@@ -243,26 +275,29 @@ class MultiPedestrianEnv(MiniGridEnv):
         # with all the actions, then set self.agentsGrid = newAgentsGrid
         # to update the existing grid and proceed to taking the actions below
         
-        index = 0
-        for agent in self.agents:
+        
+        # index = 0
+        # for agent in self.agents:
 
-            if actions[index] == PedActions.forward:
-                self.forwardAgent(agent)
-            elif actions[index] == PedActions.shiftLeft:
-                self.shiftLeft(agent)
-            elif actions[index] == PedActions.shiftRight:
-                self.shiftRight(agent)
-            else:
-                assert False, f"unknown action {action}"
+        #     if actions[index] == PedActions.forward:
+        #         self.forwardAgent(agent)
+        #     elif actions[index] == PedActions.shiftLeft:
+        #         self.shiftLeft(agent)
+        #     elif actions[index] == PedActions.shiftRight:
+        #         self.shiftRight(agent)
+        #     else:
+        #         assert False, f"unknown action {action}"
 
-            index += 1
+        #     index += 1
 
         if self.step_count >= self.max_steps:
             done = True
 
         obs = self.gen_obs()
-
+        
         return obs, reward, done, {}
+
+
 
     def gen_obs(self):
         """
@@ -277,10 +312,12 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #endregion
 
+    
+
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 10
-        height = 20
+        width = 100
+        height = 60
         super().__init__(
             width=width,
             height=height,
