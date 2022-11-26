@@ -84,7 +84,6 @@ class PedestrianEnv20x80(PedestrianEnv):
             agent_start_dir=0
         )
 
-        
 register(
     id='Pedestrian-Empty-9x16-v0',
     entry_point='gym_minigrid.envs.pedestrian:PedestrianEnv9x16'

@@ -39,6 +39,11 @@ class MultiPedestrianEnv(MiniGridEnv):
         for agent in self.agents:
             agent.reset()
 
+    def getDensity(self):
+        cells = (self.width - 1) * (self.height - 1)
+        agents = len(self.agents)
+        return agents/cells
+
     def forwardAgent(self, agent: Agent):
         # TODO DONE
         
@@ -228,6 +233,9 @@ class MultiPedestrianEnv(MiniGridEnv):
         print('done')
 
         for agent in self.agents:
+            agent.parallel2(self.agents)
+
+        for agent in self.agents:
             self.forwardAgent(agent)
             agent.canShiftLeft = True
             agent.canShiftRight = True
@@ -236,6 +244,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         #     action = agent.getAction()
         #     actions.append(action)
 
+        #TODO remove this grid later, we aren't using it
         newAgentsGrid = np.zeros((self.width, self.height))
         # Terry - create the new agentsGrid here before actually testing the actions
         # We simulate the new positions here to check for an overlap of agents

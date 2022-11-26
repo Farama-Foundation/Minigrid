@@ -17,14 +17,7 @@ for i in range(50):
     yPos = np.random.randint(2, 18)
     xPos = np.random.randint(10, 18)
     direction = 2 if np.random.random() > 0.5 else 0
-    prob = np.random.random()
-    if prob < 0.1:
-        speed = 1
-    elif prob < 0.9:
-        speed = 2
-    else:
-        speed = 3
-    agents.append(PedAgent((xPos, yPos), direction, speed))
+    agents.append(PedAgent((xPos, yPos), direction))
 env.addAgents(agents)
 
 env.reset()
