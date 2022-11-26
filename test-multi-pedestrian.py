@@ -20,6 +20,12 @@ for i in range(5):
     agents.append(PedAgent(i, (xPos, yPos), direction))
 env.addAgents(agents)
 
+
+def helloWorld(env):
+    print("helloWorld")
+
+env.subscribe("stepParallel1", helloWorld)
+
 env.reset()
 
 for i in range(0, 20):
