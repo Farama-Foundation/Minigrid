@@ -3,6 +3,10 @@ from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 from gym_minigrid.agents import Agent, PedActions, PedAgent
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
+from gym_minigrid.lib.Action import Action
+from gym_minigrid.lib.LaneAction import LaneAction
+from gym_minigrid.lib.ForwardAction import ForwardAction
+# from pyee.base import EventEmitter
 
 class MultiPedestrianEnv(MiniGridEnv):
     def __init__(
@@ -23,14 +27,31 @@ class MultiPedestrianEnv(MiniGridEnv):
             # Set this to True for maximum speed
             see_through_walls=True
         )
+
+        self.stepParallel1 = []
+        self.stepParallel2 = []
+        self.stepParallel3 = []
+        self.stepParallel4 = []
+
+        self._actionHandlers = {
+            LaneAction: self.executeLaneAction,
+            ForwardAction: self.executeForwardAction,
+        }
+
     pass
 
     #region agent management
     def addAgents(self, agents: List[Agent]):
-        self.agents.extend(agents)
+        for agent in agents:
+            self.addAgent(agent)
             
     def addAgent(self, agent: Agent):
         self.agents.append(agent)
+
+        ## attach event handlers
+        # TODO: this subscription must not be done in side the evironment as only the research knows about its decision and action phases.
+        self.subscribe("stepParallel1", agent.parallel1) # TODO event name should be enums
+        self.subscribe("stepParallel2", agent.parallel2) # TODO event name should be enums
         
     def getNumAgents(self):
         return len(self.agents)
@@ -207,70 +228,49 @@ class MultiPedestrianEnv(MiniGridEnv):
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
 
+    def subscribe(self, eventName, handler):
+        if eventName == "stepParallel1": # TODO convert to enum
+            self.stepParallel1.append(handler)
+
+        if eventName == "stepParallel2": # TODO convert to enum
+            self.stepParallel2.append(handler)
+    
+    def emitEventAndGetResponse(self, eventName) -> List[Action]:
+
+        print(f"executing {eventName}")
+        # print(self.stepParallel1)
+        # print(self.stepParallel2)
+        if eventName == "stepParallel1": # TODO convert to enum
+            return [handler(self) for handler in self.stepParallel1] # TODO fix for multiple actions by a single handler.
+
+        if eventName == "stepParallel2": # TODO convert to enum
+            return [handler(self) for handler in self.stepParallel2]
+
+
+    
+
     def step(self, action=None):
+        """This step is tightly coupled with the research, how can we decouple it?
+
+        Args:
+            action (_type_, optional): _description_. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
         self.step_count += 1
 
         reward = 0
         done = False
 
-        # TODO:
-        # 1. get the agent
-        # 2. decide what type of action (move forward, change lane (moveLeft or moveRight), do nothing)
-        # 3. call the method that takes the action
         self.eliminateConflict()
-        LaneActions = []
-        for agent in self.agents:
-            lane = agent.parallel1(self.agents)
-            print(lane, agent.speed, agent.gapSame, agent.gapOpp)
-            LaneActions.append(lane)
-        
-        for i, laneAction in enumerate(LaneActions):
-            if laneAction == 1:
-                self.shiftLeft(self.agents[i])
-            elif laneAction == 2:
-                self.shiftRight(self.agents[i])
-                
-        print('done')
 
-        for agent in self.agents:
-            agent.parallel2(self.agents)
+        actions = self.emitEventAndGetResponse("stepParallel1")
+        self.executeActions(actions)
 
-        for agent in self.agents:
-            self.forwardAgent(agent)
-            agent.canShiftLeft = True
-            agent.canShiftRight = True
-        # actions = []
-        # for agent in self.agents:
-        #     action = agent.getAction()
-        #     actions.append(action)
+        actions = self.emitEventAndGetResponse("stepParallel2")
+        self.executeActions(actions)
 
-        #TODO remove this grid later, we aren't using it
-        newAgentsGrid = np.zeros((self.width, self.height))
-        # Terry - create the new agentsGrid here before actually testing the actions
-        # We simulate the new positions here to check for an overlap of agents
-        # Change value at agent positions to 1 as we iterate over all the agents
-        # Check if value equals 1 before setting the value to check if there
-        # is already an agent there
-        # If yes, then we can't have the agent take that action because there would
-        # be 2 agents in the same position
-        # After simulating the new agents grid and there isn't any problems
-        # with all the actions, then set self.agentsGrid = newAgentsGrid
-        # to update the existing grid and proceed to taking the actions below
-        
-        
-        # index = 0
-        # for agent in self.agents:
-
-        #     if actions[index] == PedActions.forward:
-        #         self.forwardAgent(agent)
-        #     elif actions[index] == PedActions.shiftLeft:
-        #         self.shiftLeft(agent)
-        #     elif actions[index] == PedActions.shiftRight:
-        #         self.shiftRight(agent)
-        #     else:
-        #         assert False, f"unknown action {action}"
-
-        #     index += 1
 
         if self.step_count >= self.max_steps:
             done = True
@@ -279,7 +279,40 @@ class MultiPedestrianEnv(MiniGridEnv):
         
         return obs, reward, done, {}
 
+    def executeActions(self, actions: List[Action]):
+        if len(actions) == 0:
+            return
+        # TODO
 
+        for action in actions:
+            if action is not None:
+                self._actionHandlers[action.action.__class__](action)
+            # self.executeAction(action)
+        pass
+
+    def executeLaneAction(self, action: Action):
+        if action is None:
+            return 
+        if action == 1:
+            self.shiftLeft(self.agents[i])
+        elif action == 2:
+            self.shiftRight(self.agents[i])
+        pass
+
+    def executeForwardAction(self, action: Action):
+        if action is None:
+            return 
+
+
+            
+        agent = action.agent
+
+        print(f"forwarding agent {agent.id}")
+
+        self.forwardAgent(agent)
+        agent.canShiftLeft = True
+        agent.canShiftRight = True
+        pass
 
     def gen_obs(self):
         """

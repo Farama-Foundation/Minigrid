@@ -1,7 +1,7 @@
 import numpy as np
 from gym_minigrid.minigrid import Grid
 from typing import List
-from gym_minigrid.agents import PedAgent
+from gym_minigrid.agents.PedAgent import PedAgent
 
 class PedGrid(Grid):
 

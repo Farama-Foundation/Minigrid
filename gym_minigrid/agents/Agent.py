@@ -5,9 +5,12 @@ import numpy as np
 class Agent:
     def __init__(
         self, 
+        id,
         position: Tuple[int, int], 
         direction: int
         ):
+
+        self.id = id
 
         prob = np.random.random()
         if prob < 0.05:
