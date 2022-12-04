@@ -13,13 +13,24 @@ from gym_minigrid.agents import PedAgent
 # Load the gym environment
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
 agents = []
-for i in range(5):
-    yPos = np.random.randint(2, 18)
-    xPos = np.random.randint(10, 18)
-    direction = 2 if np.random.random() > 0.5 else 0
-    agents.append(PedAgent(i, (xPos, yPos), direction))
-env.addAgents(agents)
+width = 30
+height = 10
+density = 0.5
 
+possibleX = list(range(0, width))
+possibleY = list(range(5, height + 5))
+possibleCoordinates = []
+for i in possibleX:
+    for j in possibleY:
+        possibleCoordinates.append((i, j))
+print(len(possibleCoordinates))
+for i in range(int(density * width * height)):
+    randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
+    pos = possibleCoordinates[randomIndex]
+    direction = 2 if np.random.random() > 0.5 else 0
+    agents.append(PedAgent(i, pos, direction))
+    del possibleCoordinates[randomIndex]
+env.addAgents(agents)
 
 def helloWorld(env):
     print("helloWorld")
@@ -28,7 +39,7 @@ env.subscribe("stepParallel1", helloWorld)
 
 env.reset()
 
-for i in range(0, 20):
+for i in range(0, 100):
 
     obs, reward, done, info = env.step(None)
     
@@ -40,6 +51,7 @@ for i in range(0, 20):
 
     time.sleep(0.05)
 
+print(env.getAverageSpeed())
 
 # Test the close method
 env.close()

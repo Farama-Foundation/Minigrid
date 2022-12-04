@@ -28,6 +28,8 @@ class MultiPedestrianEnv(MiniGridEnv):
             see_through_walls=True
         )
 
+        self.stepsTaken = 0
+
         self.stepParallel1 = []
         self.stepParallel2 = []
         self.stepParallel3 = []
@@ -65,14 +67,29 @@ class MultiPedestrianEnv(MiniGridEnv):
         agents = len(self.agents)
         return agents/cells
 
+    def getAverageSpeed(self):
+        return self.stepsTaken / len(self.agents) / (self.step_count - 20)
+
+    def removeAgent(self, agent):
+        if agent in self.agents:
+            self.unsubscribe("stepParallel1", agent.parallel1) # TODO event name should be enums
+            self.unsubscribe("stepParallel2", agent.parallel2) # TODO event name should be enums
+            self.agents.remove(agent)
+        else:
+            print("Agent not in list")
+
     def forwardAgent(self, agent: Agent):
         # TODO DONE
-        
+        if self.step_count > 20:
+            self.stepsTaken += agent.speed
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
-        if fwd_pos[0] < 0 or fwd_pos[0] >= self.width:
-            self.agents.remove(agent)
+        if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
+            # self.agents.append(PedAgent(agent.id, (1, agent.position[1]), (agent.direction + 2) % 4))
+            agent.position = (1, agent.position[1])
+            agent.direction = (agent.direction + 2) % 4
+            # self.removeAgent(agent)
             return
         # Terry - implemented speed ^ by multiplying speed with direction unit vector
 
@@ -81,7 +98,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-                agent.position = fwd_pos
+            agent.position = fwd_pos
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
@@ -228,6 +245,13 @@ class MultiPedestrianEnv(MiniGridEnv):
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
 
+    def unsubscribe(self, eventName, handler):
+        if eventName == "stepParallel1": # TODO convert to enum
+            self.stepParallel1.remove(handler)
+
+        if eventName == "stepParallel2": # TODO convert to enum
+            self.stepParallel2.remove(handler)
+    
     def subscribe(self, eventName, handler):
         if eventName == "stepParallel1": # TODO convert to enum
             self.stepParallel1.append(handler)
@@ -270,7 +294,6 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         actions = self.emitEventAndGetResponse("stepParallel2")
         self.executeActions(actions)
-
 
         if self.step_count >= self.max_steps:
             done = True
@@ -331,8 +354,8 @@ class MultiPedestrianEnv(MiniGridEnv):
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 100
-        height = 60
+        width = 30
+        height = 50
         super().__init__(
             width=width,
             height=height,
