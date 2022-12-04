@@ -68,7 +68,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         return agents/cells
 
     def getAverageSpeed(self):
-        return self.stepsTaken / len(self.agents) / (self.step_count - 20)
+        stepsIgnoring = 20
+        return self.stepsTaken / len(self.agents) / (self.step_count - stepsIgnoring)
 
     def removeAgent(self, agent):
         if agent in self.agents:
@@ -87,7 +88,10 @@ class MultiPedestrianEnv(MiniGridEnv):
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
         if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
             # self.agents.append(PedAgent(agent.id, (1, agent.position[1]), (agent.direction + 2) % 4))
-            agent.position = (1, agent.position[1])
+            if fwd_pos[0] <= 0:
+                agent.position = (1, agent.position[1])
+            else:
+                agent.position = (self.width - 2, agent.position[1])
             agent.direction = (agent.direction + 2) % 4
             # self.removeAgent(agent)
             return

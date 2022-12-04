@@ -39,7 +39,7 @@ env.subscribe("stepParallel1", helloWorld)
 
 env.reset()
 
-for i in range(0, 100):
+for i in range(0, 120):
 
     obs, reward, done, info = env.step(None)
     
