@@ -20,6 +20,7 @@ import imageio
 
 from mazelib import Maze
 from mazelib.generate.Prims import Prims
+
 from .gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
@@ -305,6 +306,7 @@ class Batch:
         self.batch_meta = batch_meta
         self.dataset_meta = dataset_meta
         self.data_type = dataset_meta['data_type']
+        self.encoding = dataset_meta['encoding']
         self.label_ids = np.arange(self.batch_meta['batch_size'])
         self.label_contents = dict.fromkeys(self.dataset_meta['label_descriptors'])
         self.features = None
@@ -328,8 +330,15 @@ class Batch:
             # features3 = tr.Nav2DTransforms.encode_grid_to_gridworld(features2)
             # assert np.array_equal(features, features3)
         elif self.data_type == 'graph':
-            if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
-                batch_data = tr.Nav2DTransforms.encode_gridworld_to_graph(batch_data)
+            if self.encoding == 'minimal':
+                if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
+                    batch_data = tr.Nav2DTransforms.encode_gridworld_to_graph(batch_data)
+            elif self.encoding == 'dense':
+                if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
+                    raise TypeError("Output of generate_data() must be a DGLGraph or list of DGLGraphs. For dense "
+                                    "encoding")
+            else:
+                raise NotImplementedError(f"Encoding {self.encoding} not implemented.")
             self.generate_label_contents(batch_data, features=features)
 
         self.features = batch_data
@@ -353,7 +362,7 @@ class Batch:
         self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
         self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
         if "images" in self.label_contents.keys():
-            self.label_contents["images"] = tr.Nav2DTransforms.graph_to_mingrid_render(data, tile_size=32)
+            self.label_contents["images"] = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
 
         self.compute_graph_metrics(data, features)
 

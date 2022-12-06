@@ -9,15 +9,16 @@ import torchvision
 from mazelib import Maze
 from typing import Union, List, Dict, Any, Tuple
 from collections import defaultdict
+from envs.multigrid.multigrid import Grid, AGENT_COLOURS
 
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
 
-from envs.multigrid.adversarial import AdversarialEnv
-
 from ..gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
+
+from .util import get_node_features
 
 logger = logging.getLogger(__name__)
 
@@ -271,7 +272,6 @@ class Nav2DTransforms:
         else:
             expected_channels = 4
 
-        # TODO: perf remodel to handle GPU
         tensor = False
         if torch.is_tensor(grids):
             tensor = True
@@ -396,13 +396,12 @@ class Nav2DTransforms:
         goal_dim = decoder.attributes.index('goal')
         n_nodes = mode_Fx.shape[1]
 
-        # TODO correct_Fx
         mode_A = mode_A.reshape(mode_A.shape[0], -1, 2)
 
         start_nodes = mode_Fx[..., start_dim].argmax(dim=-1)
         goal_nodes = mode_Fx[..., goal_dim].argmax(dim=-1)
 
-        is_valid, adj = Nav2DTransforms._check_validity(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
+        is_valid, adj = Nav2DTransforms._check_validity_minimal(mode_A, start_nodes, goal_nodes, n_nodes, correct_A=correct_A)
 
         mode_Fx = mode_Fx.cpu()
         adj = adj.cpu().numpy()
@@ -422,8 +421,6 @@ class Nav2DTransforms:
                                   used_attributes: Tuple[str] = ("start", "goal"),
                                   probabilistic_mode: bool = False,
                                   output_dtype: str = 'tensor'):
-        # TODO: probabilistic_mode not fully implemented
-        # TODO: perf enhancements if going full tensor
 
         def get_gw_inds(nodes_tuple: Tuple[np.ndarray], n_nodes, mapping=lambda x: 2 * x + 1):
             inds_tuple = []
@@ -451,9 +448,9 @@ class Nav2DTransforms:
             A, Fx = graphs
             # n_nodes = Fx.shape[-2]
             n_nodes = int(A.shape[
-                              -1] / 2 + 1)  # TODO: find a better way to handle full graph encoding (may require an additional input argument)
+                              -1] / 2 + 1)
             A = A.reshape(A.shape[0], -1, 2)
-            A = A.cpu().numpy()  # TODO make more efficient to handle tensors
+            A = A.cpu().numpy()
             if Fx is not None:
                 Fx = Fx.cpu().numpy()
         elif isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph):
@@ -621,11 +618,11 @@ class Nav2DTransforms:
         return graphs
 
     @staticmethod
-    def dense_graph_to_minigrid(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], node_attr=None, level_info=None,
+    def dense_features_to_minigrid(features: torch.Tensor, node_attributes=None, level_info=None,
                                 color_config=None, device=None) -> np.ndarray:
 
         if device is None:
-            device = "cpu"
+            device = features.device
 
         if color_config is None:
             color_config = MINIGRID_COLOR_CONFIG
@@ -633,20 +630,20 @@ class Nav2DTransforms:
         if level_info is None:
             level_info = LEVEL_INFO
 
-        if node_attr is None:
-            node_attr = DENSE_GRAPH_NODE_ATTRIBUTES
+        if node_attributes is None:
+            node_attributes = DENSE_GRAPH_NODE_ATTRIBUTES
 
-        if isinstance(graphs, dgl.DGLGraph):
-            device = graphs.device
-            graphs = dgl.unbatch(graphs)
-
-        shape_no_padding = (level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
-        grids = np.ones((len(graphs) ,*shape_no_padding), dtype=level_info['dtype']) * Minigrid_OBJECT_TO_IDX['empty']
+        shape_no_padding = (features.shape[0], level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
+        features = features.reshape(*shape_no_padding)
+        grids = torch.ones(shape_no_padding, dtype=torch.int, device=device) * Minigrid_OBJECT_TO_IDX['empty']
 
         minigrid_object_to_encoding_map = {} #[object_id, color, state]
         for obj_type, color_str in color_config.items():
             if obj_type == "empty":
                 minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX["empty"], 0, 0]
+            # this is to handle the different color encoding for the agent in multigrid.py . Agent will always be blue.
+            elif obj_type == "agent":
+                minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX["agent"], 0, 0]
             else:
                 minigrid_object_to_encoding_map[obj_type] = [Minigrid_OBJECT_TO_IDX[obj_type],
                                                              Minigrid_COLOR_TO_IDX[color_str], 0]
@@ -655,45 +652,52 @@ class Nav2DTransforms:
         if 'agent' not in minigrid_object_to_encoding_map.keys() and 'start' in minigrid_object_to_encoding_map.keys():
             minigrid_object_to_encoding_map['agent'] = minigrid_object_to_encoding_map['start']
 
-
-        for m, g in enumerate(graphs):
-            if isinstance(g, nx.Graph):
-                g = dgl.from_networkx(g, node_attrs=node_attr).to(device)
-            f = g.ndata
-            f_grid = {}
-            for attr in node_attr:
-                f_grid[attr] = f[attr].reshape(level_info['shape'][0] - 2, level_info['shape'][1] - 2).cpu()
-                if attr == 'active':
-                    mapping = minigrid_object_to_encoding_map['wall']
-                    grids[m][f_grid['active'] == 0] = tuple(mapping)
-                else:
-                    mapping = minigrid_object_to_encoding_map[attr]
-                    grids[m, f_grid[attr] == 1] = tuple(mapping)
-
+        for i, attr in enumerate(node_attributes):
+            if attr == 'active':
+                mapping = minigrid_object_to_encoding_map['wall']
+                grids[features[..., i] == 0] = torch.tensor(mapping, dtype=torch.int, device=device)
+            else:
+                mapping = minigrid_object_to_encoding_map[attr]
+                grids[features[..., i] == 1] = torch.tensor(mapping, dtype=torch.int, device=device)
 
         padding = torch.tensor(minigrid_object_to_encoding_map['wall'], dtype=torch.int).to(device)
-        padded_grid = einops.rearrange(torch.tensor(grids, dtype=torch.int).to(device), 'b h w c -> b c h w')
+        padded_grid = einops.rearrange(grids, 'b h w c -> b c h w')
         padded_grid = torchvision.transforms.Pad(1, fill=-1, padding_mode='constant')(padded_grid)
         padded_grid = einops.rearrange(padded_grid, 'b c h w -> b h w c')
-        padded_grid[torch.where(padded_grid[..., 0] == -1)] = torch.tensor(list(padding), dtype=torch.int).to(device)
+        padded_grid[torch.where(padded_grid[..., 0] == -1)] = torch.tensor(list(padding), dtype=torch.int).to(
+            device)
+
         grids = padded_grid.cpu().numpy().astype(level_info['dtype'])
 
         return grids
 
     @staticmethod
-    def graph_to_mingrid_render(graphs, tile_size=32):
-        env = AdversarialEnv(size=15, n_clutter=0)
-        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs)
+    def dense_graph_to_minigrid(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]],
+                                level_info=None, color_config=None, device=None) -> np.ndarray:
 
+        features, node_attributes = get_node_features(graphs, node_attributes=None, reshape=True)
+        grids = Nav2DTransforms.dense_features_to_minigrid(features, node_attributes=node_attributes, level_info=level_info,
+                                                           color_config=color_config, device=device)
+
+        return grids
+
+    @staticmethod
+    def dense_graph_to_minigrid_render(graphs, tile_size=32):
+        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs)
+        return Nav2DTransforms.minigrid_to_minigrid_render(grids, tile_size=tile_size)
+
+    @staticmethod
+    def minigrid_to_minigrid_render(grids, tile_size=32):
         images = []
-        for i in range(len(grids)):
-            env.reset_to_level(grids[i])
-            img = env.grid.render(tile_size=tile_size)
-            #img = PILImage.fromarray(img, mode="RGB")
+        GridObj = Grid(grids.shape[1], grids.shape[2])
+        for i, grid in enumerate(grids):
+            grid = grid.transpose(1, 0, 2)
+            GridObj = GridObj.decode(grid)[0]
+            img = GridObj.render(tile_size=tile_size)
             images.append(img)
 
         images = np.array(images)
-        images = torch.from_numpy(images).permute(0, 3, 1, 2)
+        images = torch.from_numpy(images).permute(0, 3, 1, 2).to(torch.float)
         return images
 
     @staticmethod
@@ -717,7 +721,7 @@ class Nav2DTransforms:
         graphs = []
         for g in grid_graphs:
             if isinstance(g, dgl.DGLGraph):
-                g = dgl.to_networkx(g, node_attrs=g.ndata.keys())
+                g = dgl.to_networkx(g.cpu(), node_attrs=g.ndata.keys())
             g = nx.convert_node_labels_to_integers(g) # however this should be done automatically by dgl
             if to_dgl:
                 g = dgl.from_networkx(g, node_attrs=node_attr)
@@ -743,7 +747,7 @@ class Nav2DTransforms:
         grid_graphs = []
         for g in graphs:
             if isinstance(g, dgl.DGLGraph):
-                g = dgl.to_networkx(g, node_attrs=g.ndata.keys())
+                g = dgl.to_networkx(g.cpu(), node_attrs=g.ndata.keys())
                 g = nx.Graph(g)
             assert g.number_of_nodes() == (level_info['shape'][0] - 2) * (level_info['shape'][1] - 2), \
                 "Number of nodes does not match level info."
@@ -773,7 +777,7 @@ class Nav2DTransforms:
 
         g = copy.deepcopy(graph) # ensures that the original graph is not changed.
         if isinstance(graph, dgl.DGLGraph):
-            g = dgl.to_networkx(graph, node_attrs=graph.ndata.keys())
+            g = dgl.to_networkx(graph.cpu(), node_attrs=graph.ndata.keys())
         assert isinstance(g, nx.Graph), "Graph is not a networkx graph." #Note: issubclass(type(g), nx.Graph) works as well here.
         g = nx.Graph(g)
         g = Nav2DTransforms.graph_to_grid_graph([g], level_info=level_info)[0]
@@ -993,7 +997,23 @@ class Nav2DTransforms:
         return nodes_inds_t
 
     @staticmethod
-    def check_validity_start_goal(start_nodes: torch.Tensor, goal_nodes: torch.Tensor, A:torch.Tensor, threshold:int=0.5) -> torch.Tensor:
+    def check_validity_start_goal_dense(start_node_ids: torch.Tensor, goal_node_ids: torch.Tensor, layout_nodes:torch.Tensor, threshold:int=0.5) -> torch.Tensor:
+        """
+        Check if the start and goal nodes are valid.
+        """
+
+        batch_inds = torch.arange(0, start_node_ids.shape[0])
+
+        mask1 = start_node_ids == goal_node_ids
+        mask2 = layout_nodes[batch_inds, start_node_ids] < threshold
+        mask3 = layout_nodes[batch_inds, goal_node_ids] < threshold
+        # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
+        valid = ~(mask1 | mask2 | mask3)
+
+        return valid
+
+    @staticmethod
+    def check_validity_start_goal_minimal(start_nodes: torch.Tensor, goal_nodes: torch.Tensor, A:torch.Tensor, threshold:int=0.5) -> torch.Tensor:
         """
         Check if the start and goal nodes are valid.
         """
@@ -1049,7 +1069,7 @@ class Nav2DTransforms:
         return A, valid
 
     @staticmethod
-    def _check_validity(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False, threshold=0.5) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _check_validity_minimal(A_red, start_nodes, goal_nodes, n_nodes, correct_A=False, threshold=0.5) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Check if the reduced adjacency matrix is valid and checks if the start and goal nodes are placed correctly
 
@@ -1061,7 +1081,7 @@ class Nav2DTransforms:
         # DEBUG: crash here
         A = Nav2DTransforms.encode_reduced_adj_to_adj(A_red.cpu().numpy())
         A = torch.tensor(A, device=start_nodes.device, dtype=torch.float)
-        valid_start_goal = Nav2DTransforms.check_validity_start_goal(start_nodes, goal_nodes, A, threshold=threshold)
+        valid_start_goal = Nav2DTransforms.check_validity_start_goal_minimal(start_nodes, goal_nodes, A, threshold=threshold)
         valid = valid_A & valid_start_goal
 
         return valid, A
