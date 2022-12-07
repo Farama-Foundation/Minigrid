@@ -172,10 +172,14 @@ class MissionSpace(spaces.Space[str]):
             # Check that place holder lists are the same
             if self.ordered_placeholders is not None:
                 # Check length
-                if (len(self.ordered_placeholders) == len(other.ordered_placeholders)) and (
+                if (
+                    len(self.ordered_placeholders) == len(other.ordered_placeholders)
+                ) and (
                     all(
                         set(i) == set(j)
-                        for i, j in zip(self.ordered_placeholders, other.ordered_placeholders)
+                        for i, j in zip(
+                            self.ordered_placeholders, other.ordered_placeholders
+                        )
                     )
                 ):
                     # Check mission string is the same with dummy space placeholders
