@@ -5,6 +5,11 @@ import numpy as np
 import gym_minigrid
 from gym_minigrid.wrappers import *
 from gym_minigrid.agents import PedAgent
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
+
 # from gym_minigrid.envs import MultiPedestrianEnv
 # %matplotlib auto
 # %load_ext autoreload
@@ -23,7 +28,9 @@ possibleCoordinates = []
 for i in possibleX:
     for j in possibleY:
         possibleCoordinates.append((i, j))
-print(len(possibleCoordinates))
+
+logging.info(f"Number of possible coordinates is {len(possibleCoordinates)}")
+
 for i in range(int(density * width * height)):
     randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
     pos = possibleCoordinates[randomIndex]
@@ -32,14 +39,9 @@ for i in range(int(density * width * height)):
     del possibleCoordinates[randomIndex]
 env.addAgents(agents)
 
-def helloWorld(env):
-    print("helloWorld")
-
-env.subscribe("stepParallel1", helloWorld)
-
 env.reset()
 
-for i in range(0, 120):
+for i in range(1000):
 
     obs, reward, done, info = env.step(None)
     
@@ -47,11 +49,14 @@ for i in range(0, 120):
         "Reached the goal"
         break
 
-    env.render()
+    # env.render()
 
-    time.sleep(0.05)
+    if i % 100 == 0:
+        logging.info(f"Completed step {i+1}")
 
-print(env.getAverageSpeed())
+    # time.sleep(0.05)
+
+logging.info(env.getAverageSpeed())
 
 # Test the close method
 env.close()

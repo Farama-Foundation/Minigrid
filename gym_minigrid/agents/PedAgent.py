@@ -4,6 +4,7 @@ from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
 import numpy as np
+import logging
 
 class PedAgent(Agent):
     # [0] = x axis [1] = y-axis
@@ -27,12 +28,12 @@ class PedAgent(Agent):
         if self.canShiftRight == True:
             gaps[2] = self.computeGap(agents, Lanes.rightLane)
         
-        print('gaps', gaps)
+        logging.debug('gaps', gaps)
         # confused about DML(Dynamic Multiple Lanes)
         maxGap = 0
         for i in range(3):
             maxGap = max(maxGap, gaps[i][0])
-        print('maxgap', maxGap)
+        logging.debug('maxgap', maxGap)
         goodLanes = []
         for i in range(3):
             if maxGap == gaps[i][0]:

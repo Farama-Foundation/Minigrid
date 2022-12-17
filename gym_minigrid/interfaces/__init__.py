@@ -1,0 +1,1 @@
+from .IMultiPedestrianEnv import IMultiPedestrianEnv

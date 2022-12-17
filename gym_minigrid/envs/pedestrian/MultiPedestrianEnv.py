@@ -6,6 +6,8 @@ from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
+from .EnvEvent import EnvEvent
+import logging
 # from pyee.base import EventEmitter
 
 class MultiPedestrianEnv(MiniGridEnv):
@@ -30,10 +32,12 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         self.stepsTaken = 0
 
+        self.stepBefore = []
         self.stepParallel1 = []
         self.stepParallel2 = []
         self.stepParallel3 = []
         self.stepParallel4 = []
+        self.stepAfter = []
 
         self._actionHandlers = {
             LaneAction: self.executeLaneAction,
@@ -52,8 +56,8 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         ## attach event handlers
         # TODO: this subscription must not be done in side the evironment as only the research knows about its decision and action phases.
-        self.subscribe("stepParallel1", agent.parallel1) # TODO event name should be enums
-        self.subscribe("stepParallel2", agent.parallel2) # TODO event name should be enums
+        self.subscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
+        self.subscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
         
     def getNumAgents(self):
         return len(self.agents)
@@ -73,11 +77,11 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def removeAgent(self, agent):
         if agent in self.agents:
-            self.unsubscribe("stepParallel1", agent.parallel1) # TODO event name should be enums
-            self.unsubscribe("stepParallel2", agent.parallel2) # TODO event name should be enums
+            self.unsubscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
+            self.unsubscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
             self.agents.remove(agent)
         else:
-            print("Agent not in list")
+            logging.warn("Agent not in list")
 
     def forwardAgent(self, agent: Agent):
         # TODO DONE
@@ -244,34 +248,42 @@ class MultiPedestrianEnv(MiniGridEnv):
         # for agent in self.agents:
         #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
         #         self.agents.remove(agent)
-        #         print('removed')
+        #         logging.debug('removed')
 
     # One step after parallel1 and parallel2
     # Save plans from parallel1 and parallel2 before actually executing it
 
-    def unsubscribe(self, eventName, handler):
-        if eventName == "stepParallel1": # TODO convert to enum
+    def unsubscribe(self, envEvent: EnvEvent, handler):
+
+        if envEvent == envEvent.stepBefore: 
+            self.stepBefore.remove(handler)
+            
+        if envEvent == envEvent.stepParallel1: 
             self.stepParallel1.remove(handler)
 
-        if eventName == "stepParallel2": # TODO convert to enum
+        if envEvent == envEvent.stepParallel2: 
             self.stepParallel2.remove(handler)
     
-    def subscribe(self, eventName, handler):
-        if eventName == "stepParallel1": # TODO convert to enum
+    def subscribe(self, envEvent, handler):
+
+        if envEvent == envEvent.stepBefore: 
+            self.stepBefore.append(handler)
+
+        if envEvent == envEvent.stepParallel1: 
             self.stepParallel1.append(handler)
 
-        if eventName == "stepParallel2": # TODO convert to enum
+        if envEvent == envEvent.stepParallel2: 
             self.stepParallel2.append(handler)
     
-    def emitEventAndGetResponse(self, eventName) -> List[Action]:
+    def emitEventAndGetResponse(self, envEvent) -> List[Action]:
 
-        print(f"executing {eventName}")
-        # print(self.stepParallel1)
-        # print(self.stepParallel2)
-        if eventName == "stepParallel1": # TODO convert to enum
+        logging.debug(f"executing {envEvent}")
+        # logging.debug(self.stepParallel1)
+        # logging.debug(self.stepParallel2)
+        if envEvent == EnvEvent.stepParallel1: 
             return [handler(self) for handler in self.stepParallel1] # TODO fix for multiple actions by a single handler.
 
-        if eventName == "stepParallel2": # TODO convert to enum
+        if envEvent == EnvEvent.stepParallel2: 
             return [handler(self) for handler in self.stepParallel2]
 
 
@@ -293,10 +305,10 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         self.eliminateConflict()
 
-        actions = self.emitEventAndGetResponse("stepParallel1")
+        actions = self.emitEventAndGetResponse(EnvEvent.stepParallel1)
         self.executeActions(actions)
 
-        actions = self.emitEventAndGetResponse("stepParallel2")
+        actions = self.emitEventAndGetResponse(EnvEvent.stepParallel2)
         self.executeActions(actions)
 
         if self.step_count >= self.max_steps:
@@ -334,7 +346,7 @@ class MultiPedestrianEnv(MiniGridEnv):
             
         agent = action.agent
 
-        print(f"forwarding agent {agent.id}")
+        logging.debug(f"forwarding agent {agent.id}")
 
         self.forwardAgent(agent)
         agent.canShiftLeft = True
