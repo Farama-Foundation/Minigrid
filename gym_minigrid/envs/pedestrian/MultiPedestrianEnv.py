@@ -47,6 +47,10 @@ class MultiPedestrianEnv(MiniGridEnv):
     pass
 
     #region agent management
+
+    def getAgents(self):
+        return self.agents
+
     def addAgents(self, agents: List[Agent]):
         for agent in agents:
             self.addAgent(agent)
@@ -72,7 +76,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         return agents/cells
 
     def getAverageSpeed(self):
-        stepsIgnoring = 20
+        stepsIgnoring = 100
         return self.stepsTaken / len(self.agents) / (self.step_count - stepsIgnoring)
 
     def removeAgent(self, agent):
@@ -85,7 +89,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def forwardAgent(self, agent: Agent):
         # TODO DONE
-        if self.step_count > 20:
+        if self.step_count >= 100:
             self.stepsTaken += agent.speed
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
@@ -257,6 +261,9 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         if envEvent == envEvent.stepBefore: 
             self.stepBefore.remove(handler)
+
+        if envEvent == envEvent.stepAfter: 
+            self.stepAfter.remove(handler)
             
         if envEvent == envEvent.stepParallel1: 
             self.stepParallel1.remove(handler)
@@ -269,6 +276,9 @@ class MultiPedestrianEnv(MiniGridEnv):
         if envEvent == envEvent.stepBefore: 
             self.stepBefore.append(handler)
 
+        if envEvent == envEvent.stepAfter: 
+            self.stepAfter.append(handler)
+
         if envEvent == envEvent.stepParallel1: 
             self.stepParallel1.append(handler)
 
@@ -278,6 +288,12 @@ class MultiPedestrianEnv(MiniGridEnv):
     def emitEventAndGetResponse(self, envEvent) -> List[Action]:
 
         logging.debug(f"executing {envEvent}")
+        if envEvent == EnvEvent.stepBefore: 
+            return [handler(self) for handler in self.stepBefore]
+
+        if envEvent == EnvEvent.stepAfter: 
+            return [handler(self) for handler in self.stepAfter]
+
         # logging.debug(self.stepParallel1)
         # logging.debug(self.stepParallel2)
         if envEvent == EnvEvent.stepParallel1: 
@@ -298,6 +314,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         Returns:
             _type_: _description_
         """
+        self.emitEventAndGetResponse(EnvEvent.stepBefore)
+
         self.step_count += 1
 
         reward = 0
@@ -315,6 +333,9 @@ class MultiPedestrianEnv(MiniGridEnv):
             done = True
 
         obs = self.gen_obs()
+
+        
+        self.emitEventAndGetResponse(EnvEvent.stepAfter)
         
         return obs, reward, done, {}
 

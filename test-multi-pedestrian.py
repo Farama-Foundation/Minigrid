@@ -5,6 +5,7 @@ import numpy as np
 import gym_minigrid
 from gym_minigrid.wrappers import *
 from gym_minigrid.agents import PedAgent
+from gym_minigrid.lib.MetricCollector import MetricCollector
 import logging
 
 
@@ -17,6 +18,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Load the gym environment
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
+metricCollector = MetricCollector(env)
 agents = []
 width = 30
 height = 10
@@ -41,7 +43,7 @@ env.addAgents(agents)
 
 env.reset()
 
-for i in range(1000):
+for i in range(500):
 
     obs, reward, done, info = env.step(None)
     
@@ -57,6 +59,10 @@ for i in range(1000):
     # time.sleep(0.05)
 
 logging.info(env.getAverageSpeed())
+
+stepStats = metricCollector.getStatistics()
+avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
+logging.info(avgSpeed)
 
 # Test the close method
 env.close()
