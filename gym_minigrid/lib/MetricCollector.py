@@ -51,7 +51,7 @@ class MetricCollector:
         for agent in env.getAgents():
             if self.previousState[agent]["direction"] is None:
                 self.previousState[agent]["direction"] = agent.direction
-            elif not list(agent.position) == list(self.previousState[agent]["position"]) and not agent.direction == self.previousState[agent]["direction"]:
+            elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
                 revolutions += 1
                 self.previousState[agent]["direction"] = agent.direction
                 
