@@ -60,9 +60,12 @@ for i in range(500):
 
 logging.info(env.getAverageSpeed())
 
-stepStats = metricCollector.getStatistics()
+stepStats = metricCollector.getStatistics()[0]
 avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
-logging.info(avgSpeed)
+logging.info("Average speed: " + str(avgSpeed))
+volumeStats = metricCollector.getStatistics()[1]
+avgVolume = sum(volumeStats) / len(volumeStats)
+logging.info("Average volume: " + str(avgVolume))
 
 # Test the close method
 env.close()

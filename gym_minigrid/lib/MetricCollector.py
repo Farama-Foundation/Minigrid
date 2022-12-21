@@ -21,6 +21,7 @@ class MetricCollector:
         env.subscribe(EnvEvent.stepAfter, self.handleStepAfter)
 
         self.stepStats = defaultdict(lambda: []) # average stuff in every step
+        self.volumeStats = []
     
 
     def handleStepAfter(self, env: IMultiPedestrianEnv):
@@ -33,15 +34,28 @@ class MetricCollector:
 
         # collect speed
         self.collectSpeed(env)
+        # collect volume
+        self.collectVolume(env)
 
-
-
-
+        for agent in env.getAgents():
+            #reset
+            self.previousState[agent]["position"] = agent.position
+            self.previousState[agent]["direction"] = agent.direction
     
     def getStatistics(self):
-        return self.stepStats
+        return [self.stepStats, self.volumeStats]
         pass
 
+    def collectVolume(self, env):
+        revolutions = 0
+        for agent in env.getAgents():
+            if self.previousState[agent]["direction"] is None:
+                self.previousState[agent]["direction"] = agent.direction
+            elif not list(agent.position) == list(self.previousState[agent]["position"]) and not agent.direction == self.previousState[agent]["direction"]:
+                revolutions += 1
+                self.previousState[agent]["direction"] = agent.direction
+                
+        self.volumeStats.append(revolutions)
     
     def collectSpeed(self, env):
         totalXSpeed = 0
@@ -57,12 +71,8 @@ class MetricCollector:
                 totalXSpeed += xSpeed
                 totalYSpeed += ySpeed
 
-                #reset
-                self.previousState[agent]["position"] = agent.position
                 self.previousState[agent]["xSpeed"] = xSpeed
                 self.previousState[agent]["ySpeed"] = ySpeed
         
         self.stepStats["xSpeed"].append(totalXSpeed / len(env.getAgents()))
         self.stepStats["ySpeed"].append(totalYSpeed / len(env.getAgents()))
-        
-
