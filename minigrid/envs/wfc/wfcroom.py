@@ -3,6 +3,10 @@ __package__ = "maze_representations"
 import copy
 import logging
 import time
+import multiprocessing
+multiprocessing.set_start_method('spawn', True) #TODO: check if works
+#TODO: check with threadpoolexecutor.
+# TODO: otherwise give up and simply implement as single process code.
 import concurrent.futures
 
 import networkx as nx
@@ -46,7 +50,9 @@ def generate_dataset(cfg: DictConfig) -> None:
 
     logger.info("Parsing Data Generation config to DatasetGenerator...")
     DatasetGenerator = GridNavDatasetGenerator(dataset_config, dataset_dir_name=dataset_config.dir_name,
-                                               num_workers=cfg.num_cpus, debug_multiprocessing=cfg.debug_multiprocessing)
+                                               num_workers=cfg.num_cpus,
+                                               multiprocessing=cfg.multiprocessing,
+                                               debug_multiprocessing=cfg.debug_multiprocessing)
     logger.info("Generating Data...")
     DatasetGenerator.generate_dataset(normalise_metrics=dataset_config.normalise_metrics)
     logger.info("Done.")
@@ -54,7 +60,8 @@ def generate_dataset(cfg: DictConfig) -> None:
 
 class GridNavDatasetGenerator:
 
-    def __init__(self, dataset_config: DictConfig, dataset_dir_name=None, num_workers=0, debug_multiprocessing=False):
+    def __init__(self, dataset_config: DictConfig, dataset_dir_name=None, num_workers=0, multiprocessing=False,
+                 debug_multiprocessing=False):
         self.config = dataset_config
         self.dataset_meta = self.get_dataset_metadata()
         self.config.size = int(self.config.num_train_batches * self.config.size_train_batch + \
@@ -65,8 +72,8 @@ class GridNavDatasetGenerator:
         self.generated_batches = []
         self.generated_labels = []
         self.generated_label_contents = []
-        self.use_multiprocessing = False if num_workers == 1 else True
-        self.multi_processing_debug_mode = True if num_workers != 1 and debug_multiprocessing \
+        self.use_multiprocessing = True if num_workers != 1 and multiprocessing else False
+        self.multi_processing_debug_mode = True if multiprocessing and num_workers != 1 and debug_multiprocessing \
             else False
         self.num_workers = num_workers
 
@@ -98,30 +105,44 @@ class GridNavDatasetGenerator:
 
         self.config.size = n_labels
 
-        if self.use_multiprocessing and not self.multi_processing_debug_mode:
-            num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
-            torch.set_num_threads(1)
-            proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus)
+        if self.use_multiprocessing:
+            logger.info(f"Using multiprocessing with {self.num_workers} workers.")
+            multi_processing_parser = Parser(GridNavDatasetGenerator._generate_batch_data)
+            if not self.multi_processing_debug_mode:
+                num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
+                torch.set_num_threads(1)
+                proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus)
+            else: #TODO: fix this
+                proc = MockProcessPoolExecutor()
         else:
-            proc = MockProcessPoolExecutor()
-        multi_processing_parser = Parser(GridNavDatasetGenerator._generate_batch_data)
+            proc = None
 
         # TODO: consider using tqdm to show progress
-        with proc as executor:
-            dataset = [executor.submit(multi_processing_parser, arg) for arg in args]
-            for batch_data in concurrent.futures.as_completed(dataset):
-                try:
-                    batch_features, batch_label_ids, batch_label_contents, batch_id = batch_data.result()
-                    self.generated_batches.append(batch_features)
-                    self.generated_labels.append(batch_label_ids)
-                    self.generated_label_contents.append(batch_label_contents)
-                    self.batch_completed.append(batch_id)
-                except Exception as e:
-                    logger.error(f"Error during multiprocressing. Error message: {str(e)}")
+        if proc is not None:
+            with proc as executor:
+                dataset = [executor.submit(multi_processing_parser, arg) for arg in args]
+                for batch_data in concurrent.futures.as_completed(dataset):
+                    try:
+                        batch_features, batch_label_ids, batch_label_contents, batch_id = batch_data.result()
+                        self.generated_batches.append(batch_features)
+                        self.generated_labels.append(batch_label_ids)
+                        self.generated_label_contents.append(batch_label_contents)
+                        self.batch_completed.append(batch_id)
+                    except Exception as e:
+                        logger.error(f"Error during multiprocressing. Error message: {str(e)}")
 
-        self.generated_batches = [self.generated_batches[i] for i in np.argsort(self.batch_completed)]
-        self.generated_labels = [self.generated_labels[i] for i in np.argsort(self.batch_completed)]
-        self.generated_label_contents = [self.generated_label_contents[i] for i in np.argsort(self.batch_completed)]
+            self.generated_batches = [self.generated_batches[i] for i in np.argsort(self.batch_completed)]
+            self.generated_labels = [self.generated_labels[i] for i in np.argsort(self.batch_completed)]
+            self.generated_label_contents = [self.generated_label_contents[i] for i in np.argsort(self.batch_completed)]
+
+        else:
+            for arg in args:
+                batch_features, batch_label_ids, batch_label_contents, batch_id = \
+                    GridNavDatasetGenerator._generate_batch_data(*arg)
+                self.generated_batches.append(batch_features)
+                self.generated_labels.append(batch_label_ids)
+                self.generated_label_contents.append(batch_label_contents)
+                self.batch_completed.append(batch_id)
 
         self.check_unique()
 
@@ -142,15 +163,24 @@ class GridNavDatasetGenerator:
 
     @staticmethod
     def _generate_batch_data(batch_id, batch_meta, dataset_meta, seeds, batch_label_offsets):
-        time_batch_start = time.perf_counter()
-        batch_g = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
-        batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
-        batch_label_ids += batch_label_offsets[batch_id]
-        time_batch_end = time.perf_counter()
-        batch_generation_time = time_batch_end - time_batch_start
-        logger.info(f"Batch {batch_id}, Task structure: {batch_meta['task_structure']} generated in "
-                    f"{batch_generation_time:.2f} seconds. "
-                    f"Average time per sample: {batch_generation_time / len(batch_label_ids):.2f} seconds.")
+        try:
+            time_batch_start = time.perf_counter()
+            batch_g = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
+            batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
+            batch_label_ids += batch_label_offsets[batch_id]
+            time_batch_end = time.perf_counter()
+            batch_generation_time = time_batch_end - time_batch_start
+            logger.info(f"Batch {batch_id}, Task structure: {batch_meta['task_structure']} generated in "
+                        f"{batch_generation_time:.2f} seconds. "
+                        f"Average time per sample: {batch_generation_time / len(batch_label_ids):.2f} seconds.")
+        except Exception as e:
+            logger.error(f"Error in child process for batch {batch_id}. Exception: {str(e)}")
+            raise e
+
+        data_size = len(pickle.dumps((batch_features, batch_label_ids, batch_label_contents, batch_id)))
+        if data_size > 2 * 10 ** 9:
+            raise RuntimeError(f'return data of total size {data_size} bytes can not be sent, too large.')
+
         return batch_features, batch_label_ids, batch_label_contents, batch_id
 
     def normalise_metrics(self):
@@ -495,7 +525,8 @@ class WaveCollapseBatch(Batch):
                 seed = self.seeds[i]
                 pattern = self._run_wfc(seed)
                 if pattern is None:
-                    logger.info(f"Seed {seed} failed to generate a valid pattern at iteration {i}")
+                    #logger.info(f"Seed {seed} failed to generate a valid pattern at iteration {i}")
+                    pass
                 else:
                     remove_seeds[i] = False
                     features.append(pattern)
