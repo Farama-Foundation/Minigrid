@@ -18,7 +18,7 @@ import torch.nn as nn
 from ..gym_minigrid.minigrid import MiniGridEnv, WorldObj, OBJECT_TO_IDX as Minigrid_OBJECT_TO_IDX, \
     IDX_TO_OBJECT as Minigrid_IDX_TO_OBJECT, COLOR_TO_IDX as Minigrid_COLOR_TO_IDX
 
-from .util import get_node_features
+import maze_representations.util.util as util
 
 logger = logging.getLogger(__name__)
 
@@ -633,7 +633,7 @@ class Nav2DTransforms:
         if node_attributes is None:
             node_attributes = DENSE_GRAPH_NODE_ATTRIBUTES
 
-        shape_no_padding = (features.shape[0], level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
+        shape_no_padding = (features.shape[-3], level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
         features = features.reshape(*shape_no_padding)
         grids = torch.ones(shape_no_padding, dtype=torch.int, device=device) * Minigrid_OBJECT_TO_IDX['empty']
 
@@ -675,7 +675,7 @@ class Nav2DTransforms:
     def dense_graph_to_minigrid(graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]],
                                 level_info=None, color_config=None, device=None) -> np.ndarray:
 
-        features, node_attributes = get_node_features(graphs, node_attributes=None, reshape=True)
+        features, node_attributes = util.get_node_features(graphs, node_attributes=None, reshape=True)
         grids = Nav2DTransforms.dense_features_to_minigrid(features, node_attributes=node_attributes, level_info=level_info,
                                                            color_config=color_config, device=device)
 
