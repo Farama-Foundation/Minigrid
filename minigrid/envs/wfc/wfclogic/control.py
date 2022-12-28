@@ -410,7 +410,7 @@ def execute_wfc(
                 stats = visualize_after()
             stats.update({"outcome": "timed_out"})
         except Contradiction as exc:
-            logger.warning(f"Contradiction: {exc}")
+            #logger.warning(f"Contradiction: {exc}")
             if visualize_after:
                 stats = visualize_after()
             stats.update({"outcome": "contradiction"})
@@ -438,6 +438,8 @@ def execute_wfc(
             if log_stats_to_output is not None:
                 log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
         if solution_tile_grid is not None:
-            return tile_grid_to_image(solution_tile_grid, tile_catalog, (tile_size, tile_size))
+            return tile_grid_to_image(solution_tile_grid, tile_catalog, (tile_size, tile_size)), outstats
+        else:
+            return None, outstats
 
     raise TimedOut("Attempt limit exceeded.")
