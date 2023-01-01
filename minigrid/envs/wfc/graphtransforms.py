@@ -6,7 +6,6 @@ import einops
 import networkx as nx
 import numpy as np
 import torchvision
-from mazelib import Maze
 from typing import Union, List, Dict, Any, Tuple
 from collections import defaultdict
 from envs.multigrid.multigrid import Grid, AGENT_COLOURS
@@ -129,24 +128,24 @@ class ToDeviceTransform(object):
 
 
 class Nav2DTransforms:
-    @staticmethod
-    def encode_maze_to_gridworld(mazes: Union[Maze, List[Maze]]) -> np.ndarray:
-
-        if isinstance(mazes, Maze):
-            mazes = [mazes]
-
-        # Obtain the different channels
-        grids = np.array([mazes[i].grid for i in range(len(mazes))])
-        start_positions_indices = np.array([[i, mazes[i].start[0], mazes[i].start[1]] for i in range(len(mazes))])
-        goal_positions_indices = np.array([[i, mazes[i].end[0], mazes[i].end[1]] for i in range(len(mazes))])
-        start_position_channels, goal_position_channels = (np.zeros(grids.shape) for i in range(2))
-        start_position_channels[tuple(start_positions_indices.T)] = 1
-        goal_position_channels[tuple(goal_positions_indices.T)] = 1
-
-        # merge
-        features = np.stack((grids, start_position_channels, goal_position_channels), axis=-1)
-
-        return features
+    # @staticmethod
+    # def encode_maze_to_gridworld(mazes: Union[Maze, List[Maze]]) -> np.ndarray:
+    #
+    #     if isinstance(mazes, Maze):
+    #         mazes = [mazes]
+    #
+    #     # Obtain the different channels
+    #     grids = np.array([mazes[i].grid for i in range(len(mazes))])
+    #     start_positions_indices = np.array([[i, mazes[i].start[0], mazes[i].start[1]] for i in range(len(mazes))])
+    #     goal_positions_indices = np.array([[i, mazes[i].end[0], mazes[i].end[1]] for i in range(len(mazes))])
+    #     start_position_channels, goal_position_channels = (np.zeros(grids.shape) for i in range(2))
+    #     start_position_channels[tuple(start_positions_indices.T)] = 1
+    #     goal_position_channels[tuple(goal_positions_indices.T)] = 1
+    #
+    #     # merge
+    #     features = np.stack((grids, start_position_channels, goal_position_channels), axis=-1)
+    #
+    #     return features
 
     @staticmethod
     def encode_minigrid_to_gridworld(envs: List[MiniGridEnv]) -> np.ndarray:
@@ -209,16 +208,16 @@ class Nav2DTransforms:
 
         return grids
 
-    @staticmethod
-    def encode_gridworld_to_maze(grids: np.ndarray) -> List[Maze]:
-        # Set up maze generator
-        mazes = [Maze() for i in range(grids.shape[0])]
-        for (maze, grid) in zip(mazes, grids):
-            maze.grid = np.int8(grid[..., 0])
-            maze.start = tuple(np.argwhere(grid[..., 1] == 1)[0])
-            maze.end = tuple(np.argwhere(grid[..., 2] == 1)[0])
-
-        return mazes
+    # @staticmethod
+    # def encode_gridworld_to_maze(grids: np.ndarray) -> List[Maze]:
+    #     # Set up maze generator
+    #     mazes = [Maze() for i in range(grids.shape[0])]
+    #     for (maze, grid) in zip(mazes, grids):
+    #         maze.grid = np.int8(grid[..., 0])
+    #         maze.start = tuple(np.argwhere(grid[..., 1] == 1)[0])
+    #         maze.end = tuple(np.argwhere(grid[..., 2] == 1)[0])
+    #
+    #     return mazes
 
     @staticmethod
     def encode_gridworld_to_grid(gridworlds: np.ndarray):
