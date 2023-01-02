@@ -19,8 +19,6 @@ class Agent:
             self.maxSpeed = 3
         else:
             self.maxSpeed = 4
-        
-        self.p_exchg = 1
 
         self.initPosition = position
         self.initDirection = direction

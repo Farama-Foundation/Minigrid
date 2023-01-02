@@ -28,16 +28,25 @@ class PedAgent(Agent):
         if self.canShiftRight == True:
             gaps[2] = self.computeGap(agents, Lanes.rightLane)
         
-        logging.debug('gaps', gaps)
-        # confused about DML(Dynamic Multiple Lanes)
-        maxGap = 0
-        for i in range(3):
-            maxGap = max(maxGap, gaps[i][0])
-        logging.debug('maxgap', maxGap)
         goodLanes = []
-        for i in range(3):
-            if maxGap == gaps[i][0]:
-                goodLanes.append(i)
+        logging.debug('gaps', gaps)
+        # DML(Dynamic Multiple Lanes)
+        if env.DML and gaps[0][3] != -1: # if agentOppIndex exists, then gapOpp <= 4
+            gaps[0][0] = 0 # set gap = 0
+            if gaps[1][1] == 0: # check if left lane gapSame == 0
+                goodLanes.append(1)
+            if gaps[2][1] == 0: # check if right lane gapSame == 0
+                goodLanes.append(2)
+        
+        # rest of algo
+        if env.DML == False or len(goodLanes) == 0:
+            maxGap = 0
+            for i in range(3):
+                maxGap = max(maxGap, gaps[i][0])
+            logging.debug('maxgap', maxGap)
+            for i in range(3):
+                if maxGap == gaps[i][0]:
+                    goodLanes.append(i)
         
         if len(goodLanes) == 1:
             lane = goodLanes[0]
@@ -82,7 +91,7 @@ class PedAgent(Agent):
         agents = env.agents
         self.speed = self.gap
         if self.gapOpp == 0 and self.gap == self.gapOpp: # or <= 1 if using possibly wrong algorithm in paper
-            if np.random.random() < self.p_exchg:
+            if np.random.random() < env.p_exchg:
                 self.speed = self.gap + 1
                 agents[self.agentOppIndex].speed = self.gap + 1
         

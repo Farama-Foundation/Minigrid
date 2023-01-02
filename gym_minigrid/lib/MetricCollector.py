@@ -8,7 +8,7 @@ class MetricCollector:
     def __init__(self, 
             env: IMultiPedestrianEnv,
             stepsToIgnoreAtTheBeginning = 100,
-            stepsToRecord = 10000
+            stepsToRecord = 1100
         ):
 
         self.stepsToIgnoreAtTheBeginning = stepsToIgnoreAtTheBeginning

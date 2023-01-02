@@ -16,6 +16,9 @@ class MultiPedestrianEnv(MiniGridEnv):
         agents: List[Agent]=None,
         width=8,
         height=8,
+        DML=True,
+        p_exchg = 1.0,
+        density = 0.5
     ):
         if agents is None:
             self.agents = []
@@ -29,6 +32,10 @@ class MultiPedestrianEnv(MiniGridEnv):
             # Set this to True for maximum speed
             see_through_walls=True
         )
+
+        self.DML = DML
+        self.p_exchg = p_exchg
+        self.density = density
 
         self.stepsTaken = 0
 
@@ -392,7 +399,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
         width = 30
-        height = 50
+        height = 12
         super().__init__(
             width=width,
             height=height,

@@ -20,12 +20,9 @@ logging.basicConfig(level=logging.INFO)
 env = gym.make('MultiPedestrian-Empty-20x80-v0')
 metricCollector = MetricCollector(env)
 agents = []
-width = 30
-height = 10
-density = 0.5
 
-possibleX = list(range(0, width))
-possibleY = list(range(5, height + 5))
+possibleX = list(range(0, env.width))
+possibleY = list(range(1, env.height - 1))
 possibleCoordinates = []
 for i in possibleX:
     for j in possibleY:
@@ -33,7 +30,7 @@ for i in possibleX:
 
 logging.info(f"Number of possible coordinates is {len(possibleCoordinates)}")
 
-for i in range(int(density * width * height)):
+for i in range(int(env.density * env.width * env.height)):
     randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
     pos = possibleCoordinates[randomIndex]
     direction = 2 if np.random.random() > 0.5 else 0
@@ -43,7 +40,7 @@ env.addAgents(agents)
 
 env.reset()
 
-for i in range(500):
+for i in range(1100):
 
     obs, reward, done, info = env.step(None)
     
