@@ -16,7 +16,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         agents: List[Agent]=None,
         width=8,
         height=8,
-        DML=True,
+        DML=False,
         p_exchg = 1.0,
         density = 0.5
     ):
@@ -398,8 +398,8 @@ class MultiPedestrianEnv(MiniGridEnv):
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 30
-        height = 12
+        width = 1000
+        height = 12 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
