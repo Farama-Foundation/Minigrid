@@ -7,6 +7,8 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [Towards Improving Exploration in Self-Imitation Learning using Intrinsic Motivation](https://arxiv.org/abs/2211.16838) (TECNALIA, IEEE ADPRL 2022)
+- [An Evaluation Study of Intrinsic Motivation Techniques applied to Reinforcement Learning over Hard Exploration Environments](https://arxiv.org/abs/2205.11184) (TECNALIA, CD-MAKE 2022)
 - [Evolution Strategies for Sparse Reward Gridworld Environments.](https://link.springer.com/chapter/10.1007/978-3-031-22695-3_19) (DSTG, AJCAI 2022)
 - [History Compression via Language Models in Reinforcement Learning.](https://proceedings.mlr.press/v162/paischer22a.html) (Johannes Kepler University Linz, PMLR 2022)
 - [Leveraging Approximate Symbolic Models for Reinforcement Learning via Skill Diversity](https://arxiv.org/abs/2202.02886) (Arizona State University, ICML 2022)
