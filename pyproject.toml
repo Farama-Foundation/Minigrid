@@ -29,9 +29,8 @@ dependencies = [
     "matplotlib>=3.0",
 ]
 dynamic = ["version"]
-entry_points = {
-    "gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]
-}
+entry_points = ["gymnasium.envs": ["__root__ = minigrid.__init__:register_minigrid_envs"]
+]
 
 [project.optional-dependencies]
 testing = [
