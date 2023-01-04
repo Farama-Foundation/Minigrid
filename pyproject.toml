@@ -29,7 +29,6 @@ dependencies = [
     "matplotlib>=3.0",
 ]
 dynamic = ["version"]
-entry_points = {"gymnasium.envs" = ["__root__ = minigrid.__init__:register_minigrid_envs"]}
 
 [project.optional-dependencies]
 testing = [
@@ -57,10 +56,11 @@ safe = true
 [tool.isort]
 atomic = true
 profile = "black"
+append_only = true
 src_paths = ["minigrid", "tests"]
+add_imports = [ "from __future__ import annotations" ]
 
 [tool.pyright]
-
 include = [
     "minigrid/**",
 ]
@@ -70,9 +70,7 @@ exclude = [
     "**/__pycache__",
 ]
 
-strict = [
-
-]
+strict = []
 
 typeCheckingMode = "basic"
 pythonVersion = "3.7"
@@ -96,8 +94,3 @@ reportPrivateImportUsage = "none"
 
 [tool.pytest.ini_options]
 filterwarnings = ['ignore:.*step API.*:DeprecationWarning'] # TODO: to be removed when old step API is removed
-
-[tool.isort]
-profile = "black"
-add_imports = [ "from __future__ import annotations" ]
-append_only = true
