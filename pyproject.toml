@@ -42,8 +42,10 @@ Repository = "https://minigrid.farama.org/"
 Documentation = "https://minigrid.farama.org/"
 "Bug Report" = "https://github.com/Farama-Foundation/Minigrid/issues"
 
-[project.entry-points."gymnasium.envs"]
-__root__ = "minigrid:__init__.register_minigrid_envs"
+[project.entry-points]
+gymnasium.envs = {
+  __root__ = "minigrid:__init__.register_minigrid_envs"
+}
 
 [tool.setuptools]
 include-package-data = true
