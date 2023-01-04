@@ -8,16 +8,16 @@ from minigrid.core.world_object import Wall
 
 
 def register_minigrid_envs():
-# BlockedUnlockPickup
-# ----------------------------------------
+    # BlockedUnlockPickup
+    # ----------------------------------------
 
     register(
         id="MiniGrid-BlockedUnlockPickup-v0",
         entry_point="minigrid.envs:BlockedUnlockPickupEnv",
     )
 
-# LavaCrossing
-# ----------------------------------------
+    # LavaCrossing
+    # ----------------------------------------
     register(
         id="MiniGrid-LavaCrossingS9N1-v0",
         entry_point="minigrid.envs:CrossingEnv",
@@ -42,8 +42,8 @@ def register_minigrid_envs():
         kwargs={"size": 11, "num_crossings": 5},
     )
 
-# SimpleCrossing
-# ----------------------------------------
+    # SimpleCrossing
+    # ----------------------------------------
 
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
@@ -69,8 +69,8 @@ def register_minigrid_envs():
         kwargs={"size": 11, "num_crossings": 5, "obstacle_type": Wall},
     )
 
-# DistShift
-# ----------------------------------------
+    # DistShift
+    # ----------------------------------------
 
     register(
         id="MiniGrid-DistShift1-v0",
@@ -84,8 +84,8 @@ def register_minigrid_envs():
         kwargs={"strip2_row": 5},
     )
 
-# DoorKey
-# ----------------------------------------
+    # DoorKey
+    # ----------------------------------------
 
     register(
         id="MiniGrid-DoorKey-5x5-v0",
@@ -111,8 +111,8 @@ def register_minigrid_envs():
         kwargs={"size": 16},
     )
 
-# Dynamic-Obstacles
-# ----------------------------------------
+    # Dynamic-Obstacles
+    # ----------------------------------------
 
     register(
         id="MiniGrid-Dynamic-Obstacles-5x5-v0",
@@ -149,8 +149,8 @@ def register_minigrid_envs():
         kwargs={"size": 16, "n_obstacles": 8},
     )
 
-# Empty
-# ----------------------------------------
+    # Empty
+    # ----------------------------------------
 
     register(
         id="MiniGrid-Empty-5x5-v0",
@@ -187,8 +187,8 @@ def register_minigrid_envs():
         kwargs={"size": 16},
     )
 
-# Fetch
-# ----------------------------------------
+    # Fetch
+    # ----------------------------------------
 
     register(
         id="MiniGrid-Fetch-5x5-N2-v0",
@@ -204,16 +204,16 @@ def register_minigrid_envs():
 
     register(id="MiniGrid-Fetch-8x8-N3-v0", entry_point="minigrid.envs:FetchEnv")
 
-# FourRooms
-# ----------------------------------------
+    # FourRooms
+    # ----------------------------------------
 
     register(
         id="MiniGrid-FourRooms-v0",
         entry_point="minigrid.envs:FourRoomsEnv",
     )
 
-# GoToDoor
-# ----------------------------------------
+    # GoToDoor
+    # ----------------------------------------
 
     register(
         id="MiniGrid-GoToDoor-5x5-v0",
@@ -232,8 +232,8 @@ def register_minigrid_envs():
         kwargs={"size": 8},
     )
 
-# GoToObject
-# ----------------------------------------
+    # GoToObject
+    # ----------------------------------------
 
     register(
         id="MiniGrid-GoToObject-6x6-N2-v0",
@@ -246,8 +246,8 @@ def register_minigrid_envs():
         kwargs={"size": 8, "numObjs": 2},
     )
 
-# KeyCorridor
-# ----------------------------------------
+    # KeyCorridor
+    # ----------------------------------------
 
     register(
         id="MiniGrid-KeyCorridorS3R1-v0",
@@ -285,8 +285,8 @@ def register_minigrid_envs():
         kwargs={"room_size": 6, "num_rows": 3},
     )
 
-# LavaGap
-# ----------------------------------------
+    # LavaGap
+    # ----------------------------------------
 
     register(
         id="MiniGrid-LavaGapS5-v0",
@@ -306,16 +306,16 @@ def register_minigrid_envs():
         kwargs={"size": 7},
     )
 
-# LockedRoom
-# ----------------------------------------
+    # LockedRoom
+    # ----------------------------------------
 
     register(
         id="MiniGrid-LockedRoom-v0",
         entry_point="minigrid.envs:LockedRoomEnv",
     )
 
-# Memory
-# ----------------------------------------
+    # Memory
+    # ----------------------------------------
 
     register(
         id="MiniGrid-MemoryS17Random-v0",
@@ -353,8 +353,8 @@ def register_minigrid_envs():
         kwargs={"size": 7},
     )
 
-# MultiRoom
-# ----------------------------------------
+    # MultiRoom
+    # ----------------------------------------
 
     register(
         id="MiniGrid-MultiRoom-N2-S4-v0",
@@ -374,8 +374,8 @@ def register_minigrid_envs():
         kwargs={"minNumRooms": 6, "maxNumRooms": 6},
     )
 
-# ObstructedMaze
-# ----------------------------------------
+    # ObstructedMaze
+    # ----------------------------------------
 
     register(
         id="MiniGrid-ObstructedMaze-1Dl-v0",
@@ -459,16 +459,16 @@ def register_minigrid_envs():
         entry_point="minigrid.envs:ObstructedMaze_Full",
     )
 
-# Playground
-# ----------------------------------------
+    # Playground
+    # ----------------------------------------
 
     register(
         id="MiniGrid-Playground-v0",
         entry_point="minigrid.envs:PlaygroundEnv",
     )
 
-# PutNear
-# ----------------------------------------
+    # PutNear
+    # ----------------------------------------
 
     register(
         id="MiniGrid-PutNear-6x6-N2-v0",
@@ -481,8 +481,8 @@ def register_minigrid_envs():
         kwargs={"size": 8, "numObjs": 3},
     )
 
-# RedBlueDoors
-# ----------------------------------------
+    # RedBlueDoors
+    # ----------------------------------------
 
     register(
         id="MiniGrid-RedBlueDoors-6x6-v0",
@@ -495,21 +495,21 @@ def register_minigrid_envs():
         entry_point="minigrid.envs:RedBlueDoorEnv",
     )
 
-# Unlock
-# ----------------------------------------
+    # Unlock
+    # ----------------------------------------
 
     register(id="MiniGrid-Unlock-v0", entry_point="minigrid.envs:UnlockEnv")
 
-# UnlockPickup
-# ----------------------------------------
+    # UnlockPickup
+    # ----------------------------------------
 
     register(
         id="MiniGrid-UnlockPickup-v0",
         entry_point="minigrid.envs:UnlockPickupEnv",
     )
 
-# BabyAI - Language based levels - GoTo
-# ----------------------------------------
+    # BabyAI - Language based levels - GoTo
+    # ----------------------------------------
 
     register(
         id="BabyAI-GoToRedBallGrey-v0",
@@ -704,8 +704,8 @@ def register_minigrid_envs():
         entry_point="minigrid.envs.babyai:GoToObjDoor",
     )
 
-# BabyAI - Language based levels - Open
-# ----------------------------------------
+    # BabyAI - Language based levels - Open
+    # ----------------------------------------
 
     register(
         id="BabyAI-Open-v0",
@@ -785,8 +785,8 @@ def register_minigrid_envs():
         kwargs={"debug": True, "num_doors": 4},
     )
 
-# BabyAI - Language based levels - Pickup
-# ----------------------------------------
+    # BabyAI - Language based levels - Pickup
+    # ----------------------------------------
 
     register(
         id="BabyAI-Pickup-v0",
@@ -819,8 +819,8 @@ def register_minigrid_envs():
         entry_point="minigrid.envs.babyai:PickupAbove",
     )
 
-# BabyAI - Language based levels - PutNext
-# ----------------------------------------
+    # BabyAI - Language based levels - PutNext
+    # ----------------------------------------
 
     register(
         id="BabyAI-PutNextLocal-v0",
@@ -887,8 +887,8 @@ def register_minigrid_envs():
         kwargs={"room_size": 7, "objs_per_room": 4, "start_carrying": True},
     )
 
-# BabyAI - Language based levels - Unlock
-# ----------------------------------------
+    # BabyAI - Language based levels - Unlock
+    # ----------------------------------------
 
     register(
         id="BabyAI-Unlock-v0",
@@ -932,8 +932,8 @@ def register_minigrid_envs():
         entry_point="minigrid.envs.babyai:UnlockToUnlock",
     )
 
-# BabyAI - Language based levels - Other
-# ----------------------------------------
+    # BabyAI - Language based levels - Other
+    # ----------------------------------------
 
     register(
         id="BabyAI-ActionObjDoor-v0",
@@ -1033,8 +1033,8 @@ def register_minigrid_envs():
         kwargs={"room_size": 8, "objs_per_room": 9},
     )
 
-# BabyAI - Language based levels - Synth
-# ----------------------------------------
+    # BabyAI - Language based levels - Synth
+    # ----------------------------------------
 
     register(
         id="BabyAI-Synth-v0",
