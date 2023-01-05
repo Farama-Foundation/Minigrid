@@ -48,9 +48,6 @@ __root__ = "minigrid.__init__:register_minigrid_envs"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.packages.find]
-include = ["minigrid"]
-
 # Linters and Test tools #######################################################
 
 [tool.black]
