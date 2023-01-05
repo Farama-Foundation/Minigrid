@@ -7,7 +7,9 @@ class Agent:
         self, 
         id,
         position: Tuple[int, int], 
-        direction: int
+        direction: int,
+        DML: bool,
+        p_exchg: float
         ):
 
         self.id = id
@@ -19,6 +21,9 @@ class Agent:
             self.maxSpeed = 3
         else:
             self.maxSpeed = 4
+
+        self.DML = DML
+        self.p_exchg = p_exchg
 
         self.initPosition = position
         self.initDirection = direction

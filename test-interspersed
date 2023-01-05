@@ -17,20 +17,20 @@ logging.basicConfig(level=logging.INFO)
 # %autoreload 2
 
 values = np.zeros((6, 19, 2)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
-for directionSplit in range(5, 11):
-    for density in range(1, 20):
+for dirSplitInt in range(5, 11):
+    for densityInt in range(1, 20):
 
         # Load the gym environment
         env = gym.make('MultiPedestrian-Empty-20x80-v0')
         metricCollector = MetricCollector(env)
         agents = []
 
-        env.density = round(0.05 * density, ndigits=2)
-        env.DML = False
-        env.p_exchg = 1.0
-        dirSplit = round(directionSplit/10, ndigits=1)
+        density = round(0.05 * densityInt, ndigits=2)
+        DML = False
+        p_exchg = 0.5
+        dirSplit = round(dirSplitInt/10, ndigits=1)
 
-        print("Density: " + str(env.density) + " Directional Split: " + str(dirSplit))
+        print("Density: " + str(density) + " Directional Split: " + str(dirSplit))
 
         possibleX = list(range(0, env.width))
         possibleY = list(range(1, env.height - 1))
@@ -41,11 +41,11 @@ for directionSplit in range(5, 11):
 
         logging.info(f"Number of possible coordinates is {len(possibleCoordinates)}")
 
-        for i in range(int(env.density * env.width * (env.height - 2))): # -2 from height to account for top and bottom
+        for i in range(int(density * env.width * (env.height - 2))): # -2 from height to account for top and bottom
             randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
             pos = possibleCoordinates[randomIndex]
             direction = 2 if np.random.random() > dirSplit else 0
-            agents.append(PedAgent(i, pos, direction))
+            agents.append(PedAgent(i, pos, direction, DML, p_exchg))
             del possibleCoordinates[randomIndex]
         env.addAgents(agents)
 
@@ -75,11 +75,11 @@ for directionSplit in range(5, 11):
         avgVolume = sum(volumeStats) / len(volumeStats)
         logging.info("Average volume: " + str(avgVolume))
 
-        values[directionSplit - 5][density - 1][0] = avgSpeed
-        values[directionSplit - 5][density - 1][1] = avgVolume
+        values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
+        values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
 
         # Test the close method
         env.close()
 
-with open(f"testing.pickle", "wb") as f:
+with open(f"interspersed_p=0.5.pickle", "wb") as f:
     pickle.dump(values, f)
