@@ -28,7 +28,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         super().__init__(
             width=width,
             height=height,
-            max_steps=1000, #4*width*height,
+            max_steps=100000, #4*width*height,
             # Set this to True for maximum speed
             see_through_walls=True
         )
@@ -255,6 +255,21 @@ class MultiPedestrianEnv(MiniGridEnv):
                         agent1.canShiftLeft = False 
                     else: 
                         agent2.canShiftRight = False
+        # self.agents.sort(key=lambda agent: (agent.position[0], agent.position[1]))
+        # for i in range(1, len(self.agents)):
+        #     if self.agents[i].position[0] != self.agents[i-1].position[0]:
+        #         continue
+
+        #     if (self.agents[i].position[1] - self.agents[i-1].position[1]) == 1:
+        #         # they are adjacent
+        #         self.agents[i].canShiftLeft = False
+        #         self.agents[i-1].canShiftRight = False
+        #     elif (self.agents[i].position[1] - self.agents[i-1].position[1]) == 2 and self.agents[i].canShiftLeft == True and self.agents[i-1].canShiftRight == True:  
+        #         # they have one cell between them
+        #         if np.random.random() > 0.5:
+        #             self.agents[i].canShiftLeft = False
+        #         else: 
+        #             self.agents[i-1].canShiftRight = False
 
         # for agent in self.agents:
         #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
@@ -398,7 +413,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 1000
+        width = 50
         height = 12 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,

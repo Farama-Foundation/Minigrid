@@ -7,7 +7,7 @@ from gym_minigrid.wrappers import *
 from gym_minigrid.agents import PedAgent
 from gym_minigrid.lib.MetricCollector import MetricCollector
 import logging
-
+import pickle5 as pickle
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,7 +30,7 @@ for i in possibleX:
 
 logging.info(f"Number of possible coordinates is {len(possibleCoordinates)}")
 
-for i in range(int(env.density * env.width * env.height)):
+for i in range(int(env.density * env.width * (env.height - 2))): # -2 from height to account for top and bottom
     randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
     pos = possibleCoordinates[randomIndex]
     direction = 2 if np.random.random() > 0.5 else 0
@@ -63,6 +63,10 @@ logging.info("Average speed: " + str(avgSpeed))
 volumeStats = metricCollector.getStatistics()[1]
 avgVolume = sum(volumeStats) / len(volumeStats)
 logging.info("Average volume: " + str(avgVolume))
+
+dump = (avgSpeed, avgVolume)
+with open(f"{env.DML}.{env.p_exchg}.{env.density}.pickle", "wb") as f:
+    pickle.dump(dump, f)
 
 # Test the close method
 env.close()
