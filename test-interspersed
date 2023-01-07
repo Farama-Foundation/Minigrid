@@ -27,7 +27,7 @@ for dirSplitInt in range(5, 11):
 
         density = round(0.05 * densityInt, ndigits=2)
         DML = False
-        p_exchg = 0.5 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
+        p_exchg = 1.0 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
         dirSplit = round(dirSplitInt/10, ndigits=1)
 
         print("Density: " + str(density) + " Directional Split: " + str(dirSplit))
@@ -81,5 +81,5 @@ for dirSplitInt in range(5, 11):
         # Test the close method
         env.close()
 
-with open(f"testing.pickle", "wb") as f:
+with open(f"newInterspersed_p=1.0.pickle", "wb") as f:
     pickle.dump(values, f)

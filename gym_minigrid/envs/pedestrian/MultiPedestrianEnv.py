@@ -8,6 +8,7 @@ from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
 from .EnvEvent import EnvEvent
 import logging
+import random
 # from pyee.base import EventEmitter
 
 class MultiPedestrianEnv(MiniGridEnv):
@@ -94,16 +95,22 @@ class MultiPedestrianEnv(MiniGridEnv):
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
-        if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
-            # self.agents.append(PedAgent(agent.id, (1, agent.position[1]), (agent.direction + 2) % 4))
-            if fwd_pos[0] <= 0:
-                agent.position = (1, agent.position[1])
-            else:
-                agent.position = (self.width - 2, agent.position[1])
-            agent.direction = (agent.direction + 2) % 4
-            # self.removeAgent(agent)
+        # if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
+        #     if fwd_pos[0] <= 0:
+        #         agent.position = (1, agent.position[1])
+        #     else:
+        #         agent.position = (self.width - 2, agent.position[1])
+        #     agent.direction = (agent.direction + 2) % 4
+        #     return
+        if fwd_pos[0] <= 0:
+            # random may introduce conflict
+            # agent.position = (self.width - 2, random.randint(1, self.height - 2))
+            agent.position = (self.width - 2, agent.position[1])
             return
-        # Terry - implemented speed ^ by multiplying speed with direction unit vector
+        elif fwd_pos[0] >= self.width - 1:
+            # agent.position = (1, random.randint(1, self.height - 2))
+            agent.position = (1, agent.position[1])
+            return
 
         # Get the contents of the cell in front of the agent
         fwd_cell = self.grid.get(*fwd_pos)

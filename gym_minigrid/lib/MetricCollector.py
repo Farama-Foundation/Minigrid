@@ -51,9 +51,12 @@ class MetricCollector:
         for agent in env.getAgents():
             if self.previousState[agent]["direction"] is None:
                 self.previousState[agent]["direction"] = agent.direction
-            elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
+            # elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
+            #     revolutions += 1
+            elif agent.direction == 0 and self.previousState[agent]["position"][0] > agent.position[0]:
                 revolutions += 1
-                self.previousState[agent]["direction"] = agent.direction
+            elif agent.direction == 2 and agent.position[0] > self.previousState[agent]["position"][0]:
+                revolutions += 1
         
         self.volumeStats.append(revolutions/(env.height - 2))
     
