@@ -27,7 +27,7 @@ for dirSplitInt in range(5, 11):
 
         density = round(0.05 * densityInt, ndigits=2)
         DML = True
-        p_exchg = 1.0 # 0.5 for 6th graph, 1.0 for 5th graph
+        p_exchg = 0.5 # 0.5 for 6th graph, 1.0 for 5th graph
         dirSplit = round(dirSplitInt/10, ndigits=1)
 
         print("Density: " + str(density) + " Directional Split: " + str(dirSplit))
@@ -81,5 +81,5 @@ for dirSplitInt in range(5, 11):
         # Test the close method
         env.close()
 
-with open(f"DML_p=0.5.pickle", "wb") as f:
+with open(f"DML_p=0.5.pickle", "wb") as f: # already set to correct name for the next dataset to run (graph 6)
     pickle.dump(values, f)
