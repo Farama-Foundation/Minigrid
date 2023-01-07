@@ -71,6 +71,14 @@ class MetricCollector:
                 xSpeed = abs(agent.position[0] - self.previousState[agent]["position"][0])
                 ySpeed = abs(agent.position[1] - self.previousState[agent]["position"][1])
 
+                if agent.direction == 0 and self.previousState[agent]["position"][0] > agent.position[0]:
+                    xSpeed = abs((env.width - 2) - self.previousState[agent]["position"][0])
+                elif agent.direction == 2 and agent.position[0] > self.previousState[agent]["position"][0]:
+                    xSpeed = abs(self.previousState[agent]["position"][0] - 1)
+
+                # xSpeed = agent.speed
+                # ^ try this if data still doesn't match up
+
                 totalXSpeed += xSpeed
                 totalYSpeed += ySpeed
 
