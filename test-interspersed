@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 # %load_ext autoreload
 # %autoreload 2
 
-values = np.zeros((6, 19, 2)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
+values = np.zeros((6, 19, 3)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
 for dirSplitInt in range(5, 11):
     for densityInt in range(1, 20):
 
@@ -77,9 +77,10 @@ for dirSplitInt in range(5, 11):
 
         values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
         values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
+        values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
 
         # Test the close method
         env.close()
 
-with open(f"newInterspersed_p=1.0.pickle", "wb") as f:
+with open(f"testing.pickle", "wb") as f:
     pickle.dump(values, f)
