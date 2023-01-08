@@ -22,11 +22,11 @@ class PedAgent(Agent):
         agents = env.agents
         #TODO Simulate lane change
         gaps = np.zeros((3, 4)).astype(int)
-        gaps[0] = self.computeGap(agents, Lanes.currentLane)
+        gaps[0] = self.computeGap(agents, Lanes.currentLane, env)
         if self.canShiftLeft == True:
-            gaps[1] = self.computeGap(agents, Lanes.leftLane)
+            gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
         if self.canShiftRight == True:
-            gaps[2] = self.computeGap(agents, Lanes.rightLane)
+            gaps[2] = self.computeGap(agents, Lanes.rightLane, env)
         
         goodLanes = []
         logging.debug('gaps', gaps)
@@ -90,15 +90,18 @@ class PedAgent(Agent):
     def parallel2(self, env): # TODO add type
         agents = env.agents
         self.speed = self.gap
-        if self.gapOpp == 0 and self.gap == self.gapOpp: # or <= 1 if using possibly wrong algorithm in paper
+        if self.gap < 2 and self.gap == self.gapOpp: # or <= 1 if using possibly wrong algorithm in paper
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
                 agents[self.agentOppIndex].speed = self.gap + 1
+            else:
+                self.speed = 0
+        logging.info("Gap: " + str(self.gap) + " GapOpp: " + str(self.gapOpp))
         
         return Action(self, ForwardAction.KEEP)
         
 
-    def computeGap(self, agents, lane):
+    def computeGap(self, agents, lane, env):
         """
         Compute the gap (basically the possible speed ) according to the paper
         """
@@ -109,8 +112,12 @@ class PedAgent(Agent):
         gap_same = 8
         if lane == Lanes.leftLane:
             postionY -= 1
+            if postionY == 0:
+                return 0, 0, 0, -1
         elif lane == Lanes.rightLane:
             postionY += 1
+            if postionY == env.height - 1:
+                return 0, 0, 0, -1
         for agent2 in agents:
             #sameGap, so direction must be same and they must be in same lane
             if self.direction != agent2.direction or postionY != agent2.position[1]: 
