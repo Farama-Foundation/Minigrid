@@ -53,7 +53,7 @@ for dirSplitInt in range(5, 11):
 
         env.reset()
 
-        for i in range(2100):
+        for i in range(1100):
 
             obs, reward, done, info = env.step(None)
             

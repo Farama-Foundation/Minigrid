@@ -25,13 +25,18 @@ class PedAgent(Agent):
         gaps[0] = self.computeGap(agents, Lanes.currentLane, env)
         if self.canShiftLeft == True:
             gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
+        else:
+            gaps[1] = -1, -1, -1, -10 # as backup in case gaps of 0 mess up the code, -10 is on purpose to avoid conflict with DML checking
         if self.canShiftRight == True:
             gaps[2] = self.computeGap(agents, Lanes.rightLane, env)
+        else:
+            gaps[2] = -1, -1, -1, -10 # as backup in case gaps of 0 mess up the code, -10 is on purpose to avoid conflict with DML checking
+        # logging.info(gaps)
         
         goodLanes = []
         logging.debug('gaps', gaps)
         # DML(Dynamic Multiple Lanes)
-        if self.DML and gaps[0][3] != -1: # if agentOppIndex exists, then gapOpp <= 4
+        if self.DML and gaps[0][3] != -1: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
             gaps[0][0] = 0 # set gap = 0
             if gaps[1][1] == 0: # check if left lane gapSame == 0
                 goodLanes.append(1)
@@ -96,7 +101,7 @@ class PedAgent(Agent):
                 agents[self.agentOppIndex].speed = self.gap + 1
             else:
                 self.speed = 0
-        logging.info("Gap: " + str(self.gap) + " GapOpp: " + str(self.gapOpp))
+        # logging.info("Gap: " + str(self.gap) + " GapOpp: " + str(self.gapOpp))
         
         return Action(self, ForwardAction.KEEP)
         
@@ -112,22 +117,18 @@ class PedAgent(Agent):
         gap_same = 8
         if lane == Lanes.leftLane:
             postionY -= 1
-            if postionY == 0:
-                return 0, 0, 0, -1
         elif lane == Lanes.rightLane:
             postionY += 1
-            if postionY == env.height - 1:
-                return 0, 0, 0, -1
         for agent2 in agents:
             #sameGap, so direction must be same and they must be in same lane
             if self.direction != agent2.direction or postionY != agent2.position[1]: 
                 continue
             if self.direction == 2: #looking up
-                gap = postionX - agent2.position[0]
+                gap = postionX - agent2.position[0] - 1
             elif self.direction == 0: #looking down
-                gap = agent2.position[0] - postionY
+                gap = agent2.position[0] - postionX - 1
 
-            if gap > 0 and gap <= 8: # gap must not be negative and less than 8
+            if gap >= 0 and gap <= 8: # gap must not be negative and less than 8
                 gap_same = min(gap_same, gap)
 
         # now oppGap
@@ -137,11 +138,11 @@ class PedAgent(Agent):
             if self.direction == agent2.direction or postionY != agent2.position[1]: 
                 continue
             if self.direction == 2: #looking up
-                gap = postionY - agent2.position[0]
+                gap = postionX - agent2.position[0] - 1
             elif self.direction == 0: #looking down
-                gap = agent2.position[0] - postionY
+                gap = agent2.position[0] - postionX - 1
             
-            if gap > 0 and gap <= 8: # gap must not be negative and less than 4
+            if gap >= 0 and gap <= 8: # gap must not be negative and less than 4
                 if min(gap_opposite, gap/2) == gap/2:
                     agentOppIndex = i
                 gap_opposite = min(gap_opposite, gap/2)
