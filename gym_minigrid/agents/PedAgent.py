@@ -95,7 +95,7 @@ class PedAgent(Agent):
     def parallel2(self, env): # TODO add type
         agents = env.agents
         self.speed = self.gap
-        if self.gap < 2 and self.gap == self.gapOpp: # or <= 1 if using possibly wrong algorithm in paper
+        if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
                 agents[self.agentOppIndex].speed = self.gap + 1
