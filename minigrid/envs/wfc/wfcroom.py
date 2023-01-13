@@ -54,12 +54,8 @@ class GridNavDatasetGenerator:
 
     def __init__(self, dataset_config: DictConfig, dataset_dir_name=None, num_workers=0, multiprocessing=False,
                  debug_multiprocessing=False):
-        self.config = dataset_config
-        if not self.config.generate_images:
-            self.config.label_descriptors.remove('images')
+        self.config = self.generate_config(dataset_config)
         self.dataset_meta = self.get_dataset_metadata()
-        self.config.size = int(self.config.num_train_batches * self.config.size_train_batch + \
-                               self.config.num_test_batches * self.config.size_test_batch)
         self.batches_meta = self.get_batches_metadata()
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(dataset_dir_name)
@@ -80,19 +76,30 @@ class GridNavDatasetGenerator:
         self._task_seeds = torch.randperm(int(1e7)) #10M possible seeds
         self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
         self.batch_label_offset = []
-        self.batch_completed = []
 
+    def generate_config(self, dataset_config: DictConfig) -> DictConfig:
+        """
+        Generate a config for the dataset generator.
+        """
+        if not dataset_config.generate_images:
+            dataset_config.label_descriptors.remove('images')
+        if dataset_config.num_train_batches is None:
+            dataset_config.num_train_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
+        if dataset_config.num_test_batches is None:
+            dataset_config.num_test_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
+
+        return dataset_config
 
     def generate_dataset(self, normalise_metrics: bool = True):
 
         n_labels = 0
         seed_counter = 0
         args = []
-        for batch_id, batch_meta in enumerate(self.batches_meta):
+        for i, batch_meta in enumerate(self.batches_meta):
+            self.batch_label_offset.append(n_labels)
             seeds = self._task_seeds[seed_counter:seed_counter+self._seeds_per_batch]
             seed_counter += self._seeds_per_batch
-            args.append((batch_id, batch_meta, self.dataset_meta, seeds, self.batch_label_offset))
-            self.batch_label_offset.append(n_labels)
+            args.append((batch_meta, self.dataset_meta, seeds, n_labels))
             n_labels += batch_meta['batch_size']
 
         self.config.size = n_labels
@@ -143,22 +150,22 @@ class GridNavDatasetGenerator:
         self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
 
     @staticmethod
-    def _generate_batch_data(batch_id, batch_meta, dataset_meta, seeds, batch_label_offsets):
+    def _generate_batch_data(batch_meta, dataset_meta, seeds, batch_label_offset):
         try:
             time_batch_start = time.perf_counter()
             batch = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
             batch_features, batch_label_ids, batch_label_contents = batch.generate_batch()
-            batch_label_ids += batch_label_offsets[batch_id]
+            batch_label_ids += batch_label_offset
             time_batch_end = time.perf_counter()
             batch_generation_time = time_batch_end - time_batch_start
-            logger.info(f"Batch {batch_id}, Task structure: {batch_meta['task_structure']} generated in "
+            logger.info(f"Batch {batch_meta['batch_id']}, Task structure: {batch_meta['task_structure']} generated in "
                         f"{batch_generation_time:.2f} seconds. "
                         f"Average time per sample: {batch_generation_time / len(batch_label_ids):.2f} seconds.")
         except Exception as e:
-            logger.error(f"Error in child process for batch {batch_id}. Exception: {str(e)}")
+            logger.error(f"Error in child process for batch {batch_meta['batch_id']}. Exception: {str(e)}")
             raise e
 
-        data_size = len(pickle.dumps((batch_features, batch_label_ids, batch_label_contents, batch_id)))
+        data_size = len(pickle.dumps(batch))
         if data_size > 2 * 10 ** 9:
             raise RuntimeError(f'return data of total size {data_size} bytes can not be sent, too large.')
 
@@ -208,15 +215,15 @@ class GridNavDatasetGenerator:
 
             batch_ids = []
             if regime == "train":
+                prefix = ''
                 num_batches = self.config.num_train_batches
                 batch_size = self.config.size_train_batch
                 if self.config.train_batch_ids is None: self.config.train_batch_ids = batch_ids
-                start_at_id = 0
             elif regime == "test":
+                prefix = 'test_'
                 num_batches = self.config.num_test_batches
                 batch_size = self.config.size_test_batch
                 if self.config.test_batch_ids is None: self.config.test_batch_ids = batch_ids
-                start_at_id = 90
             else:
                 raise NotImplementedError(f"Regime {regime} not implemented.")
 
@@ -233,7 +240,7 @@ class GridNavDatasetGenerator:
                     f"Provided task structure split {str(self.config.task_structure_split)} is not compatible with " \
                     f"num_{regime}_batches ({num_batches}). Adjust data_generation config."
                 for i in range(num_batches):
-                    batch_id = i + start_at_id
+                    batch_id = regime + '_' + str(i)
                     batch_ids.append(batch_id)
 
                     if len(self.config.generating_algorithm) > 1:
@@ -247,13 +254,8 @@ class GridNavDatasetGenerator:
                     else:
                         algo = self.config.generating_algorithm[0]
 
-                    if batch_id >= 90:
-                        prefix = "test_"
-                    else:
-                        prefix = ""
-
                     batch_meta = {
-                        'output_file': f'{prefix}batch_{batch_id}.data',
+                        'output_file': f'{prefix}batch_{i}.data',
                         'batch_size': batch_size,
                         'batch_id': batch_id,
                         'task_structure': task_structures[i],
@@ -261,6 +263,9 @@ class GridNavDatasetGenerator:
                         'generating_algorithm_options': [],
                         }
                     batches_meta.append(batch_meta)
+
+            else:
+                raise ValueError(f"Number of batches must be greater than 0.")
 
         batches_meta = []
         for val in all_batches_meta.values():
@@ -342,6 +347,11 @@ class GridNavDatasetGenerator:
         task_structures = []
         for batch in self.generated_batches.values():
             label_content = batch.label_contents
+
+            #Skip repeated values
+            if batch.batch_meta['task_structure'] in task_structures:
+                continue
+
             task_structures.extend(label_content['task_structure'][:n_per_batch])
             if 'images' in label_content:
                 images.extend(label_content['images'][:n_per_batch])
