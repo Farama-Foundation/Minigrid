@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 __package__ = "maze_representations"
 
 import copy
 import logging
 import time
 import multiprocessing
+from bounded_pool_executor import BoundedProcessPoolExecutor
 multiprocessing.set_start_method('spawn', True) #TODO: check if works
 #TODO: check with threadpoolexecutor.
 # TODO: otherwise give up and simply implement as single process code.
@@ -63,15 +66,15 @@ class GridNavDatasetGenerator:
     def __init__(self, dataset_config: DictConfig, dataset_dir_name=None, num_workers=0, multiprocessing=False,
                  debug_multiprocessing=False):
         self.config = dataset_config
+        if not self.config.generate_images:
+            self.config.label_descriptors.remove('images')
         self.dataset_meta = self.get_dataset_metadata()
         self.config.size = int(self.config.num_train_batches * self.config.size_train_batch + \
                                self.config.num_test_batches * self.config.size_test_batch)
         self.batches_meta = self.get_batches_metadata()
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(dataset_dir_name)
-        self.generated_batches = []
-        self.generated_labels = []
-        self.generated_label_contents = []
+        self.generated_batches = {}
         self.use_multiprocessing = True if num_workers != 1 and multiprocessing else False
         self.multi_processing_debug_mode = True if multiprocessing and num_workers != 1 and debug_multiprocessing \
             else False
@@ -105,13 +108,18 @@ class GridNavDatasetGenerator:
 
         self.config.size = n_labels
 
+        # creates folder if it does not exist.
+        if not os.path.exists(self.save_dir):
+            logger.info(f"Saving dataset in new directory {self.save_dir}")
+            os.makedirs(self.save_dir)
+
         if self.use_multiprocessing:
             logger.info(f"Using multiprocessing with {self.num_workers} workers.")
             multi_processing_parser = Parser(GridNavDatasetGenerator._generate_batch_data)
             if not self.multi_processing_debug_mode:
                 num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
                 torch.set_num_threads(1)
-                proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus)
+                proc = BoundedProcessPoolExecutor(max_workers=num_cpus)
             else: #TODO: fix this
                 proc = MockProcessPoolExecutor()
         else:
@@ -123,26 +131,14 @@ class GridNavDatasetGenerator:
                 dataset = [executor.submit(multi_processing_parser, arg) for arg in args]
                 for batch_data in concurrent.futures.as_completed(dataset):
                     try:
-                        batch_features, batch_label_ids, batch_label_contents, batch_id = batch_data.result()
-                        self.generated_batches.append(batch_features)
-                        self.generated_labels.append(batch_label_ids)
-                        self.generated_label_contents.append(batch_label_contents)
-                        self.batch_completed.append(batch_id)
+                        batch = batch_data.result()
+                        self.generated_batches[batch.batch_meta['batch_id']] = batch
                     except Exception as e:
                         logger.error(f"Error during multiprocressing. Error message: {str(e)}")
-
-            self.generated_batches = [self.generated_batches[i] for i in np.argsort(self.batch_completed)]
-            self.generated_labels = [self.generated_labels[i] for i in np.argsort(self.batch_completed)]
-            self.generated_label_contents = [self.generated_label_contents[i] for i in np.argsort(self.batch_completed)]
-
         else:
             for arg in args:
-                batch_features, batch_label_ids, batch_label_contents, batch_id = \
-                    GridNavDatasetGenerator._generate_batch_data(*arg)
-                self.generated_batches.append(batch_features)
-                self.generated_labels.append(batch_label_ids)
-                self.generated_label_contents.append(batch_label_contents)
-                self.batch_completed.append(batch_id)
+                batch = GridNavDatasetGenerator._generate_batch_data(*arg)
+                self.generated_batches[batch.batch_meta['batch_id']] = batch
 
         self.check_unique()
 
@@ -150,13 +146,9 @@ class GridNavDatasetGenerator:
 
         #update the dataset meta with the values automatically updated during generation
         self.dataset_meta = self.get_dataset_metadata()
-        # creates folder if it does not exist.
-        if not os.path.exists(self.save_dir):
-            os.makedirs(self.save_dir)
 
-        for i in range(len(self.generated_batches)):
-            self.save_batch(self.generated_batches[i], self.generated_labels[i],
-                            self.generated_label_contents[i], self.batches_meta[i])
+        for batch in self.generated_batches.values():
+            self.save_batch(batch)
 
         self.save_dataset_meta()
         self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
@@ -165,8 +157,8 @@ class GridNavDatasetGenerator:
     def _generate_batch_data(batch_id, batch_meta, dataset_meta, seeds, batch_label_offsets):
         try:
             time_batch_start = time.perf_counter()
-            batch_g = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
-            batch_features, batch_label_ids, batch_label_contents = batch_g.generate_batch()
+            batch = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
+            batch_features, batch_label_ids, batch_label_contents = batch.generate_batch()
             batch_label_ids += batch_label_offsets[batch_id]
             time_batch_end = time.perf_counter()
             batch_generation_time = time_batch_end - time_batch_start
@@ -181,22 +173,22 @@ class GridNavDatasetGenerator:
         if data_size > 2 * 10 ** 9:
             raise RuntimeError(f'return data of total size {data_size} bytes can not be sent, too large.')
 
-        return batch_features, batch_label_ids, batch_label_contents, batch_id
+        return batch
 
     def normalise_metrics(self):
 
-            maximums = ["shortest_path", "resistance", "navigable_nodes"]
-            for key in maximums:
-                stack = []
-                for i in range(len(self.generated_label_contents)):
-                    stack.append(self.generated_label_contents[i][key])
-                stack = torch.cat(stack)
-                self.config.label_descriptors_config[key]['normalisation_factor'] = \
-                    float(stack.amax() * self.config.label_descriptors_config[key]['max'])
-                for i in range(len(self.generated_label_contents)):
-                    self.generated_label_contents[i][key] = \
-                        self.generated_label_contents[i][key].to(torch.float) \
-                        / self.config.label_descriptors_config[key]['normalisation_factor']
+        maximums = ["shortest_path", "resistance", "navigable_nodes"]
+        for key in maximums:
+            stack = []
+            for batch in self.generated_batches.values():
+                stack.append(batch.label_contents[key])
+            stack = torch.cat(stack)
+            self.config.label_descriptors_config[key]['normalisation_factor'] = \
+                float(stack.amax() * self.config.label_descriptors_config[key]['max'])
+            for batch_id in self.generated_batches.keys():
+                self.generated_batches[batch_id].label_contents[key] = \
+                    self.generated_batches[batch_id].label_contents[key].to(torch.float) \
+                    / self.config.label_descriptors_config[key]['normalisation_factor']
 
     def get_dataset_metadata(self):
         # TODO: would be easier to just instantiate all metadata as OmegaConf objects
@@ -314,24 +306,23 @@ class GridNavDatasetGenerator:
 
         return path
 
-    def save_batch(self, batch_data: List[Any], batch_labels: np.ndarray,
-                   batch_label_contents: Dict[int, Any], batch_meta: Dict[str, Any]):
+    def save_batch(self, batch: Batch):
 
-        filename = self.save_dir + batch_meta['output_file']
-        if isinstance(batch_labels, np.ndarray):
-            batch_labels = torch.tensor(batch_labels)
+        filename = self.save_dir + batch.batch_meta['output_file']
+        if isinstance(batch.label_ids, np.ndarray):
+            batch.label_ids = torch.tensor(batch.label_ids)
 
         # need to save (data, labels) and (label_contents, metadata) in 2 separate files because of limitations of
         # save_graphs()
-        logger.info(f"Saving Batch {batch_meta['batch_id']} to {filename}.")
+        logger.info(f"Saving Batch {batch.batch_meta['batch_id']} to {filename}.")
         if self.data_type=='graph':
-            entry = {'label_contents': batch_label_contents, 'batch_meta': batch_meta}
-            dgl.data.utils.save_graphs(filename, batch_data, {'labels': batch_labels})
+            entry = {'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
+            dgl.data.utils.save_graphs(filename, batch.features, {'labels': batch.label_ids})
             filename += '.meta'
-            logger.info(f"Saving Batch {batch_meta['batch_id']} Metadata to {filename}.")
+            logger.info(f"Saving Batch {batch.batch_meta['batch_id']} Metadata to {filename}.")
         else:
-            entry = {'data': batch_data, 'labels': batch_labels,
-                     'label_contents': batch_label_contents, 'batch_meta': batch_meta}
+            entry = {'data': batch.features, 'labels': batch.label_ids,
+                     'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
         with open(filename, 'wb') as f:
             pickle.dump(entry, f)
 
@@ -347,8 +338,8 @@ class GridNavDatasetGenerator:
     def check_unique(self):
 
         all_data = []
-        for data in self.generated_batches:
-            all_data.extend(data)
+        for batch in self.generated_batches.values():
+            all_data.extend(batch.features)
         features, _ = util.get_node_features(all_data, device=None) # TODO: add device?
         if not util.check_unique(features).all():
             logger.warning(f"There are duplicate features in the dataset.")
@@ -360,9 +351,14 @@ class GridNavDatasetGenerator:
 
         images = []
         task_structures = []
-        for label_content in self.generated_label_contents:
+        for batch in self.generated_batches.values():
+            label_content = batch.label_contents
             task_structures.extend(label_content['task_structure'][:n_per_batch])
-            images.extend(label_content['images'][:n_per_batch])
+            if 'images' in label_content:
+                images.extend(label_content['images'][:n_per_batch])
+            else:
+                img = batch.get_images([j for j in range(n_per_batch)])
+                images.extend(img)
 
         filename = 'layouts'
         path = os.path.join(self.save_dir, f'{filename}.png')
@@ -370,11 +366,6 @@ class GridNavDatasetGenerator:
                                        channels_first=True)
         logger.info(f"Saving layout thumbnails to {path}.")
         vutils.save_image(images, path)
-
-
-    # TODO: check_unique function on entire dataset (look at scratch.py in X())
-
-    # TODO: generate_layouts.png (look at scratch.py in X())
 
 
 class BatchGenerator:
@@ -495,6 +486,9 @@ class Batch:
 
         return start_nodes, goal_nodes
 
+    def get_images(self, indices: List[int]) -> List[np.ndarray]:
+        raise NotImplementedError
+
 
 class WaveCollapseBatch(Batch):
 
@@ -534,7 +528,6 @@ class WaveCollapseBatch(Batch):
 
             self.seeds = self.seeds[~remove_seeds]
             assert len(features) == len(self.seeds), "Number of generated patterns does not match number of seeds"
-
 
             features = np.array(features)
             features = self._pattern_to_minigrid_layout(features)
@@ -611,6 +604,12 @@ class WaveCollapseBatch(Batch):
                 graphs[i] = copy.deepcopy(g)
 
             return graphs
+
+        def get_images(self, idx: List[int]) -> List[torch.Tensor]:
+
+            data = [self.features[i] for i in idx]
+            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
+            return images
 
 
 class MazeBatch(Batch):
