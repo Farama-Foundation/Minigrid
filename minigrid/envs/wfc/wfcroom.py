@@ -136,7 +136,7 @@ class GridNavDatasetGenerator:
                 batch = GridNavDatasetGenerator._generate_batch_data(*arg)
                 self.generated_batches[batch.batch_meta['batch_id']] = batch
 
-        self.check_unique()
+        self.dataset_meta['unique_data'] = self.check_unique()
 
         if normalise_metrics: self.normalise_metrics()
 
@@ -200,6 +200,7 @@ class GridNavDatasetGenerator:
             'graph_feature_descriptors'        : self.config.graph_feature_descriptors,
             'minigrid_feature_descriptors'     : self.config.minigrid_feature_descriptors,
             'ensure_connected'                 : self.config.ensure_connected,
+            'unique_data'                      : None,
             }
 
         return dataset_meta
