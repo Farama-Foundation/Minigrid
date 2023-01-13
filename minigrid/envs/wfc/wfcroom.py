@@ -5,16 +5,10 @@ __package__ = "maze_representations"
 import copy
 import logging
 import time
-import multiprocessing
 from bounded_pool_executor import BoundedProcessPoolExecutor
-multiprocessing.set_start_method('spawn', True) #TODO: check if works
-#TODO: check with threadpoolexecutor.
-# TODO: otherwise give up and simply implement as single process code.
 import concurrent.futures
-
 import networkx as nx
 from torchvision import utils as vutils
-
 from omegaconf import DictConfig
 from typing import List, Tuple, Dict, Any, Union
 import numpy as np
@@ -27,14 +21,9 @@ import os
 import dgl
 import imageio
 
-from mazelib import Maze
-from mazelib.generate.Prims import Prims
-
 from util import make_grid_with_labels
-from .gym_minigrid.envs.multiroom_mod import MultiRoomEnv
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
-
 from .util import graph_metrics
 from .util import transforms as tr
 from .util import util as util
@@ -374,10 +363,6 @@ class BatchGenerator:
 
         if batch_meta['generating_algorithm'] == 'wave_function_collapse':
             instance = super().__new__(WaveCollapseBatch)
-        elif batch_meta['task_structure'] == 'maze':
-            instance = super().__new__(MazeBatch)
-        elif batch_meta['task_structure'] == 'rooms_unstructured_layout':
-            instance = super().__new__(RoomsUnstructuredBatch)
         else:
             raise KeyError("Task Structure was not recognised")
 
@@ -611,49 +596,6 @@ class WaveCollapseBatch(Batch):
             images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
             return images
 
-
-class MazeBatch(Batch):
-
-    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
-        super().__init__(batch_meta, dataset_meta, seeds)
-
-    def generate_data(self):
-        # Set up maze generator
-        maze_generator = Maze()
-        maze_size_arg = [int((x - 1) / 2) for x in self.dataset_meta['data_dim']]
-
-        # Set up generating algorithm
-        if self.batch_meta['generating_algorithm'] == 'Prims':
-            maze_generator.generator = Prims(*maze_size_arg)
-        else:
-            raise KeyError(f"Maze generating algorithm '{self.batch_meta['generating_algorithm']}' was not recognised")
-
-        batch_features = []
-        for i in range(self.batch_meta['batch_size']):
-            maze_generator.set_seed(int(self.seeds[i]))
-            maze_generator.generate()
-            maze_generator.generate_entrances(False, False)
-            features = tr.Nav2DTransforms.encode_maze_to_gridworld(maze_generator)
-            batch_features.append(features)
-
-        batch_features = np.squeeze(batch_features)
-        return batch_features
-
-
-class RoomsUnstructuredBatch(Batch):
-
-    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
-        super().__init__(batch_meta, dataset_meta, seeds)
-
-    def generate_data(self) -> Tuple[np.ndarray, np.ndarray, Dict[int, Any]]:
-        # Set up generator
-        envs = [MultiRoomEnv(minNumRooms=1, maxNumRooms=6, minRoomSize=5, maxRoomSize=9,
-                             grid_size=self.dataset_meta['data_dim'][0], odd=True,
-                             seed=int(self.seeds[i])) for i in range(self.batch_meta['batch_size'])]
-
-        batch_features = tr.Nav2DTransforms.encode_minigrid_to_gridworld(envs)
-
-        return batch_features
 
 if __name__ == '__main__':
     generate_dataset()
