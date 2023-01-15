@@ -2,6 +2,7 @@ import logging
 from typing import Tuple, List
 
 import numpy as np
+import math
 
 from gym_minigrid.agents import Lanes
 
@@ -213,7 +214,7 @@ class BlueAdlerPedAgent(PedAgent):
         for agent2 in sameAgents:
             gap = self.cellsBetween(agent2) # number of cells between?
             assert gap >= 0
-            print("gap: ", gap)
+            # print("gap: ", gap)
 
             if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 8
                 gap_same = min(gap_same, gap)
@@ -223,6 +224,7 @@ class BlueAdlerPedAgent(PedAgent):
     def computeOppGapAndAgent(self, opps: List[PedAgent]) -> Tuple[int, PedAgent]:
         """
         Warning, does not check if opps have same direction agents
+        returns 1 if the cell between is 1. 
         """
         closestOpp = None
         gap_opposite = self.pedVmax
@@ -232,10 +234,20 @@ class BlueAdlerPedAgent(PedAgent):
             # gap = self.distanceTo(agent2)
             gap = self.cellsBetween(agent2)
             assert gap >= 0
-            if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 4
-                if min(gap_opposite, gap // 2) == gap // 2:
-                    closestOpp = agent2
-                gap_opposite = min(gap_opposite, gap // 2)
+
+            gap_agent2 = math.ceil(gap / 2)
+
+            # print("cells between", gap)
+            # print("gap_agent2", gap_agent2)
+
+            if gap_agent2 <= gap_opposite:
+                closestOpp = agent2
+                gap_opposite = gap_agent2
+
+            # if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 4
+            #     if min(gap_opposite, gap // 2) == gap // 2:
+            #         closestOpp = agent2
+            #     gap_opposite = min(gap_opposite, gap // 2)
         
         return gap_opposite, closestOpp
 

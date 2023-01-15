@@ -2,7 +2,7 @@ import pytest
 from gym_minigrid.lib.Direction import Direction
 from gym_minigrid.agents import BlueAdlerPedAgent
 from gym_minigrid.agents import Lanes
-
+import math
 
 
 
@@ -65,10 +65,10 @@ def test_gp_opp_0_to_10_LR():
         pedVmax=pedVMax
     )
 
-    for expectedGap in range(10):
+    for cellsBetween in range(10):
         agent2 = BlueAdlerPedAgent(
             id=2,
-            position=(x+expectedGap+1,y),
+            position=(x+cellsBetween+1,y),
             direction=Direction.RL,
             speed=3,
             DML=False,
@@ -81,7 +81,10 @@ def test_gp_opp_0_to_10_LR():
         sameAgents, oppAgents = agent1.getSameAndOppositeAgents(agents, laneOffset=0)
         gap_opposite, closestOpp = agent1.computeOppGapAndAgent(oppAgents)
 
-        expectedGap = min(pedVMax*2, expectedGap)
+        expectedGap = min(pedVMax,  math.ceil(cellsBetween / 2))
         assert oppAgents == [agent2]
-        assert closestOpp == agent2
         assert gap_opposite == expectedGap
+        if math.ceil(cellsBetween / 2) <= pedVMax:
+            assert closestOpp == agent2
+        else:
+            assert closestOpp is None
