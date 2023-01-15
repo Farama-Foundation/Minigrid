@@ -48,6 +48,46 @@ def test_gap_facing_0():
     assert gap_opposite == 0
     # assert agentOppIndex == -1
 
+def test_gap_facing_inthesameplace_and_gap_is_negative():
+
+    pedVMax = 4
+
+    y = 1
+    x = 30
+
+    agent1 = BlueAdlerPedAgent(
+        id=1,
+        position=(x,y),
+        direction=Direction.LR,
+        speed=3,
+        DML=False,
+        p_exchg=0.0,
+        pedVmax=pedVMax
+    )
+
+    agent2 = BlueAdlerPedAgent(
+        id=2,
+        position=(x,y),
+        direction=Direction.RL,
+        speed=3,
+        DML=False,
+        p_exchg=0.0,
+        pedVmax=pedVMax
+    )
+
+    agents = [agent1, agent2]
+
+    sameAgents, oppAgents = agent1.getSameAndOppositeAgents(agents)
+
+    gap_opposite, closestOpp = agent1.computeOppGapAndAgent(oppAgents)
+
+    print(gap_opposite, closestOpp)
+
+    assert oppAgents == [agent2]
+    assert closestOpp == agent2
+
+    assert gap_opposite >= 0
+    # assert agentOppIndex == -1
 
 
 def test_gp_opp_0_to_10_LR():

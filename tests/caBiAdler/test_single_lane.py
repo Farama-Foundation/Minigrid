@@ -136,3 +136,53 @@ def test_2_agents_exchange(env):
     runSteps(env, 1)
     assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
     assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
+
+def test_2_agents_exchange_inthesameplace(env):
+    # create two agents facing each other
+
+    expectedGap = 1
+    expectedTranslation = expectedGap + 1
+    agents = []
+
+    agent1Position = (8,1)
+    agent1Speed = 3
+    agent1 = BlueAdlerPedAgent(
+        id=1,
+        position=agent1Position,
+        direction=Direction.LR,
+        maxSpeed=agent1Speed,
+        speed=agent1Speed,
+        DML=False,
+        p_exchg=1.0
+    )
+
+    agents.append(agent1)
+
+    agent2Position = (12,1)
+    agent2Speed = 3
+    agent2 = BlueAdlerPedAgent(
+        id=1,
+        position=agent2Position,
+        direction=Direction.RL,
+        maxSpeed=agent2Speed,
+        speed=agent2Speed,
+        DML=False,
+        p_exchg=1.0
+    )
+    agents.append(agent2)
+
+    # agent2 = BlueAdlerPedAgent(
+
+    env.addAgents(agents)
+
+    runSteps(env, 1, close=False)
+
+    assert agent1.position == (agent1Position[0] + expectedTranslation, agent1Position[1])
+    assert agent2.position == (agent2Position[0] - expectedTranslation, agent2Position[1])
+
+    agent1Position = agent1.position
+    agent2Position = agent2.position
+
+    runSteps(env, 1)
+    assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
+    assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
