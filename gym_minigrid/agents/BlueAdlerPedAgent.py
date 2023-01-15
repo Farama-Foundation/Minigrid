@@ -68,7 +68,7 @@ class BlueAdlerPedAgent(PedAgent):
         # logging.info(gaps)
         
         goodLanes = []
-        logging.debug('gaps', gaps)
+        # logging.info('gaps', gaps)
         # DML(Dynamic Multiple Lanes)
         if self.DML and gaps[0][3] is not None: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
             gaps[0][0] = 0 # set gap = 0
@@ -114,6 +114,8 @@ class BlueAdlerPedAgent(PedAgent):
         self.gapOpp = gaps[lane][2]
         self.closestOpp = gaps[lane][3]
 
+        logging.info(f"Parallel 1 gap: {self.gap}, gapSame: {self.gapSame}, gapOpp: {self.gapOpp}")
+
         # return lane
         
         return self.convertLaneDecisionToAction(lane)
@@ -135,7 +137,8 @@ class BlueAdlerPedAgent(PedAgent):
                 self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
             else:
                 self.speed = 0
-        # logging.info("Gap: " + str(self.gap) + " GapOpp: " + str(self.gapOpp))
+
+        logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
         return Action(self, ForwardAction.KEEP)
         
@@ -157,10 +160,13 @@ class BlueAdlerPedAgent(PedAgent):
 
         gap_opposite, closestOpp = self.computeOppGapAndAgent(oppositeAgents)
 
+
         # if gap > maxSpeed, we only use maxSpeed since we pick lanes in parallel1 with gap size
         # Anything > maxSpeed is irrelevant because it doesn't affect agent movement
         # doesn't affect parallel2 because maxSpeed >= 2 and parallel2 checks for == 0 or <= 1
         gap = min(self.maxSpeed, min(gap_same, gap_opposite))
+        print(f"self position: {self.position}")
+        print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
         return gap, gap_same, gap_opposite, closestOpp
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:
