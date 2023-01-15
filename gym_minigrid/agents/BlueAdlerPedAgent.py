@@ -202,14 +202,22 @@ class BlueAdlerPedAgent(PedAgent):
     def inTheRelevantLane(self, agent2: PedAgent, laneOffset=0) -> bool:
         return (self.position[1] + laneOffset) == agent2.position[1]
 
+    def distanceTo(self, other:PedAgent) -> int:
+        return abs(self.position[0] - other.position[0])
+    
+    def cellsBetween(self, other: PedAgent) -> int:
+        return self.distanceTo(other) - 1
+
     def computeSameGap(self, sameAgents: List[PedAgent]) -> int:
         gap_same = 2 * self.pedVmax
         for agent2 in sameAgents:
-            gap = abs(self.position[0] - agent2.position[0]) - 1
+            gap = self.cellsBetween(agent2) # number of cells between?
             assert gap >= 0
+            print("gap: ", gap)
 
-        if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 8
-            gap_same = min(gap_same, gap)
+            if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 8
+                gap_same = min(gap_same, gap)
+                
         return gap_same
 
     def computeOppGapAndIndex(self, opps: List[PedAgent]) -> Tuple[int, int]:
@@ -221,7 +229,8 @@ class BlueAdlerPedAgent(PedAgent):
 
         for i, agent2 in enumerate(opps):
             
-            gap = abs(self.position[0] - agent2.position[0]) - 1
+            # gap = self.distanceTo(agent2)
+            gap = self.cellsBetween(agent2)
             assert gap >= 0
             if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 4
                 if min(gap_opposite, gap // 2) == gap // 2:
