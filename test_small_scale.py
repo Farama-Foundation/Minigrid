@@ -11,24 +11,20 @@ import pickle
 
 logging.basicConfig(level=logging.INFO)
 
-# from gym_minigrid.envs import MultiPedestrianEnv
-# %matplotlib auto
-# %load_ext autoreload
-# %autoreload 2
 
 values = np.zeros((6, 19, 3)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
-for dirSplitInt in range(5, 11):
+for dirSplitInt in range(5, 11, 2):
     for densityInt in range(1, 20):
 
         # Load the gym environment
         env = gym.make('MultiPedestrian-Empty-20x80-v0')
-        metricCollector = MetricCollector(env)
+        metricCollector = MetricCollector(env, 0, 100)
         agents = []
 
         density = round(0.05 * densityInt, ndigits=2)
         # density = 0.04
         DML = False
-        p_exchg = 0.0 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
+        p_exchg = 1 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
         dirSplit = round(dirSplitInt/10, ndigits=1)
         # dirSplit = 0.5
 
@@ -53,7 +49,7 @@ for dirSplitInt in range(5, 11):
 
         env.reset()
 
-        for i in range(1100):
+        for i in range(100):
 
             obs, reward, done, info = env.step(None)
             
@@ -61,7 +57,7 @@ for dirSplitInt in range(5, 11):
                 "Reached the goal"
                 break
 
-            # env.render()
+            env.render()
 
             if i % 100 == 0:
                 logging.info(f"Completed step {i+1}")
@@ -77,12 +73,12 @@ for dirSplitInt in range(5, 11):
         avgVolume = sum(volumeStats) / len(volumeStats)
         logging.info("Average volume: " + str(avgVolume))
 
-        values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
-        values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
-        values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
+        # values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
+        # values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
+        # values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
 
         # Test the close method
         env.close()
 
-with open(f"testing.pickle", "wb") as f:
-    pickle.dump(values, f)
+# with open(f"testing.pickle", "wb") as f:
+#     pickle.dump(values, f)

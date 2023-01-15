@@ -82,7 +82,7 @@ class BlueAdlerPedAgent(PedAgent):
             maxGap = 0
             for i in range(3):
                 maxGap = max(maxGap, gaps[i][0])
-            logging.debug('maxgap', maxGap)
+            # logging.debug('maxgap', maxGap)
             for i in range(3):
                 if maxGap == gaps[i][0]:
                     goodLanes.append(i)
@@ -114,7 +114,7 @@ class BlueAdlerPedAgent(PedAgent):
         self.gapOpp = gaps[lane][2]
         self.closestOpp = gaps[lane][3]
 
-        logging.info(f"Parallel 1 gap: {self.gap}, gapSame: {self.gapSame}, gapOpp: {self.gapOpp}")
+        # logging.info(f"Parallel 1 gap: {self.gap}, gapSame: {self.gapSame}, gapOpp: {self.gapOpp}")
 
         # return lane
         
@@ -140,7 +140,7 @@ class BlueAdlerPedAgent(PedAgent):
             else:
                 self.speed = 0
 
-        logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
+        # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
         return Action(self, ForwardAction.KEEP)
         
@@ -167,8 +167,8 @@ class BlueAdlerPedAgent(PedAgent):
         # Anything > maxSpeed is irrelevant because it doesn't affect agent movement
         # doesn't affect parallel2 because maxSpeed >= 2 and parallel2 checks for == 0 or <= 1
         gap = min(self.maxSpeed, min(gap_same, gap_opposite))
-        print(f"self position: {self.position}")
-        print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
+        # print(f"self position: {self.position}")
+        # print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
         return gap, gap_same, gap_opposite, closestOpp
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:
@@ -190,12 +190,12 @@ class BlueAdlerPedAgent(PedAgent):
         return sames, opps
 
     def isFollowing(self, other:PedAgent) -> bool:
-        if self.direction != other.direction:
+        if self.direction != other.direction:# or self.position == other.position:
             return False
         return self.isBehind(other)
 
     def isFacing(self, other: PedAgent) -> bool:
-        if self.direction == other.direction:
+        if self.direction == other.direction:# or self.position == other.position:
             return False
         return self.isBehind(other)
 
