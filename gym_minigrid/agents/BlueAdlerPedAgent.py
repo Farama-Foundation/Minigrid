@@ -131,7 +131,9 @@ class BlueAdlerPedAgent(PedAgent):
     def parallel2(self, env): # TODO add type
         agents = env.agents
         self.speed = self.gap
-        if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
+        # if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
+        # if self.gap < self.pedVmax and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
+        if self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
                 self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
