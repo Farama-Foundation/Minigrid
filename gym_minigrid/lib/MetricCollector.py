@@ -58,7 +58,7 @@ class MetricCollector:
             elif agent.direction == 2 and agent.position[0] > self.previousState[agent]["position"][0]:
                 revolutions += 1
         
-        self.volumeStats.append(revolutions/(env.height - 2))
+        self.volumeStats.append(revolutions*self.stepStats["xSpeed"][-1]/(env.height - 2))
     
     def collectSpeed(self, env):
         totalXSpeed = 0

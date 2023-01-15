@@ -16,13 +16,15 @@ class MultiPedestrianEnv(MiniGridEnv):
         self,
         agents: List[Agent]=None,
         width=8,
-        height=8
+        height=8,
+        stepsIgnore = 100
     ):
+
         if agents is None:
             self.agents = []
         else:
             self.agents = agents
-
+        self.stepsIgnore = stepsIgnore
         super().__init__(
             width=width,
             height=height,
@@ -77,8 +79,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         return agents/cells
 
     def getAverageSpeed(self):
-        stepsIgnoring = 100
-        return self.stepsTaken / len(self.agents) / (self.step_count - stepsIgnoring)
+
+        return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
 
     def removeAgent(self, agent):
         if agent in self.agents:
@@ -90,11 +92,12 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def forwardAgent(self, agent: Agent):
         # TODO DONE
-        if self.step_count >= 100:
+        if self.step_count >= self.stepsIgnore:
             self.stepsTaken += agent.speed
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
+        # print("Id ", agent.id, "speed ", agent.speed)
         # if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
         #     if fwd_pos[0] <= 0:
         #         agent.position = (1, agent.position[1])
@@ -416,6 +419,18 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
             height=height,
             agents=None
         )
+
+class MultiPedestrianEnv5x20(MultiPedestrianEnv):
+    def __init__(self):
+        width = 40
+        height = 5 # actual height: 10 + 2 gray square on top and bottom
+        super().__init__(
+            width=width,
+            height=height,
+            agents=None,
+            stepsIgnore=0
+        )
+
 class MultiPedestrianEnv1x20(MultiPedestrianEnv):
     def __init__(self):
         width = 20
@@ -429,6 +444,10 @@ class MultiPedestrianEnv1x20(MultiPedestrianEnv):
 register(
     id='MultiPedestrian-Empty-20x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+)
+register(
+    id='MultiPedestrian-Empty-5x20-v0',
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv5x20'
 )
 register(
     id='MultiPedestrian-Empty-1x20-v0',

@@ -38,6 +38,7 @@ class BlueAdlerPedAgent(PedAgent):
         )
 
         self.pedVmax = pedVmax
+        # self.speedFixed = True
 
 
 
@@ -53,6 +54,7 @@ class BlueAdlerPedAgent(PedAgent):
         Returns:
             _type_: 0 to keep lane, 1 shiftLeft, 2 shiftRight
         """
+        # self.speedFixed = False
         agents = env.agents
         #TODO Simulate lane change
         gaps = [None] * 3
@@ -129,14 +131,25 @@ class BlueAdlerPedAgent(PedAgent):
             return Action(self, LaneAction.RIGHT)
 
     def parallel2(self, env): # TODO add type
+        # if self.speedFixed == True:
+        #     return Action(self, ForwardAction.KEEP)
+
         agents = env.agents
         self.speed = self.gap
+        # self.speedFixed = True
         if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
                 self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
+                # just testing out
+                # print("here")
+                # self.speed = abs(self.position[0] - self.closestOpp.position[0])
+                # self.closestOpp.speed = self.speed
+                
             else:
                 self.speed = 0
+                self.closestOpp.speed = 0
+            self.closestOpp.speedFixed = True
 
         # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
