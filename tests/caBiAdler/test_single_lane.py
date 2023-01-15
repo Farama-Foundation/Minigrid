@@ -140,7 +140,7 @@ def test_2_agents_exchange(env):
 def test_2_agents_exchange_inthesameplace(env):
     # create two agents facing each other
 
-    expectedGap = 1
+    expectedGap = 2
     expectedTranslation = expectedGap + 1
     agents = []
 
@@ -186,3 +186,14 @@ def test_2_agents_exchange_inthesameplace(env):
     runSteps(env, 1)
     assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
     assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
+
+
+
+# opposite gap issues
+# if gap = floor(cellsBetween / 2)
+# case cells = 0, gap = 0, speed=1, they do not overlap
+# cells = 1, gap = 0, speed = 1 they do not overlap
+# cells = 2, gap = 1, speed = 2, they do not overlap
+# cells = 3, gap = 1, speed = 2 they do not overlap
+# cells = 4, gap = 2, speed = 3 they do not overlap
+# cells = 5, gap = 2, speed = 3 they do not overlap

@@ -47,13 +47,27 @@ for dirSplitInt in range(5, 11):
             randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
             pos = possibleCoordinates[randomIndex]
             direction = 2 if np.random.random() > dirSplit else 0
-            agents.append(BlueAdlerPedAgent(i, pos, direction, DML, p_exchg))
+            speed = np.random.choice([1, 2, 3, 4])
+            # speed = 4
+            # agents.append(BlueAdlerPedAgent(i, pos, direction, DML, p_exchg))
+            agents.append(
+                BlueAdlerPedAgent(
+                    id=i,
+                    position=pos,
+                    direction=direction,
+                    maxSpeed=speed,
+                    speed=speed,
+                    DML=DML,
+                    p_exchg=p_exchg,
+                    pedVmax=4
+                )
+            )
             del possibleCoordinates[randomIndex]
         env.addAgents(agents)
 
         env.reset()
 
-        for i in range(1100):
+        for i in range(15):
 
             obs, reward, done, info = env.step(None)
             
@@ -61,7 +75,7 @@ for dirSplitInt in range(5, 11):
                 "Reached the goal"
                 break
 
-            # env.render()
+            env.render()
 
             if i % 100 == 0:
                 logging.info(f"Completed step {i+1}")
