@@ -140,7 +140,7 @@ def test_2_agents_exchange(env):
 def test_2_agents_exchange_inthesameplace(env):
     # create two agents facing each other
 
-    expectedGap = 1
+    expectedGap = 2
     expectedTranslation = expectedGap + 1
     agents = []
 

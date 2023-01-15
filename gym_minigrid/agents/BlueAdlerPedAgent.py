@@ -190,12 +190,12 @@ class BlueAdlerPedAgent(PedAgent):
         return sames, opps
 
     def isFollowing(self, other:PedAgent) -> bool:
-        if self.direction != other.direction:# or self.position == other.position:
+        if self.direction != other.direction:
             return False
         return self.isBehind(other)
 
     def isFacing(self, other: PedAgent) -> bool:
-        if self.direction == other.direction:# or self.position == other.position:
+        if self.direction == other.direction:
             return False
         return self.isBehind(other)
 
