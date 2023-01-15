@@ -67,7 +67,9 @@ def test_game_same_0():
 
     agents = [agent1, agent2]
 
-    gap_opposite, agentOppIndex = agent1.computeOppGapAndIndex([agent2])
+    sameAgents, oppAgents = agent1.getSameAndOppositeAgents(agents)
+
+    gap_opposite, agentOppIndex = agent1.computeOppGapAndIndex(oppAgents)
 
     print(gap_opposite, agentOppIndex)
 

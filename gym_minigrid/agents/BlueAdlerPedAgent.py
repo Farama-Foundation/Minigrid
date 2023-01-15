@@ -164,14 +164,17 @@ class BlueAdlerPedAgent(PedAgent):
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:
 
+        # TODO handle all the corner cases
         opps = []
         sames = []
         for agent2 in agents:
 
             if self.inTheRelevantLane(agent2, laneOffset=laneOffset):
                 if self.direction == agent2.direction:
+                    # TODO if self is following agent2
                     sames.append(agent2)
                 else:
+                    # TODO if self is actually facing agent2
                     opps.append(agent2)
 
         return sames, opps
