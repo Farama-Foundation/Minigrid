@@ -7,22 +7,26 @@ from gym_minigrid.agents import Lanes
 
 
 
-def test_game_same_0():
+def test_gap_facing_0():
 
     pedVMax = 4
 
+    y = 1
+    x = 30
+
     agent1 = BlueAdlerPedAgent(
         id=1,
-        position=(3,1),
+        position=(x,y),
         direction=Direction.LR,
         speed=3,
         DML=False,
         p_exchg=0.0,
         pedVmax=pedVMax
     )
+
     agent2 = BlueAdlerPedAgent(
         id=2,
-        position=(2,1),
+        position=(x + 1,1),
         direction=Direction.RL,
         speed=3,
         DML=False,
@@ -38,5 +42,7 @@ def test_game_same_0():
 
     print(gap_opposite, agentOppIndex)
 
-    assert gap_opposite == pedVMax
-    assert agentOppIndex == -1
+    assert oppAgents == [agent2]
+
+    assert gap_opposite == 0
+    # assert agentOppIndex == -1

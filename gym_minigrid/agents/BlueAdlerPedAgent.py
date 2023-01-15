@@ -69,7 +69,7 @@ class BlueAdlerPedAgent(PedAgent):
         goodLanes = []
         logging.debug('gaps', gaps)
         # DML(Dynamic Multiple Lanes)
-        if self.DML and gaps[0][3] != -1: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
+        if self.DML and gaps[0][3] is not None: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
             gaps[0][0] = 0 # set gap = 0
             if gaps[1][1] == 0: # check if left lane gapSame == 0
                 goodLanes.append(1)
@@ -111,7 +111,7 @@ class BlueAdlerPedAgent(PedAgent):
         self.gap = gaps[lane][0]
         self.gapSame = gaps[lane][1]
         self.gapOpp = gaps[lane][2]
-        self.agentOppIndex = gaps[lane][3]
+        self.closestOpp = gaps[lane][3]
 
         # return lane
         
@@ -131,7 +131,7 @@ class BlueAdlerPedAgent(PedAgent):
         if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
-                agents[self.agentOppIndex].speed = self.gap + 1
+                self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
             else:
                 self.speed = 0
         # logging.info("Gap: " + str(self.gap) + " GapOpp: " + str(self.gapOpp))
@@ -139,7 +139,7 @@ class BlueAdlerPedAgent(PedAgent):
         return Action(self, ForwardAction.KEEP)
         
 
-    def computeGap(self, agents, lane, env=None):
+    def computeGap(self, agents, lane, env=None) -> Tuple[int, int, int, PedAgent]:
         """
         Compute the gap (basically the possible speed ) according to the paper
         """
@@ -154,13 +154,13 @@ class BlueAdlerPedAgent(PedAgent):
        
         gap_same = self.computeSameGap(sameAgents)
 
-        gap_opposite, agentOppIndex = self.computeOppGapAndIndex(oppositeAgents)
+        gap_opposite, closestOpp = self.computeOppGapAndAgent(oppositeAgents)
 
         # if gap > maxSpeed, we only use maxSpeed since we pick lanes in parallel1 with gap size
         # Anything > maxSpeed is irrelevant because it doesn't affect agent movement
         # doesn't affect parallel2 because maxSpeed >= 2 and parallel2 checks for == 0 or <= 1
         gap = min(self.maxSpeed, min(gap_same, gap_opposite))
-        return gap, gap_same, gap_opposite, agentOppIndex
+        return gap, gap_same, gap_opposite, closestOpp
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:
 
@@ -217,14 +217,14 @@ class BlueAdlerPedAgent(PedAgent):
 
             if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 8
                 gap_same = min(gap_same, gap)
-                
+
         return gap_same
 
-    def computeOppGapAndIndex(self, opps: List[PedAgent]) -> Tuple[int, int]:
+    def computeOppGapAndAgent(self, opps: List[PedAgent]) -> Tuple[int, PedAgent]:
         """
         Warning, does not check if opps have same direction agents
         """
-        agentOppIndex = -1
+        closestOpp = None
         gap_opposite = self.pedVmax
 
         for i, agent2 in enumerate(opps):
@@ -234,9 +234,9 @@ class BlueAdlerPedAgent(PedAgent):
             assert gap >= 0
             if gap >= 0 and gap <= 2 * self.pedVmax: # gap must not be negative and less than 4
                 if min(gap_opposite, gap // 2) == gap // 2:
-                    agentOppIndex = i
+                    closestOpp = agent2
                 gap_opposite = min(gap_opposite, gap // 2)
         
-        return gap_opposite, agentOppIndex
+        return gap_opposite, closestOpp
 
 
