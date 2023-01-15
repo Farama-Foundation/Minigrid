@@ -7,7 +7,7 @@ import gym
 import numpy as np
 
 import gym_minigrid
-from gym_minigrid.agents import PedAgent
+from gym_minigrid.agents import BlueAdlerPedAgent
 from gym_minigrid.lib.MetricCollector import MetricCollector
 from gym_minigrid.wrappers import *
 from gym_minigrid.lib.Direction import Direction
@@ -42,7 +42,7 @@ def test_2_agents(env):
 
     agent1Position = (3,1)
     agent1Speed = 3
-    agent1 = PedAgent(
+    agent1 = BlueAdlerPedAgent(
         id=1,
         position=(3,1),
         direction=Direction.LR,
@@ -55,7 +55,7 @@ def test_2_agents(env):
 
     agent2Position = (6,1)
     agent2Speed = 3
-    agent2 = PedAgent(
+    agent2 = BlueAdlerPedAgent(
         id=1,
         position=(6,1),
         direction=Direction.RL,
@@ -65,7 +65,7 @@ def test_2_agents(env):
     )
     agents.append(agent2)
 
-    # agent2 = PedAgent(
+    # agent2 = BlueAdlerPedAgent(
 
     env.addAgents(agents)
 
