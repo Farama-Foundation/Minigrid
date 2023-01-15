@@ -414,7 +414,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
         width = 50
-        height = 3 # actual height: 10 + 2 gray square on top and bottom
+        height = 12 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,

@@ -26,7 +26,7 @@ for dirSplitInt in range(5, 11):
         agents = []
 
         # density = round(0.05 * densityInt, ndigits=2)
-        density = 0.04
+        density = 0.5
         DML = False
         p_exchg = 0.0 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
         # dirSplit = round(dirSplitInt/10, ndigits=1)
@@ -66,7 +66,7 @@ for dirSplitInt in range(5, 11):
             if i % 100 == 0:
                 logging.info(f"Completed step {i+1}")
 
-            time.sleep(2)
+            # time.sleep(2)
 
         logging.info(env.getAverageSpeed())
 
