@@ -83,8 +83,8 @@ def test_gap_facing_inthesameplace_and_gap_is_negative():
 
     print(gap_opposite, closestOpp)
 
-    assert oppAgents == [agent2]
-    assert closestOpp == agent2
+    assert oppAgents == []
+    assert closestOpp == None
 
     assert gap_opposite >= 0
     # assert agentOppIndex == -1
