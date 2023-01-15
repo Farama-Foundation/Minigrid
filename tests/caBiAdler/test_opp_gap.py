@@ -48,7 +48,7 @@ def test_gap_facing_0():
     assert gap_opposite == 0
     # assert agentOppIndex == -1
 
-@pytest.mark.skip 
+@pytest.mark.xfail 
 def test_gap_facing_inthesameplace_and_gap_is_negative(): # should be impossible
 
     pedVMax = 4
