@@ -4,7 +4,9 @@ from gym_minigrid.agents import BlueAdlerPedAgent
 from gym_minigrid.agents import Lanes
 
 
-@pytest.mark.xfail()
+
+
+
 def test_game_same_0():
 
     pedVMax = 4
@@ -20,8 +22,8 @@ def test_game_same_0():
     )
     agent2 = BlueAdlerPedAgent(
         id=2,
-        position=(3,1),
-        direction=Direction.LR,
+        position=(2,1),
+        direction=Direction.RL,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -30,13 +32,11 @@ def test_game_same_0():
 
     agents = [agent1, agent2]
 
-    gap, gap_same, gap_opposite, agentOppIndex = agent1.computeGap(agents, Lanes.currentLane)
+    sameAgents, oppAgents = agent1.getSameAndOppositeAgents(agents)
 
-    print(gap, gap_same, gap_opposite, agentOppIndex)
+    gap_opposite, agentOppIndex = agent1.computeOppGapAndIndex(oppAgents)
 
-    assert gap == 0
-    assert gap_same == 0
+    print(gap_opposite, agentOppIndex)
+
     assert gap_opposite == pedVMax
     assert agentOppIndex == -1
-
-

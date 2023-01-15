@@ -169,15 +169,35 @@ class BlueAdlerPedAgent(PedAgent):
         sames = []
         for agent2 in agents:
 
+            if agent2 == self:
+                continue
+
             if self.inTheRelevantLane(agent2, laneOffset=laneOffset):
-                if self.direction == agent2.direction:
-                    # TODO if self is following agent2
+                if self.isFollowing(agent2):
                     sames.append(agent2)
-                else:
-                    # TODO if self is actually facing agent2
+                elif self.isFacing(agent2):
                     opps.append(agent2)
 
         return sames, opps
+
+    def isFollowing(self, other:PedAgent) -> bool:
+        if self.direction != other.direction:
+            return False
+        return self.isBehind(other)
+
+    def isFacing(self, other: PedAgent) -> bool:
+        if self.direction == other.direction:
+            return False
+        return self.isBehind(other)
+
+    def isBehind(self, other:PedAgent) -> bool:
+
+        if self.direction == Direction.LR and self.position[0] > other.position[0]:
+            return False
+        if self.direction == Direction.RL and self.position[0] < other.position[0]:
+            return False
+        return True
+
     
     def inTheRelevantLane(self, agent2: PedAgent, laneOffset=0) -> bool:
         return (self.position[1] + laneOffset) == agent2.position[1]
