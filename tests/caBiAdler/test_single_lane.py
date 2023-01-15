@@ -74,6 +74,56 @@ def test_2_agents(env):
     assert agent1.position == agent1Position
     assert agent2.position == agent2Position
 
-    runSteps(env, 2)
+    runSteps(env, 1)
     assert agent1.position == agent1Position
     assert agent2.position == agent2Position
+
+    assert False
+
+
+
+@pytest.mark.caBiAdler
+def test_2_agents_exchange(env):
+    # create two agents facing each other
+
+    agents = []
+
+    agent1Position = (3,1)
+    agent1Speed = 3
+    agent1 = BlueAdlerPedAgent(
+        id=1,
+        position=(3,1),
+        direction=Direction.LR,
+        speed=agent1Speed,
+        DML=False,
+        p_exchg=0.9
+    )
+
+    agents.append(agent1)
+
+    agent2Position = (6,1)
+    agent2Speed = 3
+    agent2 = BlueAdlerPedAgent(
+        id=1,
+        position=(6,1),
+        direction=Direction.RL,
+        speed=agent2Speed,
+        DML=False,
+        p_exchg=0.9
+    )
+    agents.append(agent2)
+
+    # agent2 = BlueAdlerPedAgent(
+
+    env.addAgents(agents)
+
+    runSteps(env, 1, close=False)
+
+    assert agent1.position == agent2Position
+    assert agent2.position == agent1Position
+
+    runSteps(env, 1)
+    assert agent1.position == agent1Position
+    assert agent2.position == agent2Position
+
+    assert False

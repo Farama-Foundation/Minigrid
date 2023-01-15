@@ -55,7 +55,7 @@ class BlueAdlerPedAgent(PedAgent):
         """
         agents = env.agents
         #TODO Simulate lane change
-        gaps = np.zeros((3, 4)).astype(int)
+        gaps = [None] * 3
         gaps[0] = self.computeGap(agents, Lanes.currentLane, env)
         if self.canShiftLeft == True:
             gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
