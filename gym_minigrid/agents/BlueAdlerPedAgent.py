@@ -132,15 +132,15 @@ class BlueAdlerPedAgent(PedAgent):
         agents = env.agents
         self.speed = self.gap
         # if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
-        # if self.gap < self.pedVmax and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
-        if self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
+        if self.gap < self.pedVmax and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
+        # if self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
                 self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
             else:
                 self.speed = 0
 
-        # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
+        logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
         return Action(self, ForwardAction.KEEP)
         
@@ -221,6 +221,8 @@ class BlueAdlerPedAgent(PedAgent):
         gap_same = 2 * self.pedVmax
         for agent2 in sameAgents:
             gap = self.cellsBetween(agent2) # number of cells between?
+            if gap < 0:
+                print(f"gap: {gap}, {self.position}, {agent2.position}")
             assert gap >= 0
             # print("gap: ", gap)
 
@@ -235,12 +237,14 @@ class BlueAdlerPedAgent(PedAgent):
         returns 1 if the cell between is 1. 
         """
         closestOpp = None
-        gap_opposite = self.pedVmax
+        gap_opposite = self.pedVmax * 2
 
         for i, agent2 in enumerate(opps):
             
             # gap = self.distanceTo(agent2)
             gap = self.cellsBetween(agent2)
+            if gap < 0:
+                print(f"gap: {gap}, {self.position}, {agent2.position}")
             assert gap >= 0
 
             gap_agent2 = math.ceil(gap / 2)
