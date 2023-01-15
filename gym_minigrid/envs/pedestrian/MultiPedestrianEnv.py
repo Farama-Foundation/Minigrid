@@ -117,7 +117,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-            agent.position = fwd_pos
+            agent.position = (fwd_pos[0], fwd_pos[1])
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
@@ -410,10 +410,20 @@ class MultiPedestrianEnv(MiniGridEnv):
     #endregion
 
     
+# TODO extract the following to a registration file
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 50
+        width = 80
+        height = 20 # actual height: 10 + 2 gray square on top and bottom
+        super().__init__(
+            width=width,
+            height=height,
+            agents=None
+        )
+class MultiPedestrianEnv1x20(MultiPedestrianEnv):
+    def __init__(self):
+        width = 20
         height = 3 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
@@ -424,4 +434,8 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
 register(
     id='MultiPedestrian-Empty-20x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+)
+register(
+    id='MultiPedestrian-Empty-1x20-v0',
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv1x20'
 )

@@ -1,13 +1,17 @@
-import time
+import logging
 import random
+import time
+
+import pytest
+
 import gym
 import numpy as np
+import pickle5 as pickle
+
 import gym_minigrid
-from gym_minigrid.wrappers import *
 from gym_minigrid.agents import PedAgent
 from gym_minigrid.lib.MetricCollector import MetricCollector
-import logging
-import pickle5 as pickle
+from gym_minigrid.wrappers import *
 
 logging.basicConfig(level=logging.INFO)
 
