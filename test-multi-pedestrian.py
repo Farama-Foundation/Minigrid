@@ -6,7 +6,7 @@ import pytest
 
 import gym
 import numpy as np
-import pickle5 as pickle
+import pickle
 
 import gym_minigrid
 from gym_minigrid.agents import PedAgent
