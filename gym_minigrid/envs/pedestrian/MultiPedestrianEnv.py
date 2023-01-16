@@ -6,6 +6,7 @@ from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.Direction import Direction
 from .EnvEvent import EnvEvent
 import logging
 import random
@@ -108,11 +109,15 @@ class MultiPedestrianEnv(MiniGridEnv):
         if fwd_pos[0] < 1:
             # random may introduce conflict
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
-            agent.position = (self.width - 2, agent.position[1])
+            # agent.position = (self.width - 2, agent.position[1])
+            agent.position = (1, agent.position[1])
+            agent.direction = Direction.LR
             return
         elif fwd_pos[0] > self.width - 2:
             # agent.position = (1, random.randint(1, self.height - 2))
-            agent.position = (1, agent.position[1])
+            # agent.position = (1, agent.position[1])
+            agent.position = (self.width - 2, agent.position[1])
+            agent.direction = Direction.RL
             return
 
         # Get the contents of the cell in front of the agent

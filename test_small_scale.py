@@ -17,11 +17,13 @@ logging.basicConfig(level=logging.INFO)
 den = []
 vols = []
 p = []
+split = []
+speeds = []
 
 values = np.zeros((6, 19, 3)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
-# for dirSplitInt in range(9, 10):
-for prob in [0, 0.25, 0.5, 0.75, 1]:
-    for densityInt in range(10, 20):
+for dirSplitInt in range(5, 11):
+# for p_exchg in [0, 0.25, 0.5, 0.75, 1]:
+    for densityInt in range(1, 20, 2):
         
         # Load the gym environment
         env = gym.make('MultiPedestrian-Empty-5x20-v0')
@@ -33,8 +35,8 @@ for prob in [0, 0.25, 0.5, 0.75, 1]:
         # density = 0.04
         DML = False
         p_exchg = 1 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
-        # dirSplit = round(dirSplitInt/10, ndigits=1)
-        dirSplit = 0.9
+        dirSplit = round(dirSplitInt/10, ndigits=1)
+        # dirSplit = 0.9
 
         print("Density: " + str(density) + " Directional Split: " + str(dirSplit))
 
@@ -59,7 +61,7 @@ for prob in [0, 0.25, 0.5, 0.75, 1]:
                 speed = 2
             else:
                 speed = 4
-            agents.append(BlueAdlerPedAgent(i, pos, direction, speed, speed, DML, prob, speed))
+            agents.append(BlueAdlerPedAgent(i, pos, direction, speed, speed, DML, p_exchg, speed))
             del possibleCoordinates[randomIndex]
         env.addAgents(agents)
 
@@ -73,25 +75,27 @@ for prob in [0, 0.25, 0.5, 0.75, 1]:
                 "Reached the goal"
                 break
 
-            env.render()
+            # env.render()
 
 
             if i % 10 == 0:
                 logging.info(f"Completed step {i+1}")
 
-            time.sleep(2)
+            # time.sleep(2)
 
         logging.info(env.getAverageSpeed())
 
         stepStats = metricCollector.getStatistics()[0]
-        avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
+        avgSpeed = sum(stepStats["ySpeed"]) / len(stepStats["ySpeed"])
         logging.info("Average speed: " + str(avgSpeed))
         volumeStats = metricCollector.getStatistics()[1]
         avgVolume = sum(volumeStats) / len(volumeStats)
         logging.info("Average volume: " + str(avgVolume))
-        vols.append(40*avgVolume)
+        vols.append(avgVolume)
         den.append(density)
-        p.append(prob)
+        p.append(p_exchg)
+        split.append(dirSplit)
+        speeds.append(env.getAverageSpeed())
         # values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
         # values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
         # values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
@@ -99,11 +103,11 @@ for prob in [0, 0.25, 0.5, 0.75, 1]:
         # Test the close method
 
         env.close()
-data = {"den":den, "vols":vols, "p": p}
+data = {"den":den, "vols":vols, "p": p, "split":split, "speed":speeds}
 data = pd.DataFrame(data)
 
 print(data)
-sns.lineplot(data=data, x="den", y="vols", hue="p", palette = "flag", markers=True)
+sns.lineplot(data=data, x="den", y="speed", hue="split", palette = "flag", markers=True)
 plt.show()
 # with open(f"testing.pickle", "wb") as f:
 #     pickle.dump(values, f)

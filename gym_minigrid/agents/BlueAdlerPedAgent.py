@@ -73,7 +73,7 @@ class BlueAdlerPedAgent(PedAgent):
         # logging.info('gaps', gaps)
         # DML(Dynamic Multiple Lanes)
         if self.DML and gaps[0][3] is not None: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
-            gaps[0][0] = 0 # set gap = 0
+            gaps[0] = (0, gaps[0][1], gaps[0][2], gaps[0][3]) # set gap = 0
             if gaps[1][1] == 0: # check if left lane gapSame == 0
                 goodLanes.append(1)
             if gaps[2][1] == 0: # check if right lane gapSame == 0
@@ -152,7 +152,7 @@ class BlueAdlerPedAgent(PedAgent):
                 self.closestOpp.speed = 0
             self.closestOpp.speedFixed = True
 
-        logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
+        # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
         return Action(self, ForwardAction.KEEP)
         
@@ -180,7 +180,7 @@ class BlueAdlerPedAgent(PedAgent):
         # doesn't affect parallel2 because maxSpeed >= 2 and parallel2 checks for == 0 or <= 1
         gap = min(self.maxSpeed, min(gap_same, gap_opposite))
         # print(f"self position: {self.position}")
-        # print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
+        print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
         return gap, gap_same, gap_opposite, closestOpp
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:
@@ -202,12 +202,12 @@ class BlueAdlerPedAgent(PedAgent):
         return sames, opps
 
     def isFollowing(self, other:PedAgent) -> bool:
-        if self.direction != other.direction:
+        if self.direction != other.direction or self.position == other.position:
             return False
         return self.isBehind(other)
 
     def isFacing(self, other: PedAgent) -> bool:
-        if self.direction == other.direction:
+        if self.direction == other.direction or self.position == other.position:
             return False
         return self.isBehind(other)
 
