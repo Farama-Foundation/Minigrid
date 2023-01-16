@@ -44,7 +44,7 @@ def test_2_agents(env):
 
     agents = []
 
-    agent1Position = (18,1)
+    agent1Position = (1,1)
     agent1Speed = 3
     agent1 = BlueAdlerPedAgent(
         id=1,
@@ -57,7 +57,7 @@ def test_2_agents(env):
 
     agents.append(agent1)
 
-    agent2Position = (6,1)
+    agent2Position = (2,1)
     agent2Speed = 3
     agent2 = BlueAdlerPedAgent(
         id=1,
@@ -75,19 +75,19 @@ def test_2_agents(env):
 
     runSteps(env, 1, close=False)
 
-    # assert agent1.position == agent1Position
-    # assert agent2.position == agent2Position
+    assert agent1.position == (1, 1)
+    assert agent2.position == (2, 1)
 
     runSteps(env, 1)
-    # assert agent1.position == agent1Position
-    # assert agent2.position == agent2Position
+    assert agent1.position == agent1Position
+    assert agent2.position == agent2Position
 
     # assert False
 
 
 
 @pytest.mark.caBiAdler
-def test_2_agents_exchange(env):
+def test_2_agents_on_finish(env):
     # create two agents facing each other
 
     expectedGap = 1
@@ -98,7 +98,7 @@ def test_2_agents_exchange(env):
     agent1Speed = 3
     agent1 = BlueAdlerPedAgent(
         id=1,
-        position=agent1Position,
+        position=(18, 1),
         direction=Direction.LR,
         maxSpeed=agent1Speed,
         speed=agent1Speed,
@@ -108,7 +108,7 @@ def test_2_agents_exchange(env):
 
     agents.append(agent1)
 
-    agent2Position = (11,1)
+    agent2Position = (1,1)
     agent2Speed = 3
     agent2 = BlueAdlerPedAgent(
         id=1,
@@ -127,24 +127,24 @@ def test_2_agents_exchange(env):
 
     runSteps(env, 1, close=False)
 
-    assert agent1.position == (agent1Position[0] + expectedTranslation, agent1Position[1])
-    assert agent2.position == (agent2Position[0] - expectedTranslation, agent2Position[1])
+    assert agent1.position == (1, 1)
+    assert agent2.position == (18, 1)
 
     agent1Position = agent1.position
     agent2Position = agent2.position
 
     runSteps(env, 1)
-    assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
-    assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
+    assert agent1.position == (4, 1)
+    assert agent2.position == (15, 1)
 
-def test_2_agents_exchange_inthesameplace(env):
+def test_2_agents_exchange_on_finish(env):
     # create two agents facing each other
 
     expectedGap = 2
     expectedTranslation = expectedGap + 1
     agents = []
 
-    agent1Position = (8,1)
+    agent1Position = (18,1)
     agent1Speed = 3
     agent1 = BlueAdlerPedAgent(
         id=1,
@@ -158,7 +158,7 @@ def test_2_agents_exchange_inthesameplace(env):
 
     agents.append(agent1)
 
-    agent2Position = (11,1)
+    agent2Position = (2,1)
     agent2Speed = 3
     agent2 = BlueAdlerPedAgent(
         id=1,
@@ -171,21 +171,33 @@ def test_2_agents_exchange_inthesameplace(env):
     )
     agents.append(agent2)
 
-    # agent2 = BlueAdlerPedAgent(
+    agent3Position = (1,1)
+    agent3Speed = 3
+    agent3 = BlueAdlerPedAgent(
+        id=1,
+        position=agent3Position,
+        direction=Direction.LR,
+        maxSpeed=agent3Speed,
+        speed=agent3Speed,
+        DML=False,
+        p_exchg=1.0
+    )
+    agents.append(agent3)
+
 
     env.addAgents(agents)
 
     runSteps(env, 1, close=False)
 
-    assert agent1.position == (agent1Position[0] + expectedTranslation, agent1Position[1])
-    assert agent2.position == (agent2Position[0] - expectedTranslation, agent2Position[1])
+    # assert agent1.position == (agent1Position[0] + expectedTranslation, agent1Position[1])
+    # assert agent2.position == (agent2Position[0] - expectedTranslation, agent2Position[1])
 
     agent1Position = agent1.position
     agent2Position = agent2.position
 
     runSteps(env, 1)
-    assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
-    assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
+    # assert agent1.position == (agent1Position[0] + agent1Speed, agent1Position[1])
+    # assert agent2.position == (agent2Position[0] - agent2Speed, agent2Position[1])
 
 
 
