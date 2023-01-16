@@ -98,8 +98,10 @@ class MultiPedestrianEnv(MiniGridEnv):
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
+        if agent.position[1] < 0 or agent.position[1] >= self.height:
+            logging.info(f"id: {agent.id} pos: {agent.position} canRight: {agent.canShiftRight} canleft: {agent.canShiftLeft}")
         # print("Id ", agent.id, "speed ", agent.speed)
-        # if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
+        # if fwd_pos[0] <= 0 o]r fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
         #     if fwd_pos[0] <= 0:
         #         agent.position = (1, agent.position[1])
         #     else:
@@ -239,9 +241,9 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def eliminateConflict(self):
         for agent in self.agents:
-            if agent.position[1] == 1:
+            if agent.position[1] <= 1:
                 agent.canShiftLeft = False
-            if agent.position[1] == self.height - 2:
+            if agent.position[1] >= self.height - 2:
                 agent.canShiftRight = False
         for agent1 in self.agents:
             for agent2 in self.agents:
@@ -258,29 +260,7 @@ class MultiPedestrianEnv(MiniGridEnv):
                         agent1.canShiftLeft = False 
                     else: 
                         agent2.canShiftRight = False
-        # self.agents.sort(key=lambda agent: (agent.position[0], agent.position[1]))
-        # for i in range(1, len(self.agents)):
-        #     if self.agents[i].position[0] != self.agents[i-1].position[0]:
-        #         continue
 
-        #     if (self.agents[i].position[1] - self.agents[i-1].position[1]) == 1:
-        #         # they are adjacent
-        #         self.agents[i].canShiftLeft = False
-        #         self.agents[i-1].canShiftRight = False
-        #     elif (self.agents[i].position[1] - self.agents[i-1].position[1]) == 2 and self.agents[i].canShiftLeft == True and self.agents[i-1].canShiftRight == True:  
-        #         # they have one cell between them
-        #         if np.random.random() > 0.5:
-        #             self.agents[i].canShiftLeft = False
-        #         else: 
-        #             self.agents[i-1].canShiftRight = False
-
-        # for agent in self.agents:
-        #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
-        #         self.agents.remove(agent)
-        #         logging.debug('removed')
-
-    # One step after parallel1 and parallel2
-    # Save plans from parallel1 and parallel2 before actually executing it
 
     def unsubscribe(self, envEvent: EnvEvent, handler):
 
@@ -349,8 +329,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         self.eliminateConflict()
 
         actions = self.emitEventAndGetResponse(EnvEvent.stepParallel1)
+        
         self.executeActions(actions)
-
         actions = self.emitEventAndGetResponse(EnvEvent.stepParallel2)
         self.executeActions(actions)
 
@@ -372,16 +352,16 @@ class MultiPedestrianEnv(MiniGridEnv):
         for action in actions:
             if action is not None:
                 self._actionHandlers[action.action.__class__](action)
-            # self.executeAction(action)
+            
         pass
 
     def executeLaneAction(self, action: Action):
         if action is None:
             return 
-        if action == 1:
-            self.shiftLeft(self.agents[i])
-        elif action == 2:
-            self.shiftRight(self.agents[i])
+        if action.action == LaneAction.LEFT:
+            self.shiftLeft(action.agent)
+        elif action.action == LaneAction.RIGHT:
+            self.shiftRight(action.agent)
         pass
 
     def executeForwardAction(self, action: Action):
@@ -427,8 +407,8 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
 
 class MultiPedestrianEnv5x20(MultiPedestrianEnv):
     def __init__(self):
-        width = 40
-        height = 5 # actual height: 10 + 2 gray square on top and bottom
+        width = 200
+        height = 4 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,

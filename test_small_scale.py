@@ -34,7 +34,7 @@ for dirSplitInt in range(5, 11):
 
         # density = 0.04
         DML = False
-        p_exchg = 1 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
+        p_exchg = 0.5 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
         dirSplit = round(dirSplitInt/10, ndigits=1)
         # dirSplit = 0.9
 
@@ -67,7 +67,7 @@ for dirSplitInt in range(5, 11):
 
         env.reset()
 
-        for i in range(100):
+        for i in range(50):
 
             obs, reward, done, info = env.step(None)
             
@@ -95,10 +95,8 @@ for dirSplitInt in range(5, 11):
         den.append(density)
         p.append(p_exchg)
         split.append(dirSplit)
-        speeds.append(env.getAverageSpeed())
-        # values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
-        # values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
-        # values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
+        speeds.append(avgSpeed)
+        # values[dirSplitInt - 5][densityInt - 1][0] = avgSpeedx`x`
 
         # Test the close method
 

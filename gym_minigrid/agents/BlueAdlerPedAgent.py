@@ -62,16 +62,14 @@ class BlueAdlerPedAgent(PedAgent):
         if self.canShiftLeft == True:
             gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
         else:
-            gaps[1] = -1, -1, -1, -10 # as backup in case gaps of 0 mess up the code, -10 is on purpose to avoid conflict with DML checking
+            gaps[1] = -100, 0, 0, None
         if self.canShiftRight == True:
             gaps[2] = self.computeGap(agents, Lanes.rightLane, env)
         else:
-            gaps[2] = -1, -1, -1, -10 # as backup in case gaps of 0 mess up the code, -10 is on purpose to avoid conflict with DML checking
-        # logging.info(gaps)
+            gaps[2] = -100, 0, 0, None
         
         goodLanes = []
-        # logging.info('gaps', gaps)
-        # DML(Dynamic Multiple Lanes)
+
         if self.DML and gaps[0][3] is not None: # if agentOppIndex exists, then gapOpp <= 4, prevents default of gapOpp = 0 from messing up code
             gaps[0] = (0, gaps[0][1], gaps[0][2], gaps[0][3]) # set gap = 0
             if gaps[1][1] == 0: # check if left lane gapSame == 0
@@ -84,11 +82,11 @@ class BlueAdlerPedAgent(PedAgent):
             maxGap = 0
             for i in range(3):
                 maxGap = max(maxGap, gaps[i][0])
-            # logging.debug('maxgap', maxGap)
+            # logging.info(f"id: {self.id} max_gap: {maxGap}")
             for i in range(3):
                 if maxGap == gaps[i][0]:
                     goodLanes.append(i)
-        
+        # logging.info(f"id: {self.id} goodlanes : {goodLanes}")
         if len(goodLanes) == 1:
             lane = goodLanes[0]
         elif len(goodLanes) == 2:
@@ -111,6 +109,7 @@ class BlueAdlerPedAgent(PedAgent):
             else:
                 lane = goodLanes[2]
 
+        # logging.info(f"id: {self.id} lane Chosen: {lane}")
         self.gap = gaps[lane][0]
         self.gapSame = gaps[lane][1]
         self.gapOpp = gaps[lane][2]
@@ -141,16 +140,12 @@ class BlueAdlerPedAgent(PedAgent):
         # if self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
             if np.random.random() < self.p_exchg:
                 self.speed = self.gap + 1
-                self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
-                # just testing out
-                # print("here")
-                # self.speed = abs(self.position[0] - self.closestOpp.position[0])
-                # self.closestOpp.speed = self.speed
-                
+                if self.closestOpp is not None:
+                    self.closestOpp.speed = self.gap + 1 # TODO can one agent update another?
             else:
                 self.speed = 0
-                self.closestOpp.speed = 0
-            self.closestOpp.speedFixed = True
+                if self.closestOpp is not None:
+                    self.closestOpp.speed = 0
 
         # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
@@ -180,7 +175,7 @@ class BlueAdlerPedAgent(PedAgent):
         # doesn't affect parallel2 because maxSpeed >= 2 and parallel2 checks for == 0 or <= 1
         gap = min(self.maxSpeed, min(gap_same, gap_opposite))
         # print(f"self position: {self.position}")
-        print(f"computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
+        # print(f"id: {self.id} computeGap gap: {gap}, gap_opposite: {gap_opposite}, gap_same: {gap_same}")
         return gap, gap_same, gap_opposite, closestOpp
         
     def getSameAndOppositeAgents(self, agents: List[PedAgent], laneOffset=0) -> Tuple[List[PedAgent], List[PedAgent]]:

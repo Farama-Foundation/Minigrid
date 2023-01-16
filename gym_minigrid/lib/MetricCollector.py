@@ -91,4 +91,4 @@ class MetricCollector:
                 self.previousState[agent]["ySpeed"] = ySpeed
         
         self.stepStats["xSpeed"].append(totalXSpeed / len(env.getAgents()))
-        self.stepStats["ySpeed"].append(totalYSpeed)
+        self.stepStats["ySpeed"].append(totalYSpeed / len(env.getAgents()))
