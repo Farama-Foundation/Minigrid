@@ -5,6 +5,8 @@ __package__ = "maze_representations"
 import copy
 import logging
 import time
+from collections import defaultdict
+
 from bounded_pool_executor import BoundedProcessPoolExecutor
 import concurrent.futures
 import networkx as nx
@@ -41,29 +43,20 @@ def generate_dataset(cfg: DictConfig) -> None:
     logger.info("\n" + OmegaConf.to_yaml(dataset_config))
 
     logger.info("Parsing Data Generation config to DatasetGenerator...")
-    DatasetGenerator = GridNavDatasetGenerator(dataset_config, dataset_dir_name=dataset_config.dir_name,
+    DatasetGenerator = GridNavDatasetGenerator(dataset_config,
                                                num_workers=cfg.num_cpus,
                                                multiprocessing=cfg.multiprocessing,
                                                debug_multiprocessing=cfg.debug_multiprocessing)
     logger.info("Generating Data...")
-    DatasetGenerator.generate_dataset(normalise_metrics=dataset_config.normalise_metrics)
+    DatasetGenerator.generate_dataset()
     logger.info("Done.")
 
 
 class GridNavDatasetGenerator:
 
-    def __init__(self, dataset_config: DictConfig, dataset_dir_name=None, num_workers=0, multiprocessing=False,
+    def __init__(self, dataset_config: DictConfig, num_workers=0, multiprocessing=False,
                  debug_multiprocessing=False):
         self.config = self.generate_config(dataset_config)
-        self.dataset_meta = self.get_dataset_metadata()
-        self.batches_meta = self.get_batches_metadata()
-        self.data_type = self.dataset_meta['data_type']
-        self.save_dir = self.get_dataset_dir(dataset_dir_name)
-        self.generated_batches = {}
-        self.use_multiprocessing = True if num_workers != 1 and multiprocessing else False
-        self.multi_processing_debug_mode = True if multiprocessing and num_workers != 1 and debug_multiprocessing \
-            else False
-        self.num_workers = num_workers
 
         if self.config.label_descriptors_config.use_seed:
             if self.config.seed is None:
@@ -73,9 +66,22 @@ class GridNavDatasetGenerator:
             util.seed_everything(self.seed)
             logger.info(f"Using seed {self.seed}")
 
+        self.ts_thumbnails = {}
+        self.ts_batches = defaultdict(list)
         self._task_seeds = torch.randperm(int(1e7)) #10M possible seeds
-        self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
         self.batch_label_offset = []
+        self.existing_files = []
+
+        self.dataset_meta = self.generate_dataset_metadata()
+        self.batches_meta = self.generate_batches_metadata()
+        self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
+        self.data_type = self.dataset_meta['data_type']
+        self.save_dir = self.get_dataset_dir(self.config.dir_name)
+        self.generated_batches = {}
+        self.use_multiprocessing = True if num_workers != 1 and multiprocessing else False
+        self.multi_processing_debug_mode = True if multiprocessing and num_workers != 1 and debug_multiprocessing \
+            else False
+        self.num_workers = num_workers
 
     def generate_config(self, dataset_config: DictConfig) -> DictConfig:
         """
@@ -88,108 +94,16 @@ class GridNavDatasetGenerator:
         if dataset_config.num_test_batches is None:
             dataset_config.num_test_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
 
+        if dataset_config.save_as_completed and dataset_config.check_unique:
+            raise ValueError("Cannot have config.save_as_completed and config.check_unique True at the same time.")
+
         return dataset_config
 
-    def generate_dataset(self, normalise_metrics: bool = True):
-
-        n_labels = 0
-        seed_counter = 0
-        args = []
-        for i, batch_meta in enumerate(self.batches_meta):
-            self.batch_label_offset.append(n_labels)
-            seeds = self._task_seeds[seed_counter:seed_counter+self._seeds_per_batch]
-            seed_counter += self._seeds_per_batch
-            args.append((batch_meta, self.dataset_meta, seeds, n_labels))
-            n_labels += batch_meta['batch_size']
-
-        self.config.size = n_labels
-
-        # creates folder if it does not exist.
-        if not os.path.exists(self.save_dir):
-            logger.info(f"Saving dataset in new directory {self.save_dir}")
-            os.makedirs(self.save_dir)
-
-        if self.use_multiprocessing:
-            logger.info(f"Using multiprocessing with {self.num_workers} workers.")
-            multi_processing_parser = Parser(GridNavDatasetGenerator._generate_batch_data)
-            if not self.multi_processing_debug_mode:
-                num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
-                torch.set_num_threads(1)
-                proc = BoundedProcessPoolExecutor(max_workers=num_cpus)
-            else: #TODO: fix this
-                proc = MockProcessPoolExecutor()
-        else:
-            proc = None
-
-        # TODO: consider using tqdm to show progress
-        if proc is not None:
-            with proc as executor:
-                dataset = [executor.submit(multi_processing_parser, arg) for arg in args]
-                for batch_data in concurrent.futures.as_completed(dataset):
-                    try:
-                        batch = batch_data.result()
-                        self.generated_batches[batch.batch_meta['batch_id']] = batch
-                    except Exception as e:
-                        logger.error(f"Error during multiprocressing. Error message: {str(e)}")
-        else:
-            for arg in args:
-                batch = GridNavDatasetGenerator._generate_batch_data(*arg)
-                self.generated_batches[batch.batch_meta['batch_id']] = batch
-
-        self.dataset_meta['unique_data'] = self.check_unique()
-
-        if normalise_metrics: self.normalise_metrics()
-
-        #update the dataset meta with the values automatically updated during generation
-        self.dataset_meta = self.get_dataset_metadata()
-
-        for batch in self.generated_batches.values():
-            self.save_batch(batch)
-
-        self.save_dataset_meta()
-        self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
-
-    @staticmethod
-    def _generate_batch_data(batch_meta, dataset_meta, seeds, batch_label_offset):
-        try:
-            time_batch_start = time.perf_counter()
-            batch = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
-            batch_features, batch_label_ids, batch_label_contents = batch.generate_batch()
-            batch_label_ids += batch_label_offset
-            time_batch_end = time.perf_counter()
-            batch_generation_time = time_batch_end - time_batch_start
-            logger.info(f"Batch {batch_meta['batch_id']}, Task structure: {batch_meta['task_structure']} generated in "
-                        f"{batch_generation_time:.2f} seconds. "
-                        f"Average time per sample: {batch_generation_time / len(batch_label_ids):.2f} seconds.")
-        except Exception as e:
-            logger.error(f"Error in child process for batch {batch_meta['batch_id']}. Exception: {str(e)}")
-            raise e
-
-        data_size = len(pickle.dumps(batch))
-        if data_size > 2 * 10 ** 9:
-            raise RuntimeError(f'return data of total size {data_size} bytes can not be sent, too large.')
-
-        return batch
-
-    def normalise_metrics(self):
-
-        maximums = ["shortest_path", "resistance", "navigable_nodes"]
-        for key in maximums:
-            stack = []
-            for batch in self.generated_batches.values():
-                stack.append(batch.label_contents[key])
-            stack = torch.cat(stack)
-            self.config.label_descriptors_config[key]['normalisation_factor'] = \
-                float(stack.amax() * self.config.label_descriptors_config[key]['max'])
-            for batch_id in self.generated_batches.keys():
-                self.generated_batches[batch_id].label_contents[key] = \
-                    self.generated_batches[batch_id].label_contents[key].to(torch.float) \
-                    / self.config.label_descriptors_config[key]['normalisation_factor']
-
-    def get_dataset_metadata(self):
+    def generate_dataset_metadata(self):
         # TODO: would be easier to just instantiate all metadata as OmegaConf objects
         dataset_meta = {
             'output_file'                      : 'dataset.meta',
+            'size'                             : self.config.size,
             'seed'                             : self.config.seed,
             'data_type'                        : self.config.data_type,  # types: gridworld, grid, graph
             'encoding'                         : self.config.encoding,  # types: minimal, dense (only for graph)
@@ -201,11 +115,16 @@ class GridNavDatasetGenerator:
             'minigrid_feature_descriptors'     : self.config.minigrid_feature_descriptors,
             'ensure_connected'                 : self.config.ensure_connected,
             'unique_data'                      : None,
+            'task_seeds'                       : self._task_seeds,
+            'all_batches_present'              : False,
+            'normalised_metrics'               : False,
+            'ts_thumbnails'                    : self.ts_thumbnails,
+            'ts_batches'                       : self.ts_batches,
             }
 
         return dataset_meta
 
-    def get_batches_metadata(self):
+    def generate_batches_metadata(self):
 
         all_batches_meta = {
             "train": [],
@@ -262,6 +181,7 @@ class GridNavDatasetGenerator:
                         'task_structure': task_structures[i],
                         'generating_algorithm': algo,
                         'generating_algorithm_options': [],
+                        'unique_data': True,
                         }
                     batches_meta.append(batch_meta)
 
@@ -273,6 +193,200 @@ class GridNavDatasetGenerator:
             batches_meta.extend(val)
 
         return batches_meta
+
+    def generate_dataset(self):
+
+        #check if folder exists
+        if os.path.exists(self.save_dir):
+
+            if not self.config.resume_generation:
+                raise FileExistsError(f"Dataset directory {self.save_dir} already exists. Aborting.")
+            else:
+                logger.info(f"Dataset directory {self.save_dir} already exists. Resuming generation.")
+
+            self.existing_files.extend([f for f in os.listdir(self.save_dir)
+                                        if os.path.isfile(os.path.join(self.save_dir, f))])
+            try:
+                self.load_dataset_meta()
+            except FileNotFoundError:
+                logger.warning(f"Dataset meta file not found in {self.save_dir}. Generating new meta file.")
+                if self.existing_files:
+                    raise FileExistsError(f"Dataset directory {self.save_dir} contains files but not dataset.meta. "
+                                          f"Aborting.")
+                self.save_dataset_meta()
+
+        # creates folder if it does not exist.
+        else:
+            logger.info(f"Saving dataset in new directory {self.save_dir}")
+            os.makedirs(self.save_dir)
+
+        n_labels = 0
+        seed_counter = 0
+        args = []
+        for i, batch_meta in enumerate(self.batches_meta):
+            self.batch_label_offset.append(n_labels)
+            seeds = self._task_seeds[seed_counter:seed_counter+self._seeds_per_batch]
+            seed_counter += self._seeds_per_batch
+            n_first_label = n_labels
+            n_labels += batch_meta['batch_size']
+            if batch_meta['output_file'] in self.existing_files:
+                logger.info(f"{batch_meta['output_file']} already exists. Will be skipped.")
+                continue
+            args.append((batch_meta, self.dataset_meta, seeds, n_first_label))
+
+        self.dataset_meta['size'] = n_labels
+
+        if self.use_multiprocessing:
+            logger.info(f"Using multiprocessing with {self.num_workers} workers.")
+            multi_processing_parser = Parser(GridNavDatasetGenerator._generate_batch_data)
+            if not self.multi_processing_debug_mode:
+                num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
+                torch.set_num_threads(1)
+                # proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus)
+                proc = BoundedProcessPoolExecutor(max_workers=num_cpus)
+            else: #TODO: fix this
+                proc = MockProcessPoolExecutor()
+        else:
+            proc = None
+
+        # TODO: consider using tqdm to show progress
+        if proc is not None:
+            with proc as executor:
+                dataset = [executor.submit(multi_processing_parser, arg) for arg in args]
+                for futures_job in concurrent.futures.as_completed(dataset):
+                    try:
+                        batch = futures_job.result()
+
+                        self.update_metric_normalisation_factors(batch)
+
+                        if not batch.batch_meta['unique_data']:
+                            self.dataset_meta['unique_data'] = False
+
+                        if self.config.save_as_completed:
+                            self.save_batch(batch)
+                            ts = batch.batch_meta['task_structure']
+                            self.ts_batches[ts].append(batch.batch_meta['output_file'])
+                            if ts not in self.ts_thumbnails:
+                                self.ts_thumbnails[batch.batch_meta['task_structure']] = \
+                                    batch.get_images([j for j in range(self.config.n_thumbnail_per_batch)])
+                        else:
+                            #This will cause 'too many open files' error if too many batches are being generated
+                            self.generated_batches[batch.batch_meta['batch_id']] = batch
+
+                    except Exception as e:
+                        logger.error(f"Error during multiprocessing. Error message: {str(e)}")
+        else:
+            for arg in args:
+                batch = GridNavDatasetGenerator._generate_batch_data(*arg)
+                self.generated_batches[batch.batch_meta['batch_id']] = batch
+
+        _ = self.all_batches_generated()
+
+        if self.config.save_as_completed:
+            if self.dataset_meta['all_batches_present'] \
+                    and self.config.normalise_metrics \
+                    and not self.dataset_meta['normalised_metrics']:
+                batch_meta_files = [f for f in self.existing_files if f.endswith('.meta')]
+                for file in batch_meta_files:
+                    loaded_data = self.load_batch_meta(file)
+                    self.normalise_metrics(loaded_data['label_contents'])
+                    self.save_batch_meta(**loaded_data)
+                logger.info(f"Normalised metrics for all batches.")
+                self.dataset_meta['normalised_metrics'] = True
+            if self.dataset_meta['unique_data'] is None:
+                logger.warning(f"Not checking for duplicate data across entire dataset, "
+                               f"but data within each batch is unique.")
+        else:
+            for batch in self.generated_batches.values():
+                self.save_batch(batch)
+            if self.dataset_meta['unique_data'] is None and self.config.check_unique:
+                self.dataset_meta['unique_data'] = self.check_unique()
+
+            if self.config.normalise_metrics:
+                self.normalise_metrics()
+
+        self.save_dataset_meta() #Save again in case it was updated during generation
+        self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
+
+    @staticmethod
+    def _generate_batch_data(batch_meta, dataset_meta, seeds, batch_label_offset):
+        try:
+            time_batch_start = time.perf_counter()
+            batch = BatchGenerator(batch_meta, dataset_meta, seeds=seeds)
+            batch_features, batch_label_ids, batch_label_contents = batch.generate_batch()
+            batch_label_ids += batch_label_offset
+            time_batch_end = time.perf_counter()
+            batch_generation_time = time_batch_end - time_batch_start
+            logger.info(f"Batch {batch_meta['batch_id']}, Task structure: {batch_meta['task_structure']} generated in "
+                        f"{batch_generation_time:.2f} seconds. "
+                        f"Average time per sample: {batch_generation_time / len(batch_label_ids):.2f} seconds.")
+        except Exception as e:
+            logger.error(f"Error in child process for batch {batch_meta['batch_id']}. Exception: {str(e)}")
+            raise e
+
+        data_size = len(pickle.dumps(batch))
+        if data_size > 2 * 10 ** 9:
+            raise RuntimeError(f'return data of total size {data_size} bytes can not be sent, too large.')
+
+        return batch
+
+    def update_metric_normalisation_factors(self, latest_batch: Batch):
+        """
+        Update the metric normalisation factors for the dataset based on the latest batch.
+        """
+
+        maximums = ["shortest_path", "resistance", "navigable_nodes"]
+        for key in maximums:
+            batch_metric = latest_batch.label_contents[key]
+            metric_max = batch_metric.amax().item() * self.dataset_meta['label_descriptors_config'][key]['max']
+            if self.dataset_meta['label_descriptors_config'][key]['normalisation_factor'] is None \
+                    or metric_max > self.dataset_meta['label_descriptors_config'][key]['normalisation_factor']:
+                self.dataset_meta['label_descriptors_config'][key]['normalisation_factor'] = metric_max
+                #TODO: remove spaghetti code when refactoring to store self.config directly in self.dataset_meta
+                self.config['label_descriptors_config'][key]['normalisation_factor'] = metric_max
+
+    def normalise_metrics(self, batch_label_contents=None):
+
+        maximums = ["shortest_path", "resistance", "navigable_nodes"]
+        for key in maximums:
+            # Use 1. perform (and possibly compute) the normalisation across all batches in self.generated_batches
+            if batch_label_contents is None:
+                if self.dataset_meta['label_descriptors_config'][key]['normalisation_factor'] is None:
+                    stack = []
+                    for batch in self.generated_batches.values():
+                        stack.append(batch.label_contents[key])
+                    stack = torch.cat(stack)
+                    self.dataset_meta['label_descriptors_config'][key]['normalisation_factor'] = \
+                        float(stack.amax() * self.dataset_meta['label_descriptors_config'][key]['max'])
+                for batch_id in self.generated_batches.keys():
+                    self.generated_batches[batch_id].label_contents[key] = \
+                        self.generated_batches[batch_id].label_contents[key].to(torch.float) \
+                        / self.dataset_meta['label_descriptors_config'][key]['normalisation_factor']
+            # Use 2. perform the normalisation across a specific batch_label_contents, using precomputed factors
+            else:
+                batch_label_contents[key] = batch_label_contents[key].to(torch.float) \
+                                            / self.dataset_meta['label_descriptors_config'][key]['normalisation_factor']
+
+        if batch_label_contents is None:
+            self.dataset_meta['normalised_metrics'] = True
+
+    def all_batches_generated(self):
+        """
+        Called to check if all batches have been generated.
+        """
+
+        all_generated = True
+        for batch_meta in self.batches_meta:
+            if batch_meta['output_file'] not in self.existing_files:
+                logger.warning(f"Missing {batch_meta['output_file']}.")
+                all_generated = False
+
+        if all_generated:
+            logger.info("All batches generated successfully.")
+
+        self.dataset_meta['all_batches_present'] = all_generated
+
+        return all_generated
 
     def get_dataset_dir(self, dir_name=None):
         base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
@@ -296,39 +410,118 @@ class GridNavDatasetGenerator:
         if len(path) > 260:
             raise ValueError("Dataset dir path too long. Please use a shorter path.")
 
-        if os.path.exists(path):
-            raise FileExistsError(f"Dataset directory {path} already exists. Aborting.")
-
         return path
 
     def save_batch(self, batch: Batch):
+        """
+        Save a batch to disk.
+        :param batch: May be provided as a Batch object or as a dictionary containing only the data to be saved.
+        """
 
-        filename = self.save_dir + batch.batch_meta['output_file']
+        filename = batch.batch_meta['output_file']
+        filepath = self.save_dir + filename
         if isinstance(batch.label_ids, np.ndarray):
             batch.label_ids = torch.tensor(batch.label_ids)
 
         # need to save (data, labels) and (label_contents, metadata) in 2 separate files because of limitations of
         # save_graphs()
-        logger.info(f"Saving Batch {batch.batch_meta['batch_id']} to {filename}.")
+        logger.info(f"Saving Batch {batch.batch_meta['batch_id']} to {filepath}.")
         if self.data_type=='graph':
-            entry = {'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
-            dgl.data.utils.save_graphs(filename, batch.features, {'labels': batch.label_ids})
-            filename += '.meta'
-            logger.info(f"Saving Batch {batch.batch_meta['batch_id']} Metadata to {filename}.")
+            dgl.data.utils.save_graphs(filepath, batch.features, {'labels': batch.label_ids})
+            self.existing_files.append(filename)
+            self.save_batch_meta(batch.label_contents, batch.batch_meta)
         else:
             entry = {'data': batch.features, 'labels': batch.label_ids,
                      'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
-        with open(filename, 'wb') as f:
+            with open(filepath, 'wb') as f:
+                pickle.dump(entry, f)
+            self.existing_files.append(filename)
+
+    def save_batch_meta(self, label_contents, batch_meta):
+        filename = batch_meta['output_file'] + '.meta'
+        filepath = self.save_dir + filename
+        logger.info(f"Saving Batch {batch_meta['batch_id']} Metadata to {filepath}.")
+        entry = {'label_contents': label_contents, 'batch_meta': batch_meta}
+        with open(filepath, 'wb') as f:
             pickle.dump(entry, f)
+        self.existing_files.append(filename)
+
+    def load_batch_meta(self, filename) -> Dict[str, Any]:
+        '''
+        Load the metadata of a batch.
+        :param filename:
+        :return: {'label_contents': batch_label_contents, 'batch_meta': batch_meta}
+        '''
+        filepath = self.save_dir + filename
+        with open(filepath, 'rb') as f:
+            entry = pickle.load(f)
+        logger.info(f"Loaded Batch {entry['batch_meta']['batch_id']} Metadata from {filepath}.")
+        return entry
 
     def save_dataset_meta(self):
 
         entry = self.dataset_meta
 
-        filename = self.save_dir + self.dataset_meta['output_file']
-        logger.info(f"Saving dataset metadata to {filename}.")
-        with open(filename, 'wb') as f:
+        filename = self.dataset_meta['output_file']
+        filepath = self.save_dir + filename
+        logger.info(f"Saving dataset metadata to {filepath}.")
+        with open(filepath, 'wb') as f:
             pickle.dump(entry, f)
+            self.existing_files.append(filename)
+
+    def load_dataset_meta(self):
+
+        path = os.path.join(self.save_dir, self.dataset_meta['output_file'])
+        with open(path, "rb") as infile:
+            self.dataset_meta = pickle.load(infile, encoding="latin1")
+
+        self._task_seeds = self.dataset_meta[
+            'task_seeds']  # Necessary to ensure that the same seeds are used if resuming generation
+
+        #TODO: this spaghetti code can be removed once we switch self.dateset_meta to simply include self.config
+        self.config.seed = self.dataset_meta['seed']
+        self.config.data_type = self.dataset_meta['data_type']
+        self.config.encoding = self.dataset_meta['encoding']
+        # self.config.gridworld_data_dim = (self.dataset_meta['data_dim'][0],) * 2 #Not important
+        self.config.task_type = self.dataset_meta['task_type']
+        self.config.label_descriptors = self.dataset_meta['label_descriptors']
+        self.config.label_descriptors_config = self.dataset_meta['label_descriptors_config']
+        self.config.graph_feature_descriptors = self.dataset_meta['graph_feature_descriptors']
+        self.config.minigrid_feature_descriptors = self.dataset_meta['minigrid_feature_descriptors']
+        self.config.ensure_connected = self.dataset_meta['ensure_connected']
+
+    def save_layout_thumbnail(self, n_per_batch=10):
+        filename = 'layouts.png'
+
+        images = []
+        task_structures = []
+        if not self.ts_thumbnails:
+            for batch in self.generated_batches.values():
+                label_content = batch.label_contents
+
+                #Skip repeated values
+                if batch.batch_meta['task_structure'] in task_structures:
+                    continue
+
+                task_structures.extend(label_content['task_structure'][:n_per_batch])
+                if 'images' in label_content:
+                    img = label_content['images'][:n_per_batch]
+                else:
+                    img = batch.get_images([j for j in range(n_per_batch)])
+                if n_per_batch > len(img):
+                    logger.warning(f"Batch {batch.batch_meta['batch_id']} has less than {n_per_batch} images."
+                                   f"{filename} may not be generated correctly")
+                images.extend(img)
+        else:
+            for ts, img in self.ts_thumbnails.items():
+                task_structures.extend([ts] * len(img))
+                images.extend(img)
+
+        path = os.path.join(self.save_dir, filename)
+        images = make_grid_with_labels(images, task_structures, nrow=n_per_batch, normalize=True, limit=None,
+                                       channels_first=True)
+        logger.info(f"Saving layout thumbnails to {path}.")
+        vutils.save_image(images, path)
 
     def check_unique(self):
 
@@ -342,30 +535,6 @@ class GridNavDatasetGenerator:
         else:
             return True
 
-    def save_layout_thumbnail(self, n_per_batch=10):
-
-        images = []
-        task_structures = []
-        for batch in self.generated_batches.values():
-            label_content = batch.label_contents
-
-            #Skip repeated values
-            if batch.batch_meta['task_structure'] in task_structures:
-                continue
-
-            task_structures.extend(label_content['task_structure'][:n_per_batch])
-            if 'images' in label_content:
-                images.extend(label_content['images'][:n_per_batch])
-            else:
-                img = batch.get_images([j for j in range(n_per_batch)])
-                images.extend(img)
-
-        filename = 'layouts'
-        path = os.path.join(self.save_dir, f'{filename}.png')
-        images = make_grid_with_labels(images, task_structures, nrow=n_per_batch, normalize=True, limit=None,
-                                       channels_first=True)
-        logger.info(f"Saving layout thumbnails to {path}.")
-        vutils.save_image(images, path)
 
 
 class BatchGenerator:
@@ -408,6 +577,7 @@ class Batch:
 
         if not util.check_unique(features).all():
             logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
+            self.batch_meta['unique_data'] = False
         if self.data_type == 'gridworld':
             pass
         elif self.data_type == 'grid':
@@ -501,6 +671,8 @@ class WaveCollapseBatch(Batch):
             task_structure_meta_path = base_dir + f"/conf/task_structure/{self.task_structure}.yaml"
             self.task_structure_meta = OmegaConf.load(task_structure_meta_path)
             template_path = base_dir + f"/{self.task_structure_meta.template_path}"
+            # with open(template_path, "r") as f:
+            #     self.template = imageio.v2.imread(f)[:, :, :3]
             self.template = imageio.v2.imread(template_path)[:, :, :3]
             self.output_pattern_dim = (self.dataset_meta['data_dim'][0] - 2, self.dataset_meta['data_dim'][1] - 2)
 
