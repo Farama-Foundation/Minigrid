@@ -105,12 +105,12 @@ class MultiPedestrianEnv(MiniGridEnv):
         #         agent.position = (self.width - 2, agent.position[1])
         #     agent.direction = (agent.direction + 2) % 4
         #     return
-        if fwd_pos[0] <= 1:
+        if fwd_pos[0] < 1:
             # random may introduce conflict
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
             agent.position = (self.width - 2, agent.position[1])
             return
-        elif fwd_pos[0] >= self.width - 2:
+        elif fwd_pos[0] > self.width - 2:
             # agent.position = (1, random.randint(1, self.height - 2))
             agent.position = (1, agent.position[1])
             return

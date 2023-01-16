@@ -235,6 +235,7 @@ class BlueAdlerPedAgent(PedAgent):
             gap = self.cellsBetween(agent2) # number of cells between?
             if gap < 0:
                 print(f"gap: {gap}, {self.position}, {agent2.position}")
+                # gap = 0
             assert gap >= 0
             # print("gap: ", gap)
 
@@ -257,6 +258,7 @@ class BlueAdlerPedAgent(PedAgent):
             gap = self.cellsBetween(agent2)
             if gap < 0:
                 print(f"gap: {gap}, {self.position}, {agent2.position}")
+                # gap = 0
             assert gap >= 0
 
             gap_agent2 = math.ceil(gap / 2)

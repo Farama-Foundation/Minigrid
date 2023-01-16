@@ -79,7 +79,7 @@ for prob in [0, 0.25, 0.5, 0.75, 1]:
             if i % 10 == 0:
                 logging.info(f"Completed step {i+1}")
 
-            time.sleep(.2)
+            time.sleep(2)
 
         logging.info(env.getAverageSpeed())
 
