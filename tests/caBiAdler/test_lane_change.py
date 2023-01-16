@@ -40,7 +40,9 @@ def runSteps(env, steps=1, close=True):
 
 @pytest.mark.caBiAdler
 def test_2_agents(env):
-    # create two agents facing each other
+    # should have a guaranteed lane change. because in current lane gap = 0
+    # also how is it moving although gap = 0? if it stayed in current lane, it shouldn't have moved
+    # maybe it is calculating gap correctly, but making wrong lane decisions
 
     agents = []
 
