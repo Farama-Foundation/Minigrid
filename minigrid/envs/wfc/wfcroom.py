@@ -74,7 +74,8 @@ class GridNavDatasetGenerator:
 
         self.dataset_meta = self.generate_dataset_metadata()
         self.batches_meta = self.generate_batches_metadata()
-        self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
+        #self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
+        self._seeds_per_batch = self.config.seeds_per_batch #TODO: remove the hardcoding
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(self.config.dir_name)
         self.generated_batches = {}
