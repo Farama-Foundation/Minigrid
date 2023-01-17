@@ -235,8 +235,9 @@ class GridNavDatasetGenerator:
             if not self.multi_processing_debug_mode:
                 num_cpus = self.num_workers if self.num_workers != 0 else None #None means use all available cpus
                 torch.set_num_threads(1)
-                proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus, mp_context=multiprocessing.get_context('spawn'))
-                #proc = BoundedProcessPoolExecutor(max_workers=num_cpus)
+                # proc = concurrent.futures.ProcessPoolExecutor(max_workers=num_cpus, mp_context=multiprocessing.get_context('spawn'))
+                logger.info(f"Using BoundedProcessPoolExecutor with {num_cpus} workers.")
+                proc = BoundedProcessPoolExecutor(max_workers=num_cpus)
             else: #TODO: fix this
                 proc = MockProcessPoolExecutor()
         else:
@@ -249,6 +250,8 @@ class GridNavDatasetGenerator:
                 for futures_job in concurrent.futures.as_completed(dataset):
                     try:
                         batch = futures_job.result()
+
+                        logger.info(f"Generated batch {batch.batch_meta['batch_id']}.")
 
                         self.update_metric_normalisation_factors(batch)
 
