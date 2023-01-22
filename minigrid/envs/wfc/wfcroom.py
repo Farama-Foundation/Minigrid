@@ -24,7 +24,7 @@ import dgl
 import imageio
 import multiprocessing
 
-from util import make_grid_with_labels
+from util import make_grid_with_labels, DotDict
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
 from .util import graph_metrics
@@ -48,8 +48,14 @@ def generate_dataset(cfg: DictConfig) -> None:
                                                num_workers=cfg.num_cpus,
                                                multiprocessing=cfg.multiprocessing,
                                                debug_multiprocessing=cfg.debug_multiprocessing)
-    logger.info("Generating Data...")
-    DatasetGenerator.generate_dataset()
+    if dataset_config.source_dataset is not None:
+        logger.info("Obtaining dataset from source dataset")
+        base_dir = str(Path(__file__).resolve().parent) + '/datasets/'
+        dataset_meta_path = os.path.join(base_dir, dataset_config.source_dataset, 'dataset.meta')
+        DatasetGenerator.generate_subdataset(dataset_meta_path)
+    else:
+        logger.info("Generating Dataset...")
+        DatasetGenerator.generate_dataset()
     logger.info("Done.")
 
 
@@ -199,7 +205,7 @@ class GridNavDatasetGenerator:
             else:
                 logger.info(f"Dataset directory {self.save_dir} already exists. Resuming generation.")
             try:
-                self.load_dataset_meta()
+                self.dataset_meta = self.load_dataset_meta()
             except FileNotFoundError:
                 logger.warning(f"Dataset meta file not found in {self.save_dir}. Generating new meta file.")
                 if self.existing_files:
@@ -254,7 +260,7 @@ class GridNavDatasetGenerator:
 
                         logger.info(f"Generated batch {batch.batch_meta['batch_id']}.")
 
-                        self.update_metric_normalisation_factors(batch)
+                        self.update_metric_normalisation_factors(batch.label_contents)
 
                         if not batch.batch_meta['unique_data']:
                             self.dataset_meta['unique_data'] = False
@@ -305,6 +311,66 @@ class GridNavDatasetGenerator:
         self.save_dataset_meta() #Save again in case it was updated during generation
         self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
 
+    def generate_subdataset(self, original_dataset_meta_path):
+
+        original_dataset_meta = self.load_dataset_meta(original_dataset_meta_path, update_config=False)
+        assert not original_dataset_meta['normalised_metrics'], "Original dataset must NOT have normalised metrics."
+        original_dataset_dir = os.path.dirname(original_dataset_meta_path)
+
+        def get_data(batch_ids, batch_size):
+            data = []
+            for file in batch_ids:
+                file = file + '.data'
+                entry, entry_type = self.load_batch(file, original_dataset_dir)
+                # TODO: remove spaghetti code, due to a bug in the original code
+                if entry_type == 'pickle':
+                    graphs = entry['data']
+                    labels = entry['labels']
+                    batch_meta = entry['batch_meta']
+                    label_contents = entry['label_contents']
+                elif entry_type == 'dgl':
+                    graphs = entry[0]
+                    labels = entry[1]
+                    file = file + '.meta'
+                    entry = self.load_batch_meta(file, original_dataset_dir)
+                    batch_meta = entry['batch_meta']
+                    label_contents = entry['label_contents']
+                else:
+                    raise ValueError(f"Unknown entry type {entry_type}.")
+                graphs = graphs[:batch_size]
+                labels = labels[:batch_size]
+                for key in label_contents:
+                    label_contents[key] = label_contents[key][:batch_size]
+                batch_meta['batch_size'] = batch_size
+                data.append(DotDict({'features':graphs,
+                                     'label_ids':labels,
+                                     'batch_meta':batch_meta,
+                                     'label_contents':label_contents}))
+                data[-1].batch_meta = data[-1].batch_meta.to_dict()
+                data[-1].label_contents = data[-1].label_contents.to_dict()
+            return data
+
+        batch_data = []
+        batch_data.extend(get_data(self.config.train_batch_ids, self.config.size_train_batch))
+        batch_data.extend(get_data(self.config.test_batch_ids, self.config.size_test_batch))
+
+        for i, b_data in enumerate(batch_data):
+            assert b_data.batch_meta['task_structure'] == self.batches_meta[i]['task_structure']
+            assert b_data.batch_meta['batch_size'] == self.batches_meta[i]['batch_size']
+            assert b_data.batch_meta['unique_data']
+            data = [b_data.features[i] for i in range(self.config.n_thumbnail_per_batch)]
+            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
+            self.ts_thumbnails[b_data.batch_meta['task_structure']] = images
+            self.update_metric_normalisation_factors(b_data.label_contents)
+
+        for b_data in batch_data:
+            self.normalise_metrics(b_data.label_contents)
+            self.save_batch(b_data, self.save_dir)
+
+        self.save_dataset_meta()
+        self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
+
+
     @staticmethod
     def _generate_batch_data(batch_meta, dataset_meta, seeds, batch_label_offset, save_dir):
         try:
@@ -329,14 +395,14 @@ class GridNavDatasetGenerator:
 
         return batch #TODO: consider not returning anything, but will need to build back the batch from the saved files
 
-    def update_metric_normalisation_factors(self, latest_batch: Batch):
+    def update_metric_normalisation_factors(self, label_contents: Dict):
         """
         Update the metric normalisation factors for the dataset based on the latest batch.
         """
 
         maximums = ["shortest_path", "resistance", "navigable_nodes"]
         for key in maximums:
-            batch_metric = latest_batch.label_contents[key]
+            batch_metric = label_contents[key]
             metric_max = batch_metric.amax().item() * self.dataset_meta['label_descriptors_config'][key]['max']
             if self.dataset_meta['label_descriptors_config'][key]['normalisation_factor'] is None \
                     or metric_max > self.dataset_meta['label_descriptors_config'][key]['normalisation_factor']:
@@ -413,7 +479,7 @@ class GridNavDatasetGenerator:
         return path
 
     @staticmethod
-    def save_batch(batch: Batch, save_dir):
+    def save_batch(batch: Union[Batch, Dict, DotDict], save_dir):
         """
         Save a batch to disk.
         :param save_dir:
@@ -430,10 +496,10 @@ class GridNavDatasetGenerator:
         logger.info(f"Saving Batch {batch.batch_meta['batch_id']} to {filepath}.")
         dgl.data.utils.save_graphs(filepath, batch.features, {'labels': batch.label_ids})
         GridNavDatasetGenerator.save_batch_meta(batch.label_contents, batch.batch_meta, save_dir)
-        entry = {'data': batch.features, 'labels': batch.label_ids,
-                 'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
-        with open(filepath, 'wb') as f:
-            pickle.dump(entry, f)
+        # entry = {'data': batch.features, 'labels': batch.label_ids,
+        #          'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
+        # with open(filepath, 'wb') as f:
+        #     pickle.dump(entry, f)
         logger.info(f"Saved Batch {batch.batch_meta['batch_id']} to {filepath}.")
 
     @staticmethod
@@ -445,13 +511,32 @@ class GridNavDatasetGenerator:
         with open(filepath, 'wb') as f:
             pickle.dump(entry, f)
 
-    def load_batch_meta(self, filename) -> Dict[str, Any]:
+    def load_batch(self, filename, dir=None):
+        if dir is None:
+            dir = self.save_dir
+        filepath = os.path.join(dir, filename)
+        try:
+            entry = dgl.load_graphs(filepath)
+            entry_type = 'dgl'
+        except Exception as e:
+            logger.error(f"Error loading {filepath} with DGL."
+                         f"Message: {e}."
+                         f"Trying to load with pickle.")
+            with open(filepath, 'rb') as f:
+                entry = pickle.load(f)
+                entry_type = 'pickle'
+            logger.info(f"Successfuly Loaded {filepath} with pickle.")
+        return entry, entry_type
+
+    def load_batch_meta(self, filename, dir=None) -> Dict[str, Any]:
         '''
         Load the metadata of a batch.
         :param filename:
         :return: {'label_contents': batch_label_contents, 'batch_meta': batch_meta}
         '''
-        filepath = self.save_dir + filename
+        if dir is None:
+            dir = self.save_dir
+        filepath = os.path.join(dir, filename)
         with open(filepath, 'rb') as f:
             entry = pickle.load(f)
         logger.info(f"Loaded Batch {entry['batch_meta']['batch_id']} Metadata from {filepath}.")
@@ -467,28 +552,34 @@ class GridNavDatasetGenerator:
         with open(filepath, 'wb') as f:
             pickle.dump(entry, f)
 
-    def load_dataset_meta(self):
+    def load_dataset_meta(self, dataset_meta_path=None, update_config=True):
 
-        path = os.path.join(self.save_dir, self.dataset_meta['output_file'])
+        if dataset_meta_path is None:
+            path = os.path.join(self.save_dir, self.dataset_meta['output_file'])
+        else:
+            path = dataset_meta_path
         with open(path, "rb") as infile:
-            self.dataset_meta = pickle.load(infile, encoding="latin1")
+            dataset_meta = pickle.load(infile, encoding="latin1")
 
-        self._task_seeds = self.dataset_meta[
-            'task_seeds']  # Necessary to ensure that the same seeds are used if resuming generation
-        self.ts_thumbnails = self.dataset_meta['ts_thumbnails'] #Necessary to ensure we keep the existing thumbnails
-                                                                # if resuming generation
+        if update_config:
+            self._task_seeds = dataset_meta[
+                'task_seeds']  # Necessary to ensure that the same seeds are used if resuming generation
+            self.ts_thumbnails = dataset_meta['ts_thumbnails'] #Necessary to ensure we keep the existing thumbnails
+                                                                    # if resuming generation
 
-        #TODO: this spaghetti code can be removed once we switch self.dateset_meta to simply include self.config
-        self.config.seed = self.dataset_meta['seed']
-        self.config.data_type = self.dataset_meta['data_type']
-        self.config.encoding = self.dataset_meta['encoding']
-        # self.config.gridworld_data_dim = (self.dataset_meta['data_dim'][0],) * 2 #Not important
-        self.config.task_type = self.dataset_meta['task_type']
-        self.config.label_descriptors = self.dataset_meta['label_descriptors']
-        self.config.label_descriptors_config = self.dataset_meta['label_descriptors_config']
-        self.config.graph_feature_descriptors = self.dataset_meta['graph_feature_descriptors']
-        self.config.minigrid_feature_descriptors = self.dataset_meta['minigrid_feature_descriptors']
-        self.config.ensure_connected = self.dataset_meta['ensure_connected']
+            #TODO: this spaghetti code can be removed once we switch self.dateset_meta to simply include self.config
+            self.config.seed = dataset_meta['seed']
+            self.config.data_type = dataset_meta['data_type']
+            self.config.encoding = dataset_meta['encoding']
+            # self.config.gridworld_data_dim = (dataset_meta['data_dim'][0],) * 2 #Not important
+            self.config.task_type = dataset_meta['task_type']
+            self.config.label_descriptors = dataset_meta['label_descriptors']
+            self.config.label_descriptors_config = dataset_meta['label_descriptors_config']
+            self.config.graph_feature_descriptors = dataset_meta['graph_feature_descriptors']
+            self.config.minigrid_feature_descriptors = dataset_meta['minigrid_feature_descriptors']
+            self.config.ensure_connected = dataset_meta['ensure_connected']
+
+        return dataset_meta
 
     def save_layout_thumbnail(self, n_per_batch=10):
         filename = 'layouts.png'
