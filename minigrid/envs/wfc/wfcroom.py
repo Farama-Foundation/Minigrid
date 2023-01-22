@@ -354,10 +354,13 @@ class GridNavDatasetGenerator:
         batch_data.extend(get_data(self.config.train_batch_ids, self.config.size_train_batch))
         batch_data.extend(get_data(self.config.test_batch_ids, self.config.size_test_batch))
 
+        label_id_count = 0
         for i, b_data in enumerate(batch_data):
             assert b_data.batch_meta['task_structure'] == self.batches_meta[i]['task_structure']
             assert b_data.batch_meta['batch_size'] == self.batches_meta[i]['batch_size']
             assert b_data.batch_meta['unique_data']
+            b_data.label_ids = torch.arange(label_id_count, label_id_count + b_data.batch_meta['batch_size']).to(torch.int64)
+            label_id_count += b_data.batch_meta['batch_size']
             data = [b_data.features[i] for i in range(self.config.n_thumbnail_per_batch)]
             images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
             self.ts_thumbnails[b_data.batch_meta['task_structure']] = images
