@@ -17,10 +17,52 @@ from minigrid.envs.babyai.core.verifier import (
 
 class ActionObjDoor(RoomGridLevel):
     """
+
+    ## Description
+
     [pick up an object] or
     [go to an object or door] or
     [open a door]
     (in the current room)
+
+    ## Mission Space
+
+    "go to the red ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent goes to the red ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-GoToRedBallGrey-v0`
     """
 
     def __init__(self, **kwargs):
@@ -51,9 +93,51 @@ class ActionObjDoor(RoomGridLevel):
 
 class FindObjS5(RoomGridLevel):
     """
+
+    ## Description
+
     Pick up an object (in a random room)
     Rooms have a size of 5
     This level requires potentially exhaustive exploration
+
+    ## Mission Space
+
+    "go to the red ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent goes to the red ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-GoToRedBallGrey-v0`
     """
 
     def __init__(self, room_size=5, max_steps: int | None = None, **kwargs):
@@ -76,8 +160,50 @@ class FindObjS5(RoomGridLevel):
 
 class KeyCorridor(RoomGridLevel):
     """
+
+    ## Description
+
     A ball is behind a locked door, the key is placed in a
     random room.
+
+    ## Mission Space
+
+    "go to the red ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent goes to the red ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-GoToRedBallGrey-v0`
     """
 
     def __init__(
@@ -122,8 +248,50 @@ class KeyCorridor(RoomGridLevel):
 
 class OneRoomS8(RoomGridLevel):
     """
+
+    ## Description
+
     Pick up the ball
     Rooms have a size of 8
+
+    ## Mission Space
+
+    "go to the red ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent goes to the red ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-GoToRedBallGrey-v0`
     """
 
     def __init__(self, room_size=8, **kwargs):
@@ -137,9 +305,51 @@ class OneRoomS8(RoomGridLevel):
 
 class MoveTwoAcross(RoomGridLevel):
     """
+
+    ## Description
+
     Task of the form: move the A next to the B and the C next to the D.
     This task is structured to have a very large number of possible
     instructions.
+
+    ## Mission Space
+
+    "go to the red ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent goes to the red ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-GoToRedBallGrey-v0`
     """
 
     def __init__(
