@@ -59,7 +59,8 @@ class Open(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-Open-v0`
+
     """
 
     def gen_mission(self):
@@ -128,7 +129,8 @@ class OpenRedDoor(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-OpenRedDoor-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -186,7 +188,11 @@ class OpenDoor(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-OpenDoor-v0`
+    - `BabyAI-OpenDoorDebug-v0`
+    - `BabyAI-OpenDoorColor-v0`
+    - `BabyAI-OpenDoorLoc-v0`
+
     """
 
     def __init__(self, debug=False, select_by=None, **kwargs):
@@ -263,7 +269,10 @@ class OpenTwoDoors(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-OpenTwoDoors-v0`
+    - `BabyAI-OpenRedBlueDoors-v0`
+    - `BabyAI-OpenRedBlueDoorsDebug-v0`
+
     """
 
     def __init__(
@@ -349,7 +358,10 @@ class OpenDoorsOrder(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-OpenDoorsOrderN2-v0`
+    - `BabyAI-OpenDoorsOrderN4-v0`
+    - `BabyAI-OpenDoorsOrderN2Debug-v0`
+    - `BabyAI-OpenDoorsOrderN4Debug-v0`
     """
 
     def __init__(self, num_doors, debug=False, max_steps: int | None = None, **kwargs):

@@ -56,7 +56,8 @@ class Unlock(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-Unlock-v0`
+
     """
 
     def gen_mission(self):
@@ -151,7 +152,9 @@ class UnlockLocal(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-UnlockLocal-v0`
+    - `BabyAI-UnlockLocalDist-v0`
+
     """
 
     def __init__(self, distractors=False, **kwargs):
@@ -212,7 +215,8 @@ class KeyInBox(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-KeyInBox-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -275,7 +279,9 @@ class UnlockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-UnlockPickup-v0`
+    - `BabyAI-UnlockPickupDist-v0`
+
     """
 
     def __init__(self, distractors=False, max_steps: int | None = None, **kwargs):
@@ -348,7 +354,8 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-BlockedUnlockPickup-v0`
+
     """
 
     def __init__(self, max_steps: int | None = None, **kwargs):
@@ -420,7 +427,8 @@ class UnlockToUnlock(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-UnlockToUnlock-v0`
+
     """
 
     def __init__(self, max_steps: int | None = None, **kwargs):

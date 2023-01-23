@@ -53,7 +53,8 @@ class Pickup(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-Pickup-v0`
+
     """
 
     def gen_mission(self):
@@ -110,7 +111,8 @@ class UnblockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-UnblockPickup-v0`
+
     """
 
     def gen_mission(self):
@@ -174,7 +176,8 @@ class PickupLoc(LevelGen):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-PickupLoc-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -240,7 +243,9 @@ class PickupDist(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-PickupDist-v0`
+    - `BabyAI-PickupDistDebug-v0`
+
     """
 
     def __init__(self, debug=False, **kwargs):
@@ -309,7 +314,8 @@ class PickupAbove(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-PickupAbove-v0`
+
     """
 
     def __init__(self, max_steps: int | None = None, **kwargs):

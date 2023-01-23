@@ -62,7 +62,8 @@ class ActionObjDoor(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-ActionObjDoor-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -137,7 +138,10 @@ class FindObjS5(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-FindObjS5-v0`
+    - `BabyAI-FindObjS6-v0`
+    - `BabyAI-FindObjS7-v0`
+
     """
 
     def __init__(self, room_size=5, max_steps: int | None = None, **kwargs):
@@ -203,7 +207,14 @@ class KeyCorridor(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-KeyCorridor-v0`
+    - `BabyAI-KeyCorridorS3R1-v0`
+    - `BabyAI-KeyCorridorS3R2-v0`
+    - `BabyAI-KeyCorridorS3R3-v0`
+    - `BabyAI-KeyCorridorS4R3-v0`
+    - `BabyAI-KeyCorridorS5R3-v0`
+    - `BabyAI-KeyCorridorS6R3-v0`
+
     """
 
     def __init__(
@@ -291,7 +302,11 @@ class OneRoomS8(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-OneRoomS8-v0`
+    - `BabyAI-OneRoomS12-v0`
+    - `BabyAI-OneRoomS16-v0`
+    - `BabyAI-OneRoomS20-v0`
+
     """
 
     def __init__(self, room_size=8, **kwargs):
@@ -349,7 +364,9 @@ class MoveTwoAcross(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-MoveTwoAcrossS5N2-v0`
+    - `BabyAI-MoveTwoAcrossS8N9-v0`
+
     """
 
     def __init__(

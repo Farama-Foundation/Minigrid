@@ -53,7 +53,10 @@ class PutNextLocal(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-PutNextLocal-v0`
+    - `BabyAI-PutNextLocalS5N3-v0`
+    - `BabyAI-PutNextLocalS6N4-v0``
+
     """
 
     def __init__(self, room_size=8, num_objs=8, **kwargs):
@@ -117,7 +120,15 @@ class PutNext(RoomGridLevel):
 
     ## Registered Configurations
 
-    - `BabyAI-GoToRedBallGrey-v0`
+    - `BabyAI-PutNextS4N1-v0
+    - `BabyAI-PutNextS5N2-v0`
+    - `BabyAI-PutNextS5N1-v0`
+    - `BabyAI-PutNextS6N3-v0`
+    - `BabyAI-PutNextS7N4-v0`
+    - `BabyAI-PutNextS5N2Carrying-v0`
+    - `BabyAI-PutNextS6N3Carrying-v0`
+    - `BabyAI-PutNextS7N4Carrying-v0`
+
     """
 
     def __init__(
