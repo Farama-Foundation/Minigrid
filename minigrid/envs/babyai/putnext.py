@@ -18,7 +18,12 @@ class PutNextLocal(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -48,7 +53,7 @@ class PutNextLocal(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent finishes the instructed task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -85,7 +90,12 @@ class PutNext(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -115,12 +125,12 @@ class PutNext(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent finishes the instructed task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
 
-    - `BabyAI-PutNextS4N1-v0
+    - `BabyAI-PutNextS4N1-v0`
     - `BabyAI-PutNextS5N2-v0`
     - `BabyAI-PutNextS5N1-v0`
     - `BabyAI-PutNextS6N3-v0`

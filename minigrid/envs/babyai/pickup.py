@@ -18,7 +18,12 @@ class Pickup(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up a {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -48,7 +53,7 @@ class Pickup(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -76,7 +81,12 @@ class UnblockPickup(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up a/the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -106,7 +116,7 @@ class UnblockPickup(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -141,7 +151,12 @@ class PickupLoc(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -171,7 +186,7 @@ class PickupLoc(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -208,7 +223,12 @@ class PickupDist(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up a/the {color}/{type}/{color}{type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -238,7 +258,7 @@ class PickupDist(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -279,7 +299,12 @@ class PickupAbove(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "go to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -309,7 +334,7 @@ class PickupAbove(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations

@@ -27,7 +27,20 @@ class ActionObjDoor(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the {color} {type}"
+
+    or
+
+    "go to the {color} {type}"
+
+    or
+
+    "open a {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box", "door" or "key".
 
     ## Action Space
 
@@ -57,7 +70,7 @@ class ActionObjDoor(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent finishes the instruction.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -103,7 +116,9 @@ class FindObjS5(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the {type}"
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -133,7 +148,7 @@ class FindObjS5(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the object.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -172,7 +187,7 @@ class KeyCorridor(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the ball"
 
     ## Action Space
 
@@ -202,7 +217,7 @@ class KeyCorridor(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the ball.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -262,12 +277,11 @@ class OneRoomS8(RoomGridLevel):
 
     ## Description
 
-    Pick up the ball
-    Rooms have a size of 8
+    Pick up the ball. Rooms have a size of 8.
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the ball"
 
     ## Action Space
 
@@ -297,7 +311,7 @@ class OneRoomS8(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the ball.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -329,7 +343,12 @@ class MoveTwoAcross(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "put the {color} {type} next to the {color} {type}, then put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -359,7 +378,7 @@ class MoveTwoAcross(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent finishes the instruction.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations

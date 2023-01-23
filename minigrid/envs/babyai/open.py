@@ -24,7 +24,10 @@ class Open(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open a {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -54,7 +57,7 @@ class Open(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -94,7 +97,7 @@ class OpenRedDoor(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the red door"
 
     ## Action Space
 
@@ -124,7 +127,7 @@ class OpenRedDoor(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -153,7 +156,10 @@ class OpenDoor(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -183,7 +189,7 @@ class OpenDoor(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -234,7 +240,10 @@ class OpenTwoDoors(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the {color} door, the open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -264,7 +273,7 @@ class OpenTwoDoors(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -323,7 +332,18 @@ class OpenDoorsOrder(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the {color} door, the open the {color} door"
+
+    or
+
+    "open the {color} door after you open the {color} door"
+
+    or
+
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -353,7 +373,7 @@ class OpenDoorsOrder(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
