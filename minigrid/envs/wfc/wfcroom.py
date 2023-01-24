@@ -80,8 +80,7 @@ class GridNavDatasetGenerator:
 
         self.dataset_meta = self.generate_dataset_metadata()
         self.batches_meta = self.generate_batches_metadata()
-        #self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
-        self._seeds_per_batch = self.config.seeds_per_batch #TODO: remove the hardcoding
+        self._seeds_per_batch = len(self._task_seeds) // len(self.batches_meta)
         self.data_type = self.dataset_meta['data_type']
         self.save_dir = self.get_dataset_dir(self.config.dir_name)
         self.generated_batches = {}
@@ -97,9 +96,15 @@ class GridNavDatasetGenerator:
         if not dataset_config.generate_images:
             dataset_config.label_descriptors.remove('images')
         if dataset_config.num_train_batches is None:
-            dataset_config.num_train_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
+            if dataset_config.size_train_batch == 0:
+                dataset_config.num_train_batches = 0
+            else:
+                dataset_config.num_train_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
         if dataset_config.num_test_batches is None:
-            dataset_config.num_test_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
+            if dataset_config.size_test_batch == 0:
+                dataset_config.num_test_batches = 0
+            else:
+                dataset_config.num_test_batches = int(np.array(list(dataset_config.task_structure_split.values())).sum())
 
         if dataset_config.save_as_completed and dataset_config.check_unique:
             raise ValueError("Cannot have config.save_as_completed and config.check_unique True at the same time.")
@@ -108,6 +113,15 @@ class GridNavDatasetGenerator:
 
     def generate_dataset_metadata(self):
         # TODO: would be easier to just instantiate all metadata as OmegaConf objects
+
+        level_info = {
+            'numpy': True,
+            'dtype': np.uint8,
+            'shape': (self.config.gridworld_data_dim[1],
+                      self.config.gridworld_data_dim[2],
+                      self.config.gridworld_data_dim[0]),
+            }
+
         dataset_meta = {
             'output_file'                      : 'dataset.meta',
             'size'                             : self.config.size,
@@ -127,6 +141,7 @@ class GridNavDatasetGenerator:
             'normalised_metrics'               : False,
             'ts_thumbnails'                    : self.ts_thumbnails,
             'ts_batches'                       : self.ts_batches,
+            'level_info'                       : level_info,
             }
 
         return dataset_meta
@@ -187,7 +202,8 @@ class GridNavDatasetGenerator:
                     batches_meta.append(batch_meta)
 
             else:
-                raise ValueError(f"Number of batches must be greater than 0.")
+                logger.info(f"No {regime} batches will be generated.")
+                # raise ValueError(f"Number of batches must be greater than 0.")
 
         batches_meta = []
         for val in all_batches_meta.values():
@@ -218,6 +234,13 @@ class GridNavDatasetGenerator:
             logger.info(f"Saving dataset in new directory {self.save_dir}")
             os.makedirs(self.save_dir)
             self.save_dataset_meta()
+
+        logger.info(f"Batches to be generated:")
+        for batch_meta in self.batches_meta:
+            if batch_meta['output_file'] in self.existing_files:
+                continue
+            else:
+                logger.info(f"Batch {batch_meta['batch_id']}")
 
         n_labels = 0
         seed_counter = 0
@@ -362,7 +385,7 @@ class GridNavDatasetGenerator:
             b_data.label_ids = torch.arange(label_id_count, label_id_count + b_data.batch_meta['batch_size']).to(torch.int64)
             label_id_count += b_data.batch_meta['batch_size']
             data = [b_data.features[i] for i in range(self.config.n_thumbnail_per_batch)]
-            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
+            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta['level_info'])
             self.ts_thumbnails[b_data.batch_meta['task_structure']] = images
             self.update_metric_normalisation_factors(b_data.label_contents)
 
@@ -714,7 +737,7 @@ class Batch:
         self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
         self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
         if "images" in self.label_contents.keys():
-            self.label_contents["images"] = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
+            self.label_contents["images"] = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta['level_info'])
 
         self.compute_graph_metrics(data, features)
 
@@ -831,7 +854,7 @@ class WaveCollapseBatch(Batch):
         def _pattern_to_minigrid_layout(self, patterns):
 
             assert patterns.ndim == 4
-            layouts = np.ones(patterns.shape, dtype=tr.LEVEL_INFO['dtype']) * tr.Minigrid_OBJECT_TO_IDX['empty']
+            layouts = np.ones(patterns.shape, dtype=self.dataset_meta['level_info']['dtype']) * tr.Minigrid_OBJECT_TO_IDX['empty']
 
             wall_ids = np.where(patterns == self.PATTERN_COLOR_CONFIG['wall'])
             layouts[wall_ids] = tr.Minigrid_OBJECT_TO_IDX['wall']
@@ -875,7 +898,7 @@ class WaveCollapseBatch(Batch):
         def get_images(self, idx: List[int]) -> List[torch.Tensor]:
 
             data = [self.features[i] for i in idx]
-            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16)
+            images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta['level_info'])
             return images
 
 

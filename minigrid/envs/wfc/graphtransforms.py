@@ -148,6 +148,31 @@ class Nav2DTransforms:
     #     return features
 
     @staticmethod
+    def minigrid_to_bitmap(grids):
+
+        layout = grids[..., 0]
+        bitmap = np.zeros_like(layout)
+        bitmap[layout == 2] = 1
+        bitmap = list(bitmap)
+
+        start_pos_id = np.where(layout == 10)
+        goal_pos_id = np.where(layout == 8)
+
+        start_pos = []
+        goal_pos = []
+        for i in range(len(bitmap)):
+            bitmap[i] = bitmap[i][1:-1, 1:-1]
+            start_pos.append(np.array([start_pos_id[2][i], start_pos_id[1][i]]))
+            goal_pos.append(np.array([goal_pos_id[2][i], goal_pos_id[1][i]]))
+
+        return bitmap, start_pos, goal_pos
+
+    @staticmethod
+    def graphs_to_bitmap(graphs: List[dgl.DGLGraph], level_info=None) -> Tuple[List[np.ndarray], List[np.ndarray], List[np.ndarray]]:
+        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs, level_info=level_info)
+        return Nav2DTransforms.minigrid_to_bitmap(grids)
+
+    @staticmethod
     def encode_minigrid_to_gridworld(envs: List[MiniGridEnv]) -> np.ndarray:
         minigrid_grid_arrays = [env.grid.encode()[:, :, 0] for env in envs]
 
@@ -681,8 +706,8 @@ class Nav2DTransforms:
         return grids
 
     @staticmethod
-    def dense_graph_to_minigrid_render(graphs, tile_size=32):
-        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs)
+    def dense_graph_to_minigrid_render(graphs, tile_size=32, level_info=None):
+        grids = Nav2DTransforms.dense_graph_to_minigrid(graphs, level_info)
         return Nav2DTransforms.minigrid_to_minigrid_render(grids, tile_size=tile_size)
 
     @staticmethod
