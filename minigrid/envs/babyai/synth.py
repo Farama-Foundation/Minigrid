@@ -22,7 +22,24 @@ class Synth(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    "go to the {color} {type}"
+
+    or
+
+    "pick up a/the {color} {type}"
+
+    or
+
+    "open the {color} door"
+
+    or
+
+    "put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
 
     ## Action Space
 
@@ -52,7 +69,7 @@ class Synth(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -90,7 +107,27 @@ class SynthLoc(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    "go to the {color} {type} {location}"
+
+    or
+
+    "pick up a/the {color} {type} {location}"
+
+    or
+
+    "open the {color} door {location}"
+
+    or
+
+    "put the {color} {type} {location} next to the {color} {type} {location}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    {location} can be " ", "in front of you", "behind you", "on your left"
+    or "on your right"
 
     ## Action Space
 
@@ -120,7 +157,7 @@ class SynthLoc(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -204,6 +241,8 @@ class MiniBossLevel(LevelGen):
 
     ## Description
 
+    Command can be any sentence drawn from the Baby Language grammar.
+    Union of all competencies. This level is a superset of all other levels.
 
     ## Mission Space
 
