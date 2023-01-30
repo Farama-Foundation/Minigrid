@@ -189,7 +189,50 @@ class SynthSeq(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    Action mission space:
+
+    "go to the {color} {type} {location}"
+
+    or
+
+    "pick up a/the {color} {type} {location}"
+
+    or
+
+    "open the {color} door {location}"
+
+    or
+
+    "put the {color} {type} {location} next to the {color} {type} {location}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    {location} can be " ", "in front of you", "behind you", "on your left"
+    or "on your right"
+
+    And mission space:
+
+    Two action missions concatenated with "and"
+
+    Example:
+
+    go to the green key
+    and
+    put the box next to the yellow ball
+
+    Sequence mission space:
+
+    Two missions, they can be action or and missions, concatenated with
+    ", then" or "after you".
+
+    Example:
+
+    open a red door and go to the ball on your left
+    after you
+    put the grey ball next to a door
 
     ## Action Space
 
@@ -219,7 +262,7 @@ class SynthSeq(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -243,10 +286,55 @@ class MiniBossLevel(LevelGen):
 
     Command can be any sentence drawn from the Baby Language grammar.
     Union of all competencies. This level is a superset of all other levels.
+    Compared to BossLevel this has a smaller room and a lower probability of
+    locked rooms.
 
     ## Mission Space
 
-    "go to the red ball"
+    Action mission space:
+
+    "go to the {color} {type} {location}"
+
+    or
+
+    "pick up a/the {color} {type} {location}"
+
+    or
+
+    "open the {color} door {location}"
+
+    or
+
+    "put the {color} {type} {location} next to the {color} {type} {location}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    {location} can be " ", "in front of you", "behind you", "on your left"
+    or "on your right"
+
+    And mission space:
+
+    Two action missions concatenated with "and"
+
+    Example:
+
+    go to the green key
+    and
+    put the box next to the yellow ball
+
+    Sequence mission space:
+
+    Two missions, they can be action or and missions, concatenated with
+    ", then" or "after you".
+
+    Example:
+
+    open a red door and go to the ball on your left
+    after you
+    put the grey ball next to a door
 
     ## Action Space
 
@@ -276,7 +364,7 @@ class MiniBossLevel(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -306,7 +394,50 @@ class BossLevel(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    Action mission space:
+
+    "go to the {color} {type} {location}"
+
+    or
+
+    "pick up a/the {color} {type} {location}"
+
+    or
+
+    "open the {color} door {location}"
+
+    or
+
+    "put the {color} {type} {location} next to the {color} {type} {location}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    {location} can be " ", "in front of you", "behind you", "on your left"
+    or "on your right"
+
+    And mission space:
+
+    Two action missions concatenated with "and"
+
+    Example:
+
+    go to the green key
+    and
+    put the box next to the yellow ball
+
+    Sequence mission space:
+
+    Two missions, they can be action or and missions, concatenated with
+    ", then" or "after you".
+
+    Example:
+
+    open a red door and go to the ball on your left
+    after you
+    put the grey ball next to a door
 
     ## Action Space
 
@@ -336,7 +467,7 @@ class BossLevel(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -359,7 +490,50 @@ class BossLevelNoUnlock(LevelGen):
 
     ## Mission Space
 
-    "go to the red ball"
+    Action mission space:
+
+    "go to the {color} {type} {location}"
+
+    or
+
+    "pick up a/the {color} {type} {location}"
+
+    or
+
+    "open the {color} door {location}"
+
+    or
+
+    "put the {color} {type} {location} next to the {color} {type} {location}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    {location} can be " ", "in front of you", "behind you", "on your left"
+    or "on your right"
+
+    And mission space:
+
+    Two action missions concatenated with "and"
+
+    Example:
+
+    go to the green key
+    and
+    put the box next to the yellow ball
+
+    Sequence mission space:
+
+    Two missions, they can be action or and missions, concatenated with
+    ", then" or "after you".
+
+    Example:
+
+    open a red door and go to the ball on your left
+    after you
+    put the grey ball next to a door
 
     ## Action Space
 
@@ -389,7 +563,7 @@ class BossLevelNoUnlock(LevelGen):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent achieves the task.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
