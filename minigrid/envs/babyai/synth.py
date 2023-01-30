@@ -262,7 +262,8 @@ class BossLevel(LevelGen):
 
     ## Description
 
-
+    Command can be any sentence drawn from the Baby Language grammar.
+    Union of all competencies. This level is a superset of all other levels.
 
     ## Mission Space
 
@@ -313,7 +314,9 @@ class BossLevelNoUnlock(LevelGen):
 
     ## Description
 
-
+    Command can be any sentence drawn from the Baby Language grammar.
+    Union of all competencies. This level is a superset of all other levels.
+    No implicit unlocking.
 
     ## Mission Space
 

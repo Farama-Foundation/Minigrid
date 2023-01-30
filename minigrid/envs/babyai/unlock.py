@@ -21,7 +21,10 @@ class Unlock(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -51,7 +54,7 @@ class Unlock(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the correct door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -117,7 +120,7 @@ class UnlockLocal(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the door"
 
     ## Action Space
 
@@ -147,7 +150,7 @@ class UnlockLocal(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -180,7 +183,7 @@ class KeyInBox(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "open the door"
 
     ## Action Space
 
@@ -210,7 +213,7 @@ class KeyInBox(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent opens the door.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -244,7 +247,10 @@ class UnlockPickup(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the {color} box"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
 
     ## Action Space
 
@@ -274,7 +280,7 @@ class UnlockPickup(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the correct box.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -319,7 +325,7 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the box"
 
     ## Action Space
 
@@ -349,7 +355,7 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the box.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
@@ -392,7 +398,7 @@ class UnlockToUnlock(RoomGridLevel):
 
     ## Mission Space
 
-    "go to the red ball"
+    "pick up the ball"
 
     ## Action Space
 
@@ -422,7 +428,7 @@ class UnlockToUnlock(RoomGridLevel):
 
     The episode ends if any one of the following conditions is met:
 
-    1. The agent goes to the red ball.
+    1. The agent picks up the ball.
     2. Timeout (see `max_steps`).
 
     ## Registered Configurations
