@@ -407,8 +407,8 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
 
 class MultiPedestrianEnv5x20(MultiPedestrianEnv):
     def __init__(self):
-        width = 200
-        height = 4 # actual height: 10 + 2 gray square on top and bottom
+        width = 30
+        height = 6 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,

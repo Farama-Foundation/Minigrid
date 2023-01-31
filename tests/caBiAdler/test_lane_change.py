@@ -87,3 +87,49 @@ def test_2_agents(env):
     # assert False
 
 
+@pytest.mark.caBiAdler
+def test_2_agents_for_diagram(env):
+
+    agents = []
+
+    agent1Position = (3,4)
+    agent1Speed = 3
+    agent1 = BlueAdlerPedAgent(
+        id=1,
+        position=agent1Position,
+        direction=Direction.LR,
+        speed=3,
+        DML=False,
+        p_exchg=0.0
+    )
+
+    agents.append(agent1)
+
+    # agent2Position = (3,2)
+    # agent2Speed = 3
+    # agent2 = BlueAdlerPedAgent(
+    #     id=1,
+    #     position=agent2Position,
+    #     direction=Direction.LR,
+    #     speed=3,
+    #     DML=False,
+    #     p_exchg=0.0
+    # )
+    # agents.append(agent2)
+
+    # agent2 = BlueAdlerPedAgent(
+
+    env.addAgents(agents)
+
+    runSteps(env, 1, close=False)
+
+    # assert agent1.position == agent1Position
+    # assert agent2.position == agent2Position
+
+    runSteps(env, 1)
+    # assert agent1.position == agent1Position
+    # assert agent2.position == agent2Position
+
+    # assert False
+
+
