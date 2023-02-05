@@ -14,9 +14,10 @@ class Synth(LevelGen):
 
     ## Description
 
-    Union of all instructions from PutNext, Open, Goto and PickUp. The agent
-    may need to move objects around. The agent may have to unlock the door,
-    but only if it is explicitly referred by the instruction.
+    Union of all instructions from PutNext, Open, Goto and PickUp.
+    The agent may need to move objects around. The agent may have
+    to unlock the door, but only if it is explicitly referred by
+    the instruction.
 
     Competencies: Maze, Unblock, Unlock, GoTo, PickUp, PutNext, Open
 
