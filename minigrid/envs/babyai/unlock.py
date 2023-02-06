@@ -12,9 +12,55 @@ from minigrid.envs.babyai.core.verifier import ObjDesc, OpenInstr, PickupInstr
 
 class Unlock(RoomGridLevel):
     """
+
+    ## Description
+
     Unlock a door.
 
     Competencies: Maze, Open, Unlock. No unblocking.
+
+    ## Mission Space
+
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the correct door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-Unlock-v0`
+
     """
 
     def gen_mission(self):
@@ -66,8 +112,52 @@ class Unlock(RoomGridLevel):
 
 class UnlockLocal(RoomGridLevel):
     """
+
+    ## Description
+
     Fetch a key and unlock a door
     (in the current room)
+
+    ## Mission Space
+
+    "open the door"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-UnlockLocal-v0`
+    - `BabyAI-UnlockLocalDist-v0`
+
     """
 
     def __init__(self, distractors=False, **kwargs):
@@ -86,7 +176,50 @@ class UnlockLocal(RoomGridLevel):
 
 class KeyInBox(RoomGridLevel):
     """
+
+    ## Description
+
     Unlock a door. Key is in a box (in the current room).
+
+    ## Mission Space
+
+    "open the door"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-KeyInBox-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -107,7 +240,54 @@ class KeyInBox(RoomGridLevel):
 
 class UnlockPickup(RoomGridLevel):
     """
+
+    ## Description
+
     Unlock a door, then pick up a box in another room
+
+    ## Mission Space
+
+    "pick up the {color} box"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent picks up the correct box.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-UnlockPickup-v0`
+    - `BabyAI-UnlockPickupDist-v0`
+
     """
 
     def __init__(self, distractors=False, max_steps: int | None = None, **kwargs):
@@ -137,8 +317,51 @@ class UnlockPickup(RoomGridLevel):
 
 class BlockedUnlockPickup(RoomGridLevel):
     """
+
+    ## Description
+
     Unlock a door blocked by a ball, then pick up a box
     in another room
+
+    ## Mission Space
+
+    "pick up the box"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent picks up the box.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-BlockedUnlockPickup-v0`
+
     """
 
     def __init__(self, max_steps: int | None = None, **kwargs):
@@ -168,7 +391,50 @@ class BlockedUnlockPickup(RoomGridLevel):
 
 class UnlockToUnlock(RoomGridLevel):
     """
+
+    ## Description
+
     Unlock a door A that requires to unlock a door B before
+
+    ## Mission Space
+
+    "pick up the ball"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent picks up the ball.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-UnlockToUnlock-v0`
+
     """
 
     def __init__(self, max_steps: int | None = None, **kwargs):
