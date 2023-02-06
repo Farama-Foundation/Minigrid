@@ -3,7 +3,6 @@ from __future__ import annotations
 import math
 import operator
 from functools import reduce
-from pdb import set_trace
 
 import gymnasium as gym
 import numpy as np
@@ -602,8 +601,6 @@ class FlatObsWrapper(ObservationWrapper):
     def observation(self, obs):
         image = obs["image"]
         mission = obs["mission"]
-
-        set_trace()
 
         # Cache the last-encoded mission string
         if mission != self.cachedStr:
