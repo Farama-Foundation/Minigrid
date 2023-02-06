@@ -11,6 +11,7 @@ from gymnasium.core import ObservationWrapper, Wrapper
 
 from minigrid.core.constants import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX
 from minigrid.core.world_object import Goal
+from pdb import set_trace
 
 
 class ReseedWrapper(Wrapper):
@@ -201,7 +202,7 @@ class ImgObsWrapper(ObservationWrapper):
         >>> import gymnasium as gym
         >>> from minigrid.wrappers import ImgObsWrapper
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
-        >>> obs, _ = env.reset(seed=0)
+        >>> obs, _ = env.reset()
         >>> obs.keys()
         dict_keys(['image', 'direction', 'mission'])
         >>> env = ImgObsWrapper(env)
@@ -231,9 +232,9 @@ class OneHotPartialObsWrapper(ObservationWrapper):
     Example:
         >>> import miniworld
         >>> import gymnasium as gym
-        >>> from minigrid.wrappers import ImgObsWrapper
+        >>> from minigrid.wrappers import OneHotPartialObsWrapper
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
-        >>> obs, _ = env.reset(seed=0)
+        >>> obs, _ = env.reset()
         >>> obs["image"][0, :, :]
         array([[2, 5, 0],
                [2, 5, 0],
@@ -298,6 +299,20 @@ class RGBImgObsWrapper(ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import RGBImgObsWrapper
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs['image'])
+        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)
+        >>> env = RGBImgObsWrapper(env)
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs['image'])
+        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)
     """
 
     def __init__(self, env, tile_size=8):
@@ -326,6 +341,24 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import RGBImgObsWrapper, RGBImgPartialObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs["image"])
+        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)
+        >>> env_obs = RGBImgObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> plt.imshow(obs["image"])
+        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)
+        >>> env_obs = RGBImgPartialObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> plt.imshow(obs["image"])
+        ![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)
     """
 
     def __init__(self, env, tile_size=8):
@@ -354,7 +387,21 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
 
 class FullyObsWrapper(ObservationWrapper):
     """
-    Fully observable gridworld using a compact grid encoding
+    Fully observable gridworld using a compact grid encoding instead of the agent view.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import FullyObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = FullyObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (11, 11, 3)
     """
 
     def __init__(self, env):
@@ -387,6 +434,20 @@ class DictObservationSpaceWrapper(ObservationWrapper):
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
 
     This wrapper is not applicable to BabyAI environments, given that these have their own language component.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import DictObservationSpaceWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['mission']
+        'avoid the lava and get to the green goal square'
+        >>> env_obs = DictObservationSpaceWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['mission'][:10]
+        [19, 31, 17, 36, 20, 38, 31, 2, 15, 35]
     """
 
     def __init__(self, env, max_words_in_mission=50, word_dict=None):
@@ -507,6 +568,17 @@ class FlatObsWrapper(ObservationWrapper):
     and combine these with observed images into one flat array.
 
     This wrapper is not applicable to BabyAI environments, given that these have their own language component.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import FlatObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> env_obs = FlatObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs.shape
+        (2835,)
     """
 
     def __init__(self, env, maxStrLen=96):
@@ -530,6 +602,8 @@ class FlatObsWrapper(ObservationWrapper):
     def observation(self, obs):
         image = obs["image"]
         mission = obs["mission"]
+
+        set_trace()
 
         # Cache the last-encoded mission string
         if mission != self.cachedStr:
@@ -568,6 +642,20 @@ class ViewSizeWrapper(Wrapper):
     """
     Wrapper to customize the agent field of view size.
     This cannot be used with fully observable wrappers.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import ViewSizeWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = ViewSizeWrapper(env, agent_view_size=5)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (5, 5, 3)
     """
 
     def __init__(self, env, agent_view_size=7):
