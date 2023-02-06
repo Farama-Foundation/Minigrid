@@ -17,7 +17,53 @@ from minigrid.envs.babyai.core.verifier import (
 
 class Open(RoomGridLevel):
     """
+
+    ## Description
+
     Open a door, which may be in another room
+
+    ## Mission Space
+
+    "open a {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-Open-v0`
+
     """
 
     def gen_mission(self):
@@ -41,10 +87,53 @@ class Open(RoomGridLevel):
 
 class OpenRedDoor(RoomGridLevel):
     """
+
+    ## Description
+
     Go to the red door
     (always unlocked, in the current room)
     Note: this level is intentionally meant for debugging and is
     intentionally kept very simple.
+
+    ## Mission Space
+
+    "open the red door"
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-OpenRedDoor-v0`
+
     """
 
     def __init__(self, **kwargs):
@@ -58,9 +147,58 @@ class OpenRedDoor(RoomGridLevel):
 
 class OpenDoor(RoomGridLevel):
     """
+
+    ## Description
+
     Go to the door
     The door to open is given by its color or by its location.
     (always unlocked, in the current room)
+
+    ## Mission Space
+
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-OpenDoor-v0`
+    - `BabyAI-OpenDoorDebug-v0`
+    - `BabyAI-OpenDoorColor-v0`
+    - `BabyAI-OpenDoorLoc-v0`
+
     """
 
     def __init__(self, debug=False, select_by=None, **kwargs):
@@ -92,10 +230,58 @@ class OpenDoor(RoomGridLevel):
 
 class OpenTwoDoors(RoomGridLevel):
     """
+
+    ## Description
+
     Open door X, then open door Y
     The two doors are facing opposite directions, so that the agent
     Can't see whether the door behind him is open.
     This task requires memory (recurrent policy) to be solved effectively.
+
+    ## Mission Space
+
+    "open the {color} door, the open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-OpenTwoDoors-v0`
+    - `BabyAI-OpenRedBlueDoors-v0`
+    - `BabyAI-OpenRedBlueDoorsDebug-v0`
+
     """
 
     def __init__(
@@ -139,7 +325,63 @@ class OpenTwoDoors(RoomGridLevel):
 
 class OpenDoorsOrder(RoomGridLevel):
     """
+
+    ## Description
+
     Open one or two doors in the order specified.
+
+    ## Mission Space
+
+    "open the {color} door, the open the {color} door"
+
+    or
+
+    "open the {color} door after you open the {color} door"
+
+    or
+
+    "open the {color} door"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent opens the door.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-OpenDoorsOrderN2-v0`
+    - `BabyAI-OpenDoorsOrderN4-v0`
+    - `BabyAI-OpenDoorsOrderN2Debug-v0`
+    - `BabyAI-OpenDoorsOrderN4Debug-v0`
     """
 
     def __init__(self, num_doors, debug=False, max_steps: int | None = None, **kwargs):
