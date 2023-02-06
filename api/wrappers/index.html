@@ -14,8 +14,8 @@
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
         <title>Action Bonus - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=6e5c1b8ed2a40fe812b456d29406f7f0a7f2228c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=3cf7b839e8c50b5f3a39bb99d90baa7b845de926" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=9e86d0f2b4c7365fca1b48b729b6cac79739c5d7" />
     
     
 
@@ -42,199 +42,70 @@
   }
 </style></head>
   <body>
-    <header class="farama-header">
+    <header class="farama-header" aria-label="Farama header">
       <div class="farama-header__container">
-        <div class="farama-header__left">
+        <div class="farama-header__left--mobile">
+          <label class="nav-overlay-icon" for="__navigation">
+            <div class="visually-hidden">Toggle site navigation sidebar</div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs></defs>
+              <line x1="0.5" y1="4" x2="23.5" y2="4"></line>
+              <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
+              <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
+            </svg>
+            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
+              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
+              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
+              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
+            </svg> -->
+            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
+              <defs></defs>
+              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
+              <line x1="8" y1="1" x2="8" y2="23"></line>
+              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
+            </svg> -->
+          </label>
+        </div>
+        <div class="farama-header__left farama-header__center--mobile">
           <a href="../../">
               <img class="farama-header__logo only-light" src="../../_static/img/minigrid.svg" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.svg" alt="Dark Logo"/>
-            <h1 class="farama-header__title">MiniGrid Documentation</h1>
+            <span class="farama-header__title">MiniGrid Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
           <div class="farama-header-menu">
-            <div class="farama-header-menu__btn">
-              <span class="farama-header-menu__btn-name">
-                Farama Foundation
-              </span>
-              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-                  <defs></defs>
-                  <path d="M 3 4.677 C 3 3.751 3.659 3 4.474 3 L 27.526 3 C 28.341 3 29 3.751 29 4.677 C 29 5.603 28.341 6.354 27.526 6.354 L 4.474 6.354 C 3.659 6.354 3 5.603 3 4.677 Z" bx:origin="0.622825 3.875593"></path>
-                  <path d="M 3 16 C 3 15.074 3.659 14.323 4.474 14.323 L 27.526 14.323 C 28.341 14.323 29 15.074 29 16 C 29 16.926 28.341 17.677 27.526 17.677 L 4.474 17.677 C 3.659 17.677 3 16.926 3 16 Z" bx:origin="0.622825 0.5"></path>
-                  <path d="M 3 27.323 C 3 26.397 3.659 25.646 4.474 25.646 L 27.526 25.646 C 28.341 25.646 29 26.397 29 27.323 C 29 28.249 28.341 29 27.526 29 L 4.474 29 C 3.659 29 3 28.249 3 27.323 Z" bx:origin="0.622825 -2.875591"></path>
+            <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
+              <img class="farama-white-logo-invert" src="../../_static/img/farama-logo-header.svg">
+              <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
               </svg>
-            </div>
-            <div class="farama-header-menu-container">
+            </button>
+            <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
               <div class="farama-header-menu__header">
                 <a href="https://farama.org">
-                  <img class="farama-header-menu__logo" src="../../_static/img/farama_solid_white.svg" alt="Farama Foundation">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
                   <span>Farama Foundation</span>
                 </a>
-                <button id="farama-close-menu">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
-                    <line x1="3" y1="21" x2="21" y2="3"></line>
-                    <line x1="3" y1="3" x2="21" y2="21"></line>
-                  </svg>
-                </button>
+                <div class="farama-header-menu-header__right">
+                  <button id="farama-close-menu">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close">
+                      <line x1="3" y1="21" x2="21" y2="3"></line>
+                      <line x1="3" y1="3" x2="21" y2="21"></line>
+                    </svg>
+                  </button>
+                </div>
               </div>
               <div class="farama-header-menu__body">
-                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
-                  <span class="farama-header-menu__section-title">Documentation</span>
-                  <ul class="farama-header-menu-list">
-                    <li>
-                      <a href="https://gymnasium.farama.org">
-                        
-                        <img src="../../_static/img/gymnasium-white.svg">
-                        
-                        Gymnasium
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://pettingzoo.farama.org">
-                        
-                        <img src="../../_static/img/pettingzoo-white.svg">
-                        
-                        PettingZoo
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://minigrid.farama.org">
-                        
-                        <img src="../../_static/img/minigrid-white.svg">
-                        
-                        MiniGrid
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://robotics.farama.org">
-                        
-                        <img src="../../_static/img/gymrobotics-white.svg">
-                        
-                        Gymnasium-Robotics
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </div>
-                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
-                  <span class="farama-header-menu__section-title">Mature Projects</span>
-                  <ul class="farama-header-menu-list">
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/SuperSuit">
-                        
-                        <img src="../../_static/img/supersuit-white.svg">
-                        
-                        SuperSuit
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/tinyscaler">
-                        
-                        <img src="../../_static/img/tinyscaler-white.svg">
-                        
-                        Tinyscaler
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/AutoROM">
-                        
-                        <img src="../../_static/img/autorom-white.svg">
-                        
-                        AutoROM
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/Jumpy">
-                        
-                        <img src="../../_static/img/jumpy-white.svg">
-                        
-                        JumPy
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </div>
-                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
-                  <span class="farama-header-menu__section-title">Incubating Projects</span>
-                  <ul class="farama-header-menu-list">
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/MAgent2">
-                        
-                        <img src="../../_static/img/MAgent2-white.svg">
-                        
-                        MAgent2
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/procgen2">
-                        
-                        <img src="../../_static/img/procgen2-white.svg">
-                        
-                        Procgen2
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/MiniWorld">
-                        
-                        <img src="../../_static/img/miniworld-white.svg">
-                        
-                        Miniworld
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/D4RL">
-                        
-                        <img src="../../_static/img/d4rl-white.svg">
-                        
-                        D4RL
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/Farama-Foundation/Kabuki">
-                        
-                        <img src="../../_static/img/kabuki-white.svg">
-                        
-                        Kabuki
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </div>
-                <div class="farama-header-menu__section"  style="padding-left: 24px;" >
-                  <span class="farama-header-menu__section-title">Foundation</span>
-                  <ul class="farama-header-menu-list">
-                    <li>
-                      <a href="https://farama.org/about">
-                        
-                        About
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://farama.org/project_standards">
-                        
-                        Standards
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://farama.org/donations">
-                        
-                        Donate
-                      </a>
-                    </li>
-                    
-                  </ul>
-                </div>
-                
-
+                <!-- Response from farama.org/api/projects.json -->
               </div>
             </div>
           </div>
         </div>
       </div>
     </header>
-
-    <div class="farama-header-menu__overlay"></div>
 
     
     <script>
@@ -315,7 +186,7 @@
 
 
 <div class="page">
-  <header class="mobile-header">
+   <!--<header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
         <div class="visually-hidden">Toggle site navigation sidebar</div>
@@ -339,11 +210,15 @@
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
-  </header>
+  </header>-->
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><form class="sidebar-search-container" method="get" action="../../search/" role="search">
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../">
+      <img class="farama-header__logo only-light" src="../../_static/img/minigrid.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.svg" alt="Dark Logo"/>
+    <span class="farama-header__title">MiniGrid Documentation</span>
+  </a><form class="sidebar-search-container" method="get" action="../../search/" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -500,6 +375,28 @@
 <dd><p>Wrapper which adds an exploration bonus.
 This is a reward to encourage exploration of less
 visited (state,action) pairs.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ActionBonus</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_bonus</span> <span class="o">=</span> <span class="n">ActionBonus</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -511,6 +408,21 @@ visited (state,action) pairs.</p>
 <dd><p>Transforms the observation space (that has a textual component) to a fully numerical observation space,
 where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.</p>
 <p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">DictObservationSpaceWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;mission&#39;</span><span class="p">]</span>
+<span class="go">&#39;avoid the lava and get to the green goal square&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">DictObservationSpaceWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;mission&#39;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<span class="go">[19, 31, 17, 36, 20, 38, 31, 2, 15, 35]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -532,6 +444,18 @@ type = {slope , angle}</p>
 <dd><p>Encode mission strings using a one-hot scheme,
 and combine these with observed images into one flat array.</p>
 <p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">FlatObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">FlatObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(2835,)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -540,7 +464,22 @@ and combine these with observed images into one flat array.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.FullyObsWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FullyObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.FullyObsWrapper" title="Permalink to this definition">#</a></dt>
-<dd><p>Fully observable gridworld using a compact grid encoding</p>
+<dd><p>Fully observable gridworld using a compact grid encoding instead of the agent view.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">FullyObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(7, 7, 3)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">FullyObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(11, 11, 3)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -548,27 +487,13 @@ and combine these with observed images into one flat array.</p>
 <h1>Observation<a class="headerlink" href="#observation" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.ObservationWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ObservationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ObservationWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ObservationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ObservationWrapper" title="Permalink to this definition">#</a></dt>
 <dd><p>Superclass of wrappers that can modify observations using <code class="xref py py-meth docutils literal notranslate"><span class="pre">observation()</span></code> for <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code>.</p>
 <p>If you would like to apply a function to only the observation before
 passing it to the learning code, you can simply inherit from <a class="reference internal" href="#minigrid.wrappers.ObservationWrapper" title="minigrid.wrappers.ObservationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObservationWrapper</span></code></a> and overwrite the method
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">observation()</span></code> to implement that transformation. The transformation defined in that method must be
 reflected by the <code class="xref py py-attr docutils literal notranslate"><span class="pre">env</span></code> observation space. Otherwise, you need to specify the new observation space of the
 wrapper by setting <code class="xref py py-attr docutils literal notranslate"><span class="pre">self.observation_space</span></code> in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">__init__()</span></code> method of your wrapper.</p>
-<p>For example, you might have a 2D navigation task where the environment returns dictionaries as observations with
-keys <code class="docutils literal notranslate"><span class="pre">&quot;agent_position&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;target_position&quot;</span></code>. A common thing to do might be to throw away some degrees of
-freedom and only consider the position of the target relative to the agent, i.e.
-<code class="docutils literal notranslate"><span class="pre">observation[&quot;target_position&quot;]</span> <span class="pre">-</span> <span class="pre">observation[&quot;agent_position&quot;]</span></code>. For this, you could implement an
-observation wrapper like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RelativePosition</span><span class="p">(</span><span class="n">gymnasium</span><span class="o">.</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
 <p>Among others, Gymnasium provides the observation wrapper <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeAwareObservation</span></code>, which adds information about the
 index of the timestep to the observation.</p>
 </dd></dl>
@@ -581,6 +506,33 @@ index of the timestep to the observation.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">OneHotPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.OneHotPartialObsWrapper" title="Permalink to this definition">#</a></dt>
 <dd><p>Wrapper to get a one-hot encoding of a partially observable
 agent view as observation.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">OneHotPartialObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="go">array([[2, 5, 0],</span>
+<span class="go">       [2, 5, 0],</span>
+<span class="go">       [2, 5, 0],</span>
+<span class="go">       [2, 5, 0],</span>
+<span class="go">       [2, 5, 0],</span>
+<span class="go">       [2, 5, 0],</span>
+<span class="go">       [2, 5, 0]], dtype=uint8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">OneHotPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="go">array([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
+<span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]],</span>
+<span class="go">       dtype=uint8)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -592,6 +544,28 @@ agent view as observation.</p>
 <dd><p>Wrapper to always regenerate an environment with the same set of seeds.
 This can be used to force an environment to always keep the same
 configuration when reset.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">minigrid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ReseedWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[1, 9, 5, 8, 4, 3, 8, 8, 3, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">ReseedWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">seed_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[8, 6, 5, 2, 3, 0, 0, 0, 1, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[4, 5, 7, 9, 0, 1, 8, 9, 2, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[8, 6, 5, 2, 3, 0, 0, 0, 1, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="go">[4, 5, 7, 9, 0, 1, 8, 9, 2, 3]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -602,6 +576,21 @@ configuration when reset.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.RGBImgObsWrapper" title="Permalink to this definition">#</a></dt>
 <dd><p>Wrapper to use fully observable RGB image as observation,
 This can be used to have the agent to solve the gridworld in pixel space.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">RGBImgObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>
+<span class="go">![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">RGBImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>
+<span class="go">![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -612,6 +601,28 @@ This can be used to have the agent to solve the gridworld in pixel space.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">StateBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.StateBonus" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds an exploration bonus based on which positions
 are visited on the grid.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">StateBonus</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_bonus</span> <span class="o">=</span> <span class="n">StateBonus</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env_bonus</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+<span class="go">0.7071067811865475</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -633,6 +644,21 @@ the coordinates on the grid, and IDX is the id of the object.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ViewSizeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_view_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#minigrid.wrappers.ViewSizeWrapper" title="Permalink to this definition">#</a></dt>
 <dd><p>Wrapper to customize the agent field of view size.
 This cannot be used with fully observable wrappers.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">miniworld</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ViewSizeWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(7, 7, 3)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">ViewSizeWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent_view_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(5, 5, 3)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -750,24 +776,21 @@ This cannot be used with fully observable wrappers.</p>
   </div>
 </div>
     <script>
-      let toggleMenu = () => {
+      const toggleMenu = () => {
+        const menuBtn = document.querySelector(".farama-header-menu__btn");
+        const menuContainer = document.querySelector(".farama-header-menu-container");
+        if (document.querySelector(".farama-header-menu").classList.contains("active")) {
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuContainer.setAttribute("aria-hidden", "true");
+        } else {
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuContainer.setAttribute("aria-hidden", "false");
+        }
         document.querySelector(".farama-header-menu").classList.toggle("active");
-        document.querySelector(".farama-header-menu__overlay").classList.toggle("active");
       }
 
       document.querySelector(".farama-header-menu__btn").addEventListener("click", toggleMenu);
       document.getElementById("farama-close-menu").addEventListener("click", toggleMenu);
-      document.querySelector(".farama-header-menu__overlay").addEventListener("click", toggleMenu);
-
-      window.onclick = function(event) {
-        if (!event.target.matches('.farama-header-menu__btn')) {
-          const dropdown = document.querySelector(".farama-header-menu-container");
-          if (dropdown.classList.contains('active')) {
-            dropdown.classList.remove('active');
-            document.querySelector(".farama-header-menu__overlay").classList.remove("active");
-          }
-        }
-      }
     </script>
 
     
@@ -812,6 +835,119 @@ This cannot be used with fully observable wrappers.</p>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
+    
+    <script>
+      const createCORSRequest = (method, url) => {
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+
+        if ("withCredentials" in xhr) {
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // IE8 & IE9
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      };
+
+      const url = 'https://farama.org/api/projects.json';
+      const imagesBasepath = "https://farama.org/assets/images"
+      const method = 'GET';
+      let xhr = createCORSRequest(method, url);
+
+      xhr.onload = () => {
+        const jsonResponse = xhr.response;
+        const sections = {
+          "Documentation": [],
+          "Mature Projects": [],
+          "Incubating Projects": [],
+          "Foundation": [
+            {
+              name: "About",
+              link: "https://farama.org/about"
+            },
+            {
+              name: "Standards",
+              link: "https://farama.org/project_standards",
+            },
+            {
+              name: "Donate",
+              link: "https://farama.org/donations"
+            }
+          ]
+        }
+        Object.keys(jsonResponse).forEach(key => {
+          projectJson = jsonResponse[key];
+          if (projectJson.website !== null) {
+            projectJson.link = projectJson.website;
+            sections["Documentation"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            projectJson.link = projectJson.github;
+            sections["Mature Projects"].push(projectJson)
+          } else {
+            projectJson.link = projectJson.github;
+            sections["Incubating Projects"].push(projectJson)
+          }
+        })
+
+        const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        Object.keys(sections).forEach((key, i) => {
+          projects = sections[key];
+          const sectionElem = Object.assign(
+            document.createElement('div'), {
+              className:'farama-header-menu__section',
+              style: "padding-left: 24px"
+            }
+          )
+          sectionElem.appendChild(Object.assign(document.createElement('span'),
+            {
+              className:'farama-header-menu__section-title' ,
+              innerText: key
+            }
+          ))
+          const ulElem = Object.assign(document.createElement('ul'),
+            {
+              className:'farama-header-menu-list',
+            }
+          )
+          for (let project of projects) {
+            const liElem = document.createElement("li");
+            const aElem = Object.assign(document.createElement("a"),
+              {
+                href: project.link
+              }
+            );
+            liElem.appendChild(aElem);
+            if (key !== "Foundation") {
+              const imgElem = Object.assign(document.createElement("img"),
+                {
+                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                  alt: `${project.name} logo`,
+                  className: "farama-black-logo-invert"
+                }
+              );
+              aElem.appendChild(imgElem);
+            }
+            aElem.appendChild(document.createTextNode(project.name));
+            ulElem.appendChild(liElem);
+          }
+          sectionElem.appendChild(ulElem);
+          menuContainer.appendChild(sectionElem)
+        });
+      }
+
+      xhr.onerror = function() {
+        console.error("Unable to load projects");
+      };
+
+      xhr.send();
+    </script>
+
     
     </body>
 </html>
