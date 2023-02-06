@@ -32,19 +32,20 @@ babyai_envs = {}
 
 # Obtain filtered list
 for env_spec in tqdm(all_envs):
-    # minigrid.envs:Env
-    split = env_spec.entry_point.split(".")
-    # ignore gymnasium.envs.env_type:Env
-    env_module = split[0]
+    if isinstance(env_spec.entry_point, str):
+        # minigrid.envs:Env
+        split = env_spec.entry_point.split(".")
+        # ignore gymnasium.envs.env_type:Env
+        env_module = split[0]
 
-    if len(split) > 2 and "babyai" in split[2]:
-        curr_babyai_env = split[2]
-        babyai_env_name = curr_babyai_env.split(":")[1]
-        babyai_envs[babyai_env_name] = env_spec
-    elif env_module == "minigrid":
-        env_name = split[1]
-        filtered_envs_by_type[env_name] = env_spec
-    # if env_module != "minigrid":
+        if len(split) > 2 and "babyai" in split[2]:
+            curr_babyai_env = split[2]
+            babyai_env_name = curr_babyai_env.split(":")[1]
+            babyai_envs[babyai_env_name] = env_spec
+        elif env_module == "minigrid":
+            env_name = split[1]
+            filtered_envs_by_type[env_name] = env_spec
+        # if env_module != "minigrid":
     else:
         continue
 
