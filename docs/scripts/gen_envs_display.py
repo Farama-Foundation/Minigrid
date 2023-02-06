@@ -56,19 +56,22 @@ if __name__ == "__main__":
     type_dict = {}
 
     for env_spec in gymnasium.envs.registry.values():
-        # minigrid.envs:Env or minigrid.envs.babyai:Env
-        split = env_spec.entry_point.split(".")
-        # ignore minigrid.envs.env_type:Env
-        env_module = split[0]
-        env_name = split[-1].split(":")[-1]
-        env_type = env_module if len(split) == 2 else split[-1].split(":")[0]
+        if isinstance(env_spec.entry_point, str):
+            # minigrid.envs:Env or minigrid.envs.babyai:Env
+            split = env_spec.entry_point.split(".")
+            # ignore minigrid.envs.env_type:Env
+            env_module = split[0]
+            env_name = split[-1].split(":")[-1]
+            env_type = env_module if len(split) == 2 else split[-1].split(":")[0]
 
-        if env_module == "minigrid":
-            if env_type not in type_dict.keys():
-                type_dict[env_type] = []
+            if env_module == "minigrid":
+                if env_type not in type_dict.keys():
+                    type_dict[env_type] = []
 
-            if env_name not in type_dict[env_type]:
-                type_dict[env_type].append(env_name)
+                if env_name not in type_dict[env_type]:
+                    type_dict[env_type].append(env_name)
+        else:
+            continue
 
     for key, value in type_dict.items():
         env_type = key
