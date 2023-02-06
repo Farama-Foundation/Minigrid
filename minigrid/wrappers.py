@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 import operator
 from functools import reduce
+from pdb import set_trace
 
 import gymnasium as gym
 import numpy as np
@@ -11,7 +12,6 @@ from gymnasium.core import ObservationWrapper, Wrapper
 
 from minigrid.core.constants import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX
 from minigrid.core.world_object import Goal
-from pdb import set_trace
 
 
 class ReseedWrapper(Wrapper):
