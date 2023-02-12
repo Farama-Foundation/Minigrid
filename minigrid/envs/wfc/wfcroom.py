@@ -22,7 +22,6 @@ from pathlib import Path
 import os
 import dgl
 import imageio
-import multiprocessing
 
 from util import make_grid_with_labels, DotDict
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
