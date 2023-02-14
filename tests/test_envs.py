@@ -304,14 +304,22 @@ def test_mission_space():
     assert mission_space.contains("get the green key and the green key.")
     assert mission_space.contains("go fetch the red ball and the green key.")
 
+
 # not reasonable to test for all environments, test for a few of them.
-@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-8x8-v0", "MiniGrid-DoorKey-16x16-v0","MiniGrid-ObstructedMaze-1Dl-v0"])
+@pytest.mark.parametrize(
+    "env_id",
+    [
+        "MiniGrid-Empty-8x8-v0",
+        "MiniGrid-DoorKey-16x16-v0",
+        "MiniGrid-ObstructedMaze-1Dl-v0",
+    ],
+)
 def test_env_sync_vectorization(env_id):
-    
     def env_maker(env_id, **kwargs):
         def env_func():
             env = gym.make(env_id, **kwargs)
             return env
+
         return env_func
 
     num_envs = 4

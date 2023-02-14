@@ -635,7 +635,7 @@ class FlatObsWrapper(ObservationWrapper):
         return obs
 
 
-class ViewSizeWrapper(Wrapper):
+class ViewSizeWrapper(ObservationWrapper):
     """
     Wrapper to customize the agent field of view size.
     This cannot be used with fully observable wrappers.

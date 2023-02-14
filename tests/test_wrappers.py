@@ -250,3 +250,13 @@ def test_agent_sees_method(wrapper):
     assert (obs1["size"] == [5, 5]).all()
     for key in obs2:
         assert np.array_equal(obs1[key], obs2[key])
+
+
+@pytest.mark.parametrize("view_size", [5, 7, 9])
+def test_viewsize_wrapper(view_size):
+    env = gym.make("MiniGrid-Empty-5x5-v0")
+    env = ViewSizeWrapper(env, agent_view_size=view_size)
+    env.reset()
+    obs, _, _, _, _ = env.step(0)
+    assert obs["image"].shape == (view_size, view_size, 3)
+    env.close()
