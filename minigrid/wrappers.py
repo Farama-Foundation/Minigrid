@@ -127,8 +127,7 @@ class ActionBonus(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 
-# Should be named PositionBonus
-class StateBonus(Wrapper):
+class PositionBonus(Wrapper):
     """
     Adds an exploration bonus based on which positions
     are visited on the grid.
@@ -136,7 +135,7 @@ class StateBonus(Wrapper):
     Example:
         >>> import miniworld
         >>> import gymnasium as gym
-        >>> from minigrid.wrappers import StateBonus
+        >>> from minigrid.wrappers import PositionBonus
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
         >>> _, _ = env.reset(seed=0)
         >>> _, reward, _, _, _ = env.step(1)
@@ -145,7 +144,7 @@ class StateBonus(Wrapper):
         >>> _, reward, _, _, _ = env.step(1)
         >>> print(reward)
         0
-        >>> env_bonus = StateBonus(env)
+        >>> env_bonus = PositionBonus(env)
         >>> obs, _ = env_bonus.reset(seed=0)
         >>> obs, reward, terminated, truncated, info = env_bonus.step(1)
         >>> print(reward)

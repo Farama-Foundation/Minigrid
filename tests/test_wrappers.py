@@ -18,7 +18,7 @@ from minigrid.wrappers import (
     ReseedWrapper,
     RGBImgObsWrapper,
     RGBImgPartialObsWrapper,
-    StateBonus,
+    PositionBonus,
     ViewSizeWrapper,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
@@ -79,7 +79,7 @@ def test_reseed_wrapper(env_spec):
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_state_bonus_wrapper(env_id):
     env = gym.make(env_id)
-    wrapped_env = StateBonus(gym.make(env_id))
+    wrapped_env = PositionBonus(gym.make(env_id))
 
     action_forward = Actions.forward
     action_left = Actions.left

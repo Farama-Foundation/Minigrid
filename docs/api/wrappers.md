@@ -58,10 +58,10 @@ lastpage:
 .. autoclass:: minigrid.wrappers.RGBImgObsWrapper
 ```
 
-# State Bonus
+# Position Bonus
 
 ```{eval-rst}
-.. autoclass:: minigrid.wrappers.StateBonus
+.. autoclass:: minigrid.wrappers.PositionBonus
 ```
 
 # Symbolic Obs
