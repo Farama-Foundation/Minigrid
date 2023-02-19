@@ -3,7 +3,6 @@ from __future__ import annotations
 import math
 import operator
 from functools import reduce
-from pdb import set_trace
 
 import gymnasium as gym
 import numpy as np
