@@ -719,7 +719,7 @@ class DirectionObsWrapper(ObservationWrapper):
                     self.goal_position[0] % self.width,
                 )
 
-        return obs
+        return self.observation(obs)
 
     def observation(self, obs):
         slope = np.divide(
