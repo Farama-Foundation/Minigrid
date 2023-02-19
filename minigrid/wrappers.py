@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 import operator
 from functools import reduce
+from pdb import set_trace
 
 import gymnasium as gym
 import numpy as np
@@ -688,6 +689,17 @@ class DirectionObsWrapper(ObservationWrapper):
     """
     Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
     type = {slope , angle}
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import DirectionObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> env_obs = DirectionObsWrapper(env, type="slope")
+        >>> obs, _ = env_obs.reset()
+        >>> obs['goal_direction']
+        1.0
     """
 
     def __init__(self, env, type="slope"):
@@ -696,7 +708,8 @@ class DirectionObsWrapper(ObservationWrapper):
         self.type = type
 
     def reset(self):
-        obs = self.env.reset()
+        obs, _ = self.env.reset()
+
         if not self.goal_position:
             self.goal_position = [
                 x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
@@ -707,6 +720,7 @@ class DirectionObsWrapper(ObservationWrapper):
                     int(self.goal_position[0] / self.height),
                     self.goal_position[0] % self.width,
                 )
+
         return obs
 
     def observation(self, obs):
@@ -714,7 +728,12 @@ class DirectionObsWrapper(ObservationWrapper):
             self.goal_position[1] - self.agent_pos[1],
             self.goal_position[0] - self.agent_pos[0],
         )
-        obs["goal_direction"] = np.arctan(slope) if self.type == "angle" else slope
+
+        if self.type == "angle":
+            obs["goal_direction"] = np.arctan(slope)
+        else:
+            obs["goal_direction"] = slope
+
         return obs
 
 
@@ -723,6 +742,20 @@ class SymbolicObsWrapper(ObservationWrapper):
     Fully observable grid with a symbolic state representation.
     The symbol is a triple of (X, Y, IDX), where X and Y are
     the coordinates on the grid, and IDX is the id of the object.
+
+    Example:
+        >>> import miniworld
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import SymbolicObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = SymbolicObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (11, 11, 3)
     """
 
     def __init__(self, env):
@@ -749,4 +782,5 @@ class SymbolicObsWrapper(ObservationWrapper):
         grid = np.transpose(grid, (1, 2, 0))
         grid[agent_pos[0], agent_pos[1], 2] = OBJECT_TO_IDX["agent"]
         obs["image"] = grid
+
         return obs
