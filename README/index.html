@@ -12,7 +12,7 @@
         <link rel="canonical" href="https://minigrid.farama.org/README.html" />
 
     <link rel="shortcut icon" href="../_static/minigrid-favicon.png"/><meta name="generator" content="sphinx-5.2.3, furo 2022.09.15.dev1"/>
-        <title>MiniGrid-docs - MiniGrid Documentation</title>
+        <title>MiniGrid documentation - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=c36209c3579494d5f9512671edd8cd731f7c406c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=57f753f2a36df4cd87bf0e4232aabc9b3cc73912" />
@@ -379,24 +379,20 @@
           </div>
           <article role="main">
             
-            <section id="minigrid-docs">
-<h1>MiniGrid-docs<a class="headerlink" href="#minigrid-docs" title="Permalink to this heading">#</a></h1>
-<p>This repo contains the <span class="xref myst">NEW website</span> for <a class="reference external" href="https://github.com/Farama-Foundation/MiniGrid">MiniGrid</a>. This site is currently in Beta and we are in the process of adding/editing information.</p>
-<p>The documentation uses Sphinx. However, the documentation is written in regular md, NOT rst.</p>
-<p>If you are modifying a non-environment page or an atari environment page, please PR this repo. Otherwise, follow the steps below:</p>
-<section id="instructions-for-modifying-environment-pages">
-<h2>Instructions for modifying environment pages<a class="headerlink" href="#instructions-for-modifying-environment-pages" title="Permalink to this heading">#</a></h2>
+            <section id="minigrid-documentation">
+<h1>MiniGrid documentation<a class="headerlink" href="#minigrid-documentation" title="Permalink to this heading">#</a></h1>
+<p>This folder contains the documentation for MiniGrid.</p>
+<p>For more information about how to contribute to the documentation go to our <a class="reference external" href="https://github.com/Farama-Foundation/Celshast/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
 <section id="editing-an-environment-page">
-<h3>Editing an environment page<a class="headerlink" href="#editing-an-environment-page" title="Permalink to this heading">#</a></h3>
+<h2>Editing an environment page<a class="headerlink" href="#editing-an-environment-page" title="Permalink to this heading">#</a></h2>
 <p>If you are editing an Atari environment, directly edit the md file in this repository.</p>
 <p>Otherwise, fork Gym and edit the docstring in the environment’s Python file. Then, pip install your Gym fork and run <code class="docutils literal notranslate"><span class="pre">docs/scripts/gen_mds.py</span></code> in this repo. This will automatically generate a md documentation file for the environment.</p>
 </section>
-</section>
 <section id="build-the-documentation">
 <h2>Build the Documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this heading">#</a></h2>
-<p>Install the required packages and Gym (or your fork):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">gym</span>
+<p>Install the required packages and Minigrid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">docs</span><span class="o">/</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
 </pre></div>
 </div>
 <p>To build the documentation once:</p>
@@ -406,7 +402,7 @@
 </div>
 <p>To rebuild the documentation automatically every time a change is made:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">autobuild</span> <span class="o">-</span><span class="n">b</span> <span class="n">dirhtml</span> <span class="o">./</span><span class="n">source</span> <span class="n">build</span><span class="o">/</span><span class="n">html</span>
+<span class="n">sphinx</span><span class="o">-</span><span class="n">autobuild</span> <span class="o">-</span><span class="n">b</span> <span class="n">dirhtml</span> <span class="o">.</span> <span class="n">_build</span>
 </pre></div>
 </div>
 </section>
@@ -459,11 +455,8 @@
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">MiniGrid-docs</a><ul>
-<li><a class="reference internal" href="#instructions-for-modifying-environment-pages">Instructions for modifying environment pages</a><ul>
+<li><a class="reference internal" href="#">MiniGrid documentation</a><ul>
 <li><a class="reference internal" href="#editing-an-environment-page">Editing an environment page</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#build-the-documentation">Build the Documentation</a></li>
 </ul>
 </li>
