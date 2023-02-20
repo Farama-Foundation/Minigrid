@@ -130,7 +130,7 @@ class ActionBonus(gym.Wrapper):
 class PositionBonus(Wrapper):
     """
     Adds an exploration bonus based on which positions
-    are visited on the grid.
+    are visited on the grid. Was previously called StateBonus.
 
     Example:
         >>> import miniworld
