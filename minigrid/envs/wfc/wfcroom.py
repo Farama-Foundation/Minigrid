@@ -26,10 +26,10 @@ import imageio
 from util import make_grid_with_labels, DotDict
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
-from .util import graph_metrics
-from .util import transforms as tr
-from .util import util as util
-from .util.multiprocessing import MockProcessPoolExecutor, Parser
+from maze_representations.util import graph_metrics
+from maze_representations.util import transforms as tr
+from maze_representations.util import util as util
+from maze_representations.util.multiprocessing import MockProcessPoolExecutor, Parser
 
 logger = logging.getLogger(__name__)
 
@@ -106,9 +106,9 @@ class GridNavDatasetGenerator:
 
         return dataset_config
 
-    def generate_dataset_metadata(self):
+    def generate_dataset_metadata(self) -> DotDict:
 
-        dataset_meta = OmegaConf.create()
+        dataset_meta = DotDict({})
         dataset_meta.config = self.config
 
         level_info = {
@@ -283,6 +283,9 @@ class GridNavDatasetGenerator:
         else:
             for arg in args:
                 batch = GridNavDatasetGenerator._generate_batch_data(*arg)
+                logger.info(f"Generated batch {batch.batch_meta['batch_id']}.")
+
+                self.update_metric_normalisation_factors(batch.label_contents)
                 self.generated_batches[batch.batch_meta['batch_id']] = batch
 
         _ = self.all_batches_generated()
@@ -301,7 +304,7 @@ class GridNavDatasetGenerator:
         if self.dataset_meta.unique_data is None:
             if self.config.check_unique:
                 logger.info(f"Checking for duplicate data across entire dataset.")
-                batches = [self.load_batch(f) for f in self.existing_files if f.endswith('.data')]
+                batches = [self.load_batch(f)[0] for f in self.existing_files if f.endswith('.data')]
                 self.dataset_meta.unique_data = self.check_unique(batches)
             else:
                 logger.info(f"Not checking for duplicate data across entire dataset, "
@@ -438,6 +441,8 @@ class GridNavDatasetGenerator:
                         / self.dataset_meta.config.label_descriptors_config[key]['normalisation_factor']
             # Use 2. perform the normalisation across a specific batch_label_contents, using precomputed factors
             else:
+                assert self.dataset_meta.config.label_descriptors_config[key]['normalisation_factor'] is not None, \
+                    "Normalisation factor for metric {} not computed.".format(key)
                 batch_label_contents[key] = batch_label_contents[key].to(torch.float) \
                                             / self.dataset_meta.config.label_descriptors_config[key]['normalisation_factor']
 
@@ -610,11 +615,16 @@ class GridNavDatasetGenerator:
         logger.info(f"Saving layout thumbnails to {path}.")
         vutils.save_image(images, path)
 
-    def check_unique(self, batches):
+    def check_unique(self, batches: Union[List[Batch], List[Tuple[torch.Tensor, torch.Tensor]]]):
 
         all_data = []
         for batch in batches:
-            all_data.extend(batch.features)
+            if isinstance(batch, Batch):
+                all_data.extend(batch.features)
+            elif isinstance(batch, tuple):
+                all_data.extend(batch[0])
+            else:
+                raise TypeError(f"Batch type {type(batch)} not recognised.")
         features, _ = util.get_node_features(all_data, device=None) # TODO: add device?
         if not util.check_unique(features).all():
             logger.warning(f"There are duplicate features in the dataset.")
@@ -661,7 +671,7 @@ class Batch:
 
     def generate_batch(self):
 
-        batch_data = self.generate_data()
+        batch_data, extra = self.generate_data()
         if isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph):
             features, _ = util.get_node_features(batch_data, device=None) # TODO: add device?
         else:
@@ -684,15 +694,15 @@ class Batch:
                                     "encoding")
             else:
                 raise NotImplementedError(f"Encoding {self.encoding} not implemented.")
-            self.generate_label_contents(batch_data, features=features)
+            self.generate_label_contents(batch_data, features=features, extra_data=extra)
 
         self.features = batch_data
         return self.features, self.label_ids, self.label_contents
 
-    def generate_data(self):
+    def generate_data(self) -> Tuple[List[dgl.DGLGraph], Dict[str, Any]]:
         raise NotImplementedError
 
-    def generate_label_contents(self, data, features=None):
+    def generate_label_contents(self, data, features=None, extra_data=None):
 
         if features is None:
             if isinstance(data, dgl.DGLGraph) or isinstance(data[0], dgl.DGLGraph):
@@ -706,10 +716,15 @@ class Batch:
         self.label_contents["seed"] = self.seeds if self.seeds is not None else [None] * self.batch_meta['batch_size']
         self.label_contents["task_structure"] = [self.batch_meta["task_structure"]] * self.batch_meta['batch_size']
         self.label_contents["generating_algorithm"] = [self.batch_meta["generating_algorithm"]] * self.batch_meta['batch_size']
+        self.label_contents['minigrid'] = tr.Nav2DTransforms.dense_graph_to_minigrid(data, level_info=self.dataset_meta.level_info)
         if "images" in self.label_contents.keys():
             self.label_contents["images"] = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta.level_info)
 
         self.compute_graph_metrics(data, features)
+
+        if extra_data is not None:
+            for key, value in extra_data.items():
+                self.label_contents[key] = value
 
     def compute_graph_metrics(self, graphs, features):
 
@@ -791,14 +806,36 @@ class WaveCollapseBatch(Batch):
 
             features = np.array(features)
             features = self._pattern_to_minigrid_layout(features)
-            features = tr.Nav2DTransforms.minigrid_layout_to_dense_graph(features, to_dgl=False, remove_edges=False)
 
-            if self.dataset_meta.ensure_connected:
-                features = self._get_largest_component(features, to_dgl=True)
+            stage1_edge_config = {}
+            stage2_edge_config = {}
+            for k, v in self.dataset_meta.config.graph_edge_descriptors.items():
+                if k == 'navigable':
+                    stage1_edge_config[k] = v
+                else:
+                    stage2_edge_config[k] = v
 
-            features = self._place_start_and_goal(features)
+            features, edge_graphs = tr.Nav2DTransforms.minigrid_layout_to_dense_graph(features,
+                                                                         to_dgl=False,
+                                                                         remove_border=False,
+                                                                         node_attr=self.dataset_meta.config.graph_feature_descriptors,
+                                                                         edge_config=stage1_edge_config,)
 
-            return features
+            if self.dataset_meta.config.ensure_connected:
+                features = self._get_largest_component(features, to_dgl=False)
+
+            extra = {}
+            if self.dataset_meta.config.task_type == "navigate_to_goal":
+                features, _ = self._place_start_and_goal_random(features)
+            elif self.dataset_meta.config.task_type == "cave_escape":
+                features, extra['shortest_path_dist'] = self._place_goal_random(features)
+                features, extra['probs_moss'] = self._place_moss_cave_escape(features, extra['shortest_path_dist'])
+                features, extra['probs_lava'] = self._place_lava_cave_escape(features, extra['shortest_path_dist'])
+                features, extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
+                features, extra['edged_graphs'] = self._add_edges(features, stage2_edge_config)
+                features = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in features]
+
+            return features, extra
 
         def _run_wfc(self, seed):
             util.seed_everything(seed)
@@ -832,19 +869,193 @@ class WaveCollapseBatch(Batch):
 
             return layouts
 
-        def _place_start_and_goal(self, graphs: List[dgl.DGLGraph]):
+        def _place_start_and_goal_random(self, graphs: List[dgl.DGLGraph]):
+
+            node_set = 'navigable'
 
             for graph in graphs:
-                possible_nodes = torch.where(graph.ndata['active'])[0]
+                possible_nodes = torch.where(graph.ndata[node_set])[0]
                 inds = torch.randperm(len(possible_nodes))[:2]
                 start_node, goal_node = possible_nodes[inds]
                 graph.ndata['start'][start_node] = 1
                 graph.ndata['goal'][goal_node] = 1
 
-            return graphs
+            return graphs, None
 
-        def check_pattern_validity(self, pattern):
-            pass
+        def _place_goal_random(self, graphs: List[nx.Graph]):
+
+            node_set = 'empty'
+
+            spl = []
+            for graph in graphs:
+                possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
+                ind = torch.randperm(len(possible_nodes))[0].item()
+                goal_node = possible_nodes[ind]
+                graph.nodes[goal_node]['goal'] = 1.0
+                graph.nodes[goal_node][node_set] = 0.0
+                spl.append(dict(nx.single_target_shortest_path_length(graph, goal_node)))
+
+            return graphs, spl
+
+        def _place_moss_cave_escape(self, graphs: List[nx.Graph], spl):
+
+            assert len(graphs) == len(spl), "Number of graphs and shortest path lengths do not match"
+
+            params = self.dataset_meta.config.moss_distribution_params
+            assert params.nodes[0] == 'empty' and len(params.nodes) == 1, "Only implemented for moss on empty nodes"
+            node_set = params.nodes[0]
+
+            probs = []
+            for m, graph in enumerate(graphs):
+                possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
+                num_sampled = int(params.fraction * len(possible_nodes))
+                shortest_path_lengths = spl[m]
+                shortest_path_lengths = {k: v for k, v in shortest_path_lengths.items() if k in possible_nodes}
+                scores = -np.array(list(shortest_path_lengths.values()))
+                weights = self._compute_weights(scores, params)
+                # sample moss according to weights
+                sampled_inds = np.random.choice(len(possible_nodes), size=num_sampled, replace=False, p=weights)
+                sampled_nodes = [list(shortest_path_lengths.keys())[i] for i in sampled_inds]
+                for node in sampled_nodes:
+                    graph.nodes[node]['moss'] = 1.0
+                    for node_subset_ in params.nodes:
+                        graph.nodes[node][node_subset_] = 0.0
+                probs.append(weights)
+
+            return graphs, probs
+
+        def _place_lava_cave_escape(self, graphs: List[nx.Graph], spl):
+
+            assert len(graphs) == len(spl), "Number of graphs and shortest path lengths do not match"
+
+            params = self.dataset_meta.config.lava_distribution_params
+            assert params.nodes[0] == 'wall' and len(params.nodes) == 1, "Only implemented for lava on wall nodes"
+            node_set = params.nodes[0]
+
+            probs = []
+            for m, graph in enumerate(graphs):
+                possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
+                nav_nodes = [n for n in graph.nodes() if graph.nodes[n]['navigable']==1.0]
+                shortest_path_lengths_nav = spl[m]
+                shortest_path_lengths_nav = {k: v for k, v in shortest_path_lengths_nav.items() if k in nav_nodes}
+                neighbors_of_non_nav_nodes = self._get_neighbors(possible_nodes, nav_nodes)
+                shortest_path_lengths = {}
+                for node_ind, neighbors in enumerate(neighbors_of_non_nav_nodes):
+                    neighbors = [n for n in neighbors if n in shortest_path_lengths_nav]
+                    if neighbors:
+                        pathlength = int(np.min([shortest_path_lengths_nav[neighbor] for neighbor in neighbors]))
+                    else:
+                        pathlength = None
+                        # pathlength = np.max(list(shortest_path_lengths_nav.values())) + 1
+                    shortest_path_lengths[possible_nodes[node_ind]] = pathlength
+                border_nodes = [n for n in shortest_path_lengths if shortest_path_lengths[n] is not None]
+                nodes_to_remove = []
+                for node in shortest_path_lengths:
+                    if shortest_path_lengths[node] is None:
+                        grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2,
+                                     self.dataset_meta.config.gridworld_data_dim[2] - 2)
+                        grid_graph = nx.grid_2d_graph(*grid_size)
+                        spl_ = dict(nx.single_target_shortest_path_length(grid_graph, node))
+                        #TODO: could make an hyperparameter
+                        if np.min([spl_[border_node] for border_node in border_nodes]) > 3:
+                            nodes_to_remove.append(node)
+                        else:
+                            spl_goal = [spl_[border_node] + shortest_path_lengths[border_node] for border_node in
+                                        border_nodes]
+                            pathlength = np.min(spl_goal)
+                            shortest_path_lengths[node] = pathlength
+                [shortest_path_lengths.pop(node) for node in nodes_to_remove]
+                num_sampled = int(params.fraction * len(shortest_path_lengths))
+                scores = np.array(list(shortest_path_lengths.values()))
+                weights = self._compute_weights(scores, params)
+                sampled_inds = np.random.choice(len(shortest_path_lengths), size=num_sampled, replace=False, p=weights)
+                sampled_nodes = [list(shortest_path_lengths.keys())[i] for i in sampled_inds]
+                for node in sampled_nodes:
+                    graph.nodes[node]['lava'] = 1.0
+                    for node_subset_ in params.nodes:
+                        graph.nodes[node][node_subset_] = 0.0
+                probs.append(weights)
+
+            return graphs, probs
+
+        def _place_start_cave_escape(self, graphs: List[nx.Graph], spl):
+
+            assert len(graphs) == len(spl), "Number of graphs and shortest path lengths do not match"
+
+            node_set = 'navigable'
+
+            node_subset = ['empty', 'moss']
+
+            # sorted_weights_moss, sorted_inds_moss = torch.sort(weights_moss, descending=True)
+            # sorted_weights_lava, sorted_inds_lava = torch.sort(weights_lava, descending=False)
+            #
+            # diff = (sorted_weights_moss - sorted_weights_lava).abs()
+            # lowest_diff_ind = torch.where(diff == diff.min())[0][0]
+            # start_node_inds = sorted_inds_moss[lowest_diff_ind]
+
+            all_possible_starts = []
+            for m, graph in enumerate(graphs):
+                possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0 and graph.nodes[n]['goal']==0.0]
+                shortest_path_lengths = spl[m]
+                shortest_path_lengths = {k: v for k, v in shortest_path_lengths.items() if k in possible_nodes}
+                spl_median = int(np.median(list(shortest_path_lengths.values())))
+                start_candidates = [k for k, v in shortest_path_lengths.items() if v == spl_median]
+                all_possible_starts.append(start_candidates)
+                start_node_ind = np.random.choice(len(start_candidates))
+                start_node = start_candidates[start_node_ind]
+                graph.nodes[start_node]['start'] = 1.0
+                for node_subset_ in node_subset:
+                    graph.nodes[start_node][node_subset_] = 0.0
+
+            return graphs, all_possible_starts
+
+        def _add_edges(self, graphs: List[nx.Graph], edge_config: Union[Dict, DictConfig]):
+
+            graph_features = self.dataset_meta.config.graph_feature_descriptors
+            edged_graphs = []
+            dim_grid = tuple(d-2 for d in self.dataset_meta.level_info['shape'][0:2])
+
+            for m, g in enumerate(graphs):
+                edge_layers = tr.Nav2DTransforms.get_edge_layers(g, edge_config, graph_features, dim_grid)
+                for edge_n, edge_g in edge_layers.items():
+                    g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
+                graphs[m] = g
+                edged_graphs.append(edge_layers)
+
+            return graphs, edged_graphs
+
+        def _get_neighbors(self, nodes:List[int], neighbors_set:List[int]):
+            grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2, self.dataset_meta.config.gridworld_data_dim[2] - 2)
+            grid_graph = nx.grid_2d_graph(*grid_size)
+            # nodes_grid = [(node % grid_size[0], node // grid_size[0]) for node in nodes]
+            # neighbors_set_grid = [(node % grid_size[0], node // grid_size[0]) for node in neighbors_set]
+            neighbors_grid = [list(grid_graph.neighbors(node)) for node in nodes]
+            neighbors_grid = [list(set(neighbors_grid[i]) & set(neighbors_set)) for i in range(len(neighbors_grid))]
+            # neighbors = [[] for _ in range(len(neighbors_grid))]
+            # for i in range(len(neighbors_grid)):
+            #     for j in range(len(neighbors_grid[i])):
+            #         neighbors[i].append(neighbors_grid[i][j][0] + neighbors_grid[i][j][1] * grid_size[0])
+            return neighbors_grid
+
+        def _compute_weights(self, scores, params):
+            if params.distribution == 'power':
+                weights = (scores.clip(0)) ** (1. / params.temperature)
+            elif params.distribution == 'power_rank':
+                temp = np.flip(scores.argsort())
+                ranks = np.empty_like(temp)
+                ranks[temp] = np.arange(len(temp)) + 1
+                weights = 1 / ranks ** (1. / params.temperature)
+            else:
+                raise ValueError(f"Unknown distribution: {params.distribution}")
+
+            z = np.sum(weights)
+            if z > 0:
+                weights /= z
+            else:
+                weights = np.ones_like(weights, dtype=np.float) / len(weights)
+                weights /= np.sum(weights)
+
+            return weights
 
         def _get_largest_component(self, graphs: Union[List[nx.Graph], List[dgl.DGLGraph]], to_dgl: bool = False)\
                 -> Union[List[nx.Graph], List[dgl.DGLGraph]]:
@@ -852,18 +1063,25 @@ class WaveCollapseBatch(Batch):
             wall_graph_attr = tr.OBJECT_TO_DENSE_GRAPH_ATTRIBUTE['wall']
             for i, graph in enumerate(graphs):
                 component, _, _ = graph_metrics.prepare_graph(graph)
-                act = nx.get_node_attributes(component, 'active')
+                for node in graph.nodes():
+                    if node not in component.nodes():
+                        for feat in graph.nodes[node]:
+                            if feat in wall_graph_attr:
+                                graph.nodes[node][feat] = 1.0
+                            else:
+                                graph.nodes[node][feat] = 0.0
                 g = nx.Graph()
-                g.add_nodes_from(graph.nodes())
-                for j in range(len(self.dataset_meta.config.graph_feature_descriptors)):
-                    nx.set_node_attributes(g, wall_graph_attr[j], self.dataset_meta.config.graph_feature_descriptors[j])
-                nx.set_node_attributes(g, act, "active")
+                g.add_nodes_from(graph.nodes(data=True))
                 g.add_edges_from(component.edges(data=True))
                 if to_dgl:
+                    g = nx.convert_node_labels_to_integers(g)
                     g = dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors)
                 graphs[i] = copy.deepcopy(g)
 
             return graphs
+
+        def check_pattern_validity(self, pattern):
+            pass
 
         def get_images(self, idx: List[int]) -> List[torch.Tensor]:
 
