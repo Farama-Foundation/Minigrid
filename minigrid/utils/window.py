@@ -5,6 +5,14 @@ except ImportError:
     raise ImportError(
         "To display the environment in a window, please install matplotlib, eg: `pip3 install --user matplotlib`"
     )
+try:
+    import pygame
+    from pygame.locals import *
+except ImportError:
+    raise ImportError(
+        "To display the environment using pygame, please install pygame, eg: `pip3 install --user pygame`"
+    )
+
 
 
 class Window:
@@ -12,7 +20,7 @@ class Window:
     Window to draw a gridworld instance using Matplotlib
     """
 
-    def __init__(self, title):
+    def __init__(self, title, render_mode=None):
         self.no_image_shown = True
 
         # Create the figure and axes
@@ -35,6 +43,14 @@ class Window:
 
         self.fig.canvas.mpl_connect("close_event", close_handler)
 
+        self.render_mode = render_mode
+        if self.render_mode is None:
+            print("WARNING: you are initializing the window with no render_mode argument, defaulting to choice: pygame")
+
+        if self.render_mode == "pygame":
+            self.pygame_window = pygame.display.set_mode((640, 480), DOUBLEBUF)
+            self.pygame_screen = pygame.display.get_surface()
+            pygame.init()
     def show_img(self, img):
         """
         Show an image or update the image being shown
@@ -48,12 +64,24 @@ class Window:
         # Update the image data
         self.imshow_obj.set_data(img)
 
-        # Request the window be redrawn
-        self.fig.canvas.draw_idle()
-        self.fig.canvas.flush_events()
+        if self.render_mode == "matplotlib":
+            # Request the window be redrawn
+            self.fig.canvas.draw_idle()
+            self.fig.canvas.flush_events()
 
-        # Let matplotlib process UI events
-        plt.pause(0.001)
+            # Let matplotlib process UI events
+            plt.pause(0.001)
+
+        elif self.render_mode == "pygame":
+            self.fig.canvas.draw()
+            renderer = self.fig.canvas.get_renderer()
+            raw_data = renderer.tostring_rgb()
+
+            size = self.fig.canvas.get_width_height()
+            surf = pygame.image.fromstring(raw_data, size, "RGB")
+
+            self.pygame_screen.blit(surf, (0, 0))
+            pygame.display.flip()
 
     def set_caption(self, text):
         """
@@ -69,24 +97,38 @@ class Window:
 
         # Keyboard handler
         self.fig.canvas.mpl_connect("key_press_event", key_handler)
+        self.key_handler = key_handler
 
     def show(self, block=True):
         """
         Show the window, and start an event loop
         """
 
-        # If not blocking, trigger interactive mode
-        if not block:
-            plt.ion()
+        if self.render_mode == "pygame":
+            while not self.closed:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.closed = True
+                    if event.type == pygame.KEYDOWN:
+                        event.key = pygame.key.name(event.key)
+                        self.key_handler(event)
 
-        # Show the plot
-        # In non-interative mode, this enters the matplotlib event loop
-        # In interactive mode, this call does not block
-        plt.show()
+        else:
+            # If not blocking, trigger interactive mode
+            if not block:
+                plt.ion()
+
+            # Show the plot
+            # In non-interative mode, this enters the matplotlib event loop
+            # In interactive mode, this call does not block
+            plt.show()
 
     def close(self):
         """
         Close the window
         """
-        plt.close()
+        if self.render_mode == "pygame":
+            pygame.quit()
+        else:
+            plt.close()
         self.closed = True

@@ -16,13 +16,14 @@ class ManualControl:
         agent_view: bool = False,
         window: Window = None,
         seed=None,
+        render_mode=None
     ) -> None:
         self.env = env
         self.agent_view = agent_view
         self.seed = seed
 
         if window is None:
-            window = Window("minigrid - " + str(env.__class__))
+            window = Window("minigrid - " + str(env.__class__), render_mode)
         self.window = window
         self.window.reg_key_handler(self.key_handler)
 
@@ -73,13 +74,16 @@ class ManualControl:
             "right": MiniGridEnv.Actions.right,
             "up": MiniGridEnv.Actions.forward,
             " ": MiniGridEnv.Actions.toggle,
+            "space": MiniGridEnv.Actions.toggle,
             "pageup": MiniGridEnv.Actions.pickup,
             "pagedown": MiniGridEnv.Actions.drop,
             "enter": MiniGridEnv.Actions.done,
         }
-
-        action = key_to_action[key]
-        self.step(action)
+        if key in key_to_action.keys():
+            action = key_to_action[key]
+            self.step(action)
+        else:
+            print(key)
 
 
 if __name__ == "__main__":
@@ -104,6 +108,12 @@ if __name__ == "__main__":
         help="draw the agent sees (partially observable view)",
         action="store_true",
     )
+    parser.add_argument(
+        "--render-mode",
+        default="matplotlib",
+        choices=["pygame", "matplotlib"],
+        help="render the environment using matplotlib or pygame"
+    )
 
     args = parser.parse_args()
 
@@ -114,5 +124,5 @@ if __name__ == "__main__":
         env = RGBImgPartialObsWrapper(env, env.tile_size)
         env = ImgObsWrapper(env)
 
-    manual_control = ManualControl(env, agent_view=args.agent_view, seed=args.seed)
+    manual_control = ManualControl(env, agent_view=args.agent_view, seed=args.seed, render_mode=args.render_mode)
     manual_control.start()
