@@ -16,7 +16,7 @@ class ManualControl:
         agent_view: bool = False,
         window: Window = None,
         seed=None,
-        render_mode=None
+        render_mode=None,
     ) -> None:
         self.env = env
         self.agent_view = agent_view
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         "--render-mode",
         default="matplotlib",
         choices=["pygame", "matplotlib"],
-        help="render the environment using matplotlib or pygame"
+        help="render the environment using matplotlib or pygame",
     )
 
     args = parser.parse_args()
@@ -124,5 +124,7 @@ if __name__ == "__main__":
         env = RGBImgPartialObsWrapper(env, env.tile_size)
         env = ImgObsWrapper(env)
 
-    manual_control = ManualControl(env, agent_view=args.agent_view, seed=args.seed, render_mode=args.render_mode)
+    manual_control = ManualControl(
+        env, agent_view=args.agent_view, seed=args.seed, render_mode=args.render_mode
+    )
     manual_control.start()

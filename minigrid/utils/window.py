@@ -7,12 +7,10 @@ except ImportError:
     )
 try:
     import pygame
-    from pygame.locals import *
 except ImportError:
     raise ImportError(
         "To display the environment using pygame, please install pygame, eg: `pip3 install --user pygame`"
     )
-
 
 
 class Window:
@@ -45,12 +43,16 @@ class Window:
 
         self.render_mode = render_mode
         if self.render_mode is None:
-            print("WARNING: you are initializing the window with no render_mode argument, defaulting to choice: pygame")
+            print(
+                "WARNING: you are initializing the window with no render_mode argument, defaulting to choice: pygame"
+            )
 
         if self.render_mode == "pygame":
-            self.pygame_window = pygame.display.set_mode((640, 480), DOUBLEBUF)
+            self.pygame_window = pygame.display.set_mode((640, 480))
             self.pygame_screen = pygame.display.get_surface()
             pygame.init()
+            pygame.display.set_caption("Minigrid")
+
     def show_img(self, img):
         """
         Show an image or update the image being shown
