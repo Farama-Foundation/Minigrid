@@ -11,14 +11,16 @@ from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
     DictObservationSpaceWrapper,
+    DirectionObsWrapper,
     FlatObsWrapper,
     FullyObsWrapper,
     ImgObsWrapper,
     OneHotPartialObsWrapper,
+    PositionBonus,
     ReseedWrapper,
     RGBImgObsWrapper,
     RGBImgPartialObsWrapper,
-    StateBonus,
+    SymbolicObsWrapper,
     ViewSizeWrapper,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
@@ -77,9 +79,9 @@ def test_reseed_wrapper(env_spec):
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
-def test_state_bonus_wrapper(env_id):
+def test_position_bonus_wrapper(env_id):
     env = gym.make(env_id)
-    wrapped_env = StateBonus(gym.make(env_id))
+    wrapped_env = PositionBonus(gym.make(env_id))
 
     action_forward = Actions.forward
     action_left = Actions.left
@@ -259,4 +261,44 @@ def test_viewsize_wrapper(view_size):
     env.reset()
     obs, _, _, _, _ = env.step(0)
     assert obs["image"].shape == (view_size, view_size, 3)
+    env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-LavaCrossingS11N5-v0"])
+@pytest.mark.parametrize("type", ["slope", "angle"])
+def test_direction_obs_wrapper(env_id, type):
+    env = gym.make(env_id)
+    env = DirectionObsWrapper(env, type=type)
+    obs = env.reset()
+
+    slope = np.divide(
+        env.goal_position[1] - env.agent_pos[1],
+        env.goal_position[0] - env.agent_pos[0],
+    )
+    if type == "slope":
+        assert obs["goal_direction"] == slope
+    elif type == "angle":
+        assert obs["goal_direction"] == np.arctan(slope)
+
+    obs, _, _, _, _ = env.step(0)
+    slope = np.divide(
+        env.goal_position[1] - env.agent_pos[1],
+        env.goal_position[0] - env.agent_pos[0],
+    )
+    if type == "slope":
+        assert obs["goal_direction"] == slope
+    elif type == "angle":
+        assert obs["goal_direction"] == np.arctan(slope)
+
+    env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_symbolic_obs_wrapper(env_id):
+    env = gym.make(env_id)
+    env = SymbolicObsWrapper(env)
+    obs, _ = env.reset()
+    assert obs["image"].shape == (env.width, env.height, 3)
+    obs, _, _, _, _ = env.step(0)
+    assert obs["image"].shape == (env.width, env.height, 3)
     env.close()
