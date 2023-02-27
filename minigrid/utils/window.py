@@ -1,4 +1,6 @@
 # Only ask users to install matplotlib if they actually need it
+from __future__ import annotations
+
 try:
     import matplotlib.pyplot as plt
 except ImportError:
@@ -18,7 +20,7 @@ class Window:
     Window to draw a gridworld instance using Matplotlib
     """
 
-    def __init__(self, title, render_mode=None):
+    def __init__(self, title, display_mode="matplotlib"):
         self.no_image_shown = True
 
         # Create the figure and axes
@@ -41,13 +43,8 @@ class Window:
 
         self.fig.canvas.mpl_connect("close_event", close_handler)
 
-        self.render_mode = render_mode
-        if self.render_mode is None:
-            print(
-                "WARNING: you are initializing the window with no render_mode argument, defaulting to choice: pygame"
-            )
-
-        if self.render_mode == "pygame":
+        self.display_mode = display_mode
+        if self.display_mode == "pygame":
             self.pygame_window = pygame.display.set_mode((640, 480))
             self.pygame_screen = pygame.display.get_surface()
             pygame.init()
@@ -66,15 +63,7 @@ class Window:
         # Update the image data
         self.imshow_obj.set_data(img)
 
-        if self.render_mode == "matplotlib":
-            # Request the window be redrawn
-            self.fig.canvas.draw_idle()
-            self.fig.canvas.flush_events()
-
-            # Let matplotlib process UI events
-            plt.pause(0.001)
-
-        elif self.render_mode == "pygame":
+        if self.display_mode == "pygame":
             self.fig.canvas.draw()
             renderer = self.fig.canvas.get_renderer()
             raw_data = renderer.tostring_rgb()
@@ -84,6 +73,14 @@ class Window:
 
             self.pygame_screen.blit(surf, (0, 0))
             pygame.display.flip()
+
+        else:
+            # Request the window be redrawn
+            self.fig.canvas.draw_idle()
+            self.fig.canvas.flush_events()
+
+            # Let matplotlib process UI events
+            plt.pause(0.001)
 
     def set_caption(self, text):
         """
@@ -106,7 +103,7 @@ class Window:
         Show the window, and start an event loop
         """
 
-        if self.render_mode == "pygame":
+        if self.display_mode == "pygame":
             while not self.closed:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -129,7 +126,7 @@ class Window:
         """
         Close the window
         """
-        if self.render_mode == "pygame":
+        if self.display_mode == "pygame":
             pygame.quit()
         else:
             plt.close()

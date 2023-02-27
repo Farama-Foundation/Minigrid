@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gymnasium as gym
+from gymnasium import Env
 
 from minigrid.minigrid_env import MiniGridEnv
 from minigrid.utils.window import Window
@@ -12,18 +13,18 @@ from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 class ManualControl:
     def __init__(
         self,
-        env: MiniGridEnv,
+        env: Env,
         agent_view: bool = False,
         window: Window = None,
         seed=None,
-        render_mode=None,
+        display_mode=None,
     ) -> None:
         self.env = env
         self.agent_view = agent_view
         self.seed = seed
 
         if window is None:
-            window = Window("minigrid - " + str(env.__class__), render_mode)
+            window = Window("minigrid - " + str(env.__class__), display_mode)
         self.window = window
         self.window.reg_key_handler(self.key_handler)
 
@@ -58,6 +59,10 @@ class ManualControl:
 
         self.redraw()
 
+    def close(self):
+        if self.window:
+            self.window.close()
+
     def key_handler(self, event):
         key: str = event.key
         print("pressed", key)
@@ -91,7 +96,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--env", help="gym environment to load", default="MiniGrid-MultiRoom-N6-v0"
+        "--env-id", help="gym environment to load", default="MiniGrid-MultiRoom-N6-v0"
     )
     parser.add_argument(
         "--seed",
@@ -109,15 +114,17 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
-        "--render-mode",
+        "--display-mode",
         default="matplotlib",
         choices=["pygame", "matplotlib"],
-        help="render the environment using matplotlib or pygame",
+        help="display the environment using matplotlib or pygame",
     )
 
     args = parser.parse_args()
 
-    env: MiniGridEnv = gym.make(args.env, tile_size=args.tile_size)
+    env = gym.make(
+        args.env_id, tile_size=args.tile_size
+    )  # TODO: fix type mismatch here (actual type is Env)
 
     if args.agent_view:
         print("Using agent view")
@@ -125,6 +132,6 @@ if __name__ == "__main__":
         env = ImgObsWrapper(env)
 
     manual_control = ManualControl(
-        env, agent_view=args.agent_view, seed=args.seed, render_mode=args.render_mode
+        env, agent_view=args.agent_view, seed=args.seed, display_mode=args.display_mode
     )
     manual_control.start()
