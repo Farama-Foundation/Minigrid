@@ -10,8 +10,58 @@ from minigrid.envs.babyai.core.verifier import ObjDesc, PutNextInstr
 
 class PutNextLocal(RoomGridLevel):
     """
+
+    ## Description
+
     Put an object next to another object, inside a single room
     with no doors, no distractors
+
+    ## Mission Space
+
+    "put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent finishes the instructed task.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-PutNextLocal-v0`
+    - `BabyAI-PutNextLocalS5N3-v0`
+    - `BabyAI-PutNextLocalS6N4-v0``
+
     """
 
     def __init__(self, room_size=8, num_objs=8, **kwargs):
@@ -31,9 +81,64 @@ class PutNextLocal(RoomGridLevel):
 
 class PutNext(RoomGridLevel):
     """
+
+    ## Description
+
     Task of the form: move the A next to the B and the C next to the D.
     This task is structured to have a very large number of possible
     instructions.
+
+    ## Mission Space
+
+    "put the {color} {type} next to the {color} {type}"
+
+    {color} is the color of the box. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+
+    {type} is the type of the object. Can be "ball", "box" or "key".
+
+    ## Action Space
+
+    | Num | Name         | Action            |
+    |-----|--------------|-------------------|
+    | 0   | left         | Turn left         |
+    | 1   | right        | Turn right        |
+    | 2   | forward      | Move forward      |
+    | 3   | pickup       | Pick up an object |
+    | 4   | drop         | Unused            |
+    | 5   | toggle       | Unused            |
+    | 6   | done         | Unused            |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/minigrid.py](minigrid/minigrid.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent finishes the instructed task.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `BabyAI-PutNextS4N1-v0`
+    - `BabyAI-PutNextS5N2-v0`
+    - `BabyAI-PutNextS5N1-v0`
+    - `BabyAI-PutNextS6N3-v0`
+    - `BabyAI-PutNextS7N4-v0`
+    - `BabyAI-PutNextS5N2Carrying-v0`
+    - `BabyAI-PutNextS6N3Carrying-v0`
+    - `BabyAI-PutNextS7N4Carrying-v0`
+
     """
 
     def __init__(
