@@ -1072,12 +1072,13 @@ def register_minigrid_envs():
         entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
     )
 
-    
+
 __version__ = "2.1.0"
 
 
 try:
     import sys
+
     from farama_notifications import notifications
 
     if "minigrid" in notifications and __version__ in notifications["minigrid"]:
