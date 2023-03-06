@@ -23,7 +23,6 @@ from typing import Any
 
 import minigrid
 
-
 project = "MiniGrid"
 copyright = "2022"
 author = "Farama Foundation"
