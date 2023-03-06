@@ -17,11 +17,12 @@
 # -- Project information -----------------------------------------------------
 from __future__ import annotations
 
-import minigrid
-
 import os
 import sys
 from typing import Any
+
+import minigrid
+
 
 project = "MiniGrid"
 copyright = "2022"
