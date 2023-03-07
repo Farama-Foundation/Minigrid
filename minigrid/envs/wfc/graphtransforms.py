@@ -658,22 +658,35 @@ class Nav2DTransforms:
                 graph_feats[attr] = torch.zeros(layouts.shape)
             graph_feats[attr] = graph_feats[attr].reshape(layouts.shape[0], -1)
 
+        graphs, edged_graphs = Nav2DTransforms.features_to_dense_graph(graph_feats, dim_grid, edge_config, to_dgl,
+                                                                       make_batch)
+
+        return graphs, edged_graphs
+
+    @staticmethod
+    def features_to_dense_graph(features: Dict[str, torch.Tensor],
+                                dim_grid: tuple,
+                                edge_config: DictConfig = None,
+                                to_dgl=False,
+                                make_batch=False) \
+            -> Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], List[Dict[str, nx.Graph]]]:
+
         graphs = []
         edged_graphs = []
-        for m in range(layouts.shape[0]):
+        for m in range(features[list(features.keys())[0]].shape[0]):
             g_temp = nx.grid_2d_graph(*dim_grid)
             g = nx.Graph()
             g.add_nodes_from(sorted(g_temp.nodes(data=True)))
-            for attr in graph_feats:
-                nx.set_node_attributes(g, {k: v for k, v in zip(g.nodes, graph_feats[attr][m].tolist())}, attr)
+            for attr in features:
+                nx.set_node_attributes(g, {k: v for k, v in zip(g.nodes, features[attr][m].tolist())}, attr)
             if edge_config is not None:
-                edge_layers = Nav2DTransforms.get_edge_layers(g, edge_config, list(graph_feats.keys()), dim_grid)
+                edge_layers = Nav2DTransforms.get_edge_layers(g, edge_config, list(features.keys()), dim_grid)
                 for edge_n, edge_g in edge_layers.items():
                     g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
                 edged_graphs.append(edge_layers)
             if to_dgl:
                 g = nx.convert_node_labels_to_integers(g)
-                g = dgl.from_networkx(g, node_attrs=graph_feats.keys())
+                g = dgl.from_networkx(g, node_attrs=features.keys()).to(features[list(features.keys())[0]].device)
             graphs.append(g)
 
         if to_dgl and make_batch:
@@ -682,11 +695,14 @@ class Nav2DTransforms:
         return graphs, edged_graphs
 
     @staticmethod
-    def dense_features_to_minigrid(features: torch.Tensor, node_attributes=None, level_info=None,
+    def graph_features_to_minigrid(graph_features: Dict[str,torch.Tensor], level_info=None,
                                    color_config=None, device=None) -> np.ndarray:
 
+        features = graph_features.copy()
+        node_attributes = list(features.keys())
+
         if device is None:
-            device = features.device
+            device = features[node_attributes[0]].device
 
         if color_config is None:
             color_config = MINIGRID_COLOR_CONFIG
@@ -694,12 +710,10 @@ class Nav2DTransforms:
         if level_info is None:
             level_info = LEVEL_INFO
 
-        if node_attributes is None:
-            node_attributes = DENSE_GRAPH_NODE_ATTRIBUTES
-
-        shape_no_padding = (
-        features.shape[-3], level_info['shape'][0] - 2, level_info['shape'][1] - 2, level_info['shape'][2])
-        features = features.reshape(*shape_no_padding[:-1], -1)
+        shape_no_padding = (features[node_attributes[0]].shape[-2], level_info['shape'][0] - 2,
+                            level_info['shape'][1] - 2, level_info['shape'][2])
+        for attr in node_attributes:
+            features[attr] = features[attr].reshape(*shape_no_padding[:-1])
         grids = torch.ones(shape_no_padding, dtype=torch.int, device=device) * Minigrid_OBJECT_TO_IDX['empty']
 
         minigrid_object_to_encoding_map = {}  # [object_id, color, state]
@@ -728,17 +742,16 @@ class Nav2DTransforms:
             if 'wall' not in node_attributes:
                 if attr == 'navigable' and "wall" not in node_attributes:  # TODO: check this
                     mapping = minigrid_object_to_encoding_map['wall']
-                    grids[features[..., i] == 0] = torch.tensor(mapping, dtype=torch.int, device=device)
+                    grids[features[attr] == 0] = torch.tensor(mapping, dtype=torch.int, device=device)
                 else:
                     mapping = minigrid_object_to_encoding_map[attr]
-                    grids[features[..., i] == 1] = torch.tensor(mapping, dtype=torch.int, device=device)
+                    grids[features[attr] == 1] = torch.tensor(mapping, dtype=torch.int, device=device)
             else:
                 try:
                     mapping = minigrid_object_to_encoding_map[attr]
-                    grids[features[..., i] == 1] = torch.tensor(mapping, dtype=torch.int, device=device)
+                    grids[features[attr] == 1] = torch.tensor(mapping, dtype=torch.int, device=device)
                 except KeyError:
                     pass
-
 
         padding = torch.tensor(minigrid_object_to_encoding_map['wall'], dtype=torch.int).to(device)
         padded_grid = einops.rearrange(grids, 'b h w c -> b c h w')
@@ -756,15 +769,25 @@ class Nav2DTransforms:
                                 level_info=None, color_config=None, device=None) -> np.ndarray:
 
         features, node_attributes = util.get_node_features(graphs, node_attributes=None, reshape=True)
-        grids = Nav2DTransforms.dense_features_to_minigrid(features, node_attributes=node_attributes,
+        num_zeros = features[features == 0.0].numel()
+        num_ones = features[features == 1.0].numel()
+        assert num_zeros + num_ones == features.numel(), "Graph features should be binary"
+        features_dict = {}
+        for i, key in enumerate(node_attributes):
+            features_dict[key] = features[..., i].float()
+        grids = Nav2DTransforms.graph_features_to_minigrid(features_dict,
                                                            level_info=level_info,
-                                                           color_config=color_config, device=device)
+                                                           color_config=color_config,
+                                                           device=device)
 
         return grids
 
     @staticmethod
     def get_edge_layers(graph:nx.Graph, edge_config:DictConfig, node_attr:List[str], dim_grid:Tuple[int, int]) \
             -> Dict[str, nx.Graph]:
+
+        navigable_nodes = ['empty', 'start', 'goal', 'moss']
+        non_navigable_nodes = ['wall', 'lava']
 
         def partial_grid(graph, nodes, dim_grid):
             non_grid_nodes = [n for n in graph.nodes if n not in nodes]
@@ -779,7 +802,7 @@ class Nav2DTransforms:
         def pair_edges(graph, node_types):
             all_nodes = []
             for n_type in node_types:
-                all_nodes.append([n for n, a in graph.nodes.items() if a[n_type] == 1.0])
+                all_nodes.append([n for n, a in graph.nodes.items() if a[n_type] >= 1.0])
             edges = list(itertools.product(*all_nodes))
             edged_graph = copy.deepcopy(graph)
             edged_graph.add_edges_from(edges)
@@ -787,7 +810,11 @@ class Nav2DTransforms:
 
         edged_graphs = {}
         for edge_ in edge_config.keys():
-            if not set(edge_config[edge_].between).issubset(set(node_attr)):
+            if edge_ == 'navigable' and 'navigable' not in node_attr:
+                edge_config[edge_].between = navigable_nodes
+            elif edge_ == 'non_navigable' and 'non_navigable' not in node_attr:
+                edge_config[edge_].between = non_navigable_nodes
+            elif not set(edge_config[edge_].between).issubset(set(node_attr)):
                 # TODO: remove
                 logger.info(f"Edge {edge_} not compatible with node attributes {node_attr}. Skipping.")
                 continue
@@ -796,7 +823,7 @@ class Nav2DTransforms:
             elif edge_config[edge_].structure == 'grid':
                 nodes = []
                 for n_type in edge_config[edge_].between:
-                    nodes += [n for n, a in graph.nodes.items() if a[n_type] == 1.0]
+                    nodes += [n for n, a in graph.nodes.items() if a[n_type] >= 1.0 and n not in nodes]
                 edged_graphs[edge_] = partial_grid(graph, nodes, dim_grid)
             else:
                 raise NotImplementedError(f"Edge structure {edge_config[edge_].structure} not supported.")
@@ -1124,7 +1151,7 @@ class Nav2DTransforms:
 
     @staticmethod
     def check_validity_start_goal_dense(start_node_ids: torch.Tensor, goal_node_ids: torch.Tensor,
-                                        layout_nodes: torch.Tensor, threshold: int = 0.5) -> torch.Tensor:
+                                        layout_nodes: torch.Tensor = None, threshold: int = 0.5) -> torch.Tensor:
         """
         Check if the start and goal nodes are valid.
         """
@@ -1132,12 +1159,17 @@ class Nav2DTransforms:
         batch_inds = torch.arange(0, start_node_ids.shape[0])
 
         mask1 = start_node_ids == goal_node_ids
-        mask2 = layout_nodes[batch_inds, start_node_ids] < threshold
-        mask3 = layout_nodes[batch_inds, goal_node_ids] < threshold
-        # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
-        valid = ~(mask1 | mask2 | mask3)
 
-        return valid
+        if layout_nodes is None:
+            return ~mask1
+
+        else:
+            mask2 = layout_nodes[batch_inds, start_node_ids] < threshold
+            mask3 = layout_nodes[batch_inds, goal_node_ids] < threshold
+            # valid only if NOT(start==goal OR no edges from start OR no edges from goal)
+            valid = ~(mask1 | mask2 | mask3)
+
+            return valid
 
     @staticmethod
     def check_validity_start_goal_minimal(start_nodes: torch.Tensor, goal_nodes: torch.Tensor, A: torch.Tensor,
