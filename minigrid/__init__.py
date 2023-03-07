@@ -96,7 +96,7 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-DoorKey-6x6-v0",
         entry_point="minigrid.envs:DoorKeyEnv",
-        kwargs={"size": 5},
+        kwargs={"size": 6},
     )
 
     register(
