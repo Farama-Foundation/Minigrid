@@ -1074,3 +1074,14 @@ def register_minigrid_envs():
 
 
 __version__ = "2.1.0"
+
+
+try:
+    import sys
+
+    from farama_notifications import notifications
+
+    if "minigrid" in notifications and __version__ in notifications["minigrid"]:
+        print(notifications["minigrid"][__version__], file=sys.stderr)
+except Exception:  # nosec
+    pass
