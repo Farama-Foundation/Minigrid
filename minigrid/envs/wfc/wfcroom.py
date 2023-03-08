@@ -24,8 +24,8 @@ import dgl
 import imageio
 
 from util import make_grid_with_labels, DotDict
-import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
-import data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
+import maze_representations.data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
+import maze_representations.data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
 from maze_representations.util import graph_metrics
 from maze_representations.util import transforms as tr
 from maze_representations.util import util as util
@@ -828,14 +828,21 @@ class WaveCollapseBatch(Batch):
             if self.dataset_meta.config.task_type == "navigate_to_goal":
                 features, _ = self._place_start_and_goal_random(features)
             elif self.dataset_meta.config.task_type == "cave_escape":
-                features, extra['shortest_path_dist'] = self._place_goal_random(features)
-                features, extra['probs_moss'] = self._place_moss_cave_escape(features, extra['shortest_path_dist'])
-                features, extra['probs_lava'] = self._place_lava_cave_escape(features, extra['shortest_path_dist'])
-                features, extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
-                features, extra['edged_graphs'] = self._add_edges(features, stage2_edge_config)
+                extra['shortest_path_dist'] = self._place_goal_random(features)
+                extra['probs_moss'] = self._place_moss_cave_escape(features, extra['shortest_path_dist'])
+                extra['probs_lava'] = self._place_lava_cave_escape(features, extra['shortest_path_dist'])
+                extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
+                extra['edge_graphs'] = self._add_edges(features, stage2_edge_config, edge_graphs=edge_graphs)
+                self._update_graph_features(extra['edge_graphs'], features)
                 features = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in features]
 
             return features, extra
+
+        @staticmethod
+        def _update_graph_features(graphs:List[Dict[str,nx.Graph]], reference_graphs:List[nx.Graph]):
+            for m, ref_g in enumerate(reference_graphs):
+                for k in graphs[m]:
+                    nx.set_node_attributes(graphs[m][k], dict(ref_g.nodes(data=True)))
 
         def _run_wfc(self, seed):
             util.seed_everything(seed)
@@ -869,7 +876,8 @@ class WaveCollapseBatch(Batch):
 
             return layouts
 
-        def _place_start_and_goal_random(self, graphs: List[dgl.DGLGraph]):
+        @staticmethod
+        def _place_start_and_goal_random(graphs: List[dgl.DGLGraph]):
 
             node_set = 'navigable'
 
@@ -882,7 +890,8 @@ class WaveCollapseBatch(Batch):
 
             return graphs, None
 
-        def _place_goal_random(self, graphs: List[nx.Graph]):
+        @staticmethod
+        def _place_goal_random(graphs: List[nx.Graph]):
 
             node_set = 'empty'
 
@@ -895,7 +904,7 @@ class WaveCollapseBatch(Batch):
                 graph.nodes[goal_node][node_set] = 0.0
                 spl.append(dict(nx.single_target_shortest_path_length(graph, goal_node)))
 
-            return graphs, spl
+            return spl
 
         def _place_moss_cave_escape(self, graphs: List[nx.Graph], spl):
 
@@ -920,9 +929,15 @@ class WaveCollapseBatch(Batch):
                     graph.nodes[node]['moss'] = 1.0
                     for node_subset_ in params.nodes:
                         graph.nodes[node][node_subset_] = 0.0
-                probs.append(weights)
+                pp = {}
+                for node in graph.nodes():
+                    if node not in possible_nodes:
+                        pp[node] = 0.0
+                    else:
+                        pp[node] = weights[list(shortest_path_lengths.keys()).index(node)]
+                probs.append(pp)
 
-            return graphs, probs
+            return probs
 
         def _place_lava_cave_escape(self, graphs: List[nx.Graph], spl):
 
@@ -965,6 +980,7 @@ class WaveCollapseBatch(Batch):
                             pathlength = np.min(spl_goal)
                             shortest_path_lengths[node] = pathlength
                 [shortest_path_lengths.pop(node) for node in nodes_to_remove]
+                [possible_nodes.remove(node) for node in nodes_to_remove]
                 num_sampled = int(params.fraction * len(shortest_path_lengths))
                 scores = np.array(list(shortest_path_lengths.values()))
                 weights = self._compute_weights(scores, params)
@@ -974,11 +990,18 @@ class WaveCollapseBatch(Batch):
                     graph.nodes[node]['lava'] = 1.0
                     for node_subset_ in params.nodes:
                         graph.nodes[node][node_subset_] = 0.0
-                probs.append(weights)
+                pp = {}
+                for node in graph.nodes():
+                    if node not in possible_nodes:
+                        pp[node] = 0.0
+                    else:
+                        pp[node] = weights[list(shortest_path_lengths.keys()).index(node)]
+                probs.append(pp)
 
-            return graphs, probs
+            return probs
 
-        def _place_start_cave_escape(self, graphs: List[nx.Graph], spl):
+        @staticmethod
+        def _place_start_cave_escape(graphs: List[nx.Graph],spl):
 
             assert len(graphs) == len(spl), "Number of graphs and shortest path lengths do not match"
 
@@ -1007,12 +1030,15 @@ class WaveCollapseBatch(Batch):
                 for node_subset_ in node_subset:
                     graph.nodes[start_node][node_subset_] = 0.0
 
-            return graphs, all_possible_starts
+            return all_possible_starts
 
-        def _add_edges(self, graphs: List[nx.Graph], edge_config: Union[Dict, DictConfig]):
+        def _add_edges(self, graphs: List[nx.Graph], edge_config: Union[Dict, DictConfig],
+                       edge_graphs:List[Dict[str, nx.Graph]]=None)\
+                ->List[Dict[str, nx.Graph]]:
 
             graph_features = self.dataset_meta.config.graph_feature_descriptors
-            edged_graphs = []
+            if edge_graphs is None:
+                edge_graphs = [{} for _ in range(len(graphs))]
             dim_grid = tuple(d-2 for d in self.dataset_meta.level_info['shape'][0:2])
 
             for m, g in enumerate(graphs):
@@ -1020,9 +1046,9 @@ class WaveCollapseBatch(Batch):
                 for edge_n, edge_g in edge_layers.items():
                     g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
                 graphs[m] = g
-                edged_graphs.append(edge_layers)
+                edge_graphs[m].update(edge_layers)
 
-            return graphs, edged_graphs
+            return edge_graphs
 
         def _get_neighbors(self, nodes:List[int], neighbors_set:List[int]):
             grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2, self.dataset_meta.config.gridworld_data_dim[2] - 2)

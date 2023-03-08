@@ -658,10 +658,10 @@ class Nav2DTransforms:
                 graph_feats[attr] = torch.zeros(layouts.shape)
             graph_feats[attr] = graph_feats[attr].reshape(layouts.shape[0], -1)
 
-        graphs, edged_graphs = Nav2DTransforms.features_to_dense_graph(graph_feats, dim_grid, edge_config, to_dgl,
+        graphs, edge_graphs = Nav2DTransforms.features_to_dense_graph(graph_feats, dim_grid, edge_config, to_dgl,
                                                                        make_batch)
 
-        return graphs, edged_graphs
+        return graphs, edge_graphs
 
     @staticmethod
     def features_to_dense_graph(features: Dict[str, torch.Tensor],
@@ -672,7 +672,7 @@ class Nav2DTransforms:
             -> Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], List[Dict[str, nx.Graph]]]:
 
         graphs = []
-        edged_graphs = []
+        edge_graphs = []
         for m in range(features[list(features.keys())[0]].shape[0]):
             g_temp = nx.grid_2d_graph(*dim_grid)
             g = nx.Graph()
@@ -683,7 +683,7 @@ class Nav2DTransforms:
                 edge_layers = Nav2DTransforms.get_edge_layers(g, edge_config, list(features.keys()), dim_grid)
                 for edge_n, edge_g in edge_layers.items():
                     g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
-                edged_graphs.append(edge_layers)
+                edge_graphs.append(edge_layers)
             if to_dgl:
                 g = nx.convert_node_labels_to_integers(g)
                 g = dgl.from_networkx(g, node_attrs=features.keys()).to(features[list(features.keys())[0]].device)
@@ -692,7 +692,7 @@ class Nav2DTransforms:
         if to_dgl and make_batch:
             graphs = dgl.batch(graphs)
 
-        return graphs, edged_graphs
+        return graphs, edge_graphs
 
     @staticmethod
     def graph_features_to_minigrid(graph_features: Dict[str,torch.Tensor], level_info=None,
@@ -804,11 +804,11 @@ class Nav2DTransforms:
             for n_type in node_types:
                 all_nodes.append([n for n, a in graph.nodes.items() if a[n_type] >= 1.0])
             edges = list(itertools.product(*all_nodes))
-            edged_graph = copy.deepcopy(graph)
+            edged_graph = nx.create_empty_copy(graph, with_data=True)
             edged_graph.add_edges_from(edges)
             return edged_graph
 
-        edged_graphs = {}
+        edge_graphs = {}
         for edge_ in edge_config.keys():
             if edge_ == 'navigable' and 'navigable' not in node_attr:
                 edge_config[edge_].between = navigable_nodes
@@ -819,16 +819,16 @@ class Nav2DTransforms:
                 logger.info(f"Edge {edge_} not compatible with node attributes {node_attr}. Skipping.")
                 continue
             if edge_config[edge_].structure is None:
-                edged_graphs[edge_] = pair_edges(graph, edge_config[edge_].between)
+                edge_graphs[edge_] = pair_edges(graph, edge_config[edge_].between)
             elif edge_config[edge_].structure == 'grid':
                 nodes = []
                 for n_type in edge_config[edge_].between:
                     nodes += [n for n, a in graph.nodes.items() if a[n_type] >= 1.0 and n not in nodes]
-                edged_graphs[edge_] = partial_grid(graph, nodes, dim_grid)
+                edge_graphs[edge_] = partial_grid(graph, nodes, dim_grid)
             else:
                 raise NotImplementedError(f"Edge structure {edge_config[edge_].structure} not supported.")
 
-        return edged_graphs
+        return edge_graphs
 
     @staticmethod
     def dense_graph_to_minigrid_render(graphs, tile_size=32, level_info=None):
