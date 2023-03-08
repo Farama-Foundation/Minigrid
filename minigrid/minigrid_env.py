@@ -5,11 +5,11 @@ import math
 from abc import abstractmethod
 from enum import IntEnum
 from typing import Iterable, TypeVar
-import pygame
-import pygame.freetype
 
 import gymnasium as gym
 import numpy as np
+import pygame
+import pygame.freetype
 from gymnasium import spaces
 
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
@@ -749,7 +749,9 @@ class MiniGridEnv(gym.Env):
             if self.window is None:
                 pygame.init()
                 pygame.display.init()
-                self.window = pygame.display.set_mode((self.screen_size, self.screen_size))
+                self.window = pygame.display.set_mode(
+                    (self.screen_size, self.screen_size)
+                )
                 pygame.display.set_caption("minigrid")
             if self.clock is None:
                 self.clock = pygame.time.Clock()
@@ -758,7 +760,9 @@ class MiniGridEnv(gym.Env):
             # Create background with mission description
             offset = surf.get_size()[0] * 0.1
             # offset = 32 if self.agent_pov else 64
-            bg = pygame.Surface((int(surf.get_size()[0] + offset) , int(surf.get_size()[1] + offset)))
+            bg = pygame.Surface(
+                (int(surf.get_size()[0] + offset), int(surf.get_size()[1] + offset))
+            )
             bg.convert()
             bg.fill((255, 255, 255))
             bg.blit(surf, (offset / 2, 0))
@@ -772,7 +776,6 @@ class MiniGridEnv(gym.Env):
             text_rect.center = bg.get_rect().center
             text_rect.y = bg.get_height() - font_size * 1.5
             font.render_to(bg, text_rect, text, size=font_size)
-
 
             self.window.blit(bg, (0, 0))
             pygame.event.pump()

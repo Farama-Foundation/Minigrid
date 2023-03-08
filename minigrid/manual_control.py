@@ -88,7 +88,7 @@ if __name__ == "__main__":
         type=str,
         help="gym environment to load",
         choices=gym.envs.registry.keys(),
-        default="MiniGrid-MultiRoom-N6-v0"
+        default="MiniGrid-MultiRoom-N6-v0",
     )
     parser.add_argument(
         "--seed",
@@ -108,24 +108,24 @@ if __name__ == "__main__":
         "--agent-view-size",
         type=int,
         default=7,
-        help="set the number of grid spaces visible in agent-view "
+        help="set the number of grid spaces visible in agent-view ",
     )
     parser.add_argument(
         "--screen-size",
         type=int,
         default="640",
-        help="set the resolution for pygame rendering (width and height)"
+        help="set the resolution for pygame rendering (width and height)",
     )
 
     args = parser.parse_args()
 
-    env = gym.make(
+    env: MiniGridEnv = gym.make(
         args.env_id,
         tile_size=args.tile_size,
         render_mode="human",
         agent_pov=args.agent_view,
-        agent_view_size = args.agent_view_size,
-        screen_size=args.screen_size
+        agent_view_size=args.agent_view_size,
+        screen_size=args.screen_size,
     )
 
     # TODO: check if this can be removed
