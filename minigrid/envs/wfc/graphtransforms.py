@@ -898,6 +898,9 @@ class Nav2DTransforms:
             if isinstance(g, dgl.DGLGraph):
                 g = dgl.to_networkx(g.cpu(), node_attrs=g.ndata.keys())
                 g = nx.Graph(g)
+                for node in g.nodes:
+                    for key in g.nodes[node].keys():
+                        g.nodes[node][key] = g.nodes[node][key].item()
             assert g.number_of_nodes() == (level_info['shape'][0] - 2) * (level_info['shape'][1] - 2), \
                 "Number of nodes does not match level info."
             g = nx.convert_node_labels_to_integers(g)

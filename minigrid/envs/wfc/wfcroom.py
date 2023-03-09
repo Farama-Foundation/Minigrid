@@ -315,10 +315,6 @@ class GridNavDatasetGenerator:
 
     def generate_subdataset(self, original_dataset_meta_path):
 
-        original_dataset_meta = self.load_dataset_meta(original_dataset_meta_path, update_config=False)
-        assert not original_dataset_meta.metrics_normalised, "Original dataset must NOT have normalised metrics."
-        original_dataset_dir = os.path.dirname(original_dataset_meta_path)
-
         def get_data(batch_ids, batch_size):
             data = []
             for file in batch_ids:
@@ -352,6 +348,10 @@ class GridNavDatasetGenerator:
                 data[-1].label_contents = data[-1].label_contents.to_dict()
             return data
 
+        original_dataset_meta = self.load_dataset_meta(original_dataset_meta_path, update_config=False)
+        # assert not original_dataset_meta.metrics_normalised, "Original dataset must NOT have normalised metrics."
+        original_dataset_dir = os.path.dirname(original_dataset_meta_path)
+
         batch_data = []
         batch_data.extend(get_data(self.config.train_batch_ids, self.config.size_train_batch))
         batch_data.extend(get_data(self.config.test_batch_ids, self.config.size_test_batch))
@@ -363,6 +363,11 @@ class GridNavDatasetGenerator:
             assert b_data.batch_meta['unique_data']
             b_data.label_ids = torch.arange(label_id_count, label_id_count + b_data.batch_meta['batch_size']).to(torch.int64)
             label_id_count += b_data.batch_meta['batch_size']
+            if self.config.task_type == 'cave_escape' and original_dataset_meta['task_type'] == 'navigate_to_goal':
+                logger.info(f"Converting batch {i}/{len(batch_data)} to cave escape task.")
+                seeds = b_data.label_contents['seed']
+                b_data.features, b_data.label_contents = self._convert_batch_data(b_data, self.batches_meta[i])
+                b_data.label_contents['seed'] = seeds
             data = [b_data.features[i] for i in range(self.config.n_thumbnail_per_batch)]
             images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta.level_info)
             self.ts_thumbnails[b_data.batch_meta['task_structure']] = images
@@ -377,6 +382,18 @@ class GridNavDatasetGenerator:
         self.save_dataset_meta()
         self.save_layout_thumbnail(n_per_batch=self.config.n_thumbnail_per_batch)
 
+    def _convert_batch_data(self, batch_data, new_batch_meta):
+        time_batch_start = time.perf_counter()
+        batch = MinigridToCaveEscapeBatch(batch_meta=new_batch_meta, dataset_meta=self.dataset_meta,
+                                          seeds=batch_data.label_contents['seed'])
+        batch_features, _, batch_label_contents = batch.generate_batch(batch_data)
+        time_batch_end = time.perf_counter()
+        batch_generation_time = time_batch_end - time_batch_start
+        logger.info(f"Batch {new_batch_meta['batch_id']}, Task structure: {new_batch_meta['task_structure']} generated in "
+                    f"{batch_generation_time:.2f} seconds. "
+                    f"Average time per sample: {batch_generation_time / len(batch_features):.2f} seconds.")
+
+        return batch_features, batch_label_contents
 
     @staticmethod
     def _generate_batch_data(batch_meta, dataset_meta, seeds, batch_label_offset, save_dir):
@@ -506,6 +523,7 @@ class GridNavDatasetGenerator:
         # save_graphs()
         logger.info(f"Saving Batch {batch.batch_meta['batch_id']} to {filepath}.")
         dgl.data.utils.save_graphs(filepath, batch.features, {'labels': batch.label_ids})
+        GridNavDatasetGenerator.save_batch_extra_data(batch, save_dir)
         GridNavDatasetGenerator.save_batch_meta(batch.label_contents, batch.batch_meta, save_dir)
         # entry = {'data': batch.features, 'labels': batch.label_ids,
         #          'label_contents': batch.label_contents, 'batch_meta': batch.batch_meta}
@@ -519,8 +537,57 @@ class GridNavDatasetGenerator:
         filepath = save_dir + filename
         logger.info(f"Saving Batch {batch_meta['batch_id']} Metadata to {filepath}.")
         entry = {'label_contents': label_contents, 'batch_meta': batch_meta}
+        extra_data = {}
+        if "edge_graphs" in label_contents:
+            extra_data["edge_graphs"] = label_contents.pop("edge_graphs")
+            filename_extra = batch_meta['output_file'] + '.dgl.extra'
+            filepath_extra = save_dir + filename_extra
+            logger.info(f"Saving Batch {batch_meta['batch_id']} Extra Data to {filepath_extra}.")
+            dgl.data.utils.save_graphs(filepath_extra, extra_data["edge_graphs"])
         with open(filepath, 'wb') as f:
             pickle.dump(entry, f)
+
+    @staticmethod
+    def save_batch_extra_data(batch, save_dir):
+        extra_data = {}
+        if "edge_graphs" in batch.label_contents:
+            extra_data["edge_graphs"] = batch.label_contents.pop("edge_graphs")
+            filename_extra = batch.batch_meta['output_file'] + '.dgl.extra'
+            filepath_extra = save_dir + filename_extra
+
+            extra_graphs = []
+            extra_labels = {}
+            for key in extra_data["edge_graphs"]:
+                extra_graphs.extend(extra_data["edge_graphs"][key])
+                extra_labels[key] = batch.label_ids.clone()
+
+            logger.info(f"Saving Batch {batch.batch_meta['batch_id']} Extra Data to {filepath_extra}.")
+            dgl.data.utils.save_graphs(filepath_extra, extra_graphs, extra_labels)
+        else:
+            pass
+
+    def load_batch_extra_data(self, filename, dir=None):
+        if dir is None:
+            dir = self.save_dir
+        filepath = os.path.join(dir, filename)
+        try:
+            entry = dgl.load_graphs(filepath)
+            extra_data = GridNavDatasetGenerator.assemble_extra_data(entry)
+            return extra_data
+        except FileNotFoundError:
+            logger.warning(f"Could not find {filepath}.")
+            return None
+
+    @staticmethod
+    def assemble_extra_data(entry):
+        graphs, extra = entry
+        num_chunks = len(extra.keys())
+        len_chunks = len(graphs) // num_chunks
+        chunks = [graphs[x:x + len_chunks] for x in range(0, len(graphs), len_chunks)]
+        extra_data = {"edge_graphs":{}}
+        for c, key in enumerate(extra.keys()):
+            extra_data["edge_graphs"][key] = chunks[c]
+        return extra_data
 
     def load_batch(self, filename, dir=None):
         if dir is None:
@@ -834,15 +901,20 @@ class WaveCollapseBatch(Batch):
                 extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
                 extra['edge_graphs'] = self._add_edges(features, stage2_edge_config, edge_graphs=edge_graphs)
                 self._update_graph_features(extra['edge_graphs'], features)
+                features = [nx.convert_node_labels_to_integers(g) for g in features]
                 features = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in features]
 
             return features, extra
 
         @staticmethod
-        def _update_graph_features(graphs:List[Dict[str,nx.Graph]], reference_graphs:List[nx.Graph]):
-            for m, ref_g in enumerate(reference_graphs):
-                for k in graphs[m]:
-                    nx.set_node_attributes(graphs[m][k], dict(ref_g.nodes(data=True)))
+        def _update_graph_features(graphs:Dict[str, List[dgl.DGLGraph]], reference_graphs:List[dgl.DGLGraph]):
+            reference_graphs = dgl.batch(reference_graphs)
+
+            for key in graphs:
+                graphs[key] = dgl.batch(graphs[key])
+                for feat in reference_graphs.ndata:
+                    graphs[key].ndata[feat] = reference_graphs.ndata[feat]
+                graphs[key] = dgl.unbatch(graphs[key])
 
         def _run_wfc(self, seed):
             util.seed_everything(seed)
@@ -1033,12 +1105,14 @@ class WaveCollapseBatch(Batch):
             return all_possible_starts
 
         def _add_edges(self, graphs: List[nx.Graph], edge_config: Union[Dict, DictConfig],
-                       edge_graphs:List[Dict[str, nx.Graph]]=None)\
-                ->List[Dict[str, nx.Graph]]:
+                       edge_graphs:Dict[str, List[dgl.DGLGraph]]=None)\
+                ->Dict[str, List[dgl.DGLGraph]]:
 
             graph_features = self.dataset_meta.config.graph_feature_descriptors
             if edge_graphs is None:
-                edge_graphs = [{} for _ in range(len(graphs))]
+                edge_graphs = defaultdict(list)
+            else:
+                edge_graphs = defaultdict(list, edge_graphs)
             dim_grid = tuple(d-2 for d in self.dataset_meta.level_info['shape'][0:2])
 
             for m, g in enumerate(graphs):
@@ -1046,7 +1120,10 @@ class WaveCollapseBatch(Batch):
                 for edge_n, edge_g in edge_layers.items():
                     g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
                 graphs[m] = g
-                edge_graphs[m].update(edge_layers)
+                for _edge_g_type in edge_layers:
+                    edge_graph = nx.convert_node_labels_to_integers(edge_layers[_edge_g_type])
+                    edge_graph = dgl.from_networkx(edge_graph, node_attrs=self.dataset_meta.config.graph_feature_descriptors)
+                    edge_graphs[_edge_g_type].append(edge_graph)
 
             return edge_graphs
 
@@ -1114,6 +1191,90 @@ class WaveCollapseBatch(Batch):
             data = [self.features[i] for i in idx]
             images = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta.level_info)
             return images
+
+
+class MinigridToCaveEscapeBatch(WaveCollapseBatch):
+    PATTERN_COLOR_CONFIG = {
+        "wall" :(0, 0, 0),  # black
+        "empty":(255, 255, 255),  # white
+        }
+
+    def __init__(self, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds: torch.Tensor = None):
+        super().__init__(batch_meta, dataset_meta, seeds)
+
+    def generate_batch(self, batch_data: DotDict):
+
+        batch_data, extra = self.generate_data(batch_data)
+        features, _ = util.get_node_features(batch_data, device=None) # TODO: add device?
+
+        if not util.check_unique(features).all():
+            logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
+            self.batch_meta['unique_data'] = False
+
+        self.generate_label_contents(batch_data, features=features, extra_data=extra)
+
+        self.features = batch_data
+        return self.features, self.label_ids, self.label_contents
+
+    def generate_data(self, batch_data: DotDict):
+        graphs = batch_data.features
+        f = dgl.batch(graphs)
+
+        nav_f = f.ndata['active'].to(torch.float)
+        non_nav_f = torch.zeros_like(nav_f)
+        non_nav_f[nav_f == 0.0] = 1.0
+
+        new_f = {
+            'navigable'     :nav_f.clone(),
+            'non_navigable' :non_nav_f.clone(),
+            'empty'         :nav_f.clone(),
+            'wall'          :non_nav_f.clone(),
+            'start'         :torch.zeros_like(nav_f),
+            'goal'          :torch.zeros_like(nav_f),
+            'lava'          :torch.zeros_like(nav_f),
+            'moss'          :torch.zeros_like(nav_f)
+            }
+
+        new_g = f.clone()
+        attributes = list(new_f.keys())
+        for key in attributes:
+            new_g.ndata[key] = new_f[key]
+
+        new_g.ndata.pop('active')
+
+        new_g = tr.Nav2DTransforms.graph_to_grid_graph(new_g, level_info=self.dataset_meta.level_info)
+            
+        # new_g = dgl.unbatch(new_g)
+        # for m, g in enumerate(new_g):
+        #     new_g[m] = nx.Graph(dgl.to_networkx(g, node_attrs=new_f.keys()))
+
+        stage1_edge_config = {}
+        stage2_edge_config = {}
+        for k, v in self.dataset_meta.config.graph_edge_descriptors.items():
+            if k == 'navigable':
+                stage1_edge_config[k] = v
+            else:
+                stage2_edge_config[k] = v
+
+        edge_graphs = {'navigable':[new_g[i] for i in range(len(new_g))]}
+        for edge_type in edge_graphs:
+            for m, edge_graph in enumerate(edge_graphs[edge_type]):
+                if isinstance(edge_graph, nx.Graph):
+                    edge_graphs[edge_type][m] = nx.convert_node_labels_to_integers(edge_graphs[edge_type][m])
+                    edge_graphs[edge_type][m] = dgl.from_networkx(edge_graphs[edge_type][m], node_attrs=self.dataset_meta.config.graph_feature_descriptors)
+        extra = {}
+        extra['shortest_path_dist'] = self._place_goal_random(new_g)
+        extra['probs_moss'] = self._place_moss_cave_escape(new_g, extra['shortest_path_dist'])
+        extra['probs_lava'] = self._place_lava_cave_escape(new_g, extra['shortest_path_dist'])
+        extra['alternate_start_locations'] = self._place_start_cave_escape(new_g, extra['shortest_path_dist'])
+        extra['edge_graphs'] = self._add_edges(new_g, stage2_edge_config, edge_graphs=edge_graphs)
+
+        new_g = [nx.convert_node_labels_to_integers(g) for g in new_g]
+        new_g = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in
+                    new_g]
+        self._update_graph_features(extra['edge_graphs'], new_g)
+
+        return new_g, extra
 
 
 if __name__ == '__main__':
