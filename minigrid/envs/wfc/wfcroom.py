@@ -426,6 +426,14 @@ class GridNavDatasetGenerator:
         maximums = ["shortest_path", "resistance", "navigable_nodes"]
         for key in maximums:
             batch_metric = label_contents[key]
+            if isinstance(batch_metric, list) or isinstance(batch_metric, tuple):
+                batch_metric = torch.tensor(batch_metric)
+            elif isinstance(batch_metric, np.ndarray):
+                batch_metric = torch.from_numpy(batch_metric)
+            elif isinstance(batch_metric, torch.Tensor):
+                pass
+            else:
+                raise TypeError(f"Metric must be a list, tuple, numpy array or torch tensor. got: {type(batch_metric)}")
             metric_max = batch_metric.amax().item() * self.dataset_meta.config.label_descriptors_config[key]['max']
             if self.dataset_meta.config.label_descriptors_config[key]['normalisation_factor'] is None \
                     or metric_max > self.dataset_meta.config.label_descriptors_config[key]['normalisation_factor']:
@@ -704,14 +712,12 @@ class GridNavDatasetGenerator:
         return [f for f in os.listdir(self.save_dir) if os.path.isfile(os.path.join(self.save_dir, f))]
 
 
-
-
 class BatchGenerator:
 
     def __new__(cls, batch_meta: Dict[str, Any], dataset_meta: Dict[str, Any], seeds:torch.Tensor=None):
 
         if batch_meta['generating_algorithm'] == 'wave_function_collapse':
-            instance = super().__new__(WaveCollapseBatch)
+            instance = super().__new__(CaveEscapeWaveCollapseBatch)
         else:
             raise KeyError("Task Structure was not recognised")
 
@@ -738,44 +744,33 @@ class Batch:
 
     def generate_batch(self):
 
-        batch_data, extra = self.generate_data()
-        if isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph):
-            features, _ = util.get_node_features(batch_data, device=None) # TODO: add device?
+        graphs, extra = self.generate_data()
+        if isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph):
+            features, _ = util.get_node_features(graphs, device=None) # TODO: add device?
         else:
-            features = batch_data
+            features = graphs
 
         if not util.check_unique(features).all():
             logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
             self.batch_meta['unique_data'] = False
-        if self.data_type == 'gridworld':
-            pass
-        elif self.data_type == 'grid':
-            batch_data = tr.Nav2DTransforms.encode_gridworld_to_grid(batch_data)
-        elif self.data_type == 'graph':
-            if self.encoding == 'minimal':
-                if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
-                    batch_data = tr.Nav2DTransforms.encode_gridworld_to_graph(batch_data)
-            elif self.encoding == 'dense':
-                if not (isinstance(batch_data, dgl.DGLGraph) or isinstance(batch_data[0], dgl.DGLGraph)):
+
+        if self.data_type == 'graph':
+            if self.encoding == 'dense':
+                if not (isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph)):
                     raise TypeError("Output of generate_data() must be a DGLGraph or list of DGLGraphs. For dense "
                                     "encoding")
-            else:
                 raise NotImplementedError(f"Encoding {self.encoding} not implemented.")
-            self.generate_label_contents(batch_data, features=features, extra_data=extra)
+            self.generate_label_contents(graphs, extra_data=extra)
+        else:
+            raise NotImplementedError(f"Data type {self.data_type} not implemented.")
 
-        self.features = batch_data
+        self.features = graphs
         return self.features, self.label_ids, self.label_contents
 
     def generate_data(self) -> Tuple[List[dgl.DGLGraph], Dict[str, Any]]:
         raise NotImplementedError
 
-    def generate_label_contents(self, data, features=None, extra_data=None):
-
-        if features is None:
-            if isinstance(data, dgl.DGLGraph) or isinstance(data[0], dgl.DGLGraph):
-                features, _ = util.get_node_features(data, device=None)  # TODO: add device?
-            else:
-                features = data
+    def generate_label_contents(self, data, extra_data=None):
 
         for key in self.label_contents.keys():
             self.label_contents[key] = []
@@ -787,42 +782,34 @@ class Batch:
         if "images" in self.label_contents.keys():
             self.label_contents["images"] = tr.Nav2DTransforms.dense_graph_to_minigrid_render(data, tile_size=16, level_info=self.dataset_meta.level_info)
 
-        self.compute_graph_metrics(data, features)
+        self.compute_graph_metrics(extra_data["edge_graphs"]["navigable"])
 
         if extra_data is not None:
             for key, value in extra_data.items():
                 self.label_contents[key] = value
 
-    def compute_graph_metrics(self, graphs, features):
+    def compute_graph_metrics(self, graphs):
 
-        start_nodes, goal_nodes = self._compute_start_goal_indices(features)
+        metrics = graph_metrics.compute_metrics(graphs)
 
+        start_nodes, goal_nodes = self._compute_start_goal_indices(graphs)
+        metrics["optimal_trajectories"] = []
         for i, graph in enumerate(graphs):
-            start_node = int(start_nodes[i])
-            goal_node = int(goal_nodes[i])
-            graph, valid, solvable = graph_metrics.prepare_graph(graph, start_node, goal_node)
+            g_nx = util.dgl_to_nx(graph)
+            shortest_paths = graph_metrics.shortest_paths(g_nx, start_nodes[i], goal_nodes[i], num_paths=1)
+            metrics["optimal_trajectories"].append(shortest_paths)
 
-            shortest_paths = graph_metrics.shortest_paths(graph, start_node, goal_node, num_paths=1)
-            self.label_contents["optimal_trajectories"].append(shortest_paths)
-            self.label_contents["shortest_path"].append(len(shortest_paths[0]))
+        for key, value in metrics.items():
+            self.label_contents[key] = value
 
-            resistance_distance = graph_metrics.resistance_distance(graph, start_node, goal_node)
-            self.label_contents["resistance"].append(resistance_distance)
+    def _compute_start_goal_indices(self, graphs: Union[dgl.DGLGraph, List[dgl.DGLGraph]]):
 
-            num_navigable_nodes = graph.number_of_nodes()
-            self.label_contents["navigable_nodes"].append(num_navigable_nodes)
+        feature_tensor, feat_labels = util.get_node_features(graphs)
 
-        self.label_contents["shortest_path"] = torch.tensor(self.label_contents["shortest_path"])
-        self.label_contents["resistance"] = torch.tensor(self.label_contents["resistance"])
-        self.label_contents["navigable_nodes"] = torch.tensor(self.label_contents["navigable_nodes"])
+        start_dim, goal_dim = feat_labels.index('start'), feat_labels.index('goal')
 
-    def _compute_start_goal_indices(self, features):
-
-        start_dim, goal_dim = self.dataset_meta.config.graph_feature_descriptors.index('start'), \
-                              self.dataset_meta.config.graph_feature_descriptors.index('goal')
-
-        start_nodes = features[..., start_dim].argmax(dim=-1)
-        goal_nodes = features[..., goal_dim].argmax(dim=-1)
+        start_nodes = feature_tensor[..., start_dim].argmax(dim=-1).tolist()
+        goal_nodes = feature_tensor[..., goal_dim].argmax(dim=-1).tolist()
 
         return start_nodes, goal_nodes
 
@@ -830,7 +817,7 @@ class Batch:
         raise NotImplementedError
 
 
-class WaveCollapseBatch(Batch):
+class CaveEscapeWaveCollapseBatch(Batch):
 
         PATTERN_COLOR_CONFIG = {
             "wall": (0, 0, 0), #black
@@ -1193,7 +1180,7 @@ class WaveCollapseBatch(Batch):
             return images
 
 
-class MinigridToCaveEscapeBatch(WaveCollapseBatch):
+class MinigridToCaveEscapeBatch(CaveEscapeWaveCollapseBatch):
     PATTERN_COLOR_CONFIG = {
         "wall" :(0, 0, 0),  # black
         "empty":(255, 255, 255),  # white
@@ -1204,16 +1191,16 @@ class MinigridToCaveEscapeBatch(WaveCollapseBatch):
 
     def generate_batch(self, batch_data: DotDict):
 
-        batch_data, extra = self.generate_data(batch_data)
-        features, _ = util.get_node_features(batch_data, device=None) # TODO: add device?
+        graphs, extra = self.generate_data(batch_data)
+        feature_tensor, _ = util.get_node_features(graphs, device=None) # TODO: add device?
 
-        if not util.check_unique(features).all():
+        if not util.check_unique(feature_tensor).all():
             logger.warning(f"Batch {self.batch_meta['batch_id']} generated duplicate features.")
             self.batch_meta['unique_data'] = False
 
-        self.generate_label_contents(batch_data, features=features, extra_data=extra)
+        self.generate_label_contents(graphs, extra_data=extra)
 
-        self.features = batch_data
+        self.features = graphs
         return self.features, self.label_ids, self.label_contents
 
     def generate_data(self, batch_data: DotDict):
