@@ -788,6 +788,8 @@ class Nav2DTransforms:
 
         navigable_nodes = ['empty', 'start', 'goal', 'moss']
         non_navigable_nodes = ['wall', 'lava']
+        assert all([isinstance(n, tuple) for n in graph.nodes])
+        assert all([len(n) == 2 for n in graph.nodes])
 
         def partial_grid(graph, nodes, dim_grid):
             non_grid_nodes = [n for n in graph.nodes if n not in nodes]
@@ -816,7 +818,7 @@ class Nav2DTransforms:
                 edge_config[edge_].between = non_navigable_nodes
             elif not set(edge_config[edge_].between).issubset(set(node_attr)):
                 # TODO: remove
-                logger.info(f"Edge {edge_} not compatible with node attributes {node_attr}. Skipping.")
+                logger.warning(f"Edge {edge_} not compatible with node attributes {node_attr}. Skipping.")
                 continue
             if edge_config[edge_].structure is None:
                 edge_graphs[edge_] = pair_edges(graph, edge_config[edge_].between)
