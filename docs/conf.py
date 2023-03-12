@@ -15,22 +15,20 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
-# TODO: change to minigrid version
-# from TODO import __version__ as minigrid_version
-
 from __future__ import annotations
 
 import os
 import sys
 from typing import Any
 
+import minigrid
+
 project = "MiniGrid"
 copyright = "2022"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
-# TODO: change to minigrid version
-release = "1.2.1"
+release = minigrid.__version__
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -80,6 +78,7 @@ html_theme_options = {
     "light_logo": "img/minigrid.svg",
     "dark_logo": "img/minigrid-white.svg",
     "gtag": "G-FBXJQQLXKD",
+    "versioning": True,
 }
 html_context: dict[str, Any] = {}
 html_context["conf_py_path"] = "/docs/"
@@ -91,3 +90,7 @@ html_context["slug"] = "minigrid"
 
 html_static_path = ["_static"]
 html_css_files = []
+
+# -- Generate Changelog -------------------------------------------------
+
+sphinx_github_changelog_token = os.environ.get("SPHINX_GITHUB_CHANGELOG_TOKEN")
