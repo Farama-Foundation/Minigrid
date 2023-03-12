@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import gymnasium as gym
 
+from minigrid.core.actions import Actions
 from minigrid.minigrid_env import MiniGridEnv
 from minigrid.utils.window import Window
 from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
-from minigrid.core.actions import Actions
 
 
 class ManualControl:
