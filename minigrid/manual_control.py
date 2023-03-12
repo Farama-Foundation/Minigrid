@@ -7,6 +7,7 @@ import gymnasium as gym
 from minigrid.minigrid_env import MiniGridEnv
 from minigrid.utils.window import Window
 from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
+from minigrid.core.actions import Actions
 
 
 class ManualControl:
@@ -31,7 +32,7 @@ class ManualControl:
         self.reset(self.seed)
         self.window.show(block=True)
 
-    def step(self, action: MiniGridEnv.Actions):
+    def step(self, action: Actions):
         _, reward, terminated, truncated, _ = self.env.step(action)
         print(f"step={self.env.step_count}, reward={reward:.2f}")
 
@@ -69,13 +70,13 @@ class ManualControl:
             return
 
         key_to_action = {
-            "left": MiniGridEnv.Actions.left,
-            "right": MiniGridEnv.Actions.right,
-            "up": MiniGridEnv.Actions.forward,
-            " ": MiniGridEnv.Actions.toggle,
-            "pageup": MiniGridEnv.Actions.pickup,
-            "pagedown": MiniGridEnv.Actions.drop,
-            "enter": MiniGridEnv.Actions.done,
+            "left": Actions.left,
+            "right": Actions.right,
+            "up": Actions.forward,
+            " ": Actions.toggle,
+            "pageup": Actions.pickup,
+            "pagedown": Actions.drop,
+            "enter": Actions.done,
         }
 
         action = key_to_action[key]
