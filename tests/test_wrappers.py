@@ -269,7 +269,7 @@ def test_viewsize_wrapper(view_size):
 def test_direction_obs_wrapper(env_id, type):
     env = gym.make(env_id)
     env = DirectionObsWrapper(env, type=type)
-    obs = env.reset()
+    obs, _ = env.reset()
 
     slope = np.divide(
         env.goal_position[1] - env.agent_pos[1],
