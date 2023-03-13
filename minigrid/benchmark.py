@@ -51,9 +51,7 @@ def benchmark(env_id, num_resets, num_frames):
 
 def benchmark_manual_control(env_id, num_resets, num_frames, tile_size):
     env = gym.make(env_id, tile_size=tile_size)
-    env = ManualControl(
-        env, seed=args.seed,
-    )
+    env = ManualControl(env, seed=args.seed)
 
     # Benchmark env.reset
     t0 = time.time()
@@ -76,9 +74,7 @@ def benchmark_manual_control(env_id, num_resets, num_frames, tile_size):
     env = RGBImgPartialObsWrapper(env, env.tile_size)
     env = ImgObsWrapper(env)
 
-    env = ManualControl(
-        env, seed=args.seed
-    )
+    env = ManualControl(env, seed=args.seed)
     env.reset()
 
     # Benchmark rendering in agent view
