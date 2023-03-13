@@ -13,6 +13,11 @@ from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
+
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+
 CHECK_ENV_IGNORE_WARNINGS = [
     f"\x1b[33mWARN: {message}\x1b[0m"
     for message in [

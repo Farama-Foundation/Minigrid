@@ -25,6 +25,11 @@ from minigrid.wrappers import (
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
+
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+
 SEEDS = [100, 243, 500]
 NUM_STEPS = 100
 

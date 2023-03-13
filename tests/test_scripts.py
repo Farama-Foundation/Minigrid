@@ -8,6 +8,10 @@ from minigrid.benchmark import benchmark
 from minigrid.manual_control import ManualControl
 from minigrid.minigrid_env import MiniGridEnv
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
+
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 def test_benchmark():
     "Test that the benchmark function works for a specific environment"
@@ -29,11 +33,6 @@ def test_manual_control(mocker: MockerFixture):
                 self.key = self.close_action
                 return
             self.key = np.random.choice(self.active_actions)
-
-    # Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
-    import os
-
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
 
     env_id = "MiniGrid-Empty-16x16-v0"
     env: MiniGridEnv = gym.make(env_id, render_mode="human")
