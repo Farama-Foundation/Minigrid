@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import math
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
+
 import gymnasium as gym
 import numpy as np
 import pytest
@@ -24,9 +27,6 @@ from minigrid.wrappers import (
     ViewSizeWrapper,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
-
-# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
-import os
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 

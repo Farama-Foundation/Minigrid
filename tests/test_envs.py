@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
 import pickle
 import warnings
 
@@ -12,9 +14,6 @@ from gymnasium.utils.env_checker import check_env, data_equivalence
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from tests.utils import all_testing_env_specs, assert_equals
-
-# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
-import os
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 

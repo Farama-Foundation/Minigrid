@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+import os
+
 import gymnasium as gym
 import numpy as np
 from pytest_mock import MockerFixture
@@ -8,10 +11,8 @@ from minigrid.benchmark import benchmark
 from minigrid.manual_control import ManualControl
 from minigrid.minigrid_env import MiniGridEnv
 
-# Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
-import os
-
 os.environ["SDL_VIDEODRIVER"] = "dummy"
+
 
 def test_benchmark():
     "Test that the benchmark function works for a specific environment"
