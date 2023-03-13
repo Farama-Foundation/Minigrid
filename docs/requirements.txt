@@ -4,3 +4,4 @@ myst-parser
 git+https://github.com/Farama-Foundation/Celshast#egg=furo
 moviepy
 pygame
+sphinx_github_changelog
