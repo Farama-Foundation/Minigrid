@@ -49,10 +49,10 @@ def benchmark(env_id, num_resets, num_frames):
     env.close()
 
 
-def benchmark_manual_control(env_id, num_resets, num_frames, display_mode, tile_size):
+def benchmark_manual_control(env_id, num_resets, num_frames, tile_size):
     env = gym.make(env_id, tile_size=tile_size)
     env = ManualControl(
-        env, agent_view=args.agent_view, seed=args.seed, display_mode=display_mode
+        env, seed=args.seed,
     )
 
     # Benchmark env.reset
@@ -77,7 +77,7 @@ def benchmark_manual_control(env_id, num_resets, num_frames, display_mode, tile_
     env = ImgObsWrapper(env)
 
     env = ManualControl(
-        env, agent_view=args.agent_view, seed=args.seed, display_mode=display_mode
+        env, seed=args.seed
     )
     env.reset()
 
@@ -125,18 +125,6 @@ if __name__ == "__main__":
         default=5000,
     )
     parser.add_argument(
-        "--display-mode",
-        default="matplotlib",
-        choices=["pygame", "matplotlib"],
-        help="display the environment using matplotlib or pygame",
-    )
-    parser.add_argument(
-        "--agent-view",
-        default=False,
-        help="draw the agent sees (partially observable view)",
-        action="store_true",
-    )
-    parser.add_argument(
         "--tile-size", type=int, help="size at which to render tiles", default=32
     )
 
@@ -144,5 +132,5 @@ if __name__ == "__main__":
     benchmark(args.env_id, args.num_resets, args.num_frames)
 
     benchmark_manual_control(
-        args.env_id, args.num_resets, args.num_frames, args.display_mode, args.tile_size
+        args.env_id, args.num_resets, args.num_frames, args.tile_size
     )

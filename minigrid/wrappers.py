@@ -302,7 +302,6 @@ class RGBImgObsWrapper(ObservationWrapper):
     This can be used to have the agent to solve the gridworld in pixel space.
 
     Example:
-        >>> import miniworld
         >>> import gymnasium as gym
         >>> import matplotlib.pyplot as plt
         >>> from minigrid.wrappers import RGBImgObsWrapper

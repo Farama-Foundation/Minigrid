@@ -63,15 +63,15 @@ class ManualControl:
             return
 
         key_to_action = {
-            "left": MiniGridEnv.Actions.left,
-            "right": MiniGridEnv.Actions.right,
-            "up": MiniGridEnv.Actions.forward,
-            "space": MiniGridEnv.Actions.toggle,
-            "pageup": MiniGridEnv.Actions.pickup,
-            "pagedown": MiniGridEnv.Actions.drop,
-            "tab": MiniGridEnv.Actions.pickup,
-            "left shift": MiniGridEnv.Actions.drop,
-            "enter": MiniGridEnv.Actions.done,
+            "left": Actions.left,
+            "right": Actions.right,
+            "up": Actions.forward,
+            "space": Actions.toggle,
+            "pageup": Actions.pickup,
+            "pagedown": Actions.drop,
+            "tab": Actions.pickup,
+            "left shift": Actions.drop,
+            "enter": Actions.done,
         }
         if key in key_to_action.keys():
             action = key_to_action[key]
