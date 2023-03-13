@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import math
 from abc import abstractmethod
-from enum import IntEnum
 from typing import Iterable, TypeVar
 
 import gymnasium as gym
@@ -12,6 +11,7 @@ import pygame
 import pygame.freetype
 from gymnasium import spaces
 
+from minigrid.core.actions import Actions
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
@@ -29,22 +29,6 @@ class MiniGridEnv(gym.Env):
         "render_modes": ["human", "rgb_array"],
         "render_fps": 10,
     }
-
-    # Enumeration of possible actions
-    class Actions(IntEnum):
-        # Turn left, turn right, move forward
-        left = 0
-        right = 1
-        forward = 2
-        # Pick up an object
-        pickup = 3
-        # Drop an object
-        drop = 4
-        # Toggle/activate an object
-        toggle = 5
-
-        # Done completing task
-        done = 6
 
     def __init__(
         self,
@@ -72,7 +56,7 @@ class MiniGridEnv(gym.Env):
         assert width is not None and height is not None
 
         # Action enumeration for this environment
-        self.actions = MiniGridEnv.Actions
+        self.actions = Actions
 
         # Actions are discrete integer values
         self.action_space = spaces.Discrete(len(self.actions))
