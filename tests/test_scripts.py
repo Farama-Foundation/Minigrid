@@ -30,6 +30,11 @@ def test_manual_control(mocker: MockerFixture):
                 return
             self.key = np.random.choice(self.active_actions)
 
+    # Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
+    import os
+
+    os.environ["SDL_VIDEODRIVER"] = "dummy"
+
     env_id = "MiniGrid-Empty-16x16-v0"
     env: MiniGridEnv = gym.make(env_id, render_mode="human")
     manual_control = ManualControl(env)
