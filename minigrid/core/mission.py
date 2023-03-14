@@ -16,13 +16,14 @@ class MissionSpace(spaces.Space[str]):
     The space allows generating random mission strings constructed with an input placeholder list.
     Example Usage::
         >>> observation_space = MissionSpace(mission_func=lambda color: f"Get the {color} ball.",
-                                                ordered_placeholders=[["green", "blue"]])
+        ...                                  ordered_placeholders=[["green", "blue"]])
+        >>> _ = observation_space.seed(123)
         >>> observation_space.sample()
-            "Get the green ball."
-        >>> observation_space = MissionSpace(mission_func=lambda : "Get the ball.".,
-                                                ordered_placeholders=None)
+        'Get the green ball.'
+        >>> observation_space = MissionSpace(mission_func=lambda : "Get the ball.",
+        ...                                  ordered_placeholders=None)
         >>> observation_space.sample()
-            "Get the ball."
+        'Get the ball.'
     """
 
     def __init__(
