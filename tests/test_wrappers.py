@@ -5,8 +5,10 @@ import math
 import gymnasium as gym
 import numpy as np
 import pytest
+from pdb import set_trace
 
 from minigrid.core.actions import Actions
+from minigrid.core.constants import OBJECT_TO_IDX
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -293,12 +295,36 @@ def test_direction_obs_wrapper(env_id, type):
     env.close()
 
 
-@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+@pytest.mark.parametrize("env_id", ["MiniGrid-DistShift1-v0"])
 def test_symbolic_obs_wrapper(env_id):
     env = gym.make(env_id)
+
     env = SymbolicObsWrapper(env)
-    obs, _ = env.reset()
+    obs, _ = env.reset(seed=123)
+    agent_pos = env.agent_pos
+    goal_pos = env.goal_pos
+
     assert obs["image"].shape == (env.width, env.height, 3)
-    obs, _, _, _, _ = env.step(0)
+    assert np.alltrue(
+        obs["image"][agent_pos[0], agent_pos[1], :]
+        == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
+    )
+    assert np.alltrue(
+        obs["image"][goal_pos[0], goal_pos[1], :]
+        == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
+    )
+
+    obs, _, _, _, _ = env.step(2)
+    agent_pos = env.agent_pos
+    goal_pos = env.goal_pos
+
     assert obs["image"].shape == (env.width, env.height, 3)
+    assert np.alltrue(
+        obs["image"][agent_pos[0], agent_pos[1], :]
+        == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
+    )
+    assert np.alltrue(
+        obs["image"][goal_pos[0], goal_pos[1], :]
+        == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
+    )
     env.close()
