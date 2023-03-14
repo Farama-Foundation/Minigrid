@@ -2,6 +2,7 @@ from __future__ import annotations
 
 # Use dummy video driver for testing (https://www.pygame.org/wiki/DummyVideoDriver)
 import os
+import sys
 
 import gymnasium as gym
 import numpy as np
@@ -11,7 +12,15 @@ from minigrid.benchmark import benchmark
 from minigrid.manual_control import ManualControl
 from minigrid.minigrid_env import MiniGridEnv
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+# Initializing pygame initializes audio connections through SDL. SDL uses alsa by default on all Linux systems
+# SDL connecting to alsa frequently create these giant lists of warnings every time you import an environment using
+#   pygame
+# DSP is far more benign (and should probably be the default in SDL anyways)
+
+if sys.platform.startswith("linux"):
+    os.environ["SDL_AUDIODRIVER"] = "dsp"
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
 
 def test_benchmark():
