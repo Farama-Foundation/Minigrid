@@ -11,7 +11,7 @@ WORKDIR /usr/local/minigrid/
 
 RUN pip install .[testing] --no-cache-dir
 
-RUN ["chmod", "+x", "/usr/local/minigrid/docker-entrypoint"]
+RUN ["chmod", "+x", "/usr/local/minigrid/docker_entrypoint"]
 
 ENTRYPOINT ["/usr/local/minigrid/docker_entrypoint"]
 
