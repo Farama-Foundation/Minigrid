@@ -230,14 +230,20 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
             )
 
             for k in [-1, 1]:
-                # Add a door to each side of the side room
-                self.add_door(
+                # Add a door to each side of the side room w/o placing a key
+                self.add_locked_door(
                     *side_room,
-                    locked=True,
                     door_idx=(i + k) % 4,
                     color=self.door_colors[(i + k) % len(self.door_colors)],
-                    key_in_box=self.key_in_box,
                     blocked=self.blocked,
+                )
+                
+            # Add keys after all doors and their blocking balls are added
+            for k in [-1, 1]:
+                self.add_key(
+                    *side_room,
+                    color=self.door_colors[(i + k) % len(self.door_colors)],
+                    key_in_box=self.key_in_box,
                 )
 
         corners = [(2, 0), (2, 2), (0, 2), (0, 0)][: self.num_quarters]
@@ -247,6 +253,37 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
             ball_room[0], ball_room[1], "ball", color=self.ball_to_find_color
         )
         self.place_agent(*self.agent_room)
+
+    def add_locked_door(
+        self, 
+        i, 
+        j, 
+        door_idx=0, 
+        color=None, 
+        blocked=False
+    ):
+        door, door_pos = RoomGrid.add_door(self, i, j, door_idx, color, locked=True)
+        
+        if blocked:
+            vec = DIR_TO_VEC[door_idx]
+            blocking_ball = Ball(self.blocking_ball_color) if blocked else None
+            self.grid.set(door_pos[0] - vec[0], door_pos[1] - vec[1], blocking_ball)
+        
+        return door, door_pos
+        
+    def add_key(
+        self,
+        i,
+        j,
+        color=None,
+        key_in_box=False,
+    ):
+        obj = Key(color)
+        if key_in_box:
+            box = Box(self.box_color)
+            box.contains = obj
+            obj = box
+        self.place_in_room(i, j, obj)
 
 
 class ObstructedMaze_2Dl(ObstructedMaze_Full):
