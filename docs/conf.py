@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "myst_parser",
+    "sphinx_github_changelog",
 ]
 
 source_suffix = {

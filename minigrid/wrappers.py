@@ -760,9 +760,11 @@ class SymbolicObsWrapper(ObservationWrapper):
             [OBJECT_TO_IDX[o.type] if o is not None else -1 for o in self.grid.grid]
         )
         agent_pos = self.env.agent_pos
-        w, h = self.width, self.height
-        grid = np.mgrid[:w, :h]
-        grid = np.concatenate([grid, objects.reshape(1, w, h)])
+        ncol, nrow = self.width, self.height
+        grid = np.mgrid[:ncol, :nrow]
+        _objects = np.transpose(objects.reshape(1, nrow, ncol), (0, 2, 1))
+
+        grid = np.concatenate([grid, _objects])
         grid = np.transpose(grid, (1, 2, 0))
         grid[agent_pos[0], agent_pos[1], 2] = OBJECT_TO_IDX["agent"]
         obs["image"] = grid
