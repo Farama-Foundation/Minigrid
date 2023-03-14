@@ -11,5 +11,5 @@ WORKDIR /usr/local/minigrid/
 
 RUN pip install .[testing] --no-cache-dir
 
-ENTRYPOINT ["/usr/local/minigrid/bin/docker_entrypoint"]
+ENTRYPOINT ["/usr/local/minigrid/docker_entrypoint"]
 
