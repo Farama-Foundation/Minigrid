@@ -5,7 +5,6 @@ import math
 import gymnasium as gym
 import numpy as np
 import pytest
-from pdb import set_trace
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import OBJECT_TO_IDX
