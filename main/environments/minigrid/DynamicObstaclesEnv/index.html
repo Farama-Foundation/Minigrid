@@ -442,7 +442,7 @@ Partial Observability.</p>
 </section>
 <section id="rewards">
 <h2>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h2>
-<p>A reward of ‘1’ is given for success, and ‘0’ for failure. A ‘-1’ penalty is
+<p>A reward of ‘1 - 0.9 * (step_count / max_steps)’ is given for success, and ‘0’ for failure. A ‘-1’ penalty is
 subtracted if the agent collides with an obstacle.</p>
 </section>
 <section id="termination">

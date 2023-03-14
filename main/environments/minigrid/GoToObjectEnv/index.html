@@ -203,7 +203,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -360,7 +360,7 @@
                 </svg>
               </button>
             </div>
-            <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <label class="toc-overlay-icon toc-content-icon" for="__toc">
               <div class="visually-hidden">Toggle table of contents sidebar</div>
               <i class="icon"><svg>
                   <use href="#svg-toc"></use>
@@ -374,8 +374,93 @@
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../../_images/GoToObjectEnv.gif"><img alt="Go To Object" src="../../../_images/GoToObjectEnv.gif" style="width: 200px;" /></a>
 </figure>
-<p>Environment in which the agent is instructed to go to a given object
-named using an English text string</p>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
+<p>This environment is a room with colored objects. The agent
+receives a textual (mission) string as input, telling it which colored object to go
+to, (eg: “go to the red key”). It receives a positive reward for performing
+the <code class="docutils literal notranslate"><span class="pre">done</span></code> action next to the correct object, as indicated in the mission
+string.</p>
+</section>
+<section id="mission-space">
+<h2>Mission Space<a class="headerlink" href="#mission-space" title="Permalink to this heading">#</a></h2>
+<p>“go to the {color} {obj_type}”</p>
+<p>{color} is the color of the object. Can be “red”, “green”, “blue”, “purple”,
+“yellow” or “grey”.
+{obj_type} is the type of the object. Can be “key”, “ball”, “box”.</p>
+</section>
+<section id="action-space">
+<h2>Action Space<a class="headerlink" href="#action-space" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Num</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>left</p></td>
+<td><p>Turn left</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>right</p></td>
+<td><p>Turn right</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>forward</p></td>
+<td><p>Move forward</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>pickup</p></td>
+<td><p>Unused</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>drop</p></td>
+<td><p>Unused</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>toggle</p></td>
+<td><p>Unused</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>done</p></td>
+<td><p>Done completing task</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="observation-encoding">
+<h2>Observation Encoding<a class="headerlink" href="#observation-encoding" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Each tile is encoded as a 3 dimensional tuple:
+<code class="docutils literal notranslate"><span class="pre">(OBJECT_IDX,</span> <span class="pre">COLOR_IDX,</span> <span class="pre">STATE)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OBJECT_TO_IDX</span></code> and <code class="docutils literal notranslate"><span class="pre">COLOR_TO_IDX</span></code> mapping can be found in
+<a class="reference internal" href="#minigrid/minigrid.py"><span class="xref myst">minigrid/minigrid.py</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATE</span></code> refers to the door state with 0=open, 1=closed and 2=locked</p></li>
+</ul>
+</section>
+<section id="rewards">
+<h2>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h2>
+<p>A reward of ‘1 - 0.9 * (step_count / max_steps)’ is given for success, and ‘0’ for failure.</p>
+</section>
+<section id="termination">
+<h2>Termination<a class="headerlink" href="#termination" title="Permalink to this heading">#</a></h2>
+<p>The episode ends if any one of the following conditions is met:</p>
+<ol class="arabic simple">
+<li><p>The agent stands next the correct door performing the <code class="docutils literal notranslate"><span class="pre">done</span></code> action.</p></li>
+<li><p>Timeout (see <code class="docutils literal notranslate"><span class="pre">max_steps</span></code>).</p></li>
+</ol>
+</section>
+<section id="registered-configurations">
+<h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-GoToObject-6x6-N2-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-GoToObject-8x8-N2-v0</span></code></p></li>
+</ul>
+</section>
 </section>
 
           </article>
@@ -435,8 +520,33 @@ named using an English text string</p>
           
         </footer>
       </div>
-      <aside class="toc-drawer no-toc">
+      <aside class="toc-drawer">
         
+        
+        <div class="toc-sticky toc-scroll">
+          <div class="toc-title-container">
+            <span class="toc-title">
+              On this page
+            </span>
+          </div>
+          <div class="toc-tree-container">
+            <div class="toc-tree">
+              <ul>
+<li><a class="reference internal" href="#">Go To Object</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#mission-space">Mission Space</a></li>
+<li><a class="reference internal" href="#action-space">Action Space</a></li>
+<li><a class="reference internal" href="#observation-encoding">Observation Encoding</a></li>
+<li><a class="reference internal" href="#rewards">Rewards</a></li>
+<li><a class="reference internal" href="#termination">Termination</a></li>
+<li><a class="reference internal" href="#registered-configurations">Registered Configurations</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+          </div>
+        </div>
         
         
       </aside>
