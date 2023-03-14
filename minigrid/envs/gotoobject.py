@@ -154,7 +154,7 @@ class GoToObjectEnv(MiniGridEnv):
 
         # Reward performing the done action next to the target object
         if action == self.actions.done:
-            if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
+            if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = self._reward()
             terminated = True
 
