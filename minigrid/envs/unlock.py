@@ -38,7 +38,7 @@ class UnlockEnv(RoomGrid):
 
     ## Rewards
 
-    A reward of '1' is given for success, and '0' for failure.
+    A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure.
 
     ## Termination
 
