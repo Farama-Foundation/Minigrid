@@ -237,7 +237,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
                     color=self.door_colors[(i + k) % len(self.door_colors)],
                     blocked=self.blocked,
                 )
-                
+
             # Add keys after all doors and their blocking balls are added
             for k in [-1, 1]:
                 self.add_key(
@@ -254,23 +254,16 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
         )
         self.place_agent(*self.agent_room)
 
-    def add_locked_door(
-        self, 
-        i, 
-        j, 
-        door_idx=0, 
-        color=None, 
-        blocked=False
-    ):
+    def add_locked_door(self, i, j, door_idx=0, color=None, blocked=False):
         door, door_pos = RoomGrid.add_door(self, i, j, door_idx, color, locked=True)
-        
+
         if blocked:
             vec = DIR_TO_VEC[door_idx]
             blocking_ball = Ball(self.blocking_ball_color) if blocked else None
             self.grid.set(door_pos[0] - vec[0], door_pos[1] - vec[1], blocking_ball)
-        
+
         return door, door_pos
-        
+
     def add_key(
         self,
         i,
