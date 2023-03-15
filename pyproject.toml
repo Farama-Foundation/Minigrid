@@ -34,6 +34,7 @@ dynamic = ["version"]
 testing = [
     "pytest>=7.0.1",
     "pytest-mock>=3.10.0",
+    "matplotlib>=3.0"
 ]
 
 [project.urls]
