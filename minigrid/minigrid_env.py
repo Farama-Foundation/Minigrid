@@ -3,18 +3,20 @@ from __future__ import annotations
 import hashlib
 import math
 from abc import abstractmethod
-from typing import Iterable, TypeVar
+from typing import Any, Iterable, SupportsFloat, TypeVar
 
 import gymnasium as gym
 import numpy as np
+import pygame
+import pygame.freetype
 from gymnasium import spaces
+from gymnasium.core import ActType, ObsType
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC, TILE_PIXELS
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Point, WorldObj
-from minigrid.utils.window import Window
 
 T = TypeVar("T")
 
@@ -39,6 +41,7 @@ class MiniGridEnv(gym.Env):
         see_through_walls: bool = False,
         agent_view_size: int = 7,
         render_mode: str | None = None,
+        screen_size: int | None = 1,
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
         agent_pov: bool = False,
@@ -83,7 +86,10 @@ class MiniGridEnv(gym.Env):
         # Range of possible rewards
         self.reward_range = (0, 1)
 
-        self.window: Window = None
+        self.screen_size = screen_size
+        self.render_size = None
+        self.window = None
+        self.clock = None
 
         # Environment configuration
         self.width = width
@@ -110,7 +116,12 @@ class MiniGridEnv(gym.Env):
         self.tile_size = tile_size
         self.agent_pov = agent_pov
 
-    def reset(self, *, seed=None, options=None):
+    def reset(
+        self,
+        *,
+        seed: int | None = None,
+        options: dict[str, Any] | None = None,
+    ) -> tuple[ObsType, dict[str, Any]]:
         super().reset(seed=seed)
 
         # Reinitialize episode-specific variables
@@ -183,36 +194,36 @@ class MiniGridEnv(gym.Env):
         # Map agent's direction to short string
         AGENT_DIR_TO_STR = {0: ">", 1: "V", 2: "<", 3: "^"}
 
-        str = ""
+        output = ""
 
         for j in range(self.grid.height):
 
             for i in range(self.grid.width):
                 if i == self.agent_pos[0] and j == self.agent_pos[1]:
-                    str += 2 * AGENT_DIR_TO_STR[self.agent_dir]
+                    output += 2 * AGENT_DIR_TO_STR[self.agent_dir]
                     continue
 
-                c = self.grid.get(i, j)
+                tile = self.grid.get(i, j)
 
-                if c is None:
-                    str += "  "
+                if tile is None:
+                    output += "  "
                     continue
 
-                if c.type == "door":
-                    if c.is_open:
-                        str += "__"
-                    elif c.is_locked:
-                        str += "L" + c.color[0].upper()
+                if tile.type == "door":
+                    if tile.is_open:
+                        output += "__"
+                    elif tile.is_locked:
+                        output += "L" + tile.color[0].upper()
                     else:
-                        str += "D" + c.color[0].upper()
+                        output += "D" + tile.color[0].upper()
                     continue
 
-                str += OBJECT_TO_STR[c.type] + c.color[0].upper()
+                output += OBJECT_TO_STR[tile.type] + tile.color[0].upper()
 
             if j < self.grid.height - 1:
-                str += "\n"
+                output += "\n"
 
-        return str
+        return output
 
     @abstractmethod
     def _gen_grid(self, width, height):
@@ -462,7 +473,7 @@ class MiniGridEnv(gym.Env):
         botX = topX + agent_view_size
         botY = topY + agent_view_size
 
-        return (topX, topY, botX, botY)
+        return topX, topY, botX, botY
 
     def relative_coords(self, x, y):
         """
@@ -503,7 +514,9 @@ class MiniGridEnv(gym.Env):
 
         return obs_cell is not None and obs_cell.type == world_cell.type
 
-    def step(self, action):
+    def step(
+        self, action: ActType
+    ) -> tuple[ObsType, SupportsFloat, bool, bool, dict[str, Any]]:
         self.step_count += 1
 
         reward = 0
@@ -722,14 +735,48 @@ class MiniGridEnv(gym.Env):
         img = self.get_frame(self.highlight, self.tile_size, self.agent_pov)
 
         if self.render_mode == "human":
+            img = np.transpose(img, axes=(1, 0, 2))
+            if self.render_size is None:
+                self.render_size = img.shape[:2]
             if self.window is None:
-                self.window = Window("minigrid")
-                self.window.show(block=False)
-            self.window.set_caption(self.mission)
-            self.window.show_img(img)
+                pygame.init()
+                pygame.display.init()
+                self.window = pygame.display.set_mode(
+                    (self.screen_size, self.screen_size)
+                )
+                pygame.display.set_caption("minigrid")
+            if self.clock is None:
+                self.clock = pygame.time.Clock()
+            surf = pygame.surfarray.make_surface(img)
+
+            # Create background with mission description
+            offset = surf.get_size()[0] * 0.1
+            # offset = 32 if self.agent_pov else 64
+            bg = pygame.Surface(
+                (int(surf.get_size()[0] + offset), int(surf.get_size()[1] + offset))
+            )
+            bg.convert()
+            bg.fill((255, 255, 255))
+            bg.blit(surf, (offset / 2, 0))
+
+            bg = pygame.transform.smoothscale(bg, (self.screen_size, self.screen_size))
+
+            font_size = 22
+            text = self.mission
+            font = pygame.freetype.SysFont(pygame.font.get_default_font(), font_size)
+            text_rect = font.get_rect(text, size=font_size)
+            text_rect.center = bg.get_rect().center
+            text_rect.y = bg.get_height() - font_size * 1.5
+            font.render_to(bg, text_rect, text, size=font_size)
+
+            self.window.blit(bg, (0, 0))
+            pygame.event.pump()
+            self.clock.tick(self.metadata["render_fps"])
+            pygame.display.flip()
+
         elif self.render_mode == "rgb_array":
             return img
 
     def close(self):
         if self.window:
-            self.window.close()
+            pygame.quit()
