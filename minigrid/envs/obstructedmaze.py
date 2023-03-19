@@ -58,6 +58,7 @@ class ObstructedMazeEnv(RoomGrid):
     "Q" number of quarters that will have doors and keys out of the 9 that the
     map already has.
     "Full" 3x3 maze with "h" and "b" options.
+    "v1" prevent the key from being covered by the blocking ball.
 
     - `MiniGrid-ObstructedMaze-1Dl-v0`
     - `MiniGrid-ObstructedMaze-1Dlh-v0`
@@ -65,9 +66,13 @@ class ObstructedMazeEnv(RoomGrid):
     - `MiniGrid-ObstructedMaze-2Dl-v0`
     - `MiniGrid-ObstructedMaze-2Dlh-v0`
     - `MiniGrid-ObstructedMaze-2Dlhb-v0`
+    - `MiniGrid-ObstructedMaze-2Dlhb-v1`
     - `MiniGrid-ObstructedMaze-1Q-v0`
+    - `MiniGrid-ObstructedMaze-1Q-v1`
     - `MiniGrid-ObstructedMaze-2Q-v0`
+    - `MiniGrid-ObstructedMaze-2Q-v1`
     - `MiniGrid-ObstructedMaze-Full-v0`
+    - `MiniGrid-ObstructedMaze-Full-v1`
 
     """
 
