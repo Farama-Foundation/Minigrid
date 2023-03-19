@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from minigrid.core.constants import COLOR_NAMES, DIR_TO_VEC
+from minigrid.core.constants import DIR_TO_VEC
 from minigrid.core.roomgrid import RoomGrid
 from minigrid.core.world_object import Ball, Box, Key
 from minigrid.envs.obstructedmaze import ObstructedMazeEnv
