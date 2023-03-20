@@ -19,7 +19,7 @@ def find_target_key(env, color):
     return False
 
 
-def test_env(env_id, repeats=10000):
+def env_test(env_id, repeats=10000):
     env = gym.make(env_id)
 
     cnt = 0
@@ -50,8 +50,8 @@ def main():
         "MiniGrid-ObstructedMaze-2Dlhb-v0",  # expected: 1 / 15 = 6.67%
         "MiniGrid-ObstructedMaze-1Q-v0",  # expected: 1 / 15 = 6.67%
         "MiniGrid-ObstructedMaze-2Q-v0",  # expected: 1 / 30 = 3.33%
-        "MiniGrid-ObstructedMaze-Full-v0",
-    ]  # expected: 0
+        "MiniGrid-ObstructedMaze-Full-v0",  # expected: 0
+    ]
     envs_v1 = [
         "MiniGrid-ObstructedMaze-2Dlhb-v1",
         "MiniGrid-ObstructedMaze-1Q-v1",
@@ -60,9 +60,9 @@ def main():
     ]
 
     for env_id in envs_v0:
-        print(f"{env_id}: {test_env(env_id):.2f}% unsolvable.")
+        print(f"{env_id}: {env_test(env_id):.2f}% unsolvable.")
     for env_id in envs_v1:
-        print(f"{env_id}: {test_env(env_id):.2f}% unsolvable.")
+        print(f"{env_id}: {env_test(env_id):.2f}% unsolvable.")
 
 
 if __name__ == "__main__":

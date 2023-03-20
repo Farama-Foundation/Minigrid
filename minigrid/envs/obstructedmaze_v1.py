@@ -12,7 +12,7 @@ class ObstructedMaze_Full(ObstructedMazeEnv):
     are locked, doors are obstructed by a ball and keys are hidden in
     boxes.
 
-    All doors and their corresponding blocking balls will be added first, 
+    All doors and their corresponding blocking balls will be added first,
     followed by the boxes containing the keys.
     """
 
