@@ -1,9 +1,17 @@
 from __future__ import annotations
 
 import gymnasium as gym
+import pytest
 
 from minigrid.core.constants import COLOR_NAMES
 from minigrid.core.world_object import Ball, Box
+
+TESTING_ENVS = [
+    "MiniGrid-ObstructedMaze-2Dlhb",
+    "MiniGrid-ObstructedMaze-1Q",
+    "MiniGrid-ObstructedMaze-2Q",
+    "MiniGrid-ObstructedMaze-Full",
+]
 
 
 def find_ball_room(env):
@@ -34,35 +42,33 @@ def env_test(env_id, repeats=10000):
     return (cnt / repeats) * 100
 
 
+@pytest.mark.parametrize("env_id", TESTING_ENVS)
+def test_solvable_env(env_id):
+    assert env_test(env_id + "-v1") == 0, f"{env_id} is unsolvable."
+
+
 def main():
     """
     Test the frequency of unsolvable situation in this environment, including
-    MiniGrid-ObstructedMaze-2Dlhb, -1Q, and -2Q. The reason for the unsolvable
+    MiniGrid-ObstructedMaze-2Dlhb, -1Q, -2Q, and -Full. The reason for the unsolvable
     situation is that in the v0 version of these environments, the box containing
     the key to the door connecting the upper-right room may be covered by the
     blocking ball of the door connecting the lower-right room.
 
-    Covering may also occur in MiniGrid-ObstructedMaze-Full, but it will not
-    lead to an unsolvable situation.
+    Note: Covering that occurs in MiniGrid-ObstructedMaze-Full won't lead to an
+    unsolvable situation.
+
+    Expected probability of unsolvable situation:
+    - MiniGrid-ObstructedMaze-2Dlhb-v0: 1 / 15 = 6.67%
+    - MiniGrid-ObstructedMaze-1Q-v0: 1/ 15 = 6.67%
+    - MiniGrid-ObstructedMaze-2Q-v0: 1 / 30 = 3.33%
+    - MiniGrid-ObstructedMaze-Full-v0: 0%
     """
 
-    envs_v0 = [
-        "MiniGrid-ObstructedMaze-2Dlhb-v0",  # expected: 1 / 15 = 6.67%
-        "MiniGrid-ObstructedMaze-1Q-v0",  # expected: 1 / 15 = 6.67%
-        "MiniGrid-ObstructedMaze-2Q-v0",  # expected: 1 / 30 = 3.33%
-        "MiniGrid-ObstructedMaze-Full-v0",  # expected: 0
-    ]
-    envs_v1 = [
-        "MiniGrid-ObstructedMaze-2Dlhb-v1",
-        "MiniGrid-ObstructedMaze-1Q-v1",
-        "MiniGrid-ObstructedMaze-2Q-v1",
-        "MiniGrid-ObstructedMaze-Full-v1",
-    ]
-
-    for env_id in envs_v0:
-        print(f"{env_id}: {env_test(env_id):.2f}% unsolvable.")
-    for env_id in envs_v1:
-        print(f"{env_id}: {env_test(env_id):.2f}% unsolvable.")
+    for env_id in TESTING_ENVS:
+        print(f"{env_id}: {env_test(env_id + '-v0'):.2f}% unsolvable.")
+    for env_id in TESTING_ENVS:
+        print(f"{env_id}: {env_test(env_id + '-v1'):.2f}% unsolvable.")
 
 
 if __name__ == "__main__":
