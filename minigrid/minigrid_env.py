@@ -41,7 +41,7 @@ class MiniGridEnv(gym.Env):
         see_through_walls: bool = False,
         agent_view_size: int = 7,
         render_mode: str | None = None,
-        screen_size: int | None = 1,
+        screen_size: int | None = 640,
         highlight: bool = True,
         tile_size: int = TILE_PIXELS,
         agent_pov: bool = False,
@@ -197,7 +197,6 @@ class MiniGridEnv(gym.Env):
         output = ""
 
         for j in range(self.grid.height):
-
             for i in range(self.grid.width):
                 if i == self.agent_pos[0] and j == self.agent_pos[1]:
                     output += 2 * AGENT_DIR_TO_STR[self.agent_dir]
@@ -731,7 +730,6 @@ class MiniGridEnv(gym.Env):
             return self.get_full_render(highlight, tile_size)
 
     def render(self):
-
         img = self.get_frame(self.highlight, self.tile_size, self.agent_pov)
 
         if self.render_mode == "human":
