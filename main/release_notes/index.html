@@ -371,6 +371,26 @@
             
             <section id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this heading">#</a></h1>
+<section id="release-v2-2-0">
+<h2>v2.2.0<a class="headerlink" href="#release-v2-2-0" title="Permalink to this heading">#</a></h2>
+<p><em>Released on 2023-03-23 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.2.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.2.0/">PyPI</a></em></p>
+<h1>Minigrid 2.2.0 Release Notes: added Pygame rendering support, fixed bug in wrappers and environments</h1>
+<p>In this release, we added support for rendering using Pygame, which improves the previously Matplotlib-based rendering procedure, this is a breaking change that removes <code>minigrid.utils.window.Window</code>. A bug in the SymbolicObsWrapper that results in the wrong observation has been fixed. An error in the documentation regarding the reward function has been corrected. The <code>ObstructedMaze</code> environments are now ensured to be solvable. The class <code>minigrid_env.MiniGridEnv.Actions</code> is removed since it is the same as <code>minigrid.core.actions.Actions</code>.</p>
+<h2>Bug Fixes and Documentation Updates</h2>
+<ul>
+<li>For the <code>MiniGrid-DoorKey-6x6-v0</code> environment, a hidden variable determining the size was wrong at 5x5, this is updated to 6x6.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1613567627" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/322" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/322/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/322">#322</a></li>
+<li>Since the class <code>minigrid_env.MiniGridEnv.Actions</code> is the same as <code>minigrid.core.actions.Actions</code>, to make the codebase cleaner, we have deleted the class <code>minigrid_env.MiniGridEnv.Actions</code>. This is a breaking change. For any code that relies on <code>minigrid_env.MiniGridEnv.Actions</code>, you can simply replace it with <code>minigrid.core.actions.Actions</code>.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1620540639" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/328" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/328/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/328">#328</a></li>
+<li>In <code>SymbolicObsWrapper</code>, the grid that records the content of each tile is formatted as <code>[x, y, item]</code>, which corresponds to <code>[col, row, item]</code>, this causes a mismatch in the observation. This mismatch is now resolved.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1621828085" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/331" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/331/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/331">#331</a></li>
+<li>The documentation for the rewards has previously incorrectly stated that the reward is 1 when the environment is solved, while it is actually <code>1 - 0.9 * (step_count / max_steps)</code>. Additionally, in <code>GoToObjectEnv</code>, there was an error in detecting whether the agent is next to the target. These issues have now been resolved.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1623142213" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/333" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/333/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/333">#333</a></li>
+<li>Previously Minigrid relied on a Matplotlib-based rendering backend. We have added a Pygame-based rendering backend that is faster and more consistent with other Farama libraries. As a result, <code>minigrid.utils.window.Window</code> has been removed.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1599245065" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/313" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/313/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/313">#313</a></li>
+<li>In the <code>ObstructedMaze</code> environments, the blocking ball placed by <code>add_door</code> may cover the box placed on the map by the previous <code>add_door</code>, causing the agent to be unable to open certain doors and complete the task. We have updated several of the <code>ObstructedMaze</code> environments to be always solvable and are registered as <code>v1</code> versions of the environment.<br>
+<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1623203837" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/334" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/334/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/334">#334</a></li>
+</ul></section>
 <section id="release-v2-1-1">
 <h2>v2.1.1: Version 2.1.1<a class="headerlink" href="#release-v2-1-1" title="Permalink to this heading">#</a></h2>
 <p><em>Released on 2023-02-27 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.1.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.1.1/">PyPI</a></em></p>
@@ -573,6 +593,7 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
             <div class="toc-tree">
               <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
+<li><a class="reference internal" href="#release-v2-2-0">v2.2.0</a></li>
 <li><a class="reference internal" href="#release-v2-1-1">v2.1.1: Version 2.1.1</a></li>
 <li><a class="reference internal" href="#release-v2-1-0">v2.1.0: Version 2.1.0</a></li>
 <li><a class="reference internal" href="#release-v2-0-0">v2.0.0: Version 2.0.0</a></li>
