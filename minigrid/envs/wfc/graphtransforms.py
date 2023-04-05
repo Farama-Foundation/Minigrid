@@ -607,8 +607,9 @@ class Nav2DTransforms:
                                        make_batch=False,
                                        remove_border=True,
                                        node_attr=None,
-                                       edge_config=None, ) -> \
-            Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], List[Dict[str, nx.Graph]]]:
+                                       edge_config=None,
+                                       to_dgl_edge_g=False) -> \
+            Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], Dict[str, List[nx.Graph]]]:
 
         assert layouts.ndim == 3, f"Wrong dimensions for minigrid layout, expected 3 dimensions, got {layouts.ndim}."
 
@@ -659,7 +660,7 @@ class Nav2DTransforms:
             graph_feats[attr] = graph_feats[attr].reshape(layouts.shape[0], -1)
 
         graphs, edge_graphs = Nav2DTransforms.features_to_dense_graph(graph_feats, dim_grid, edge_config, to_dgl,
-                                                                       make_batch)
+                                                                       make_batch, to_dgl_edge_g)
 
         return graphs, edge_graphs
 
@@ -668,11 +669,12 @@ class Nav2DTransforms:
                                 dim_grid: tuple,
                                 edge_config: DictConfig = None,
                                 to_dgl=False,
-                                make_batch=False) \
-            -> Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], List[Dict[str, nx.Graph]]]:
+                                make_batch=False,
+                                to_dgl_edge_g=False) \
+            -> Tuple[Union[dgl.DGLGraph, List[dgl.DGLGraph], List[nx.Graph]], Dict[str, List[nx.Graph]]]:
 
         graphs = []
-        edge_graphs = []
+        edge_graphs = defaultdict(list)
         for m in range(features[list(features.keys())[0]].shape[0]):
             g_temp = nx.grid_2d_graph(*dim_grid)
             g = nx.Graph()
@@ -683,7 +685,9 @@ class Nav2DTransforms:
                 edge_layers = Nav2DTransforms.get_edge_layers(g, edge_config, list(features.keys()), dim_grid)
                 for edge_n, edge_g in edge_layers.items():
                     g.add_edges_from(edge_g.edges(data=True), label=edge_n)  # TODO: why data=True
-                edge_graphs.append(edge_layers)
+                    if to_dgl_edge_g:
+                        edge_g = util.nx_to_dgl(edge_g, enable_warnings=False)
+                    edge_graphs[edge_n].append(edge_g)
             if to_dgl:
                 g = nx.convert_node_labels_to_integers(g)
                 g = dgl.from_networkx(g, node_attrs=features.keys()).to(features[list(features.keys())[0]].device)

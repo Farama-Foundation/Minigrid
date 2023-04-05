@@ -26,6 +26,7 @@ import imageio
 from util import make_grid_with_labels, DotDict
 import maze_representations.data_generation.generation_algorithms.wfc_2019f.wfc.wfc_control as wfc_control
 import maze_representations.data_generation.generation_algorithms.wfc_2019f.wfc.wfc_solver as wfc_solver
+from maze_representations.util.distributions import compute_weights
 from maze_representations.util import graph_metrics
 from maze_representations.util import transforms as tr
 from maze_representations.util import util as util
@@ -759,6 +760,7 @@ class Batch:
                 if not (isinstance(graphs, dgl.DGLGraph) or isinstance(graphs[0], dgl.DGLGraph)):
                     raise TypeError("Output of generate_data() must be a DGLGraph or list of DGLGraphs. For dense "
                                     "encoding")
+            else:
                 raise NotImplementedError(f"Encoding {self.encoding} not implemented.")
             self.generate_label_contents(graphs, extra_data=extra)
         else:
@@ -873,7 +875,8 @@ class CaveEscapeWaveCollapseBatch(Batch):
                                                                          to_dgl=False,
                                                                          remove_border=False,
                                                                          node_attr=self.dataset_meta.config.graph_feature_descriptors,
-                                                                         edge_config=stage1_edge_config,)
+                                                                         edge_config=stage1_edge_config,
+                                                                         to_dgl_edge_g=True)
 
             if self.dataset_meta.config.ensure_connected:
                 features = self._get_largest_component(features, to_dgl=False)
@@ -887,9 +890,8 @@ class CaveEscapeWaveCollapseBatch(Batch):
                 extra['probs_lava'] = self._place_lava_cave_escape(features, extra['shortest_path_dist'])
                 extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
                 extra['edge_graphs'] = self._add_edges(features, stage2_edge_config, edge_graphs=edge_graphs)
+                features = [util.nx_to_dgl(f, enable_warnings=False) for f in features]
                 self._update_graph_features(extra['edge_graphs'], features)
-                features = [nx.convert_node_labels_to_integers(g) for g in features]
-                features = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in features]
 
             return features, extra
 
@@ -980,7 +982,7 @@ class CaveEscapeWaveCollapseBatch(Batch):
                 shortest_path_lengths = spl[m]
                 shortest_path_lengths = {k: v for k, v in shortest_path_lengths.items() if k in possible_nodes}
                 scores = -np.array(list(shortest_path_lengths.values()))
-                weights = self._compute_weights(scores, params)
+                weights = compute_weights(scores, params)
                 # sample moss according to weights
                 sampled_inds = np.random.choice(len(possible_nodes), size=num_sampled, replace=False, p=weights)
                 sampled_nodes = [list(shortest_path_lengths.keys())[i] for i in sampled_inds]
@@ -1005,44 +1007,19 @@ class CaveEscapeWaveCollapseBatch(Batch):
             params = self.dataset_meta.config.lava_distribution_params
             assert params.nodes[0] == 'wall' and len(params.nodes) == 1, "Only implemented for lava on wall nodes"
             node_set = params.nodes[0]
+            grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2, self.dataset_meta.config.gridworld_data_dim[2] - 2)
+            depth = params.get('sampling_depth', 3)
 
             probs = []
             for m, graph in enumerate(graphs):
-                possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
+                non_nav_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
                 nav_nodes = [n for n in graph.nodes() if graph.nodes[n]['navigable']==1.0]
                 shortest_path_lengths_nav = spl[m]
                 shortest_path_lengths_nav = {k: v for k, v in shortest_path_lengths_nav.items() if k in nav_nodes}
-                neighbors_of_non_nav_nodes = self._get_neighbors(possible_nodes, nav_nodes)
-                shortest_path_lengths = {}
-                for node_ind, neighbors in enumerate(neighbors_of_non_nav_nodes):
-                    neighbors = [n for n in neighbors if n in shortest_path_lengths_nav]
-                    if neighbors:
-                        pathlength = int(np.min([shortest_path_lengths_nav[neighbor] for neighbor in neighbors]))
-                    else:
-                        pathlength = None
-                        # pathlength = np.max(list(shortest_path_lengths_nav.values())) + 1
-                    shortest_path_lengths[possible_nodes[node_ind]] = pathlength
-                border_nodes = [n for n in shortest_path_lengths if shortest_path_lengths[n] is not None]
-                nodes_to_remove = []
-                for node in shortest_path_lengths:
-                    if shortest_path_lengths[node] is None:
-                        grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2,
-                                     self.dataset_meta.config.gridworld_data_dim[2] - 2)
-                        grid_graph = nx.grid_2d_graph(*grid_size)
-                        spl_ = dict(nx.single_target_shortest_path_length(grid_graph, node))
-                        #TODO: could make an hyperparameter
-                        if np.min([spl_[border_node] for border_node in border_nodes]) > 3:
-                            nodes_to_remove.append(node)
-                        else:
-                            spl_goal = [spl_[border_node] + shortest_path_lengths[border_node] for border_node in
-                                        border_nodes]
-                            pathlength = np.min(spl_goal)
-                            shortest_path_lengths[node] = pathlength
-                [shortest_path_lengths.pop(node) for node in nodes_to_remove]
-                [possible_nodes.remove(node) for node in nodes_to_remove]
+                shortest_path_lengths = graph_metrics.get_non_nav_spl(non_nav_nodes, shortest_path_lengths_nav, grid_size, depth)
                 num_sampled = int(params.fraction * len(shortest_path_lengths))
                 scores = np.array(list(shortest_path_lengths.values()))
-                weights = self._compute_weights(scores, params)
+                weights = compute_weights(scores, params)
                 sampled_inds = np.random.choice(len(shortest_path_lengths), size=num_sampled, replace=False, p=weights)
                 sampled_nodes = [list(shortest_path_lengths.keys())[i] for i in sampled_inds]
                 for node in sampled_nodes:
@@ -1051,7 +1028,7 @@ class CaveEscapeWaveCollapseBatch(Batch):
                         graph.nodes[node][node_subset_] = 0.0
                 pp = {}
                 for node in graph.nodes():
-                    if node not in possible_nodes:
+                    if node not in shortest_path_lengths.keys():
                         pp[node] = 0.0
                     else:
                         pp[node] = weights[list(shortest_path_lengths.keys()).index(node)]
@@ -1113,39 +1090,6 @@ class CaveEscapeWaveCollapseBatch(Batch):
                     edge_graphs[_edge_g_type].append(edge_graph)
 
             return edge_graphs
-
-        def _get_neighbors(self, nodes:List[int], neighbors_set:List[int]):
-            grid_size = (self.dataset_meta.config.gridworld_data_dim[1] - 2, self.dataset_meta.config.gridworld_data_dim[2] - 2)
-            grid_graph = nx.grid_2d_graph(*grid_size)
-            # nodes_grid = [(node % grid_size[0], node // grid_size[0]) for node in nodes]
-            # neighbors_set_grid = [(node % grid_size[0], node // grid_size[0]) for node in neighbors_set]
-            neighbors_grid = [list(grid_graph.neighbors(node)) for node in nodes]
-            neighbors_grid = [list(set(neighbors_grid[i]) & set(neighbors_set)) for i in range(len(neighbors_grid))]
-            # neighbors = [[] for _ in range(len(neighbors_grid))]
-            # for i in range(len(neighbors_grid)):
-            #     for j in range(len(neighbors_grid[i])):
-            #         neighbors[i].append(neighbors_grid[i][j][0] + neighbors_grid[i][j][1] * grid_size[0])
-            return neighbors_grid
-
-        def _compute_weights(self, scores, params):
-            if params.distribution == 'power':
-                weights = (scores.clip(0)) ** (1. / params.temperature)
-            elif params.distribution == 'power_rank':
-                temp = np.flip(scores.argsort())
-                ranks = np.empty_like(temp)
-                ranks[temp] = np.arange(len(temp)) + 1
-                weights = 1 / ranks ** (1. / params.temperature)
-            else:
-                raise ValueError(f"Unknown distribution: {params.distribution}")
-
-            z = np.sum(weights)
-            if z > 0:
-                weights /= z
-            else:
-                weights = np.ones_like(weights, dtype=np.float) / len(weights)
-                weights /= np.sum(weights)
-
-            return weights
 
         def _get_largest_component(self, graphs: Union[List[nx.Graph], List[dgl.DGLGraph]], to_dgl: bool = False)\
                 -> Union[List[nx.Graph], List[dgl.DGLGraph]]:
