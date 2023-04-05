@@ -80,14 +80,10 @@ html_theme_options = {
     "dark_logo": "img/minigrid-white.svg",
     "gtag": "G-FBXJQQLXKD",
     "versioning": True,
+    "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
+    "source_branch": "master",
+    "source_directory": "docs/",
 }
-html_context: dict[str, Any] = {}
-html_context["conf_py_path"] = "/docs/"
-html_context["display_github"] = True
-html_context["github_user"] = "Farama-Foundation"
-html_context["github_repo"] = "Minigrid"
-html_context["github_version"] = "master"
-html_context["slug"] = "minigrid"
 
 html_static_path = ["_static"]
 html_css_files = []
