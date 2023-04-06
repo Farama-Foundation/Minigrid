@@ -452,15 +452,9 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         self.max_words_in_mission = max_words_in_mission
         self.word_dict = word_dict
 
-        image_observation_space = spaces.Box(
-            low=0,
-            high=255,
-            shape=(self.agent_view_size, self.agent_view_size, 3),
-            dtype="uint8",
-        )
         self.observation_space = spaces.Dict(
             {
-                "image": image_observation_space,
+                "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
                 "mission": spaces.MultiDiscrete(
                     [len(self.word_dict.keys())] * max_words_in_mission

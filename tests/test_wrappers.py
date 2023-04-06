@@ -327,3 +327,14 @@ def test_symbolic_obs_wrapper(env_id):
         == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
     )
     env.close()
+
+
+def test_dict_observation_space_doesnt_clash_with_one_hot():
+    env = gym.make("MiniGrid-Empty-5x5-v0")
+    env = OneHotPartialObsWrapper(env)
+    env = DictObservationSpaceWrapper(env)
+    env.reset()
+    obs, _, _, _, _ = env.step(0)
+    assert obs["image"].shape == (7, 7, 20)
+    assert env.observation_space["image"].shape == (7, 7, 20)
+    env.close()
