@@ -4,7 +4,7 @@ from typing import Tuple, List
 import numpy as np
 import math
 
-from gym_minigrid.agents import Lanes
+from gym_minigrid.agents import LaneNum
 
 from .PedAgent import PedAgent
 from gym_minigrid.lib.LaneAction import LaneAction
@@ -58,7 +58,7 @@ class BlueAdlerPedAgent(PedAgent):
         agents = env.agents
         #TODO Simulate lane change
         gaps = [None] * 3
-        gaps[0] = self.computeGap(agents, Lanes.currentLane, env)
+        gaps[0] = self.computeGap(agents, LaneNum.currentLane, env)
         if self.canShiftLeft == True:
             gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
         else:
@@ -90,7 +90,7 @@ class BlueAdlerPedAgent(PedAgent):
         if len(goodLanes) == 1:
             lane = goodLanes[0]
         elif len(goodLanes) == 2:
-            if goodLanes[0] == Lanes.currentLane:
+            if goodLanes[0] == LaneNum.currentLane:
                 if np.random.random() > 0.2:
                     lane = goodLanes[0]
                 else:
