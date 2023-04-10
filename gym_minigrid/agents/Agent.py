@@ -1,8 +1,9 @@
 from typing import Tuple
+from gym_minigrid.agents.Object import Object
 import random
 import numpy as np
 
-class Agent:
+class Agent(Object):
     def __init__(
         self, 
         id,
@@ -18,6 +19,11 @@ class Agent:
 
         self.DML = DML
         self.p_exchg = p_exchg
+
+        super.__init__(
+            topLeft=position,
+            bottomRight=position
+        )
 
         self.initPosition = position
         self.initDirection = direction
