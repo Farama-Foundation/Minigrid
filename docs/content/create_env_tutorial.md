@@ -205,9 +205,11 @@ class SimpleEnv(MiniGridEnv):
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
+        # Generate verical seperation wall
         for i in range(0, height):
             self.grid.set(5, i, Wall())
         
+        # Place the door and key
         self.grid.set(5, 6, Door(COLOR_NAMES[0], is_locked=True))
         self.grid.set(3, 6, Key(COLOR_NAMES[0]))
 
@@ -226,6 +228,8 @@ class SimpleEnv(MiniGridEnv):
 
 def main():
     env = SimpleEnv(render_mode="human")
+
+    # enable manual control for testing
     manual_control = ManualControl(env, seed=42)
     manual_control.start()
 
