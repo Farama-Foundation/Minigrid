@@ -111,9 +111,9 @@ which places the goal in the bottom right corner. Now the environment should loo
 :width: 200px
 ```
 
-### Create Seperating Walls
+### Create Separating Walls
 
-To create a wall that seperates the environment into two rooms, we use the command
+To create a wall that separates the environment into two rooms, we use the command
 
 ```python
 for i in range(0, height):
@@ -137,7 +137,6 @@ from minigrid.core.world_object import Door, Key
 ```
 
 Then, we can simply place the door and key using the command
-
 
 ```python
 self.grid.set(5, 6, Door(COLOR_NAMES[0], is_locked=True))
@@ -205,7 +204,7 @@ class SimpleEnv(MiniGridEnv):
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
-        # Generate verical seperation wall
+        # Generate verical separation wall
         for i in range(0, height):
             self.grid.set(5, i, Wall())
         
