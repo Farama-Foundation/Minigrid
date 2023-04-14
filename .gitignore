@@ -15,6 +15,8 @@ _site
 __pycache__
 .vscode/
 docs/_build/
+docs/build/
+_build/
 /docs/environments/**/*.md
 /docs/environments/**/*.html
 !/docs/environments/**/index.md
