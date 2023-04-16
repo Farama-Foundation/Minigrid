@@ -7,12 +7,12 @@
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="" />
-    <meta property="og:url" content="https://minigrid.farama.org/content/basic_usage.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="List of Publications" href="../publications/" /><link rel="prev" title="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." href="../../" />
-        <link rel="canonical" href="https://minigrid.farama.org/content/basic_usage.html" />
+    <meta property="og:url" content="https://minigrid.farama.org/content/create_env_tutorial.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" />
+        <link rel="canonical" href="https://minigrid.farama.org/content/create_env_tutorial.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 5.2.3 and Furo 2022.12.07.dev1 -->
-        <title>Basic Usage - MiniGrid Documentation</title>
+        <title>Tutorial on Creating Environments - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=4297ed78bc2370ec4493f1a6639f04addebc5da5" />
@@ -203,7 +203,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -223,9 +223,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#training-an-agent">Training an Agent</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/#training-an-agent">Training an Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/">List of Publications</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
@@ -346,7 +346,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/content/basic_usage.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/content/create_env_tutorial.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -368,7 +368,7 @@
                 </svg>
               </button>
             </div>
-            <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <label class="toc-overlay-icon toc-content-icon" for="__toc">
               <div class="visually-hidden">Toggle table of contents sidebar</div>
               <i class="icon"><svg>
                   <use href="#svg-toc"></use>
@@ -377,26 +377,208 @@
           </div>
           <article role="main">
             
-            <section id="basic-usage">
-<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h1>
-<p>There is a UI application which allows you to manually control the agent with the arrow keys:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">minigrid</span><span class="o">/</span><span class="n">manual_control</span><span class="o">.</span><span class="n">py</span>
+            <section id="tutorial-on-creating-environments">
+<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Permalink to this heading">#</a></h1>
+<p>In this tutorial, we will go through the process of creating a new environment.</p>
+<section id="boilerplate-code">
+<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">agent_start_pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">agent_start_dir</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span> <span class="o">=</span> <span class="n">agent_start_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_dir</span> <span class="o">=</span> <span class="n">agent_start_dir</span>
+
+        <span class="n">mission_space</span> <span class="o">=</span> <span class="n">MissionSpace</span><span class="p">(</span><span class="n">mission_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_gen_mission</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">mission_space</span><span class="o">=</span><span class="n">mission_space</span><span class="p">,</span>
+            <span class="n">grid_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
 </pre></div>
 </div>
-<p>The environment being run can be selected with the <code class="docutils literal notranslate"><span class="pre">--env</span></code> option, eg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">minigrid</span><span class="o">/</span><span class="n">manual_control</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">env</span> <span class="n">MiniGrid</span><span class="o">-</span><span class="n">Empty</span><span class="o">-</span><span class="mi">8</span><span class="n">x8</span><span class="o">-</span><span class="n">v0</span>
+<p>First, we need to create a class the inherits from <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define a mission space, the recommended way to do it is to define a static function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
+</pre></div>
+</div>
+<p>that only returns a string which corresponds to the mission. We then pass this function as an argument</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mission_space</span> <span class="o">=</span> <span class="n">MissionSpace</span><span class="p">(</span><span class="n">mission_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_gen_mission</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function, we pass the required arguments to the parent class. In this case we are passing the <code class="docutils literal notranslate"><span class="pre">mission_space</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">max_steps</span></code>. We also create <code class="docutils literal notranslate"><span class="pre">self.agent_start_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">self.agent_start_dir</span></code> so that member functions can have access to these two values.</p>
+</section>
+<section id="generate-the-grid-world">
+<h2>Generate the grid-world<a class="headerlink" href="#generate-the-grid-world" title="Permalink to this heading">#</a></h2>
+<p>To create your own grid-world environment we override the function <code class="docutils literal notranslate"><span class="pre">_gen_grid</span></code>. We can see from the <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code> class</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MiniGridEnv._gen_grid</span>
+<span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">_gen_grid</span></code> takes in two inputs <code class="docutils literal notranslate"><span class="pre">width</span></code> and <code class="docutils literal notranslate"><span class="pre">height</span></code>, which are used to specify the size of the environment.</p>
+<section id="create-world">
+<h3>Create World<a class="headerlink" href="#create-world" title="Permalink to this heading">#</a></h3>
+<p>To create the environment, we first an empty grid using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then, we create the walls that surrounds the grid</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">wall_rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we place the agent in the environment</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">agent_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">agent_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_dir</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">place_agent</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>these lines of code is saying if we specified the agent starting position and direction the environment will follow what we specified, otherwise, it will randomly place the agent within the environment. If we render the environment right now, it would look like this:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/first_step.png"><img alt="env after first step" src="../../_images/first_step.png" style="width: 200px;" /></a>
+</figure>
+</section>
+<section id="place-goal">
+<h3>Place Goal<a class="headerlink" href="#place-goal" title="Permalink to this heading">#</a></h3>
+<p>To place a goal in the environment, we use the function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">put_obj</span><span class="p">(</span><span class="n">Goal</span><span class="p">(),</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which places the goal in the bottom right corner. Now the environment should look like this:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/second_step.png"><img alt="env after second step" src="../../_images/second_step.png" style="width: 200px;" /></a>
+</figure>
+</section>
+<section id="create-separating-walls">
+<h3>Create Separating Walls<a class="headerlink" href="#create-separating-walls" title="Permalink to this heading">#</a></h3>
+<p>To create a wall that separates the environment into two rooms, we use the command</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Wall</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>this goes over the grids with coordinates <code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">0)</span></code>, <code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">1)</span></code> … <code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">height)</span></code> and make them walls. The result would look like:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/third_step.png"><img alt="env after third step" src="../../_images/third_step.png" style="width: 200px;" /></a>
+</figure>
+</section>
+<section id="add-keys-and-doors">
+<h3>Add Keys and Doors<a class="headerlink" href="#add-keys-and-doors" title="Permalink to this heading">#</a></h3>
+<p>To add keys and doors, we would first need to import</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_NAMES</span>
+<span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Key</span>
+</pre></div>
+</div>
+<p>Then, we can simply place the door and key using the command</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Door</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">is_locked</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Key</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Now the environment looks like:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/fourth_step.png"><img alt="env after fourth step" src="../../_images/fourth_step.png" style="width: 200px;" /></a>
+</figure>
+<p>Even for creating more complicated environments, this is all you need know.</p>
+</section>
+</section>
+<section id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this heading">#</a></h2>
+<p>The source code of this tutorial is</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_NAMES</span>
+<span class="kn">from</span> <span class="nn">minigrid.core.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span> <span class="nn">minigrid.core.mission</span> <span class="kn">import</span> <span class="n">MissionSpace</span>
+<span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Goal</span><span class="p">,</span> <span class="n">Key</span><span class="p">,</span> <span class="n">Wall</span>
+<span class="kn">from</span> <span class="nn">minigrid.manual_control</span> <span class="kn">import</span> <span class="n">ManualControl</span>
+<span class="kn">from</span> <span class="nn">minigrid.minigrid_env</span> <span class="kn">import</span> <span class="n">MiniGridEnv</span>
+
+
+<span class="k">class</span> <span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">agent_start_pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">agent_start_dir</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span> <span class="o">=</span> <span class="n">agent_start_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_dir</span> <span class="o">=</span> <span class="n">agent_start_dir</span>
+
+        <span class="n">mission_space</span> <span class="o">=</span> <span class="n">MissionSpace</span><span class="p">(</span><span class="n">mission_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_gen_mission</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">max_steps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_steps</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">size</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">mission_space</span><span class="o">=</span><span class="n">mission_space</span><span class="p">,</span>
+            <span class="n">grid_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="c1"># Set this to True for maximum speed</span>
+            <span class="n">see_through_walls</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="o">=</span><span class="n">max_steps</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="c1"># Create an empty grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="c1"># Generate the surrounding walls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">wall_rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="c1"># Generate verical separation wall</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Wall</span><span class="p">())</span>
+        
+        <span class="c1"># Place the door and key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Door</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">is_locked</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Key</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># Place a goal square in the bottom-right corner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">put_obj</span><span class="p">(</span><span class="n">Goal</span><span class="p">(),</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Place the agent</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_pos</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_start_dir</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">place_agent</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="s2">&quot;grand mission&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SimpleEnv</span><span class="p">(</span><span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+
+    <span class="c1"># enable manual control for testing</span>
+    <span class="n">manual_control</span> <span class="o">=</span> <span class="n">ManualControl</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">manual_control</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
-<section id="training-an-agent">
-<h1>Training an Agent<a class="headerlink" href="#training-an-agent" title="Permalink to this heading">#</a></h1>
-<p>If you want to train an agent with reinforcement learning, I recommend using the code found in the <a class="reference external" href="https://github.com/lcswillems/torch-rl">torch-rl</a> repository.
-This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.</p>
-<p>A sample training command is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">torch</span><span class="o">-</span><span class="n">rl</span>
-<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">scripts</span><span class="o">.</span><span class="n">train</span> <span class="o">--</span><span class="n">env</span> <span class="n">MiniGrid</span><span class="o">-</span><span class="n">Empty</span><span class="o">-</span><span class="mi">8</span><span class="n">x8</span><span class="o">-</span><span class="n">v0</span> <span class="o">--</span><span class="n">algo</span> <span class="n">ppo</span>
-</pre></div>
-</div>
 </section>
 
           </article>
@@ -404,17 +586,7 @@ This code has been tested and is known to work with this environment. The defaul
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../publications/">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">List of Publications</div>
-              </div>
-              <svg class="furo-related-icon">
-                <use href="#svg-arrow-right"></use>
-              </svg>
-            </a>
+            
             
           </div>
           <div class="bottom-of-page">
@@ -437,8 +609,35 @@ This code has been tested and is known to work with this environment. The defaul
           
         </footer>
       </div>
-      <aside class="toc-drawer no-toc">
+      <aside class="toc-drawer">
         
+        
+        <div class="toc-sticky toc-scroll">
+          <div class="toc-title-container">
+            <span class="toc-title">
+              On this page
+            </span>
+          </div>
+          <div class="toc-tree-container">
+            <div class="toc-tree">
+              <ul>
+<li><a class="reference internal" href="#">Tutorial on Creating Environments</a><ul>
+<li><a class="reference internal" href="#boilerplate-code">Boilerplate Code</a></li>
+<li><a class="reference internal" href="#generate-the-grid-world">Generate the grid-world</a><ul>
+<li><a class="reference internal" href="#create-world">Create World</a></li>
+<li><a class="reference internal" href="#place-goal">Place Goal</a></li>
+<li><a class="reference internal" href="#create-separating-walls">Create Separating Walls</a></li>
+<li><a class="reference internal" href="#add-keys-and-doors">Add Keys and Doors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+          </div>
+        </div>
         
         
       </aside>
