@@ -39,6 +39,7 @@ env.close()
 
 content/basic_usage
 content/publications
+context/create_env_tutorial
 ```
 
 ```{toctree}
