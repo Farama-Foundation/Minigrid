@@ -581,22 +581,11 @@ class GridNavDatasetGenerator:
         filepath = os.path.join(dir, filename)
         try:
             entry = dgl.load_graphs(filepath)
-            extra_data = GridNavDatasetGenerator.assemble_extra_data(entry)
+            extra_data = util.assemble_extra_data(entry)
             return extra_data
         except FileNotFoundError:
             logger.warning(f"Could not find {filepath}.")
             return None
-
-    @staticmethod
-    def assemble_extra_data(entry):
-        graphs, extra = entry
-        num_chunks = len(extra.keys())
-        len_chunks = len(graphs) // num_chunks
-        chunks = [graphs[x:x + len_chunks] for x in range(0, len(graphs), len_chunks)]
-        extra_data = {"edge_graphs":{}}
-        for c, key in enumerate(extra.keys()):
-            extra_data["edge_graphs"][key] = chunks[c]
-        return extra_data
 
     def load_batch(self, filename, dir=None):
         if dir is None:
