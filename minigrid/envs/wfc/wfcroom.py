@@ -1137,36 +1137,8 @@ class MinigridToCaveEscapeBatch(CaveEscapeWaveCollapseBatch):
         return self.features, self.label_ids, self.label_contents
 
     def generate_data(self, batch_data: DotDict):
-        graphs = batch_data.features
-        f = dgl.batch(graphs)
 
-        nav_f = f.ndata['active'].to(torch.float)
-        non_nav_f = torch.zeros_like(nav_f)
-        non_nav_f[nav_f == 0.0] = 1.0
-
-        new_f = {
-            'navigable'     :nav_f.clone(),
-            'non_navigable' :non_nav_f.clone(),
-            'empty'         :nav_f.clone(),
-            'wall'          :non_nav_f.clone(),
-            'start'         :torch.zeros_like(nav_f),
-            'goal'          :torch.zeros_like(nav_f),
-            'lava'          :torch.zeros_like(nav_f),
-            'moss'          :torch.zeros_like(nav_f)
-            }
-
-        new_g = f.clone()
-        attributes = list(new_f.keys())
-        for key in attributes:
-            new_g.ndata[key] = new_f[key]
-
-        new_g.ndata.pop('active')
-
-        new_g = tr.Nav2DTransforms.graph_to_grid_graph(new_g, level_info=self.dataset_meta.level_info)
-            
-        # new_g = dgl.unbatch(new_g)
-        # for m, g in enumerate(new_g):
-        #     new_g[m] = nx.Graph(dgl.to_networkx(g, node_attrs=new_f.keys()))
+        new_g, extra = self.minigrid_to_cave_escape(batch_data.features, level_info=self.dataset_meta.level_info, replace_start=True, replace_goal=True)
 
         stage1_edge_config = {}
         stage2_edge_config = {}
@@ -1176,25 +1148,74 @@ class MinigridToCaveEscapeBatch(CaveEscapeWaveCollapseBatch):
             else:
                 stage2_edge_config[k] = v
 
-        edge_graphs = {'navigable':[new_g[i] for i in range(len(new_g))]}
+        edge_graphs = {'navigable': [new_g[i] for i in range(len(new_g))]}
         for edge_type in edge_graphs:
             for m, edge_graph in enumerate(edge_graphs[edge_type]):
                 if isinstance(edge_graph, nx.Graph):
                     edge_graphs[edge_type][m] = nx.convert_node_labels_to_integers(edge_graphs[edge_type][m])
-                    edge_graphs[edge_type][m] = dgl.from_networkx(edge_graphs[edge_type][m], node_attrs=self.dataset_meta.config.graph_feature_descriptors)
-        extra = {}
-        extra['shortest_path_dist'] = self._place_goal_random(new_g)
-        extra['probs_moss'] = self._place_moss_cave_escape(new_g, extra['shortest_path_dist'])
-        extra['probs_lava'] = self._place_lava_cave_escape(new_g, extra['shortest_path_dist'])
-        extra['alternate_start_locations'] = self._place_start_cave_escape(new_g, extra['shortest_path_dist'])
-        extra['edge_graphs'] = self._add_edges(new_g, stage2_edge_config, edge_graphs=edge_graphs)
+                    edge_graphs[edge_type][m] = dgl.from_networkx(edge_graphs[edge_type][m],
+                                                                  node_attrs=self.dataset_meta.config.graph_feature_descriptors)
 
+        extra['edge_graphs'] = self._add_edges(new_g, stage2_edge_config, edge_graphs=edge_graphs)
         new_g = [nx.convert_node_labels_to_integers(g) for g in new_g]
         new_g = [dgl.from_networkx(g, node_attrs=self.dataset_meta.config.graph_feature_descriptors) for g in
-                    new_g]
+                 new_g]
         self._update_graph_features(extra['edge_graphs'], new_g)
+        return new_g, extra
+
+    def minigrid_to_cave_escape(self, graphs: List[dgl.DGLGraph], level_info: Dict[str, Any], replace_start: bool = False,
+                                replace_goal: bool = False) -> Tuple[List[nx.Graph], Dict[str, Any]]:
+        # Super weird function split but it's the easiest way to reuse this method for conversion of individual levels
+        f = dgl.batch(graphs)
+        if f.ndata.get('navigable') is None:
+            nav_f = f.ndata['active'].to(torch.float)
+        else:
+            nav_f = f.ndata['navigable'].to(torch.float)
+        non_nav_f = torch.zeros_like(nav_f)
+        non_nav_f[nav_f == 0.0] = 1.0
+
+        new_f = {
+            'navigable': nav_f.clone(),
+            'non_navigable': non_nav_f.clone(),
+            'empty': nav_f.clone(),
+            'wall': non_nav_f.clone(),
+            'start': torch.zeros_like(nav_f),
+            'goal': torch.zeros_like(nav_f),
+            'lava': torch.zeros_like(nav_f),
+            'moss': torch.zeros_like(nav_f)
+        }
+
+        if not replace_start:
+            new_f['start'] = f.ndata['start'].to(torch.float)
+        if not replace_goal:
+            new_f['goal'] = f.ndata['goal'].to(torch.float)
+
+        new_g = f.clone()
+        attributes = list(new_f.keys())
+        for key in attributes:
+            new_g.ndata[key] = new_f[key]
+
+        if new_g.ndata.get('active') is not None:
+            new_g.ndata.pop('active')
+
+        new_g = tr.Nav2DTransforms.graph_to_grid_graph(new_g, level_info=level_info)
+
+        extra = {}
+        if replace_goal:
+            extra['shortest_path_dist'] = self._place_goal_random(new_g)
+        else:
+            spl = []
+            for g in new_g:
+                goal_node = [n for n in g.nodes if g.nodes[n]['goal'] == 1.0][0]
+                spl.append(dict(nx.single_target_shortest_path_length(g, goal_node)))
+            extra['shortest_path_dist'] = spl
+        extra['probs_moss'] = self._place_moss_cave_escape(new_g, extra['shortest_path_dist'])
+        extra['probs_lava'] = self._place_lava_cave_escape(new_g, extra['shortest_path_dist'])
+        if replace_start:
+            extra['alternate_start_locations'] = self._place_start_cave_escape(new_g, extra['shortest_path_dist'])
 
         return new_g, extra
+
 
 
 if __name__ == '__main__':
