@@ -578,7 +578,7 @@ class Nav2DTransforms:
         return gridworlds
 
     @staticmethod
-    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]], to_dgl=False,
+    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]], node_attr, to_dgl=False,
                                 make_batch=False) -> List[dgl.DGLGraph]:
         if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
             if isinstance(minigrids[0], bytes):
@@ -598,7 +598,7 @@ class Nav2DTransforms:
         else:
             raise TypeError(f"minigrids must be of type List[bytes], List[np.ndarray], List[MiniGridEnv], "
                             f"List[MultiGridEnv], not {type(minigrids[0])}")
-        graphs, _ = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts, to_dgl, make_batch)
+        graphs, _ = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts, to_dgl, make_batch, node_attr=node_attr)
         return graphs
 
     @staticmethod
