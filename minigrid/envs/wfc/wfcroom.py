@@ -674,6 +674,7 @@ class GridNavDatasetGenerator:
                 task_structures.extend([ts] * len(img))
                 images.extend(img)
 
+        task_structures = ['']*len(images)
         path = os.path.join(self.save_dir, filename)
         images = make_grid_with_labels(images, task_structures, nrow=n_per_batch, normalize=True, limit=None,
                                        channels_first=True)
@@ -966,8 +967,12 @@ class CaveEscapeWaveCollapseBatch(Batch):
 
             probs = []
             for m, graph in enumerate(graphs):
+                if hasattr(params.fraction, '__iter__'):
+                    fraction = np.random.uniform(params.fraction[0], params.fraction[1])
+                else:
+                    fraction = params.fraction
                 possible_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
-                num_sampled = int(params.fraction * len(possible_nodes))
+                num_sampled = int(fraction * len(possible_nodes))
                 shortest_path_lengths = spl[m]
                 shortest_path_lengths = {k: v for k, v in shortest_path_lengths.items() if k in possible_nodes}
                 scores = -np.array(list(shortest_path_lengths.values()))
@@ -1001,12 +1006,16 @@ class CaveEscapeWaveCollapseBatch(Batch):
 
             probs = []
             for m, graph in enumerate(graphs):
+                if hasattr(params.fraction, '__iter__'):
+                    fraction = np.random.uniform(params.fraction[0], params.fraction[1])
+                else:
+                    fraction = params.fraction
                 non_nav_nodes = [n for n in graph.nodes() if graph.nodes[n][node_set]==1.0]
                 nav_nodes = [n for n in graph.nodes() if graph.nodes[n]['navigable']==1.0]
                 shortest_path_lengths_nav = spl[m]
                 shortest_path_lengths_nav = {k: v for k, v in shortest_path_lengths_nav.items() if k in nav_nodes}
                 shortest_path_lengths = graph_metrics.get_non_nav_spl(non_nav_nodes, shortest_path_lengths_nav, grid_size, depth)
-                num_sampled = int(params.fraction * len(shortest_path_lengths))
+                num_sampled = int(fraction * len(shortest_path_lengths))
                 scores = np.array(list(shortest_path_lengths.values()))
                 weights = compute_weights(scores, params)
                 sampled_inds = np.random.choice(len(shortest_path_lengths), size=num_sampled, replace=False, p=weights)
