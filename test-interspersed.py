@@ -4,10 +4,10 @@ import gym
 import numpy as np
 import gym_minigrid
 from gym_minigrid.wrappers import *
-from gym_minigrid.agents import PedAgent
+from gym_minigrid.agents import BlueAdlerPedAgent
 from gym_minigrid.lib.MetricCollector import MetricCollector
 import logging
-import pickle5 as pickle
+import pickle
 
 logging.basicConfig(level=logging.INFO)
 
@@ -25,12 +25,12 @@ for dirSplitInt in range(5, 11):
         metricCollector = MetricCollector(env)
         agents = []
 
-        # density = round(0.05 * densityInt, ndigits=2)
-        density = 0.5
+        density = round(0.05 * densityInt, ndigits=2)
+        # density = 0.04
         DML = False
         p_exchg = 0.0 # 0.5 for 3rd graph, 1.0 for 1st and 2nd graphs
-        # dirSplit = round(dirSplitInt/10, ndigits=1)
-        dirSplit = 0.5
+        dirSplit = round(dirSplitInt/10, ndigits=1)
+        # dirSplit = 0.5
 
         print("Density: " + str(density) + " Directional Split: " + str(dirSplit))
 
@@ -47,13 +47,27 @@ for dirSplitInt in range(5, 11):
             randomIndex = np.random.randint(0, len(possibleCoordinates) - 1)
             pos = possibleCoordinates[randomIndex]
             direction = 2 if np.random.random() > dirSplit else 0
-            agents.append(PedAgent(i, pos, direction, DML, p_exchg))
+            speed = np.random.choice([1, 2, 3, 4])
+            # speed = 4
+            # agents.append(BlueAdlerPedAgent(i, pos, direction, DML, p_exchg))
+            agents.append(
+                BlueAdlerPedAgent(
+                    id=i,
+                    position=pos,
+                    direction=direction,
+                    maxSpeed=speed,
+                    speed=speed,
+                    DML=DML,
+                    p_exchg=p_exchg,
+                    pedVmax=4
+                )
+            )
             del possibleCoordinates[randomIndex]
         env.addAgents(agents)
 
         env.reset()
 
-        for i in range(1100):
+        for i in range(15):
 
             obs, reward, done, info = env.step(None)
             

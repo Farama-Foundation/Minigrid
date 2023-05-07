@@ -1,36 +1,37 @@
 from typing import Tuple
+from gym_minigrid.agents.Object import Object
 import random
 import numpy as np
 
-class Agent:
+class Agent(Object):
     def __init__(
         self, 
         id,
         position: Tuple[int, int], 
-        direction: int,
-        DML: bool,
-        p_exchg: float
+        direction: int, # TODO convert direction to enum
+        maxSpeed: float = 4,
+        speed: float = 3,
+        DML: bool = False, # TODO this is not a property of the agent.
+        p_exchg: float = 0.0
         ):
 
         self.id = id
 
-        prob = np.random.random()
-        if prob < 0.05:
-            self.maxSpeed = 2
-        elif prob < 0.95:
-            self.maxSpeed = 3
-        else:
-            self.maxSpeed = 4
-
         self.DML = DML
         self.p_exchg = p_exchg
+
+        super.__init__(
+            topLeft=position,
+            bottomRight=position
+        )
 
         self.initPosition = position
         self.initDirection = direction
 
         self.position = position
         self.direction = direction
-        self.speed = self.maxSpeed
+        self.maxSpeed = maxSpeed
+        self.speed = speed
 
         self.canShiftLeft = True
         self.canShiftRight = True

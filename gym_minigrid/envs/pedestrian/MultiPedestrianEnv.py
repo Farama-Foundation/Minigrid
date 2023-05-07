@@ -6,6 +6,7 @@ from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.Direction import Direction
 from .EnvEvent import EnvEvent
 import logging
 import random
@@ -16,13 +17,15 @@ class MultiPedestrianEnv(MiniGridEnv):
         self,
         agents: List[Agent]=None,
         width=8,
-        height=8
+        height=8,
+        stepsIgnore = 100
     ):
+
         if agents is None:
             self.agents = []
         else:
             self.agents = agents
-
+        self.stepsIgnore = stepsIgnore
         super().__init__(
             width=width,
             height=height,
@@ -77,8 +80,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         return agents/cells
 
     def getAverageSpeed(self):
-        stepsIgnoring = 100
-        return self.stepsTaken / len(self.agents) / (self.step_count - stepsIgnoring)
+
+        return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
 
     def removeAgent(self, agent):
         if agent in self.agents:
@@ -90,26 +93,33 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def forwardAgent(self, agent: Agent):
         # TODO DONE
-        if self.step_count >= 100:
+        if self.step_count >= self.stepsIgnore:
             self.stepsTaken += agent.speed
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
-        # if fwd_pos[0] <= 0 or fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
+        if agent.position[1] < 0 or agent.position[1] >= self.height:
+            logging.info(f"id: {agent.id} pos: {agent.position} canRight: {agent.canShiftRight} canleft: {agent.canShiftLeft}")
+        # print("Id ", agent.id, "speed ", agent.speed)
+        # if fwd_pos[0] <= 0 o]r fwd_pos[0] >= self.width - 1: # = sign is to include gray squares on left & right
         #     if fwd_pos[0] <= 0:
         #         agent.position = (1, agent.position[1])
         #     else:
         #         agent.position = (self.width - 2, agent.position[1])
         #     agent.direction = (agent.direction + 2) % 4
         #     return
-        if fwd_pos[0] <= 1:
+        if fwd_pos[0] < 1:
             # random may introduce conflict
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
-            agent.position = (self.width - 2, agent.position[1])
-            return
-        elif fwd_pos[0] >= self.width - 2:
-            # agent.position = (1, random.randint(1, self.height - 2))
+            # agent.position = (self.width - 2, agent.position[1])
             agent.position = (1, agent.position[1])
+            agent.direction = Direction.LR
+            return
+        elif fwd_pos[0] > self.width - 2:
+            # agent.position = (1, random.randint(1, self.height - 2))
+            # agent.position = (1, agent.position[1])
+            agent.position = (self.width - 2, agent.position[1])
+            agent.direction = Direction.RL
             return
 
         # Get the contents of the cell in front of the agent
@@ -117,7 +127,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-            agent.position = fwd_pos
+            agent.position = (fwd_pos[0], fwd_pos[1])
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
@@ -147,11 +157,6 @@ class MultiPedestrianEnv(MiniGridEnv):
     #region sidewalk
 
     def genSidewalks(self):
-
-        # TODO turn this into 2 side walks. DONE
-
-        # Terry - added goals to the left side
-        # not sure if we are making the sidewalks go horizontally or vertically
         for i in range(1, self.height-1):
             self.put_obj(Goal(), 1, i)
             self.put_obj(Goal(), self.width - 2, i)
@@ -236,9 +241,9 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     def eliminateConflict(self):
         for agent in self.agents:
-            if agent.position[1] == 1:
+            if agent.position[1] <= 1:
                 agent.canShiftLeft = False
-            if agent.position[1] == self.height - 2:
+            if agent.position[1] >= self.height - 2:
                 agent.canShiftRight = False
         for agent1 in self.agents:
             for agent2 in self.agents:
@@ -255,29 +260,7 @@ class MultiPedestrianEnv(MiniGridEnv):
                         agent1.canShiftLeft = False 
                     else: 
                         agent2.canShiftRight = False
-        # self.agents.sort(key=lambda agent: (agent.position[0], agent.position[1]))
-        # for i in range(1, len(self.agents)):
-        #     if self.agents[i].position[0] != self.agents[i-1].position[0]:
-        #         continue
 
-        #     if (self.agents[i].position[1] - self.agents[i-1].position[1]) == 1:
-        #         # they are adjacent
-        #         self.agents[i].canShiftLeft = False
-        #         self.agents[i-1].canShiftRight = False
-        #     elif (self.agents[i].position[1] - self.agents[i-1].position[1]) == 2 and self.agents[i].canShiftLeft == True and self.agents[i-1].canShiftRight == True:  
-        #         # they have one cell between them
-        #         if np.random.random() > 0.5:
-        #             self.agents[i].canShiftLeft = False
-        #         else: 
-        #             self.agents[i-1].canShiftRight = False
-
-        # for agent in self.agents:
-        #     if agent.position[0] < 1 or agent.position[0] == self.width - 1:
-        #         self.agents.remove(agent)
-        #         logging.debug('removed')
-
-    # One step after parallel1 and parallel2
-    # Save plans from parallel1 and parallel2 before actually executing it
 
     def unsubscribe(self, envEvent: EnvEvent, handler):
 
@@ -346,8 +329,8 @@ class MultiPedestrianEnv(MiniGridEnv):
         self.eliminateConflict()
 
         actions = self.emitEventAndGetResponse(EnvEvent.stepParallel1)
+        
         self.executeActions(actions)
-
         actions = self.emitEventAndGetResponse(EnvEvent.stepParallel2)
         self.executeActions(actions)
 
@@ -369,16 +352,16 @@ class MultiPedestrianEnv(MiniGridEnv):
         for action in actions:
             if action is not None:
                 self._actionHandlers[action.action.__class__](action)
-            # self.executeAction(action)
+            
         pass
 
     def executeLaneAction(self, action: Action):
         if action is None:
             return 
-        if action == 1:
-            self.shiftLeft(self.agents[i])
-        elif action == 2:
-            self.shiftRight(self.agents[i])
+        if action.action == LaneAction.LEFT:
+            self.shiftLeft(action.agent)
+        elif action.action == LaneAction.RIGHT:
+            self.shiftRight(action.agent)
         pass
 
     def executeForwardAction(self, action: Action):
@@ -410,11 +393,33 @@ class MultiPedestrianEnv(MiniGridEnv):
     #endregion
 
     
+# TODO extract the following to a registration file
 
 class MultiPedestrianEnv20x80(MultiPedestrianEnv):
     def __init__(self):
-        width = 50
-        height = 12 # actual height: 10 + 2 gray square on top and bottom
+        width = 80
+        height = 20 # actual height: 10 + 2 gray square on top and bottom
+        super().__init__(
+            width=width,
+            height=height,
+            agents=None
+        )
+
+class MultiPedestrianEnv5x20(MultiPedestrianEnv):
+    def __init__(self):
+        width = 30
+        height = 6 # actual height: 10 + 2 gray square on top and bottom
+        super().__init__(
+            width=width,
+            height=height,
+            agents=None,
+            stepsIgnore=0
+        )
+
+class MultiPedestrianEnv1x20(MultiPedestrianEnv):
+    def __init__(self):
+        width = 20
+        height = 3 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
@@ -424,4 +429,12 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
 register(
     id='MultiPedestrian-Empty-20x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+)
+register(
+    id='MultiPedestrian-Empty-5x20-v0',
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv5x20'
+)
+register(
+    id='MultiPedestrian-Empty-1x20-v0',
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv1x20'
 )
