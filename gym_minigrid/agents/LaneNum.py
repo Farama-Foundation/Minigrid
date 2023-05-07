@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-class Lanes(IntEnum):
+class LaneNum(IntEnum):
     currentLane = 0
     leftLane = 1
     rightLane = 2

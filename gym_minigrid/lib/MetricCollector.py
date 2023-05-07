@@ -8,7 +8,7 @@ class MetricCollector:
     def __init__(self, 
             env: IMultiPedestrianEnv,
             stepsToIgnoreAtTheBeginning = 100,
-            stepsToRecord = 10000
+            stepsToRecord = 1100
         ):
 
         self.stepsToIgnoreAtTheBeginning = stepsToIgnoreAtTheBeginning
@@ -21,6 +21,7 @@ class MetricCollector:
         env.subscribe(EnvEvent.stepAfter, self.handleStepAfter)
 
         self.stepStats = defaultdict(lambda: []) # average stuff in every step
+        self.volumeStats = []
     
 
     def handleStepAfter(self, env: IMultiPedestrianEnv):
@@ -33,15 +34,36 @@ class MetricCollector:
 
         # collect speed
         self.collectSpeed(env)
+        # collect volume
+        self.collectVolume(env)
 
-
-
-
+        for agent in env.getAgents():
+            #reset
+            self.previousState[agent]["position"] = agent.position
+            self.previousState[agent]["direction"] = agent.direction
     
     def getStatistics(self):
-        return self.stepStats
+        return [self.stepStats, self.volumeStats]
         pass
 
+    def collectVolume(self, env):
+        revolutions = 0
+        for agent in env.getAgents():
+            if self.previousState[agent]["direction"] is None:
+                self.previousState[agent]["direction"] = agent.direction
+            # elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
+            #     revolutions += 1
+            # elif agent.direction == 0 and self.previousState[agent]["position"][0] > agent.position[0]:
+            #     revolutions += 1
+            # elif agent.direction == 2 and agent.position[0] > self.previousState[agent]["position"][0]:
+            #     revolutions += 1
+            elif agent.direction != self.previousState[agent]["direction"]:
+                revolutions += 1
+            self.previousState[agent]["direction"] = agent.direction
+        
+        
+        self.volumeStats.append(revolutions*self.stepStats["xSpeed"][-1]/(env.height - 2))
+        # self.volumeStats.append(revolutions/(env.height - 2))
     
     def collectSpeed(self, env):
         totalXSpeed = 0
@@ -54,15 +76,19 @@ class MetricCollector:
                 xSpeed = abs(agent.position[0] - self.previousState[agent]["position"][0])
                 ySpeed = abs(agent.position[1] - self.previousState[agent]["position"][1])
 
+                if agent.direction == 0 and self.previousState[agent]["position"][0] > agent.position[0]:
+                    xSpeed = abs((env.width - 2) - self.previousState[agent]["position"][0])
+                elif agent.direction == 2 and agent.position[0] > self.previousState[agent]["position"][0]:
+                    xSpeed = abs(self.previousState[agent]["position"][0] - 1)
+
+                # xSpeed = agent.speed
+                # ^ try this if data still doesn't match up
+
                 totalXSpeed += xSpeed
                 totalYSpeed += ySpeed
 
-                #reset
-                self.previousState[agent]["position"] = agent.position
                 self.previousState[agent]["xSpeed"] = xSpeed
                 self.previousState[agent]["ySpeed"] = ySpeed
         
         self.stepStats["xSpeed"].append(totalXSpeed / len(env.getAgents()))
         self.stepStats["ySpeed"].append(totalYSpeed / len(env.getAgents()))
-        
-
