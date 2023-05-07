@@ -1,13 +1,14 @@
 from typing import Tuple
-from gym_minigrid.agents.Object import Object
+from gym_minigrid.lib import BaseObject
 import random
 import numpy as np
 
-class Agent(Object):
+class Agent(BaseObject):
     def __init__(
         self, 
         id,
-        position: Tuple[int, int], 
+        initTopLeft: Tuple[int, int],
+        initBottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
         speed: float = 3,
@@ -20,15 +21,13 @@ class Agent(Object):
         self.DML = DML
         self.p_exchg = p_exchg
 
-        super.__init__(
-            topLeft=position,
-            bottomRight=position
+        super().__init__(
+            initTopLeft=initTopLeft,
+            initBottomRight=initBottomRight
         )
 
-        self.initPosition = position
         self.initDirection = direction
 
-        self.position = position
         self.direction = direction
         self.maxSpeed = maxSpeed
         self.speed = speed
@@ -39,15 +38,13 @@ class Agent(Object):
         # Agents will save the actions we compute
         # Once we execute, we get action from here
         
-        self.gapSame = 8
+        self.gapSame = 8 # TODO transfer all the blue and alder properties
         self.gapOpp = 4
         
         pass
 
     def reset(self):
         # TODO 
-        
-        self.position = self.initPosition 
+        super().reset()
         self.direction = self.initDirection
-
         pass

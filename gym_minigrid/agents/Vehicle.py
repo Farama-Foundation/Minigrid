@@ -1,5 +1,5 @@
 from typing import Tuple, List
-from gym_minigrid.agents.Object import Object
+from gym_minigrid.agents.BaseObject import BaseObject
 
 class Vehicle:
     def __init__(

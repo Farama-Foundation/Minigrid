@@ -1,7 +1,7 @@
 from typing import Tuple, List
-from gym_minigrid.agents.Object import Object
+from gym_minigrid.agents.BaseBaseBaseObject import BaseObject
 
-class Lane(Object):
+class Lane(BaseObject):
     def __init__(
         self,
         topLeft: Tuple[int, int],
