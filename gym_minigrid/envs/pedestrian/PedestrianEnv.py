@@ -12,7 +12,7 @@ import logging
 import random
 # from pyee.base import EventEmitter
 
-class MultiPedestrianEnv(MiniGridEnv):
+class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
         agents: List[Agent]=None,
@@ -396,7 +396,7 @@ class MultiPedestrianEnv(MiniGridEnv):
     
 # TODO extract the following to a registration file
 
-class MultiPedestrianEnv20x80(MultiPedestrianEnv):
+class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
     def __init__(self):
         width = 80
         height = 20 # actual height: 10 + 2 gray square on top and bottom
@@ -428,8 +428,8 @@ class MultiPedestrianEnv1x20(MultiPedestrianEnv):
         )
 
 register(
-    id='MultiPedestrian-Empty-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+    id='BidirectionPedestrianFlowEnv-20x80-v0',
+    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:BidirectionPedestrianFlowEnv20x80'
 )
 register(
     id='MultiPedestrian-Empty-5x20-v0',
