@@ -74,14 +74,15 @@ class MultiPedestrianEnv(MiniGridEnv):
         for agent in self.agents:
             agent.reset()
 
-    def getDensity(self):
-        cells = (self.width - 1) * (self.height - 1)
-        agents = len(self.agents)
-        return agents/cells
+    # moved to MetricCollector and can be removed
+    # def getDensity(self):
+    #     cells = (self.width - 1) * (self.height - 1)
+    #     agents = len(self.agents)
+    #     return agents/cells
 
-    def getAverageSpeed(self):
+    # def getAverageSpeed(self):
 
-        return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
+    #     return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
 
     def removeAgent(self, agent):
         if agent in self.agents:
@@ -91,7 +92,7 @@ class MultiPedestrianEnv(MiniGridEnv):
         else:
             logging.warn("Agent not in list")
 
-    def forwardAgent(self, agent: Agent):
+    def forwardPedestrian(self, agent: Agent):
         # TODO DONE
         if self.step_count >= self.stepsIgnore:
             self.stepsTaken += agent.speed
