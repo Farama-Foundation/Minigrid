@@ -114,13 +114,13 @@ class PedestrianEnv(MiniGridEnv):
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
             # agent.position = (self.width - 2, agent.position[1])
             agent.position = (1, agent.position[1])
-            agent.direction = Direction.LR
+            agent.direction = Direction.East
             return
         elif fwd_pos[0] > self.width - 2:
             # agent.position = (1, random.randint(1, self.height - 2))
             # agent.position = (1, agent.position[1])
             agent.position = (self.width - 2, agent.position[1])
-            agent.direction = Direction.RL
+            agent.direction = Direction.West
             return
 
         # Get the contents of the cell in front of the agent

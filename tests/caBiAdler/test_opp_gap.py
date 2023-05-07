@@ -17,7 +17,7 @@ def test_gap_facing_0():
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(x,y),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -27,7 +27,7 @@ def test_gap_facing_0():
     agent2 = BlueAdlerPedAgent(
         id=2,
         position=(x + 1,1),
-        direction=Direction.RL,
+        direction=Direction.West,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -59,7 +59,7 @@ def test_gap_facing_inthesameplace_and_gap_is_negative(): # should be impossible
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(x,y),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -69,7 +69,7 @@ def test_gap_facing_inthesameplace_and_gap_is_negative(): # should be impossible
     agent2 = BlueAdlerPedAgent(
         id=2,
         position=(x,y),
-        direction=Direction.RL,
+        direction=Direction.West,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -99,7 +99,7 @@ def test_gp_opp_0_to_10_LR():
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(x,y),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -110,7 +110,7 @@ def test_gp_opp_0_to_10_LR():
         agent2 = BlueAdlerPedAgent(
             id=2,
             position=(x+cellsBetween+1,y),
-            direction=Direction.RL,
+            direction=Direction.West,
             speed=3,
             DML=False,
             p_exchg=0.0,
@@ -139,7 +139,7 @@ def test_gp_opp_0_to_10_RL():
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(x,y),
-        direction=Direction.RL,
+        direction=Direction.West,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -150,7 +150,7 @@ def test_gp_opp_0_to_10_RL():
         agent2 = BlueAdlerPedAgent(
             id=2,
             position=(x - cellsBetween - 1,y),
-            direction=Direction.LR,
+            direction=Direction.East,
             speed=3,
             DML=False,
             p_exchg=0.0,
