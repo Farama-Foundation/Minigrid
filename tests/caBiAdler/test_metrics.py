@@ -49,7 +49,7 @@ def test_2_agents_speed(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(3,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=4,
         DML=False,
         p_exchg=0.0
@@ -62,7 +62,7 @@ def test_2_agents_speed(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=(14,1),
-        direction=Direction.RL,
+        direction=Direction.West,
         speed=2,
         DML=False,
         p_exchg=0.0

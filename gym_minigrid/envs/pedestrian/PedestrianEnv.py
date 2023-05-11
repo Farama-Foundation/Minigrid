@@ -92,7 +92,7 @@ class PedestrianEnv(MiniGridEnv):
         else:
             logging.warn("Agent not in list")
 
-    def forwardPedestrian(self, agent: PedAgent):
+    def forwardPedestrian(self, agent: Agent):
         # TODO DONE
         if self.step_count >= self.stepsIgnore:
             self.stepsTaken += agent.speed
@@ -113,17 +113,13 @@ class PedestrianEnv(MiniGridEnv):
             # random may introduce conflict
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
             # agent.position = (self.width - 2, agent.position[1])
-            newPos = (1, agent.position[1])
-            agent.topLeft = newPos
-            agent.bottomRight = newPos
+            agent.position = (1, agent.position[1])
             agent.direction = Direction.East
             return
         elif fwd_pos[0] > self.width - 2:
             # agent.position = (1, random.randint(1, self.height - 2))
             # agent.position = (1, agent.position[1])
-            newPos = (self.width - 2, agent.position[1])
-            agent.topLeft = newPos
-            agent.bottomRight = newPos
+            agent.position = (self.width - 2, agent.position[1])
             agent.direction = Direction.West
             return
 
@@ -132,14 +128,12 @@ class PedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-            newPos = (fwd_pos[0], fwd_pos[1])
-            agent.topLeft = newPos
-            agent.bottomRight = newPos
+            agent.position = (fwd_pos[0], fwd_pos[1])
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
     # Terry - move left and right functions are below
-    def shiftLeft(self, agent: PedAgent):
+    def shiftLeft(self, agent: Agent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
         # left_dir = agent.direction - 1
@@ -148,20 +142,16 @@ class PedestrianEnv(MiniGridEnv):
         # left_pos = agent.position + DIR_TO_VEC[left_dir]
 
         # agent.position[0] = left_pos
-        newPos = (agent.position[0], agent.position[1] - 1)
-        agent.topLeft = newPos
-        agent.bottomRight = newPos
+        agent.position = (agent.position[0], agent.position[1] - 1)
 
-    def shiftRight(self, agent: PedAgent):
+    def shiftRight(self, agent: Agent):
         # assert agent.direction >= 0 and agent.direction < 4
         # #Terry - uses the direction to left of agent to find vector to move left
         # right_dir = (agent.direction + 1) % 4
         # right_pos = agent.position + DIR_TO_VEC[right_dir]
         
         # agent.position = right_pos
-        newPos = (agent.position[0], agent.position[1] + 1)
-        agent.topLeft = newPos
-        agent.bottomRight = newPos
+        agent.position = (agent.position[0], agent.position[1] + 1)
         
     #endregion
 
@@ -385,7 +375,7 @@ class PedestrianEnv(MiniGridEnv):
 
         logging.debug(f"forwarding agent {agent.id}")
 
-        self.forwardPedestrian(agent)
+        self.forwardAgent(agent)
         agent.canShiftLeft = True
         agent.canShiftRight = True
         pass

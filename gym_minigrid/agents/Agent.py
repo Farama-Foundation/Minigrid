@@ -1,5 +1,5 @@
 from typing import Tuple
-from gym_minigrid.lib.BaseObject import BaseObject
+from gym_minigrid.lib import BaseObject
 import random
 import numpy as np
 
@@ -11,10 +11,15 @@ class Agent(BaseObject):
         initBottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
-        speed: float = 3
+        speed: float = 3,
+        DML: bool = False, # TODO this is not a property of the agent.
+        p_exchg: float = 0.0
         ):
 
         self.id = id
+
+        self.DML = DML
+        self.p_exchg = p_exchg
 
         super().__init__(
             initTopLeft=initTopLeft,

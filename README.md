@@ -12,6 +12,7 @@ Matplotlib (optional, only needed for display) - 3.0+
 
 ## Install dependencies via Conda
 ```
+conda config --append channels conda-forge
 conda create -n pedgrid python=3.18.13
 conda activate pedgrid
 conda install gym=0.21

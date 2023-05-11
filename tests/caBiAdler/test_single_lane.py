@@ -49,7 +49,7 @@ def test_2_agents(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(3,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0
@@ -62,7 +62,7 @@ def test_2_agents(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=(6,1),
-        direction=Direction.RL,
+        direction=Direction.West,
         speed=3,
         DML=False,
         p_exchg=0.0
@@ -99,7 +99,7 @@ def test_2_agents_exchange(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=agent1Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         maxSpeed=agent1Speed,
         speed=agent1Speed,
         DML=False,
@@ -113,7 +113,7 @@ def test_2_agents_exchange(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=agent2Position,
-        direction=Direction.RL,
+        direction=Direction.West,
         maxSpeed=agent2Speed,
         speed=agent2Speed,
         DML=False,
@@ -149,7 +149,7 @@ def test_2_agents_exchange_inthesameplace(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=agent1Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         maxSpeed=agent1Speed,
         speed=agent1Speed,
         DML=False,
@@ -163,7 +163,7 @@ def test_2_agents_exchange_inthesameplace(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=agent2Position,
-        direction=Direction.RL,
+        direction=Direction.West,
         maxSpeed=agent2Speed,
         speed=agent2Speed,
         DML=False,
@@ -199,7 +199,7 @@ def test_3_agents_stuck(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=agent1Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         maxSpeed=agent1Speed,
         speed=agent1Speed,
         DML=False,
@@ -213,7 +213,7 @@ def test_3_agents_stuck(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=agent2Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         maxSpeed=agent2Speed,
         speed=agent2Speed,
         DML=False,
@@ -226,7 +226,7 @@ def test_3_agents_stuck(env):
     agent3 = BlueAdlerPedAgent(
         id=1,
         position=agent3Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         maxSpeed=agent3Speed,
         speed=agent3Speed,
         DML=False,

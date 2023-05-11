@@ -208,9 +208,9 @@ class BlueAdlerPedAgent(PedAgent):
 
     def isBehind(self, other:PedAgent) -> bool:
 
-        if self.direction == Direction.LR and self.position[0] > other.position[0]:
+        if self.direction == Direction.East and self.position[0] > other.position[0]:
             return False
-        if self.direction == Direction.RL and self.position[0] < other.position[0]:
+        if self.direction == Direction.West and self.position[0] < other.position[0]:
             return False
         return True
 
