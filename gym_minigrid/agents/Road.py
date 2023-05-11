@@ -1,5 +1,5 @@
 from typing import Tuple, List
-from gym_minigrid.agents.BaseObject import BaseObject
+from gym_minigrid.lib.BaseObject import BaseObject
 from gym_minigrid.agents.Lane import Lane
 
 class Road(BaseObject):
