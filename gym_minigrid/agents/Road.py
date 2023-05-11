@@ -2,7 +2,7 @@ from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
 from gym_minigrid.agents.Lane import Lane
 
-class Road(Object):
+class Road(BaseObject):
     def __init__(
         self,
         roads: List[Lane]
