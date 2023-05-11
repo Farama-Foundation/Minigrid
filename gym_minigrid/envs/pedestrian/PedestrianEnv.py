@@ -12,7 +12,7 @@ import logging
 import random
 # from pyee.base import EventEmitter
 
-class MultiPedestrianEnv(MiniGridEnv):
+class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
         agents: List[Agent]=None,
@@ -406,7 +406,7 @@ class MultiPedestrianEnv(MiniGridEnv):
     
 # TODO extract the following to a registration file
 
-class MultiPedestrianEnv20x80(MultiPedestrianEnv):
+class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
     def __init__(self):
         width = 80
         height = 20 # actual height: 10 + 2 gray square on top and bottom
@@ -416,7 +416,7 @@ class MultiPedestrianEnv20x80(MultiPedestrianEnv):
             agents=None
         )
 
-class MultiPedestrianEnv5x20(MultiPedestrianEnv):
+class MultiPedestrianEnv5x20(PedestrianEnv):
     def __init__(self):
         width = 30
         height = 6 # actual height: 10 + 2 gray square on top and bottom
@@ -427,7 +427,7 @@ class MultiPedestrianEnv5x20(MultiPedestrianEnv):
             stepsIgnore=0
         )
 
-class MultiPedestrianEnv1x20(MultiPedestrianEnv):
+class MultiPedestrianEnv1x20(PedestrianEnv):
     def __init__(self):
         width = 20
         height = 3 # actual height: 10 + 2 gray square on top and bottom
@@ -438,14 +438,14 @@ class MultiPedestrianEnv1x20(MultiPedestrianEnv):
         )
 
 register(
-    id='MultiPedestrian-Empty-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+    id='BidirectionPedestrianFlowEnv-20x80-v0',
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:BidirectionPedestrianFlowEnv20x80'
 )
 register(
     id='MultiPedestrian-Empty-5x20-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv5x20'
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv5x20'
 )
 register(
     id='MultiPedestrian-Empty-1x20-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv1x20'
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv1x20'
 )
