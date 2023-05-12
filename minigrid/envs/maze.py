@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import itertools as itt
-
 import numpy as np
 
 from minigrid.core.grid import Grid
@@ -148,6 +146,13 @@ class MazeEnv(MiniGridEnv):
             for wall in walls:
                 if (wall[0] == rand_wall[0] and wall[1] == rand_wall[1]):
                     walls.remove(wall)
+        
+        def mark(walls, cell, p, x, y, bound):
+            if (p != bound):
+                if (self.grid.get(x, y) != cell):
+                    self.put_obj(self.obstacle_type(), x, y)
+                if ([x, y] not in walls):
+                    walls.append([x, y])
 
         while walls:
                 # Pick a random wall
@@ -156,7 +161,7 @@ class MazeEnv(MiniGridEnv):
                 # Check if it is a left wall
                 if (rand_wall[1] != 0):
 
-                    if (self.grid.get(rand_wall[0],rand_wall[1]-1) == None and self.grid.get(rand_wall[0],rand_wall[1]+1) == cell):
+                    if (self.grid.get(rand_wall[0],rand_wall[1]-1) is None and self.grid.get(rand_wall[0],rand_wall[1]+1) == cell):
                         # Find the number of surrounding cells
                         s_cells = surroundingCells(rand_wall)
                         if (s_cells < 2):
@@ -165,26 +170,13 @@ class MazeEnv(MiniGridEnv):
 
                             # Mark the new walls
                             # Upper cell
-                            if (rand_wall[0] != 0):
-                                if (self.grid.get(rand_wall[0]-1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]-1, rand_wall[1])
-                                if ([rand_wall[0]-1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]-1, rand_wall[1]])
-
+                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
 
                             # Bottom cell
-                            if (rand_wall[0] != height-1):
-                                if (self.grid.get(rand_wall[0]+1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]+1, rand_wall[1])
-                                if ([rand_wall[0]+1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]+1, rand_wall[1]])
+                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
 
                             # Leftmost cell
-                            if (rand_wall[1] != 0):	
-                                if (self.grid.get(rand_wall[0],rand_wall[1]-1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]-1)
-                                if ([rand_wall[0], rand_wall[1]-1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]-1])
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
                         
 
                         # Delete wall
@@ -194,7 +186,7 @@ class MazeEnv(MiniGridEnv):
                 
                 # Check if it is an upper wall
                 if (rand_wall[0] != 0):
-                    if (self.grid.get(rand_wall[0]-1,rand_wall[1]) == None and self.grid.get(rand_wall[0]+1,rand_wall[1]) == cell):
+                    if (self.grid.get(rand_wall[0]-1,rand_wall[1]) is None and self.grid.get(rand_wall[0]+1,rand_wall[1]) == cell):
 
                         s_cells = surroundingCells(rand_wall)
                         if (s_cells < 2):
@@ -203,25 +195,13 @@ class MazeEnv(MiniGridEnv):
 
                             # Mark the new walls
                             # Upper cell
-                            if (rand_wall[0] != 0):
-                                if (self.grid.get(rand_wall[0]-1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]-1, rand_wall[1])
-                                if ([rand_wall[0]-1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]-1, rand_wall[1]])
+                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
 
                             # Leftmost cell
-                            if (rand_wall[1] != 0):
-                                if (self.grid.get(rand_wall[0],rand_wall[1]-1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]-1)
-                                if ([rand_wall[0], rand_wall[1]-1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]-1])
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
 
                             # Rightmost cell
-                            if (rand_wall[1] != width-1):
-                                if (self.grid.get(rand_wall[0],rand_wall[1]+1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]+1)
-                                if ([rand_wall[0], rand_wall[1]+1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]+1])
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
@@ -231,7 +211,7 @@ class MazeEnv(MiniGridEnv):
 
                 # Check the bottom wall
                 if (rand_wall[0] != height-1):
-                    if (self.grid.get(rand_wall[0]+1,rand_wall[1]) == None and self.grid.get(rand_wall[0]-1,rand_wall[1]) == cell):
+                    if (self.grid.get(rand_wall[0]+1,rand_wall[1]) is None and self.grid.get(rand_wall[0]-1,rand_wall[1]) == cell):
 
                         s_cells = surroundingCells(rand_wall)
                         if (s_cells < 2):
@@ -239,21 +219,14 @@ class MazeEnv(MiniGridEnv):
                             self.grid.set(rand_wall[0], rand_wall[1], cell)
 
                             # Mark the new walls
-                            if (rand_wall[0] != height-1):
-                                if (self.grid.get(rand_wall[0]+1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]+1, rand_wall[1])
-                                if ([rand_wall[0]+1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]+1, rand_wall[1]])
-                            if (rand_wall[1] != 0):
-                                if (self.grid.get(rand_wall[0],rand_wall[1]-1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]-1)
-                                if ([rand_wall[0], rand_wall[1]-1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]-1])
-                            if (rand_wall[1] != width-1):
-                                if (self.grid.get(rand_wall[0],rand_wall[1]+1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]+1)
-                                if ([rand_wall[0], rand_wall[1]+1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]+1])
+                            # Bottom cell
+                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
+
+                            # Leftmost cell
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
+
+                            # Rightmost cell
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
@@ -263,7 +236,7 @@ class MazeEnv(MiniGridEnv):
 
                 # Check the right wall
                 if (rand_wall[1] != width-1):
-                    if (self.grid.get(rand_wall[0],rand_wall[1]+1) == None and self.grid.get(rand_wall[0],rand_wall[1]-1) == cell):
+                    if (self.grid.get(rand_wall[0],rand_wall[1]+1) is None and self.grid.get(rand_wall[0],rand_wall[1]-1) == cell):
 
                         s_cells = surroundingCells(rand_wall)
                         if (s_cells < 2):
@@ -271,21 +244,15 @@ class MazeEnv(MiniGridEnv):
                             self.grid.set(rand_wall[0], rand_wall[1], cell)
 
                             # Mark the new walls
-                            if (rand_wall[1] != width-1):
-                                if (self.grid.get(rand_wall[0],rand_wall[1]+1) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0], rand_wall[1]+1)
-                                if ([rand_wall[0], rand_wall[1]+1] not in walls):
-                                    walls.append([rand_wall[0], rand_wall[1]+1])
-                            if (rand_wall[0] != height-1):
-                                if (self.grid.get(rand_wall[0]+1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]+1, rand_wall[1])
-                                if ([rand_wall[0]+1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]+1, rand_wall[1]])
-                            if (rand_wall[0] != 0):	
-                                if (self.grid.get(rand_wall[0]-1,rand_wall[1]) != cell):
-                                    self.put_obj(self.obstacle_type(), rand_wall[0]-1, rand_wall[1])
-                                if ([rand_wall[0]-1, rand_wall[1]] not in walls):
-                                    walls.append([rand_wall[0]-1, rand_wall[1]])
+
+                            # Rightmost cell
+                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
+
+                            # Bottom cell
+                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
+
+                            # Upper cell
+                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
@@ -315,7 +282,7 @@ class MazeEnv(MiniGridEnv):
         # Mark the remaining unvisited cells as walls
         for i in range(0, height):
             for j in range(0, width):
-                if (self.grid.get(i,j) == None):
+                if (self.grid.get(i,j) is None):
                     self.put_obj(self.obstacle_type(), i, j)
                 if (self.grid.get(i,j) == cell):
                     self.grid.set(i, j, None)
