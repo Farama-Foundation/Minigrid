@@ -543,7 +543,7 @@ class GridNavDatasetGenerator:
     @staticmethod
     def save_batch_meta(label_contents, batch_meta, save_dir):
         filename = batch_meta['output_file'] + '.meta'
-        filepath = save_dir + filename
+        filepath = os.path.join(save_dir, filename)
         logger.info(f"Saving Batch {batch_meta['batch_id']} Metadata to {filepath}.")
         entry = {'label_contents': label_contents, 'batch_meta': batch_meta}
         extra_data = {}
@@ -879,6 +879,13 @@ class CaveEscapeWaveCollapseBatch(Batch):
                 extra['probs_moss'] = self._place_moss_cave_escape(features, extra['shortest_path_dist'])
                 extra['probs_lava'] = self._place_lava_cave_escape(features, extra['shortest_path_dist'])
                 extra['alternate_start_locations'] = self._place_start_cave_escape(features, extra['shortest_path_dist'])
+                extra.update(self._compute_object_distribution_stats(features, object_type='moss',
+                                                                     node_domain=['moss', 'empty', 'start', 'goal'],
+                                                                     spl_nav = extra['shortest_path_dist']))
+                extra.update(self._compute_object_distribution_stats(features, object_type='lava',
+                                                                     node_domain=['lava', 'wall'],
+                                                                     navigable=False,
+                                                                     spl_nav = extra['shortest_path_dist']))
                 extra['edge_graphs'] = self._add_edges(features, stage2_edge_config, edge_graphs=edge_graphs)
                 features = [util.nx_to_dgl(f, enable_warnings=False) for f in features]
                 self._update_graph_features(extra['edge_graphs'], features)
@@ -1066,6 +1073,41 @@ class CaveEscapeWaveCollapseBatch(Batch):
 
             return all_possible_starts
 
+        def _compute_object_distribution_stats(self, graphs: List[nx.Graph], object_type: str,
+                                              node_domain: List[str] = None, navigable=True,
+                                              spl_nav: List[Dict[Tuple[int, int], int]] = None):
+
+            stats = {f'{object_type}_density': [], f'spl_vs_{object_type}_count': []}
+
+            if not navigable:
+                assert object_type == 'lava', "Only implemented for lava"
+                params = self.dataset_meta.config.lava_distribution_params
+                grid_size = (
+                    self.dataset_meta.config.gridworld_data_dim[1] - 2,
+                    self.dataset_meta.config.gridworld_data_dim[2] - 2)
+                depth = params.get('sampling_depth', 3)
+            else:
+                grid_size = None
+                depth = None
+
+            for m, graph in enumerate(graphs):
+                goal_node = [n for n in graph.nodes if graph.nodes[n]['goal'] == 1.0]
+                assert len(goal_node) == 1
+                goal_node = goal_node[0]
+                object_density = graph_metrics.object_density(graph, object_type=object_type, node_domain=node_domain)
+                if not navigable:
+                    spl_object_count = graph_metrics.object_count_vs_spl(graph, target_node=goal_node,
+                                                                         object_type=object_type, spl=spl_nav[m],
+                                                                         navigable=False, grid_size=grid_size,
+                                                                         depth=depth)
+                else:
+                    spl_object_count = graph_metrics.object_count_vs_spl(graph, target_node=goal_node,
+                                                                         object_type=object_type, spl=spl_nav[m])
+                stats[f'{object_type}_density'].append(object_density)
+                stats[f'spl_vs_{object_type}_count'].append(spl_object_count)
+
+            return stats
+
         def _add_edges(self, graphs: List[nx.Graph], edge_config: Union[Dict, DictConfig],
                        edge_graphs:Dict[str, List[dgl.DGLGraph]]=None)\
                 ->Dict[str, List[dgl.DGLGraph]]:
@@ -1220,6 +1262,13 @@ class MinigridToCaveEscapeBatch(CaveEscapeWaveCollapseBatch):
             extra['shortest_path_dist'] = spl
         extra['probs_moss'] = self._place_moss_cave_escape(new_g, extra['shortest_path_dist'])
         extra['probs_lava'] = self._place_lava_cave_escape(new_g, extra['shortest_path_dist'])
+        extra.update(self._compute_object_distribution_stats(new_g, object_type='moss',
+                                                             node_domain=['moss', 'empty', 'start', 'goal'],
+                                                             spl_nav=extra['shortest_path_dist']))
+        extra.update(self._compute_object_distribution_stats(new_g, object_type='lava',
+                                                             node_domain=['lava', 'wall'],
+                                                             navigable=False,
+                                                             spl_nav=extra['shortest_path_dist']))
         if replace_start:
             extra['alternate_start_locations'] = self._place_start_cave_escape(new_g, extra['shortest_path_dist'])
 

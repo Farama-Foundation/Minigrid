@@ -9,7 +9,7 @@ import numpy as np
 import torchvision
 from typing import Union, List, Dict, Any, Tuple
 from omegaconf import DictConfig
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from envs.multigrid.multigrid import Grid, AGENT_COLOURS
 
 import torch
@@ -578,8 +578,11 @@ class Nav2DTransforms:
         return gridworlds
 
     @staticmethod
-    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]], node_attr, to_dgl=False,
-                                make_batch=False) -> List[dgl.DGLGraph]:
+    def minigrid_to_dense_graph(minigrids: Union[List[bytes], np.ndarray, List[MiniGridEnv]],
+                                to_dgl=False,
+                                make_batch=False,
+                                node_attr=None,
+                                edge_config=None) -> List[dgl.DGLGraph]:
         if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
             if isinstance(minigrids[0], bytes):
                 raise NotImplementedError("Decoding from bytes not yet implemented.")
@@ -598,7 +601,12 @@ class Nav2DTransforms:
         else:
             raise TypeError(f"minigrids must be of type List[bytes], List[np.ndarray], List[MiniGridEnv], "
                             f"List[MultiGridEnv], not {type(minigrids[0])}")
-        graphs, _ = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts, to_dgl, make_batch, node_attr=node_attr)
+        graphs, _ = Nav2DTransforms.minigrid_layout_to_dense_graph(layouts,
+                                                                   to_dgl=to_dgl,
+                                                                   make_batch=make_batch,
+                                                                   remove_border=True,
+                                                                   node_attr=node_attr,
+                                                                   edge_config=edge_config)
         return graphs
 
     @staticmethod
@@ -632,6 +640,10 @@ class Nav2DTransforms:
             ids = list(zip(*np.where(layouts == Minigrid_OBJECT_TO_IDX[obj])))
             for tup in ids:
                 object_locations[obj][tup[0]].append(tup[1:])
+            for m in range(layouts.shape[0]):
+                if m not in object_locations[obj]:
+                    object_locations[obj][m] = []
+            object_locations[obj] = OrderedDict(sorted(object_locations[obj].items()))
         if 'start' not in object_instances and 'agent' in object_instances:
             object_locations['start'] = object_locations['agent']
         if 'agent' not in object_instances and 'start' in object_instances:
@@ -644,16 +656,12 @@ class Nav2DTransforms:
             for attr in object_to_attr[obj]:
                 if attr not in graph_feats and attr in node_attr:
                     graph_feats[attr] = torch.zeros(layouts.shape)
-                    loc = list(object_locations[obj].values())
-                    for m in range(layouts.shape[0]):
+                loc = list(object_locations[obj].values())
+                assert len(loc) == layouts.shape[0]
+                for m in range(layouts.shape[0]):
+                    if loc[m]:
                         loc_m = torch.tensor(loc[m])
                         graph_feats[attr][m][loc_m[:, 0], loc_m[:, 1]] = 1
-                else:
-                    # TODO: remove later
-                    if attr in node_attr:
-                        logger.info(f"Skipping encoding object {obj} to attribute {attr} as it was already encoded.")
-                    else:
-                        logger.info(f"Skipping encoding object {obj} to attribute {attr} as it is not in node_attr.")
         for attr in node_attr:
             if attr not in graph_feats:
                 graph_feats[attr] = torch.zeros(layouts.shape)
