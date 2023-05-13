@@ -582,7 +582,7 @@ class Nav2DTransforms:
                                 to_dgl=False,
                                 make_batch=False,
                                 node_attr=None,
-                                edge_config=None) -> List[dgl.DGLGraph]:
+                                edge_config=None) -> Union[List[dgl.DGLGraph], List[nx.Graph], dgl.DGLGraph]:
         if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
             if isinstance(minigrids[0], bytes):
                 raise NotImplementedError("Decoding from bytes not yet implemented.")
