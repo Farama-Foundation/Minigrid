@@ -153,31 +153,43 @@ class MazeEnv(MiniGridEnv):
                     self.put_obj(self.obstacle_type(), x, y)
                 if ([x, y] not in walls):
                     walls.append([x, y])
+        
+        def helper(rand_wall, cell, wall1, wall2, wall3):
+            # Find the number of surrounding cells
+            s_cells = surroundingCells(rand_wall)
+            if (s_cells < 2):
+                # Denote the new path
+                self.grid.set(rand_wall[0], rand_wall[1], cell)
+
+                # Mark the new walls
+                mark(*wall1)
+
+                mark(*wall2)
+
+                mark(*wall3)
 
         while walls:
                 # Pick a random wall
                 rand_wall = walls[int(self.np_random.random()*len(walls))-1]
+
+                # Upper cell
+                up = (walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
+
+                # Bottom cell
+                bot = (walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
+
+                # Leftmost cell
+                left = (walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
+
+                # Rightmost cell
+                right = (walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
             
                 # Check if it is a left wall
                 if (rand_wall[1] != 0):
 
                     if (self.grid.get(rand_wall[0],rand_wall[1]-1) is None and self.grid.get(rand_wall[0],rand_wall[1]+1) == cell):
-                        # Find the number of surrounding cells
-                        s_cells = surroundingCells(rand_wall)
-                        if (s_cells < 2):
-                            # Denote the new path
-                            self.grid.set(rand_wall[0], rand_wall[1], cell)
 
-                            # Mark the new walls
-                            # Upper cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
-
-                            # Bottom cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
-
-                            # Leftmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
-                        
+                        helper(rand_wall, cell, up, bot, left)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
@@ -187,21 +199,8 @@ class MazeEnv(MiniGridEnv):
                 # Check if it is an upper wall
                 if (rand_wall[0] != 0):
                     if (self.grid.get(rand_wall[0]-1,rand_wall[1]) is None and self.grid.get(rand_wall[0]+1,rand_wall[1]) == cell):
-
-                        s_cells = surroundingCells(rand_wall)
-                        if (s_cells < 2):
-                            # Denote the new path
-                            self.grid.set(rand_wall[0], rand_wall[1], cell)
-
-                            # Mark the new walls
-                            # Upper cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
-
-                            # Leftmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
-
-                            # Rightmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
+                        
+                        helper(rand_wall, cell, up, left, right)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
@@ -213,24 +212,10 @@ class MazeEnv(MiniGridEnv):
                 if (rand_wall[0] != height-1):
                     if (self.grid.get(rand_wall[0]+1,rand_wall[1]) is None and self.grid.get(rand_wall[0]-1,rand_wall[1]) == cell):
 
-                        s_cells = surroundingCells(rand_wall)
-                        if (s_cells < 2):
-                            # Denote the new path
-                            self.grid.set(rand_wall[0], rand_wall[1], cell)
-
-                            # Mark the new walls
-                            # Bottom cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
-
-                            # Leftmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]-1, 0)
-
-                            # Rightmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
+                        helper(rand_wall, cell, bot, left, right)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
-
 
                         continue
 
@@ -238,21 +223,7 @@ class MazeEnv(MiniGridEnv):
                 if (rand_wall[1] != width-1):
                     if (self.grid.get(rand_wall[0],rand_wall[1]+1) is None and self.grid.get(rand_wall[0],rand_wall[1]-1) == cell):
 
-                        s_cells = surroundingCells(rand_wall)
-                        if (s_cells < 2):
-                            # Denote the new path
-                            self.grid.set(rand_wall[0], rand_wall[1], cell)
-
-                            # Mark the new walls
-
-                            # Rightmost cell
-                            mark(walls, cell, rand_wall[1], rand_wall[0], rand_wall[1]+1, width-1)
-
-                            # Bottom cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]+1, rand_wall[1], height-1)
-
-                            # Upper cell
-                            mark(walls, cell, rand_wall[0], rand_wall[0]-1, rand_wall[1], 0)
+                        helper(rand_wall, cell, right, bot, up)
 
                         # Delete wall
                         delete_wall(walls, rand_wall)
