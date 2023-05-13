@@ -3,7 +3,7 @@ from .PedestrianEnv import PedestrianEnv
 from typing import List
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
-from gym_minigrid.agents import Agent, PedActions, PedAgent, Road, Lane
+from gym_minigrid.agents import *
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
@@ -21,7 +21,8 @@ class TwoLaneRoadEnv(PedestrianEnv):
     def __init__(
         self,
         agents: List[Agent]=None,
-        roads: List[Road]=None,
+        road: Road=None, # TODO Color code roads, sidewalks
+        sidewalks: List[Sidewalk]=None,
         width=8,
         height=8,
         stepsIgnore = 100
