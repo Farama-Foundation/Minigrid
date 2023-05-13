@@ -6,7 +6,18 @@ from minigrid import minigrid_env, wrappers
 from minigrid.core import roomgrid
 from minigrid.core.world_object import Wall
 
-__version__ = "2.1.0"
+__version__ = "2.2.1"
+
+
+try:
+    import sys
+
+    from farama_notifications import notifications
+
+    if "minigrid" in notifications and __version__ in notifications["minigrid"]:
+        print(notifications["minigrid"][__version__], file=sys.stderr)
+except Exception:  # nosec
+    pass
 
 
 def register_minigrid_envs():
@@ -98,7 +109,7 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-DoorKey-6x6-v0",
         entry_point="minigrid.envs:DoorKeyEnv",
-        kwargs={"size": 5},
+        kwargs={"size": 6},
     )
 
     register(
@@ -459,6 +470,50 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-ObstructedMaze-Full-v0",
         entry_point="minigrid.envs:ObstructedMaze_Full",
+    )
+
+    # ObstructedMaze-v1
+    # ----------------------------------------
+
+    register(
+        id="MiniGrid-ObstructedMaze-2Dlhb-v1",
+        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        kwargs={
+            "agent_room": (2, 1),
+            "key_in_box": True,
+            "blocked": True,
+            "num_quarters": 1,
+            "num_rooms_visited": 4,
+        },
+    )
+
+    register(
+        id="MiniGrid-ObstructedMaze-1Q-v1",
+        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        kwargs={
+            "agent_room": (1, 1),
+            "key_in_box": True,
+            "blocked": True,
+            "num_quarters": 1,
+            "num_rooms_visited": 5,
+        },
+    )
+
+    register(
+        id="MiniGrid-ObstructedMaze-2Q-v1",
+        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        kwargs={
+            "agent_room": (2, 1),
+            "key_in_box": True,
+            "blocked": True,
+            "num_quarters": 2,
+            "num_rooms_visited": 11,
+        },
+    )
+
+    register(
+        id="MiniGrid-ObstructedMaze-Full-v1",
+        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
     )
 
     # Playground

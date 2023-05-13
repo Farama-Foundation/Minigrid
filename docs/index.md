@@ -39,6 +39,7 @@ env.close()
 
 content/basic_usage
 content/publications
+content/create_env_tutorial
 ```
 
 ```{toctree}
@@ -61,6 +62,7 @@ environments/babyai/index
 :hidden:
 :caption: Development
 
+release_notes
 Github <https://github.com/Farama-Foundation/MiniGrid>
 ```
 

@@ -65,7 +65,7 @@ class Grid:
     def set(self, i: int, j: int, v: WorldObj | None):
         assert (
             0 <= i < self.width
-        ), f"column index {j} outside of grid of width {self.width}"
+        ), f"column index {i} outside of grid of width {self.width}"
         assert (
             0 <= j < self.height
         ), f"row index {j} outside of grid of height {self.height}"

@@ -47,7 +47,7 @@ class DynamicObstaclesEnv(MiniGridEnv):
 
     ## Rewards
 
-    A reward of '1' is given for success, and '0' for failure. A '-1' penalty is
+    A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure. A '-1' penalty is
     subtracted if the agent collides with an obstacle.
 
     ## Termination

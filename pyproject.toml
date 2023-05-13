@@ -26,7 +26,7 @@ classifiers = [
 dependencies = [
     "numpy>=1.18.0",
     "gymnasium>=0.26",
-    "matplotlib>=3.0",
+    "pygame>=2.2.0",
 ]
 dynamic = ["version"]
 
@@ -34,6 +34,7 @@ dynamic = ["version"]
 testing = [
     "pytest>=7.0.1",
     "pytest-mock>=3.10.0",
+    "matplotlib>=3.0"
 ]
 
 [project.urls]
@@ -49,7 +50,7 @@ __root__ = "minigrid.__init__:register_minigrid_envs"
 include-package-data = true
 
 [tool.setuptools.packages.find]
-include = ["minigrid"]
+include = ["minigrid*"]
 
 # Linters and Test tools #######################################################
 
