@@ -12,7 +12,7 @@ class Agent(BaseObject):
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
         speed: float = 3
-        ):
+    ):
 
         self.id = id
 

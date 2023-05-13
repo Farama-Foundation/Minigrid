@@ -15,16 +15,16 @@ import random
 class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
-        agents: List[Agent]=None,
+        pedAgents: List[Agent]=None,
         width=8,
         height=8,
         stepsIgnore = 100
     ):
 
-        if agents is None:
-            self.agents = []
+        if pedAgents is None:
+            self.pedAgents = []
         else:
-            self.agents = agents
+            self.pedAgents = pedAgents
         self.stepsIgnore = stepsIgnore
         super().__init__(
             width=width,
@@ -52,50 +52,52 @@ class PedestrianEnv(MiniGridEnv):
 
     #region agent management
 
-    def getAgents(self):
-        return self.agents
+    def getPedAgents(self):
+        return self.pedAgents
 
-    def addAgents(self, agents: List[Agent]):
+    def addPedAgents(self, agents: List[PedAgent]):
         for agent in agents:
-            self.addAgent(agent)
+            self.addPedAgent(agent)
             
-    def addAgent(self, agent: Agent):
-        self.agents.append(agent)
+    def addPedAgent(self, agent: PedAgent):
+        self.pedAgents.append(agent)
 
         ## attach event handlers
         # TODO: this subscription must not be done in side the evironment as only the research knows about its decision and action phases.
         self.subscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
         self.subscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
         
-    def getNumAgents(self):
-        return len(self.agents)
+    def getNumPedAgents(self):
+        return len(self.pedAgents)
 
     def resetAgents(self):
-        for agent in self.agents:
+        for agent in self.pedAgents:
             agent.reset()
 
     # moved to MetricCollector and can be removed
     # def getDensity(self):
     #     cells = (self.width - 1) * (self.height - 1)
-    #     agents = len(self.agents)
+    #     agents = len(self.pedAgents)
     #     return agents/cells
 
     # def getAverageSpeed(self):
 
-    #     return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
+    #     return self.stepsTaken / len(self.pedAgents) / (self.step_count - self.stepsIgnore)
 
-    def removeAgent(self, agent):
-        if agent in self.agents:
+    def removePedAgent(self, agent: PedAgent):
+        if agent in self.pedAgents:
             self.unsubscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
             self.unsubscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
-            self.agents.remove(agent)
+            self.pedAgents.remove(agent)
         else:
             logging.warn("Agent not in list")
 
     def forwardPedestrian(self, agent: PedAgent):
         # TODO DONE
-        if self.step_count >= self.stepsIgnore:
-            self.stepsTaken += agent.speed
+        # if self.step_count >= self.stepsIgnore:
+        #     self.stepsTaken += agent.speed
+        # ^ previously used for getAverageSpeed, but this has been moved to MetricCollector
+
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
@@ -132,7 +134,7 @@ class PedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-            newPos = (fwd_pos[0], fwd_pos[1])
+            newPos = fwd_pos
             agent.topLeft = newPos
             agent.bottomRight = newPos
         # Terry - Once we get validateAgentPositions working, we won't need to check
@@ -237,7 +239,7 @@ class PedestrianEnv(MiniGridEnv):
 
         img = self.grid.render(
             tile_size,
-            self.agents,
+            self.pedAgents,
             self.agent_pos,
             self.agent_dir,
             highlight_mask=None
@@ -251,13 +253,13 @@ class PedestrianEnv(MiniGridEnv):
         return img
 
     def eliminateConflict(self):
-        for agent in self.agents:
+        for agent in self.pedAgents:
             if agent.position[1] <= 1:
                 agent.canShiftLeft = False
             if agent.position[1] >= self.height - 2:
                 agent.canShiftRight = False
-        for agent1 in self.agents:
-            for agent2 in self.agents:
+        for agent1 in self.pedAgents:
+            for agent2 in self.pedAgents:
                 if agent1 == agent2 or agent1.position[0] != agent2.position[0]:
                     continue
 

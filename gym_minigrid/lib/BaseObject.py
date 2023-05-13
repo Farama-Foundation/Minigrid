@@ -12,8 +12,8 @@ class BaseObject:
         self.topLeft = initTopLeft
         self.bottomRight = initBottomRight
 
-        self.length = self.bottomRight[0]-self.topLeft[0] + 1
-        self.width = self.bottomRight[1]-self.topLeft[1] + 1
+        self.width = self.bottomRight[0]-self.topLeft[0] + 1
+        self.height = self.bottomRight[1]-self.topLeft[1] + 1
     
     def reset(self):
         self.topLeft = self.initTopLeft

@@ -20,7 +20,8 @@ class TwoLaneRoadEnv(PedestrianEnv):
     # generic actors?
     def __init__(
         self,
-        agents: List[Agent]=None,
+        pedAgents: List[PedAgent]=None,
+        vehicleAgents: List[Vehicle]=None,
         road: Road=None, # TODO Color code roads, sidewalks
         sidewalks: List[Sidewalk]=None,
         width=8,
@@ -29,17 +30,61 @@ class TwoLaneRoadEnv(PedestrianEnv):
     ):
         
         super().__init__(
-            agents=agents,
+            pedAgents=pedAgents,
             width=width,
             height=height,
             stepsIgnore=stepsIgnore
         )
+
+        self.vehicleAgents = vehicleAgents
+        self.road = road
+        self.sidewalks = sidewalks
+
+        # TODO label each tile with either lane/sidewalk?
+
+        pass
+
+    def getPedAgents(self):
+        return self.pedAgents
+    
+    def addVehicleAgents(self, agents: List[Vehicle]):
+        for agent in agents:
+            self.addVehicleAgent(agent)
+    
+    def addVehicle(self, agent: Vehicle):
+        self.vehicleAgents.append(agent)
+        # subscribe to events here
+
+    def getNumVehicleAgents(self):
+        return len(self.vehicleAgents)
+    
+    def resetAgents(self):
+        for agent in self.vehicleAgents:
+            agent.reset()
+    
+    def removeVehicleAgent(self, agent: Vehicle):
+        if agent in self.vehicleAgents:
+            # unsubscribe to events here
+            self.vehicleAgents.remove(agent)
+        else:
+            logging.warn("Agent not in list")
+    
+    def forwardVehicle(self, agent: Vehicle):
+        assert agent.direction >= 0 and agent.direction < 4
+        fwd_pos = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
+        if fwd_pos[0] < 0 or fwd_pos[0] + agent.width >= self.width \
+            or fwd_pos[1] < 0 or fwd_pos[1] + agent.height >= self.height:
+            logging.warn("Vehicle cannot be moved here - out of bounds")
         
+        # Get the contents of the cell in front of the agent
+        fwd_cell = self.grid.get(*fwd_pos)
 
-    pass
-
+        # Move forward if no overlap
+        if fwd_cell == None or fwd_cell.can_overlap():
+            agent.topLeft = fwd_pos
+            agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
 
 register(
     id='TwoLaneRoadEnv-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:TwoLaneRoadEnv'
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:TwoLaneRoadEnv'
 )
