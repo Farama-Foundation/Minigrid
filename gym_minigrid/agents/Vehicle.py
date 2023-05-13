@@ -1,13 +1,21 @@
 from typing import Tuple, List
-from gym_minigrid.lib.BaseObject import BaseObject
+from gym_minigrid.agents.Agent import Agent
 
-class Vehicle(BaseObject):
+class Vehicle(Agent):
     def __init__(
         self,
+        id,
         topLeft: Tuple[int, int],
-        bottomRight: Tuple[int, int]
+        bottomRight: Tuple[int, int],
+        direction: int,
+        maxSpeed: float,
+        speed: float
     ):
         super.__init__(
-            topLeft=topLeft,
-            bottomRight=bottomRight
+            id=id,
+            initTopLeft=topLeft,
+            initBottomRight=bottomRight,
+            direction=direction,
+            maxSpeed=maxSpeed,
+            speed=speed
         )
