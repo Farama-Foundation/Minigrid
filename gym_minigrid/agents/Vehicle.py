@@ -9,7 +9,8 @@ class Vehicle(Agent):
         bottomRight: Tuple[int, int],
         direction: int,
         maxSpeed: float,
-        speed: float
+        speed: float,
+        inLane: int
     ):
         super.__init__(
             id=id,
@@ -19,3 +20,5 @@ class Vehicle(Agent):
             maxSpeed=maxSpeed,
             speed=speed
         )
+        
+        self.inLine = inLane
