@@ -44,8 +44,8 @@ class TwoLaneRoadEnv(PedestrianEnv):
 
         pass
 
-    def getPedAgents(self):
-        return self.pedAgents
+    def getVehicleAgents(self):
+        return self.vehicleAgents
     
     def addVehicleAgents(self, agents: List[Vehicle]):
         for agent in agents:
