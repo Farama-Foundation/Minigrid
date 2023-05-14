@@ -51,7 +51,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         for agent in agents:
             self.addVehicleAgent(agent)
     
-    def addVehicle(self, agent: Vehicle):
+    def addVehicleAgent(self, agent: Vehicle):
         self.vehicleAgents.append(agent)
         # subscribe to events here
 
