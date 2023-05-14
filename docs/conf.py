@@ -23,7 +23,7 @@ import sys
 import minigrid
 
 project = "MiniGrid"
-copyright = "2022"
+copyright = "2023 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
@@ -41,6 +41,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
+    "sphinx.ext.viewcode",
     "myst_parser",
     "sphinx_github_changelog",
 ]
@@ -77,6 +78,8 @@ html_favicon = "_static/img/minigrid-favicon.png"
 html_theme_options = {
     "light_logo": "img/minigrid.svg",
     "dark_logo": "img/minigrid-white.svg",
+    "image": "img/minigrid-github.png",
+    "description": "Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.",
     "gtag": "G-FBXJQQLXKD",
     "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
