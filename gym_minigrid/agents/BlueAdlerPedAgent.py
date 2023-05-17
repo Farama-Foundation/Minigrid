@@ -55,7 +55,7 @@ class BlueAdlerPedAgent(PedAgent):
             _type_: 0 to keep lane, 1 shiftLeft, 2 shiftRight
         """
         # self.speedFixed = False
-        agents = env.agents
+        agents = env.pedAgents
         #TODO Simulate lane change
         gaps = [None] * 3
         gaps[0] = self.computeGap(agents, LaneNum.currentLane, env)
@@ -133,7 +133,7 @@ class BlueAdlerPedAgent(PedAgent):
         # if self.speedFixed == True:
         #     return Action(self, ForwardAction.KEEP)
 
-        agents = env.agents
+        agents = env.pedAgents
         self.speed = self.gap
         # if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
         if self.gap < self.pedVmax and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1

@@ -415,7 +415,7 @@ class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
         super().__init__(
             width=width,
             height=height,
-            agents=None
+            pedAgents=None
         )
 
 class MultiPedestrianEnv5x20(PedestrianEnv):
@@ -425,7 +425,7 @@ class MultiPedestrianEnv5x20(PedestrianEnv):
         super().__init__(
             width=width,
             height=height,
-            agents=None,
+            pedAgents=None,
             stepsIgnore=0
         )
 
@@ -436,7 +436,7 @@ class MultiPedestrianEnv1x20(PedestrianEnv):
         super().__init__(
             width=width,
             height=height,
-            agents=None
+            pedAgents=None
         )
 
 register(

@@ -64,7 +64,7 @@ for p_exchg in [0, 0.25, 0.5, 0.75, 1]:
                     speed = 4
                 agents.append(BlueAdlerPedAgent(i, pos, direction, speed, speed, DML, p_exchg, speed))
                 del possibleCoordinates[randomIndex]
-            env.addAgents(agents)
+            env.addPedAgents(agents)
 
             env.reset()
 

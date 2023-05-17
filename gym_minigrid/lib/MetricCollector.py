@@ -37,7 +37,7 @@ class MetricCollector:
         # collect volume
         self.collectVolume(env)
 
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             #reset
             self.previousState[agent]["position"] = agent.position
             self.previousState[agent]["direction"] = agent.direction
@@ -48,7 +48,7 @@ class MetricCollector:
 
     def collectVolume(self, env):
         revolutions = 0
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             if self.previousState[agent]["direction"] is None:
                 self.previousState[agent]["direction"] = agent.direction
             # elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
@@ -68,7 +68,7 @@ class MetricCollector:
     def collectSpeed(self, env):
         totalXSpeed = 0
         totalYSpeed = 0
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             if self.previousState[agent]["position"] is None:
                 self.previousState[agent]["position"] = agent.position
             else:
@@ -90,5 +90,5 @@ class MetricCollector:
                 self.previousState[agent]["xSpeed"] = xSpeed
                 self.previousState[agent]["ySpeed"] = ySpeed
         
-        self.stepStats["xSpeed"].append(totalXSpeed / len(env.getAgents()))
-        self.stepStats["ySpeed"].append(totalYSpeed / len(env.getAgents()))
+        self.stepStats["xSpeed"].append(totalXSpeed / len(env.getPedAgents()))
+        self.stepStats["ySpeed"].append(totalYSpeed / len(env.getPedAgents()))
