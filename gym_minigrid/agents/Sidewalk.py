@@ -12,4 +12,5 @@ class Sidewalk(BaseObject):
             topLeft=topLeft,
             bottomRight=bottomRight
         )
+        
         self.sidewalkID = sidewalkID

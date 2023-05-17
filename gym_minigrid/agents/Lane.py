@@ -7,6 +7,7 @@ class Lane(BaseObject):
         topLeft: Tuple[int, int],
         bottomRight: Tuple[int, int],
         direction: int,
+        inRoad: int,
         laneID: int,
         posRelativeToCenter: int
         # ^ we assume roads are divided at center
@@ -19,6 +20,8 @@ class Lane(BaseObject):
             topLeft=topLeft,
             bottomRight=bottomRight
         )
+
         self.direction = direction
+        self.inRoad = inRoad
         self.laneID = laneID
         self.posRelativeTOCenter = posRelativeToCenter

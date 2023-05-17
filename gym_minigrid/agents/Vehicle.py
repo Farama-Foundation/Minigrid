@@ -10,6 +10,7 @@ class Vehicle(Agent):
         direction: int,
         maxSpeed: float,
         speed: float,
+        inRoad: int,
         inLane: int
     ):
         super.__init__(
@@ -21,4 +22,5 @@ class Vehicle(Agent):
             speed=speed
         )
         
+        self.inRoad = inRoad
         self.inLine = inLane
