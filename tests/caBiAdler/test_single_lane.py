@@ -71,7 +71,7 @@ def test_2_agents(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -123,7 +123,7 @@ def test_2_agents_exchange(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -173,7 +173,7 @@ def test_2_agents_exchange_inthesameplace(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -235,7 +235,7 @@ def test_3_agents_stuck(env):
     agents.append(agent3)
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
