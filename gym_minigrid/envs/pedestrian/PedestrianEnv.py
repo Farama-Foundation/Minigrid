@@ -70,7 +70,7 @@ class PedestrianEnv(MiniGridEnv):
     def getNumPedAgents(self):
         return len(self.pedAgents)
 
-    def resetAgents(self):
+    def resetPedAgents(self):
         for agent in self.pedAgents:
             agent.reset()
 
@@ -195,7 +195,7 @@ class PedestrianEnv(MiniGridEnv):
         # the same seed before calling env.reset()
         self._gen_grid(self.width, self.height)
 
-        self.resetAgents()
+        self.resetPedAgents()
         self.validateAgentPositions()
 
         # Item picked up, being carried, initially nothing

@@ -29,16 +29,16 @@ class TwoLaneRoadEnv(PedestrianEnv):
         stepsIgnore = 100
     ):
         
+        self.vehicleAgents = vehicleAgents
+        self.road = road
+        self.sidewalks = sidewalks
+        
         super().__init__(
             pedAgents=pedAgents,
             width=width,
             height=height,
             stepsIgnore=stepsIgnore
         )
-
-        self.vehicleAgents = vehicleAgents
-        self.road = road
-        self.sidewalks = sidewalks
 
         # TODO label each tile with either lane/sidewalk?
 
@@ -58,9 +58,14 @@ class TwoLaneRoadEnv(PedestrianEnv):
     def getNumVehicleAgents(self):
         return len(self.vehicleAgents)
     
-    def resetAgents(self):
+    def resetVehicleAgents(self):
         for agent in self.vehicleAgents:
             agent.reset()
+    
+    def reset(self):
+        if self.vehicleAgents != None:
+            self.resetVehicleAgents()
+        super().reset()
     
     def removeVehicleAgent(self, agent: Vehicle):
         if agent in self.vehicleAgents:
