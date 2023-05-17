@@ -86,5 +86,5 @@ class TwoLaneRoadEnv(PedestrianEnv):
 
 register(
     id='TwoLaneRoadEnv-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:TwoLaneRoadEnv'
+    entry_point='gym_minigrid.envs.pedestrian.TwoLaneRoadEnv:TwoLaneRoadEnv'
 )
