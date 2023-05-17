@@ -1,5 +1,7 @@
 from enum import IntEnum
 
 class Direction(IntEnum):
-    LR = 0
-    RL = 2
+    East = 0
+    South = 1
+    West = 2
+    North = 3

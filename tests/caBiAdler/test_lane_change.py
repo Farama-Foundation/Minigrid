@@ -51,7 +51,7 @@ def test_2_agents(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(3,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0
@@ -64,7 +64,7 @@ def test_2_agents(env):
     agent2 = BlueAdlerPedAgent(
         id=1,
         position=(4,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0
@@ -97,7 +97,7 @@ def test_2_agents_for_diagram(env):
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=agent1Position,
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0
@@ -110,7 +110,7 @@ def test_2_agents_for_diagram(env):
     # agent2 = BlueAdlerPedAgent(
     #     id=1,
     #     position=agent2Position,
-    #     direction=Direction.LR,
+    #     direction=Direction.East,
     #     speed=3,
     #     DML=False,
     #     p_exchg=0.0

@@ -1,20 +1,23 @@
 from typing import Tuple, List
-from gym_minigrid.agents.Object import Object
+from gym_minigrid.lib.BaseObject import BaseObject
 from gym_minigrid.agents.Lane import Lane
 
-class Road(Object):
+class Road(BaseObject):
     def __init__(
         self,
-        roads: List[Lane]
+        lanes: List[Lane],
+        roadID: int
     ):
-        self.roads = roads
-        self.roads.sort(key=lambda lane: lane.topLeft)
-        if roads.len() != 0:
-            self.topLeft = roads[0].topLeft
-            self.bottomRight = roads[roads.len()-1].bottomRight
+        self.lanes = lanes
+        self.lanes.sort(key=lambda lane: lane.topLeft)
+        if lanes.len() != 0:
+            self.topLeft = lanes[0].topLeft
+            self.bottomRight = lanes[lanes.len()-1].bottomRight
         else:
             self.topLeft = None
             self.bottomRight = None
+
+        self.roadID = roadID
 
         super.__init__(
             topLeft=self.topLeft,

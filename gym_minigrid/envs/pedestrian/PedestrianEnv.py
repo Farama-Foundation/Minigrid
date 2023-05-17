@@ -12,19 +12,19 @@ import logging
 import random
 # from pyee.base import EventEmitter
 
-class MultiPedestrianEnv(MiniGridEnv):
+class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
-        agents: List[Agent]=None,
+        pedAgents: List[Agent]=None,
         width=8,
         height=8,
         stepsIgnore = 100
     ):
 
-        if agents is None:
-            self.agents = []
+        if pedAgents is None:
+            self.pedAgents = []
         else:
-            self.agents = agents
+            self.pedAgents = pedAgents
         self.stepsIgnore = stepsIgnore
         super().__init__(
             width=width,
@@ -52,49 +52,52 @@ class MultiPedestrianEnv(MiniGridEnv):
 
     #region agent management
 
-    def getAgents(self):
-        return self.agents
+    def getPedAgents(self):
+        return self.pedAgents
 
-    def addAgents(self, agents: List[Agent]):
+    def addPedAgents(self, agents: List[PedAgent]):
         for agent in agents:
-            self.addAgent(agent)
+            self.addPedAgent(agent)
             
-    def addAgent(self, agent: Agent):
-        self.agents.append(agent)
+    def addPedAgent(self, agent: PedAgent):
+        self.pedAgents.append(agent)
 
         ## attach event handlers
         # TODO: this subscription must not be done in side the evironment as only the research knows about its decision and action phases.
         self.subscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
         self.subscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
         
-    def getNumAgents(self):
-        return len(self.agents)
+    def getNumPedAgents(self):
+        return len(self.pedAgents)
 
     def resetAgents(self):
-        for agent in self.agents:
+        for agent in self.pedAgents:
             agent.reset()
 
-    def getDensity(self):
-        cells = (self.width - 1) * (self.height - 1)
-        agents = len(self.agents)
-        return agents/cells
+    # moved to MetricCollector and can be removed
+    # def getDensity(self):
+    #     cells = (self.width - 1) * (self.height - 1)
+    #     agents = len(self.pedAgents)
+    #     return agents/cells
 
-    def getAverageSpeed(self):
+    # def getAverageSpeed(self):
 
-        return self.stepsTaken / len(self.agents) / (self.step_count - self.stepsIgnore)
+    #     return self.stepsTaken / len(self.pedAgents) / (self.step_count - self.stepsIgnore)
 
-    def removeAgent(self, agent):
-        if agent in self.agents:
+    def removePedAgent(self, agent: PedAgent):
+        if agent in self.pedAgents:
             self.unsubscribe(EnvEvent.stepParallel1, agent.parallel1) # TODO event name should be enums
             self.unsubscribe(EnvEvent.stepParallel2, agent.parallel2) # TODO event name should be enums
-            self.agents.remove(agent)
+            self.pedAgents.remove(agent)
         else:
             logging.warn("Agent not in list")
 
-    def forwardAgent(self, agent: Agent):
+    def forwardPedestrian(self, agent: PedAgent):
         # TODO DONE
-        if self.step_count >= self.stepsIgnore:
-            self.stepsTaken += agent.speed
+        # if self.step_count >= self.stepsIgnore:
+        #     self.stepsTaken += agent.speed
+        # ^ previously used for getAverageSpeed, but this has been moved to MetricCollector
+
         # Get the position in front of the agent
         assert agent.direction >= 0 and agent.direction < 4
         fwd_pos = agent.position + agent.speed * DIR_TO_VEC[agent.direction]
@@ -112,14 +115,18 @@ class MultiPedestrianEnv(MiniGridEnv):
             # random may introduce conflict
             # agent.position = (self.width - 2, random.randint(1, self.height - 2))
             # agent.position = (self.width - 2, agent.position[1])
-            agent.position = (1, agent.position[1])
-            agent.direction = Direction.LR
+            newPos = (1, agent.position[1])
+            agent.topLeft = newPos
+            agent.bottomRight = newPos
+            agent.direction = Direction.East
             return
         elif fwd_pos[0] > self.width - 2:
             # agent.position = (1, random.randint(1, self.height - 2))
             # agent.position = (1, agent.position[1])
-            agent.position = (self.width - 2, agent.position[1])
-            agent.direction = Direction.RL
+            newPos = (self.width - 2, agent.position[1])
+            agent.topLeft = newPos
+            agent.bottomRight = newPos
+            agent.direction = Direction.West
             return
 
         # Get the contents of the cell in front of the agent
@@ -127,12 +134,14 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         # Move forward if no overlap
         if fwd_cell == None or fwd_cell.can_overlap():
-            agent.position = (fwd_pos[0], fwd_pos[1])
+            newPos = fwd_pos
+            agent.topLeft = newPos
+            agent.bottomRight = newPos
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
     # Terry - move left and right functions are below
-    def shiftLeft(self, agent: Agent):
+    def shiftLeft(self, agent: PedAgent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
         # left_dir = agent.direction - 1
@@ -141,16 +150,20 @@ class MultiPedestrianEnv(MiniGridEnv):
         # left_pos = agent.position + DIR_TO_VEC[left_dir]
 
         # agent.position[0] = left_pos
-        agent.position = (agent.position[0], agent.position[1] - 1)
+        newPos = (agent.position[0], agent.position[1] - 1)
+        agent.topLeft = newPos
+        agent.bottomRight = newPos
 
-    def shiftRight(self, agent: Agent):
+    def shiftRight(self, agent: PedAgent):
         # assert agent.direction >= 0 and agent.direction < 4
         # #Terry - uses the direction to left of agent to find vector to move left
         # right_dir = (agent.direction + 1) % 4
         # right_pos = agent.position + DIR_TO_VEC[right_dir]
         
         # agent.position = right_pos
-        agent.position = (agent.position[0], agent.position[1] + 1)
+        newPos = (agent.position[0], agent.position[1] + 1)
+        agent.topLeft = newPos
+        agent.bottomRight = newPos
         
     #endregion
 
@@ -226,7 +239,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         img = self.grid.render(
             tile_size,
-            self.agents,
+            self.pedAgents,
             self.agent_pos,
             self.agent_dir,
             highlight_mask=None
@@ -240,13 +253,13 @@ class MultiPedestrianEnv(MiniGridEnv):
         return img
 
     def eliminateConflict(self):
-        for agent in self.agents:
+        for agent in self.pedAgents:
             if agent.position[1] <= 1:
                 agent.canShiftLeft = False
             if agent.position[1] >= self.height - 2:
                 agent.canShiftRight = False
-        for agent1 in self.agents:
-            for agent2 in self.agents:
+        for agent1 in self.pedAgents:
+            for agent2 in self.pedAgents:
                 if agent1 == agent2 or agent1.position[0] != agent2.position[0]:
                     continue
 
@@ -374,7 +387,7 @@ class MultiPedestrianEnv(MiniGridEnv):
 
         logging.debug(f"forwarding agent {agent.id}")
 
-        self.forwardAgent(agent)
+        self.forwardPedestrian(agent)
         agent.canShiftLeft = True
         agent.canShiftRight = True
         pass
@@ -395,46 +408,46 @@ class MultiPedestrianEnv(MiniGridEnv):
     
 # TODO extract the following to a registration file
 
-class MultiPedestrianEnv20x80(MultiPedestrianEnv):
+class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
     def __init__(self):
         width = 80
         height = 20 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
-            agents=None
+            pedAgents=None
         )
 
-class MultiPedestrianEnv5x20(MultiPedestrianEnv):
+class MultiPedestrianEnv5x20(PedestrianEnv):
     def __init__(self):
         width = 30
         height = 6 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
-            agents=None,
+            pedAgents=None,
             stepsIgnore=0
         )
 
-class MultiPedestrianEnv1x20(MultiPedestrianEnv):
+class MultiPedestrianEnv1x20(PedestrianEnv):
     def __init__(self):
         width = 20
         height = 3 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
-            agents=None
+            pedAgents=None
         )
 
 register(
-    id='MultiPedestrian-Empty-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv20x80'
+    id='BidirectionPedestrianFlowEnv-20x80-v0',
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:BidirectionPedestrianFlowEnv20x80'
 )
 register(
     id='MultiPedestrian-Empty-5x20-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv5x20'
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv5x20'
 )
 register(
     id='MultiPedestrian-Empty-1x20-v0',
-    entry_point='gym_minigrid.envs.pedestrian.MultiPedestrianEnv:MultiPedestrianEnv1x20'
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv1x20'
 )

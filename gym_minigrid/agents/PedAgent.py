@@ -15,17 +15,14 @@ class PedAgent(Agent):
         position: Tuple[int, int], 
         direction: int, # TODO convert direction to enum,
         maxSpeed: float = 4,
-        speed: float = 3,
-        DML: bool = False, # TODO this is not a property of the agent.
-        p_exchg: float = 0.0
+        speed: float = 3
         ):
-    
+        
         super().__init__(
             id=id,
-            position=position,
+            initTopLeft=position,
+            initBottomRight=position,
             direction=direction,
             maxSpeed=maxSpeed,
-            speed=speed,
-            DML=DML,
-            p_exchg=p_exchg
+            speed=speed
         )

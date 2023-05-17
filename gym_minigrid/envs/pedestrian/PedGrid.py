@@ -8,7 +8,7 @@ class PedGrid(Grid):
     def render(
         self,
         tile_size,
-        agents: List[PedAgent],
+        pedAgents: List[PedAgent], # need to add support for roads (lanes), sidewalks, vehicles
         agent_pos=None,
         agent_dir=None,
         highlight_mask=None
@@ -35,8 +35,8 @@ class PedGrid(Grid):
 
                 agentIndex = -1
                 agent_here = False
-                for index in range(0, len(agents)):
-                    agent_here = np.array_equal(agents[index].position, (i, j))
+                for index in range(0, len(pedAgents)):
+                    agent_here = np.array_equal(pedAgents[index].position, (i, j))
                     if agent_here:
                         agentIndex = index
                         break
@@ -44,7 +44,7 @@ class PedGrid(Grid):
                 # agent_here = True
                 tile_img = Grid.render_tile(
                     cell,
-                    agent_dir=agents[agentIndex].direction if agent_here else None,
+                    agent_dir=pedAgents[agentIndex].direction if agent_here else None,
                     highlight=highlight_mask[i, j],
                     tile_size=tile_size
                 )

@@ -1,4 +1,5 @@
 
+import gym_minigrid.lib
 import gym_minigrid.agents
 
 # Import the envs module so that envs register themselves

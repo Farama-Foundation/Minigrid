@@ -1,4 +1,4 @@
-from .MultiPedestrianEnv import MultiPedestrianEnv
+from .PedestrianEnv import MultiPedestrianEnv
 
 
 class CrosswalkEnv(MultiPedestrianEnv):

@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 # %autoreload 2
 
 # Load the gym environment
-env = gym.make('MultiPedestrian-Empty-20x80-v0')
+env = gym.make('BidirectionPedestrianFlowEnv-20x80-v0')
 metricCollector = MetricCollector(env)
 agents = []
 

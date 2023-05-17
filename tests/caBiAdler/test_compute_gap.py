@@ -12,7 +12,7 @@ def test_game_same_0():
     agent1 = BlueAdlerPedAgent(
         id=1,
         position=(3,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0,
@@ -21,7 +21,7 @@ def test_game_same_0():
     agent2 = BlueAdlerPedAgent(
         id=2,
         position=(3,1),
-        direction=Direction.LR,
+        direction=Direction.East,
         speed=3,
         DML=False,
         p_exchg=0.0,
