@@ -141,7 +141,7 @@ class PedestrianEnv(MiniGridEnv):
         pass
 
     # Terry - move left and right functions are below
-    def shiftLeft(self, agent: PedAgent):
+    def shiftLeft(self, agent: Agent):
         assert agent.direction >= 0 and agent.direction < 4
         #Terry - uses the direction to left of agent to find vector to move left
         # left_dir = agent.direction - 1
@@ -154,7 +154,7 @@ class PedestrianEnv(MiniGridEnv):
         agent.topLeft = newPos
         agent.bottomRight = newPos
 
-    def shiftRight(self, agent: PedAgent):
+    def shiftRight(self, agent: Agent):
         # assert agent.direction >= 0 and agent.direction < 4
         # #Terry - uses the direction to left of agent to find vector to move left
         # right_dir = (agent.direction + 1) % 4
