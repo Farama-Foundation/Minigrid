@@ -1,4 +1,5 @@
 from typing import List
+from gym_minigrid.agents.Vehicle import Vehicle
 from gym_minigrid.minigrid import *
 from gym_minigrid.register import register
 from gym_minigrid.agents import Agent, PedActions, PedAgent
@@ -6,6 +7,7 @@ from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.VehicleAction import VehicleAction
 from gym_minigrid.lib.Direction import Direction
 from .EnvEvent import EnvEvent
 import logging
@@ -18,13 +20,20 @@ class PedestrianEnv(MiniGridEnv):
         pedAgents: List[Agent]=None,
         width=8,
         height=8,
-        stepsIgnore = 100
+        stepsIgnore = 100,
+        vehicles: List[Vehicle]=None
     ):
 
         if pedAgents is None:
             self.pedAgents = []
         else:
             self.pedAgents = pedAgents
+
+        if vehicles is None:
+            self.vehicles = []
+        else:
+            self.vehicles = vehicles
+
         self.stepsIgnore = stepsIgnore
         super().__init__(
             width=width,
@@ -42,15 +51,17 @@ class PedestrianEnv(MiniGridEnv):
         self.stepParallel3 = []
         self.stepParallel4 = []
         self.stepAfter = []
-
+        
         self._actionHandlers = {
             LaneAction: self.executeLaneAction,
-            ForwardAction: self.executeForwardAction,
+            ForwardAction: self.executeForwardAction
         }
 
     pass
 
     #region agent management
+    def updateActionHandlers(self, actionHandlers: dict):
+        self._actionHandlers.update(actionHandlers)
 
     def getPedAgents(self):
         return self.pedAgents
@@ -74,15 +85,6 @@ class PedestrianEnv(MiniGridEnv):
         for agent in self.pedAgents:
             agent.reset()
 
-    # moved to MetricCollector and can be removed
-    # def getDensity(self):
-    #     cells = (self.width - 1) * (self.height - 1)
-    #     agents = len(self.pedAgents)
-    #     return agents/cells
-
-    # def getAverageSpeed(self):
-
-    #     return self.stepsTaken / len(self.pedAgents) / (self.step_count - self.stepsIgnore)
 
     def removePedAgent(self, agent: PedAgent):
         if agent in self.pedAgents:
@@ -242,7 +244,8 @@ class PedestrianEnv(MiniGridEnv):
             self.pedAgents,
             self.agent_pos,
             self.agent_dir,
-            highlight_mask=None
+            highlight_mask=None,
+            vehicles=self.vehicles
             # highlight_mask=highlight_mask if highlight else None
         )
 
@@ -376,13 +379,11 @@ class PedestrianEnv(MiniGridEnv):
         elif action.action == LaneAction.RIGHT:
             self.shiftRight(action.agent)
         pass
-
+    
     def executeForwardAction(self, action: Action):
         if action is None:
             return 
 
-
-            
         agent = action.agent
 
         logging.debug(f"forwarding agent {agent.id}")
@@ -391,6 +392,8 @@ class PedestrianEnv(MiniGridEnv):
         agent.canShiftLeft = True
         agent.canShiftRight = True
         pass
+
+    
 
     def gen_obs(self):
         """

@@ -1,5 +1,6 @@
 from typing import Tuple, List
 from gym_minigrid.agents.Agent import Agent
+from gym_minigrid.rendering import fill_coords, point_in_line, point_in_rect
 
 class Vehicle(Agent):
     def __init__(
@@ -13,7 +14,7 @@ class Vehicle(Agent):
         inRoad: int,
         inLane: int
     ):
-        super.__init__(
+        super().__init__(
             id=id,
             initTopLeft=topLeft,
             initBottomRight=bottomRight,
@@ -24,3 +25,5 @@ class Vehicle(Agent):
         
         self.inRoad = inRoad
         self.inLine = inLane
+
+    
