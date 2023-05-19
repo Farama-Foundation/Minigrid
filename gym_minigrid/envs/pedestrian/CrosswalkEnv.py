@@ -4,7 +4,7 @@ import typing as List
 
 class CrosswalkEnv(MultiPedestrianEnv):
 
-
+    # refactor if we have time (add Crosswalk object)
     
     def __init__(
         self,

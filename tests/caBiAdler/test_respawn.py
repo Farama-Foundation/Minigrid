@@ -71,7 +71,7 @@ def test_2_agents(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -123,7 +123,7 @@ def test_2_agents_on_finish(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -185,7 +185,7 @@ def test_2_agents_exchange_on_finish(env):
     agents.append(agent3)
 
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 

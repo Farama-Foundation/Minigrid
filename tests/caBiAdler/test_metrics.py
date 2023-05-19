@@ -70,7 +70,7 @@ def test_2_agents_speed(env):
     agents.append(agent2)
 
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
  
     runSteps(env, 20)
