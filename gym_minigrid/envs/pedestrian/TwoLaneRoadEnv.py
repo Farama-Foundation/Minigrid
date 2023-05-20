@@ -20,10 +20,10 @@ class TwoLaneRoadEnv(PedestrianEnv):
     # generic actors?
     def __init__(
         self,
-        pedAgents: List[PedAgent]=None,
-        vehicleAgents: List[Vehicle]=None,
-        road: Road=None, # TODO Color code roads, sidewalks
-        sidewalks: List[Sidewalk]=None,
+        pedAgents: List[PedAgent]=[],
+        vehicleAgents: List[Vehicle]=[],
+        road: Road=None,
+        sidewalks: List[Sidewalk]=[],
         width=8,
         height=8,
         stepsIgnore = 100
@@ -88,6 +88,39 @@ class TwoLaneRoadEnv(PedestrianEnv):
         if fwd_cell == None or fwd_cell.can_overlap():
             agent.topLeft = fwd_pos
             agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
+
+    def render(self, mode='human', close=False, highlight=True, tile_size=TILE_PIXELS):
+        """
+        Render the whole-grid human view
+        """
+
+        if close:
+            if self.window:
+                self.window.close()
+            return
+
+        if mode == 'human' and not self.window:
+            import gym_minigrid.window
+            self.window = gym_minigrid.window.Window('gym_minigrid')
+            self.window.show(block=False)
+
+        img = self.grid.render(
+            tile_size=tile_size,
+            pedAgents=self.pedAgents,
+            vehicleAgents=self.vehicleAgents,
+            roads=[self.road],
+            sidewalks=self.sidewalks,
+            agent_pos=self.agent_pos,
+            agent_dir=self.agent_dir,
+            highlight_mask=None
+            # highlight_mask=highlight_mask if highlight else None
+        )
+
+        if mode == 'human':
+            self.window.set_caption(self.mission)
+            self.window.show_img(img)
+
+        return img
 
 register(
     id='TwoLaneRoadEnv-20x80-v0',

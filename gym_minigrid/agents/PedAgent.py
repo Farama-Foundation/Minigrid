@@ -15,7 +15,8 @@ class PedAgent(Agent):
         position: Tuple[int, int], 
         direction: int, # TODO convert direction to enum,
         maxSpeed: float = 4,
-        speed: float = 3
+        speed: float = 3,
+        objectType="PedAgent"
         ):
         
         super().__init__(
@@ -24,5 +25,6 @@ class PedAgent(Agent):
             initBottomRight=position,
             direction=direction,
             maxSpeed=maxSpeed,
-            speed=speed
+            speed=speed,
+            objectType=objectType
         )

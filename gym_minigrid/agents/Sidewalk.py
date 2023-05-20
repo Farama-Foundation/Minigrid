@@ -6,11 +6,13 @@ class Sidewalk(BaseObject):
         self,
         topLeft: Tuple[int, int],
         bottomRight: Tuple[int, int],
-        sidewalkID: int
+        sidewalkID: int,
+        objectType="Sidewalk"
     ):
-        super.__init__(
+        super().__init__(
             topLeft=topLeft,
-            bottomRight=bottomRight
+            bottomRight=bottomRight,
+            objectType=objectType
         )
         
         self.sidewalkID = sidewalkID

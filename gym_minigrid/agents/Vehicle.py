@@ -11,15 +11,17 @@ class Vehicle(Agent):
         maxSpeed: float,
         speed: float,
         inRoad: int,
-        inLane: int
+        inLane: int,
+        objectType="Vehicle"
     ):
-        super.__init__(
+        super().__init__(
             id=id,
             initTopLeft=topLeft,
             initBottomRight=bottomRight,
             direction=direction,
             maxSpeed=maxSpeed,
-            speed=speed
+            speed=speed,
+            objectType=objectType
         )
         
         self.inRoad = inRoad

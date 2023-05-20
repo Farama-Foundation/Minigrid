@@ -11,14 +11,16 @@ class Agent(BaseObject):
         initBottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
-        speed: float = 3
+        speed: float = 3,
+        objectType=None
     ):
 
         self.id = id
 
         super().__init__(
             initTopLeft=initTopLeft,
-            initBottomRight=initBottomRight
+            initBottomRight=initBottomRight,
+            objectType=objectType
         )
 
         self.initDirection = direction

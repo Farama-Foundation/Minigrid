@@ -1,14 +1,18 @@
 import numpy as np
 from gym_minigrid.minigrid import Grid
 from typing import List
-from gym_minigrid.agents.PedAgent import PedAgent
+from gym_minigrid.agents import *
+from gym_minigrid.rendering import *
 
 class PedGrid(Grid):
-
+    
     def render(
         self,
         tile_size,
-        pedAgents: List[PedAgent], # need to add support for roads (lanes), sidewalks, vehicles
+        pedAgents: List[PedAgent]=[],
+        vehicleAgents: List[Vehicle]=[],
+        roads: List[Road]=[],
+        sidewalks: List[Sidewalk]=[],
         agent_pos=None,
         agent_dir=None,
         highlight_mask=None
@@ -28,6 +32,27 @@ class PedGrid(Grid):
 
         img = np.zeros(shape=(height_px, width_px, 3), dtype=np.uint8)
 
+        # Fill/set grid with objects
+        if len(roads) != 0:
+            for road in roads:
+                if road == None:
+                    continue
+                for x in range(road.topLeft[0], road.bottomRight[0]):
+                    for y in range(road.topLeft[1], road.bottomRight[1]):
+                        self.set(x, y, road)
+        
+        if len(sidewalks) != 0:
+            for sidewalk in sidewalks:
+                for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]):
+                    for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]):
+                        self.set(x, y, sidewalk)
+
+        if len(vehicleAgents) != 0:
+            for vehicle in vehicleAgents:
+                for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]):
+                    for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]):
+                        self.set(x, y, vehicle)
+
         # Render the grid
         for j in range(0, self.height):
             for i in range(0, self.width):
@@ -40,6 +65,7 @@ class PedGrid(Grid):
                     if agent_here:
                         agentIndex = index
                         break
+                
                 # agent_here = np.array_equal(agent_pos, (i, j))
                 # agent_here = True
                 tile_img = Grid.render_tile(

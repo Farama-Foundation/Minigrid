@@ -15,7 +15,7 @@ import random
 class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
-        pedAgents: List[Agent]=None,
+        pedAgents: List[Agent]=[],
         width=8,
         height=8,
         stepsIgnore = 100
@@ -238,10 +238,10 @@ class PedestrianEnv(MiniGridEnv):
             self.window.show(block=False)
 
         img = self.grid.render(
-            tile_size,
-            self.pedAgents,
-            self.agent_pos,
-            self.agent_dir,
+            tile_size=tile_size,
+            pedAgents=self.pedAgents,
+            agent_pos=self.agent_pos,
+            agent_dir=self.agent_dir,
             highlight_mask=None
             # highlight_mask=highlight_mask if highlight else None
         )
