@@ -21,8 +21,8 @@ class PedAgent(Agent):
         
         super().__init__(
             id=id,
-            initTopLeft=position,
-            initBottomRight=position,
+            topLeft=position,
+            bottomRight=position,
             direction=direction,
             maxSpeed=maxSpeed,
             speed=speed,

@@ -7,8 +7,8 @@ class Agent(BaseObject):
     def __init__(
         self, 
         id,
-        initTopLeft: Tuple[int, int],
-        initBottomRight: Tuple[int, int],
+        topLeft: Tuple[int, int],
+        bottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
         speed: float = 3,
@@ -18,8 +18,8 @@ class Agent(BaseObject):
         self.id = id
 
         super().__init__(
-            initTopLeft=initTopLeft,
-            initBottomRight=initBottomRight,
+            topLeft=topLeft,
+            bottomRight=bottomRight,
             objectType=objectType
         )
 

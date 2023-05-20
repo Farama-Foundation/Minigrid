@@ -11,9 +11,9 @@ class Road(BaseObject):
     ):
         self.lanes = lanes
         self.lanes.sort(key=lambda lane: lane.topLeft)
-        if lanes.len() != 0:
+        if len(lanes) != 0:
             self.topLeft = lanes[0].topLeft
-            self.bottomRight = lanes[lanes.len()-1].bottomRight
+            self.bottomRight = lanes[len(lanes)-1].bottomRight
         else:
             self.topLeft = None
             self.bottomRight = None

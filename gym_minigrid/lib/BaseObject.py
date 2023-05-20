@@ -5,15 +5,15 @@ from gym_minigrid.rendering import *
 class BaseObject:
     def __init__(
         self,
-        initTopLeft: Tuple[int, int],
-        initBottomRight: Tuple[int, int],
+        topLeft: Tuple[int, int],
+        bottomRight: Tuple[int, int],
         objectType: str
     ):
-        self.initTopLeft = initTopLeft
-        self.initBottomRight = initBottomRight
+        self.initTopLeft = topLeft
+        self.initBottomRight = bottomRight
 
-        self.topLeft = initTopLeft
-        self.bottomRight = initBottomRight
+        self.topLeft = topLeft
+        self.bottomRight = bottomRight
 
         self.width = self.bottomRight[0]-self.topLeft[0] + 1
         self.height = self.bottomRight[1]-self.topLeft[1] + 1

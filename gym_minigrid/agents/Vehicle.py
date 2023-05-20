@@ -16,8 +16,8 @@ class Vehicle(Agent):
     ):
         super().__init__(
             id=id,
-            initTopLeft=topLeft,
-            initBottomRight=bottomRight,
+            topLeft=topLeft,
+            bottomRight=bottomRight,
             direction=direction,
             maxSpeed=maxSpeed,
             speed=speed,
