@@ -51,6 +51,8 @@ class PedestrianEnv(MiniGridEnv):
     pass
 
     #region agent management
+    def updateActionHandlers(self, actionHandlers: dict):
+        self._actionHandlers.update(actionHandlers)
 
     def getPedAgents(self):
         return self.pedAgents
@@ -130,13 +132,16 @@ class PedestrianEnv(MiniGridEnv):
             return
 
         # Get the contents of the cell in front of the agent
-        fwd_cell = self.grid.get(*fwd_pos)
+        # fwd_cell = self.grid.get(*fwd_pos)
 
         # Move forward if no overlap
-        if fwd_cell == None or fwd_cell.can_overlap():
-            newPos = fwd_pos
-            agent.topLeft = newPos
-            agent.bottomRight = newPos
+        # if fwd_cell == None or fwd_cell.can_overlap():
+        
+        # ^ can be problematic because moving objects may overlap with
+        # other objects' previous positions
+        newPos = fwd_pos
+        agent.topLeft = newPos
+        agent.bottomRight = newPos
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 

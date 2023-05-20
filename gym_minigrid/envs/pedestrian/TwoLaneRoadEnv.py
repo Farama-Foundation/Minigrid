@@ -9,6 +9,7 @@ from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.ForwardAction import ForwardAction
 from gym_minigrid.lib.Direction import Direction
+from gym_minigrid.lib.VehicleAction import VehicleAction
 from .EnvEvent import EnvEvent
 import logging
 import random
@@ -40,6 +41,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
             stepsIgnore=stepsIgnore
         )
 
+        self.updateActionHandlers({VehicleAction : self.executeVehicleAction})
         # TODO label each tile with either lane/sidewalk?
 
         pass
@@ -54,6 +56,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
     def addVehicleAgent(self, agent: Vehicle):
         self.vehicleAgents.append(agent)
         # subscribe to events here
+        super().subscribe(EnvEvent.stepParallel2, agent.go)
 
     def getNumVehicleAgents(self):
         return len(self.vehicleAgents)
@@ -71,6 +74,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         if agent in self.vehicleAgents:
             # unsubscribe to events here
             self.vehicleAgents.remove(agent)
+            super().unsubscribe(EnvEvent.stepParallel2, agent.go)
         else:
             logging.warn("Agent not in list")
     
@@ -82,12 +86,25 @@ class TwoLaneRoadEnv(PedestrianEnv):
             logging.warn("Vehicle cannot be moved here - out of bounds")
         
         # Get the contents of the cell in front of the agent
-        fwd_cell = self.grid.get(*fwd_pos)
+        # fwd_cell = self.grid.get(*fwd_pos)
 
-        # Move forward if no overlap
-        if fwd_cell == None or fwd_cell.can_overlap():
-            agent.topLeft = fwd_pos
-            agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
+        # # Move forward if no overlap
+        # if fwd_cell == None or fwd_cell.can_overlap():
+        
+        # ^ can be problematic because moving objects may overlap with
+        # other objects' previous positions
+        agent.topLeft = fwd_pos
+        agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
+
+    def executeVehicleAction(self, action: Action):
+        if action is None:
+            return 
+
+        agent = action.agent
+
+        logging.debug(f"forwarding vehicle {agent.id}")
+
+        self.forwardVehicle(agent)
 
     def render(self, mode='human', close=False, highlight=True, tile_size=TILE_PIXELS):
         """

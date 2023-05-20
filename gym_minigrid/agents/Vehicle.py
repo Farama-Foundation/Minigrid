@@ -1,5 +1,7 @@
 from typing import Tuple, List
 from gym_minigrid.agents.Agent import Agent
+from gym_minigrid.lib.Action import Action
+from gym_minigrid.lib.VehicleAction import VehicleAction
 
 class Vehicle(Agent):
     def __init__(
@@ -26,3 +28,9 @@ class Vehicle(Agent):
         
         self.inRoad = inRoad
         self.inLine = inLane
+    
+    def go(self, env):
+        """
+            Simply move forward
+        """
+        return Action(self, VehicleAction.KEEP)
