@@ -242,6 +242,8 @@ class PedestrianEnv(MiniGridEnv):
             self.window = gym_minigrid.window.Window('gym_minigrid')
             self.window.show(block=False)
 
+        self._gen_grid(self.width, self.height)
+
         img = self.grid.render(
             tile_size=tile_size,
             pedAgents=self.pedAgents,
