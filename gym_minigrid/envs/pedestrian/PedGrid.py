@@ -33,17 +33,17 @@ class PedGrid(Grid):
         img = np.zeros(shape=(height_px, width_px, 3), dtype=np.uint8)
 
         # Reset the grid
-        # (changed to reset in PedestrianEnv render method instead to add back the goals & walls)
-        # self.grid = [None] * self.width * self.height
+        self.grid = [None] * self.width * self.height
 
         # Fill/set grid with objects
         if len(roads) != 0:
             for road in roads:
                 if road == None:
                     continue
-                for x in range(road.topLeft[0], road.bottomRight[0]):
-                    for y in range(road.topLeft[1], road.bottomRight[1]):
-                        self.set(x, y, road)
+                for lane in road.lanes:
+                    for x in range(lane.topLeft[0], lane.bottomRight[0]):
+                        for y in range(lane.topLeft[1], lane.bottomRight[1]):
+                            self.set(x, y, lane)
         
         if len(sidewalks) != 0:
             for sidewalk in sidewalks:

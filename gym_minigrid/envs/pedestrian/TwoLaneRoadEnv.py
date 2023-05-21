@@ -84,10 +84,15 @@ class TwoLaneRoadEnv(PedestrianEnv):
         # if fwd_pos[0] < 0 or fwd_pos[0] + agent.width >= self.width \
         #     or fwd_pos[1] < 0 or fwd_pos[1] + agent.height >= self.height:
         #     logging.warn("Vehicle cannot be moved here - out of bounds")
-
         newTopLeft = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
         newBottomRight = agent.bottomRight + agent.speed * DIR_TO_VEC[agent.direction]
-        
+
+        if newTopLeft[0] < 0 or newBottomRight[0] >= self.width \
+            or newTopLeft[1] < 0 or newBottomRight[1] >= self.height:
+            logging.warn("Vehicle cannot be moved here - out of bounds")
+        else:
+            agent.topLeft = newTopLeft
+            agent.bottomRight = newBottomRight
         # Get the contents of the cell in front of the agent
         # fwd_cell = self.grid.get(*fwd_pos)
 
@@ -96,11 +101,8 @@ class TwoLaneRoadEnv(PedestrianEnv):
         
         # ^ can be problematic because moving objects may overlap with
         # other objects' previous positions
-        # agent.topLeft = fwd_pos
-        # agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
-
-        agent.topLeft = newTopLeft
-        agent.bottomRight = newBottomRight
+            # agent.topLeft = fwd_pos
+            # agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
 
     def executeVehicleAction(self, action: Action):
         if action is None:
@@ -126,6 +128,9 @@ class TwoLaneRoadEnv(PedestrianEnv):
             import gym_minigrid.window
             self.window = gym_minigrid.window.Window('gym_minigrid')
             self.window.show(block=False)
+
+        # self._gen_grid(self.width, self.height)
+        # ^ if we want the walls and old "goal" sidewalks
 
         img = self.grid.render(
             tile_size=tile_size,

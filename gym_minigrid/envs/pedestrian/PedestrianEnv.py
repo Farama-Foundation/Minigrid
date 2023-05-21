@@ -242,7 +242,8 @@ class PedestrianEnv(MiniGridEnv):
             self.window = gym_minigrid.window.Window('gym_minigrid')
             self.window.show(block=False)
 
-        self._gen_grid(self.width, self.height)
+        # self._gen_grid(self.width, self.height)
+        # ^ if we want the walls and old "goal" sidewalks
 
         img = self.grid.render(
             tile_size=tile_size,
