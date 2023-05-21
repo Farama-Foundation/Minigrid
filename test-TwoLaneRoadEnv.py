@@ -7,6 +7,10 @@ env = gym.make('TwoLaneRoadEnv60x80-v0')
 env.reset()
 
 env.addVehicleAgent(Vehicle(1, (30, 30), (40, 35), 1, 2, 2, 1, 1))
+p1 = BlueAdlerPedAgent(id=1, position=(1,1), direction=2, maxSpeed=4, speed = 3)
+p2 = BlueAdlerPedAgent(id=1, position=(9,3), direction=Direction.West, maxSpeed=4, speed = 3)
+env.addPedAgent(p1)
+env.addPedAgent(p2)
 
 for i in range(110):
 
