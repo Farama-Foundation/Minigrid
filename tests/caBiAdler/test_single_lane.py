@@ -82,9 +82,7 @@ def test_2_agents(env):
     assert agent1.position == agent1Position
     assert agent2.position == agent2Position
 
-    assert False
-
-
+    # assert False
 
 @pytest.mark.caBiAdler
 def test_2_agents_exchange(env):
