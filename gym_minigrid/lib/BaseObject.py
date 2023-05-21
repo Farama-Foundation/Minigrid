@@ -24,8 +24,10 @@ class BaseObject:
         else:
             self.color = None
 
+    # def render(self, img, position):
     def render(self, img):
         fill_coords(img, point_in_rect(0, 1, 0, 1), ObjectColors.COLORS[self.color])
+        # fill_coords(img, point_in_rect(0.4, 0.6, 0.4, 0.6), ObjectColors.COLORS[self.color])
 
     def encode(self):
         """Encode the a description of this object as a 3-tuple of integers"""

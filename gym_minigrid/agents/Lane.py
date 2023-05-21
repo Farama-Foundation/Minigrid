@@ -1,5 +1,7 @@
 from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
+from gym_minigrid.lib.ObjectColors import ObjectColors
+from gym_minigrid.rendering import *
 
 class Lane(BaseObject):
     def __init__(
@@ -27,3 +29,11 @@ class Lane(BaseObject):
         self.inRoad = inRoad
         self.laneID = laneID
         self.posRelativeTOCenter = posRelativeToCenter
+
+    # def render(self, img, position):
+    #     if position[0] == self.topLeft[0] or position[0] == self.bottomRight[0] \
+    #     or position[1] == self.topLeft[1] or position[1] == self.bottomRight[1]:
+    #         fill_coords(img, point_in_rect(0, 1, 0, 1), ObjectColors.COLORS[self.color])
+    #     else:
+    #         fill_coords(img, point_in_rect(0.3, 0.7, 0.3, 0.7), ObjectColors.COLORS[self.color])
+    # ^ does not work, caching in rendering causes this to fail
