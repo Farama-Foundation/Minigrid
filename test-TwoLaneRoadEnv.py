@@ -6,7 +6,7 @@ import logging
 env = gym.make('TwoLaneRoadEnv60x80-v0')       
 env.reset()
 
-env.addVehicleAgent(Vehicle(1, (30, 30), (40, 35), 0, 2, 2, 1, 1))
+env.addVehicleAgent(Vehicle(1, (30, 30), (40, 35), 1, 2, 2, 1, 1))
 
 for i in range(110):
 

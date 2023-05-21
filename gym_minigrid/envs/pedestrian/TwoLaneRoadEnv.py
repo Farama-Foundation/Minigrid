@@ -80,10 +80,13 @@ class TwoLaneRoadEnv(PedestrianEnv):
     
     def forwardVehicle(self, agent: Vehicle):
         assert agent.direction >= 0 and agent.direction < 4
-        fwd_pos = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
-        if fwd_pos[0] < 0 or fwd_pos[0] + agent.width >= self.width \
-            or fwd_pos[1] < 0 or fwd_pos[1] + agent.height >= self.height:
-            logging.warn("Vehicle cannot be moved here - out of bounds")
+        # fwd_pos = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
+        # if fwd_pos[0] < 0 or fwd_pos[0] + agent.width >= self.width \
+        #     or fwd_pos[1] < 0 or fwd_pos[1] + agent.height >= self.height:
+        #     logging.warn("Vehicle cannot be moved here - out of bounds")
+
+        newTopLeft = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
+        newBottomRight = agent.bottomRight + agent.speed * DIR_TO_VEC[agent.direction]
         
         # Get the contents of the cell in front of the agent
         # fwd_cell = self.grid.get(*fwd_pos)
@@ -93,8 +96,11 @@ class TwoLaneRoadEnv(PedestrianEnv):
         
         # ^ can be problematic because moving objects may overlap with
         # other objects' previous positions
-        agent.topLeft = fwd_pos
-        agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
+        # agent.topLeft = fwd_pos
+        # agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
+
+        agent.topLeft = newTopLeft
+        agent.bottomRight = newBottomRight
 
     def executeVehicleAction(self, action: Action):
         if action is None:
