@@ -25,3 +25,5 @@ class Road(BaseObject):
             bottomRight=self.bottomRight,
             objectType=objectType
         )
+
+    # idea: add intersections in the future, either in this class or a separate one

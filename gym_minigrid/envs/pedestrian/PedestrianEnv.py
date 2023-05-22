@@ -130,6 +130,13 @@ class PedestrianEnv(MiniGridEnv):
             agent.bottomRight = newPos
             agent.direction = Direction.West
             return
+        
+        if fwd_pos[1] < 0:
+            newPos = (fwd_pos[0], 1)
+            agent.direction = Direction.South
+        elif fwd_pos[1] > self.height - 1:
+            newPos = (fwd_pos[0], self.height - 1)
+            agent.direction = Direction.North
 
         # Get the contents of the cell in front of the agent
         # fwd_cell = self.grid.get(*fwd_pos)
