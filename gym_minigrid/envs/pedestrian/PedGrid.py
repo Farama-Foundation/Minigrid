@@ -54,15 +54,15 @@ class PedGrid(Grid):
         
         if len(sidewalks) != 0:
             for sidewalk in sidewalks:
-                # for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]+1):
-                #     for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
-                #         self.set(x, y, sidewalk)
                 for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]+1):
-                    self.set(x, sidewalk.topLeft[1], sidewalk)
-                    self.set(x, sidewalk.bottomRight[1], sidewalk)
-                for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
-                    self.set(sidewalk.topLeft[0], y, sidewalk)
-                    self.set(sidewalk.bottomRight[0], y, sidewalk)
+                    for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
+                        self.set(x, y, sidewalk)
+                # for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]+1):
+                #     self.set(x, sidewalk.topLeft[1], sidewalk)
+                #     self.set(x, sidewalk.bottomRight[1], sidewalk)
+                # for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
+                #     self.set(sidewalk.topLeft[0], y, sidewalk)
+                #     self.set(sidewalk.bottomRight[0], y, sidewalk)
         
         if len(crosswalks) != 0:
             for crosswalk in crosswalks:

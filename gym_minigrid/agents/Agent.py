@@ -23,6 +23,8 @@ class Agent(BaseObject):
             objectType=objectType
         )
 
+        self.initTopLeft = topLeft
+        self.initBottomRight = bottomRight
         self.initDirection = direction
 
         self.direction = direction
@@ -42,6 +44,7 @@ class Agent(BaseObject):
 
     def reset(self):
         # TODO 
-        super().reset()
+        self.topLeft = self.initTopLeft
+        self.bottomRight = self.initBottomRight
         self.direction = self.initDirection
         pass

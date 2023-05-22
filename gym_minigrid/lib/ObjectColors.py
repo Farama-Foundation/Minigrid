@@ -9,7 +9,8 @@ class ObjectColors:
         'purple': np.array([112, 39, 195]),
         'yellow': np.array([255, 255, 0]),
         'grey'  : np.array([100, 100, 100]),
-        'white' : np.array([255, 255, 255])
+        'white' : np.array([255, 255, 255]),
+        'dark green' : np.array([21, 71, 52])
     }
 
     COLOR_NAMES = sorted(list(COLORS.keys()))
@@ -22,7 +23,8 @@ class ObjectColors:
         'purple': 3,
         'yellow': 4,
         'grey'  : 5,
-        'white' : 6
+        'white' : 6,
+        'dark green' : 7
     }
 
     IDX_TO_COLOR = dict(zip(COLOR_TO_IDX.values(), COLOR_TO_IDX.keys()))
@@ -30,10 +32,10 @@ class ObjectColors:
     # Map of object type to integers
     OBJECT_TO_IDX = {
         'Vehicle'       : 4,
-        'Lane'          : 1,
-        'Sidewalk'      : 2,
+        'Lane'          : 7,
+        'Sidewalk'      : 5,
         'Crosswalk'     : 6,
-        # 'door'          : 4,
+        'Building'      : 3,
         # 'key'           : 5,
         # 'ball'          : 6,
         # 'box'           : 7,

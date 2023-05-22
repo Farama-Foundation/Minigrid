@@ -9,9 +9,6 @@ class BaseObject:
         bottomRight: Tuple[int, int],
         objectType: str
     ):
-        self.initTopLeft = topLeft
-        self.initBottomRight = bottomRight
-
         self.topLeft = topLeft
         self.bottomRight = bottomRight
 
@@ -32,10 +29,6 @@ class BaseObject:
     def encode(self):
         """Encode the a description of this object as a 3-tuple of integers"""
         return (ObjectColors.OBJECT_TO_IDX[self.objectType], ObjectColors.COLOR_TO_IDX[self.color], 0)
-    
-    def reset(self):
-        self.topLeft = self.initTopLeft
-        self.bottomRight = self.initBottomRight
     
     @property
     def center(self) -> Tuple[int, int]:
