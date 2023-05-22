@@ -220,8 +220,6 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
         width = 30
         height = 80
 
-        # 5 10 10 5
-
         lane1 = Lane(
             topLeft=(5, 0),
             bottomRight=(14, 79),
