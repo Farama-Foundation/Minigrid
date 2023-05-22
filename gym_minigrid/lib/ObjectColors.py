@@ -29,7 +29,7 @@ class ObjectColors:
 
     # Map of object type to integers
     OBJECT_TO_IDX = {
-        'Vehicle'       : 0,
+        'Vehicle'       : 4,
         'Lane'          : 1,
         'Sidewalk'      : 2,
         'Crosswalk'     : 6,

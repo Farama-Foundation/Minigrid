@@ -13,6 +13,7 @@ class PedGrid(Grid):
         vehicleAgents: List[Vehicle]=[],
         roads: List[Road]=[],
         sidewalks: List[Sidewalk]=[],
+        crosswalks: List[Crosswalk]=[],
         agent_pos=None,
         agent_dir=None,
         highlight_mask=None
@@ -53,8 +54,8 @@ class PedGrid(Grid):
         
         if len(sidewalks) != 0:
             for sidewalk in sidewalks:
-                # for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]):
-                #     for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]):
+                # for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]+1):
+                #     for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
                 #         self.set(x, y, sidewalk)
                 for x in range(sidewalk.topLeft[0], sidewalk.bottomRight[0]+1):
                     self.set(x, sidewalk.topLeft[1], sidewalk)
@@ -62,11 +63,23 @@ class PedGrid(Grid):
                 for y in range(sidewalk.topLeft[1], sidewalk.bottomRight[1]+1):
                     self.set(sidewalk.topLeft[0], y, sidewalk)
                     self.set(sidewalk.bottomRight[0], y, sidewalk)
+        
+        if len(crosswalks) != 0:
+            for crosswalk in crosswalks:
+                # for x in range(crosswalk.topLeft[0], crosswalk.bottomRight[0]+1):
+                #     for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
+                #         self.set(x, y, crosswalk)
+                for x in range(crosswalk.topLeft[0], crosswalk.bottomRight[0]+1):
+                    self.set(x, crosswalk.topLeft[1], crosswalk)
+                    self.set(x, crosswalk.bottomRight[1], crosswalk)
+                for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
+                    self.set(crosswalk.topLeft[0], y, crosswalk)
+                    self.set(crosswalk.bottomRight[0], y, crosswalk)
 
         if len(vehicleAgents) != 0:
             for vehicle in vehicleAgents:
-                for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]):
-                    for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]):
+                for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]+1):
+                    for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]+1):
                         self.set(x, y, vehicle)
 
         # Render the grid

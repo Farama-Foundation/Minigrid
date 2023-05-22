@@ -25,6 +25,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         vehicleAgents: List[Vehicle]=[],
         road: Road=None,
         sidewalks: List[Sidewalk]=[],
+        crosswalks: List[Crosswalk]=[],
         width=8,
         height=8,
         stepsIgnore = 100
@@ -33,6 +34,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         self.vehicleAgents = vehicleAgents
         self.road = road
         self.sidewalks = sidewalks
+        self.crosswalks = crosswalks
         
         super().__init__(
             pedAgents=pedAgents,
@@ -90,6 +92,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         if newTopLeft[0] < 0 or newBottomRight[0] >= self.width \
             or newTopLeft[1] < 0 or newBottomRight[1] >= self.height:
             logging.warn("Vehicle cannot be moved here - out of bounds")
+            agent.direction = (agent.direction + 2) % 4
         else:
             agent.topLeft = newTopLeft
             agent.bottomRight = newBottomRight
@@ -138,6 +141,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
             vehicleAgents=self.vehicleAgents,
             roads=[self.road],
             sidewalks=self.sidewalks,
+            crosswalks=self.crosswalks,
             agent_pos=self.agent_pos,
             agent_dir=self.agent_dir,
             highlight_mask=None
@@ -156,17 +160,17 @@ class TwoLaneRoadEnv60x80(TwoLaneRoadEnv):
         height = 80
 
         lane1 = Lane(
-            topLeft=(10, 6),
-            bottomRight=(50, 20),
-            direction=2,
+            topLeft=(10, 0),
+            bottomRight=(24, 79),
+            direction=1,
             inRoad=1,
             laneID=1,
             posRelativeToCenter=1
         )
         lane2 = Lane(
-            topLeft=(10, 31),
-            bottomRight=(50, 45),
-            direction=0,
+            topLeft=(35, 0),
+            bottomRight=(49, 79),
+            direction=3,
             inRoad=1,
             laneID=2,
             posRelativeToCenter=-1
@@ -174,14 +178,39 @@ class TwoLaneRoadEnv60x80(TwoLaneRoadEnv):
         road1 = Road([lane1, lane2], roadID=1)
 
         sidewalk1 = Sidewalk(
-            topLeft=(10, 56),
-            bottomRight=(50, 60),
+            topLeft=(0, 0),
+            bottomRight=(9, 79),
             sidewalkID=1
+        )
+
+        sidewalk2 = Sidewalk(
+            topLeft=(25, 0),
+            bottomRight=(34, 79),
+            sidewalkID=2
+        )
+
+        sidewalk3 = Sidewalk(
+            topLeft=(50, 0),
+            bottomRight=(59, 79),
+            sidewalkID=3
+        )
+
+        crosswalk1 = Crosswalk(
+            topLeft=(10, 40),
+            bottomRight=(24, 45),
+            crosswalkID=1
+        )
+
+        crosswalk2 = Crosswalk(
+            topLeft=(35, 40),
+            bottomRight=(49, 45),
+            crosswalkID=2
         )
 
         super().__init__(
             road=road1,
-            sidewalks=[sidewalk1],
+            sidewalks=[sidewalk1, sidewalk2, sidewalk3],
+            crosswalks=[crosswalk1, crosswalk2],
             width=width,
             height=height
         )

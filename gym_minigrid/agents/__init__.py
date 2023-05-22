@@ -7,3 +7,4 @@ from gym_minigrid.agents.Lane import *
 from gym_minigrid.agents.Road import *
 from gym_minigrid.agents.Vehicle import *
 from gym_minigrid.agents.Sidewalk import *
+from gym_minigrid.agents.Crosswalk import *
