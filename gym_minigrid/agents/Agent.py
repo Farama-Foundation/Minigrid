@@ -7,20 +7,24 @@ class Agent(BaseObject):
     def __init__(
         self, 
         id,
-        initTopLeft: Tuple[int, int],
-        initBottomRight: Tuple[int, int],
+        topLeft: Tuple[int, int],
+        bottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
-        speed: float = 3
+        speed: float = 3,
+        objectType=None
     ):
 
         self.id = id
 
         super().__init__(
-            initTopLeft=initTopLeft,
-            initBottomRight=initBottomRight
+            topLeft=topLeft,
+            bottomRight=bottomRight,
+            objectType=objectType
         )
 
+        self.initTopLeft = topLeft
+        self.initBottomRight = bottomRight
         self.initDirection = direction
 
         self.direction = direction
@@ -40,6 +44,7 @@ class Agent(BaseObject):
 
     def reset(self):
         # TODO 
-        super().reset()
+        self.topLeft = self.initTopLeft
+        self.bottomRight = self.initBottomRight
         self.direction = self.initDirection
         pass

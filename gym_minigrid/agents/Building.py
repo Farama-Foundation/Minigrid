@@ -1,13 +1,14 @@
 from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
 
-class Sidewalk(BaseObject):
+class Building(BaseObject): # to add more variety of objects - Taorui
     def __init__(
         self,
         topLeft: Tuple[int, int],
         bottomRight: Tuple[int, int],
-        sidewalkID: int,
-        objectType="Sidewalk"
+        buildingID: int,
+        height: int = None,
+        objectType="Building"
     ):
         super().__init__(
             topLeft=topLeft,
@@ -15,4 +16,5 @@ class Sidewalk(BaseObject):
             objectType=objectType
         )
         
-        self.sidewalkID = sidewalkID
+        self.buildingID = buildingID
+        self.height = height

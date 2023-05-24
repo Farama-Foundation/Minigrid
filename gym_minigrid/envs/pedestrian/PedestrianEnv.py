@@ -17,7 +17,7 @@ import random
 class PedestrianEnv(MiniGridEnv):
     def __init__(
         self,
-        pedAgents: List[Agent]=None,
+        pedAgents: List[Agent]=[],
         width=8,
         height=8,
         stepsIgnore = 100,
@@ -130,15 +130,25 @@ class PedestrianEnv(MiniGridEnv):
             agent.bottomRight = newPos
             agent.direction = Direction.West
             return
+        
+        if fwd_pos[1] < 0:
+            newPos = (fwd_pos[0], 1)
+            agent.direction = Direction.South
+        elif fwd_pos[1] > self.height - 1:
+            newPos = (fwd_pos[0], self.height - 1)
+            agent.direction = Direction.North
 
         # Get the contents of the cell in front of the agent
-        fwd_cell = self.grid.get(*fwd_pos)
+        # fwd_cell = self.grid.get(*fwd_pos)
 
         # Move forward if no overlap
-        if fwd_cell == None or fwd_cell.can_overlap():
-            newPos = fwd_pos
-            agent.topLeft = newPos
-            agent.bottomRight = newPos
+        # if fwd_cell == None or fwd_cell.can_overlap():
+        
+        # ^ can be problematic because moving objects may overlap with
+        # other objects' previous positions
+        newPos = fwd_pos
+        agent.topLeft = newPos
+        agent.bottomRight = newPos
         # Terry - Once we get validateAgentPositions working, we won't need to check
         pass
 
@@ -239,13 +249,15 @@ class PedestrianEnv(MiniGridEnv):
             self.window = gym_minigrid.window.Window('gym_minigrid')
             self.window.show(block=False)
 
+        # self._gen_grid(self.width, self.height)
+        # ^ if we want the walls and old "goal" sidewalks
+
         img = self.grid.render(
-            tile_size,
-            self.pedAgents,
-            self.agent_pos,
-            self.agent_dir,
-            highlight_mask=None,
-            vehicles=self.vehicles
+            tile_size=tile_size,
+            pedAgents=self.pedAgents,
+            agent_pos=self.agent_pos,
+            agent_dir=self.agent_dir,
+            highlight_mask=None
             # highlight_mask=highlight_mask if highlight else None
         )
 

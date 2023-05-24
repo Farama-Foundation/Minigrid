@@ -1,13 +1,13 @@
 from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
 
-class Sidewalk(BaseObject):
+class Crosswalk(BaseObject):
     def __init__(
         self,
         topLeft: Tuple[int, int],
         bottomRight: Tuple[int, int],
-        sidewalkID: int,
-        objectType="Sidewalk"
+        crosswalkID: int,
+        objectType="Crosswalk"
     ):
         super().__init__(
             topLeft=topLeft,
@@ -15,4 +15,4 @@ class Sidewalk(BaseObject):
             objectType=objectType
         )
         
-        self.sidewalkID = sidewalkID
+        self.crosswalkID = crosswalkID

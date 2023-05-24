@@ -6,20 +6,24 @@ class Road(BaseObject):
     def __init__(
         self,
         lanes: List[Lane],
-        roadID: int
+        roadID: int,
+        objectType="Road"
     ):
         self.lanes = lanes
         self.lanes.sort(key=lambda lane: lane.topLeft)
-        if lanes.len() != 0:
+        if len(lanes) != 0:
             self.topLeft = lanes[0].topLeft
-            self.bottomRight = lanes[lanes.len()-1].bottomRight
+            self.bottomRight = lanes[len(lanes)-1].bottomRight
         else:
             self.topLeft = None
             self.bottomRight = None
 
         self.roadID = roadID
 
-        super.__init__(
+        super().__init__(
             topLeft=self.topLeft,
-            bottomRight=self.bottomRight
+            bottomRight=self.bottomRight,
+            objectType=objectType
         )
+
+    # idea: add intersections in the future, either in this class or a separate one

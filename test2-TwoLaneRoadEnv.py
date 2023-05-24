@@ -3,15 +3,15 @@ import gym
 import gym_minigrid
 from gym_minigrid.agents import *
 import logging
-env = gym.make('TwoLaneRoadEnv60x80-v0')       
+env = gym.make('TwoLaneRoadEnv30x80-v0')       
 env.reset()
 
-v1 = Vehicle(1, (14, 20), (20, 29), 1, 5, 5, 1, 1)
-v2 = Vehicle(1, (39, 60), (45, 69), 3, 5, 5, 1, 1)
+v1 = Vehicle(1, (7, 10), (12, 19), 1, 5, 5, 1, 1)
+v2 = Vehicle(1, (17, 60), (22, 69), 3, 5, 5, 1, 1)
 p1 = BlueAdlerPedAgent(id=1, position=(0, 42), direction=Direction.East, maxSpeed=4, speed = 3)
-p2 = BlueAdlerPedAgent(id=1, position=(59,44), direction=Direction.West, maxSpeed=4, speed = 3)
-p3 = BlueAdlerPedAgent(id=1, position=(5,5), direction=Direction.South, maxSpeed=4, speed = 3)
-p4 = BlueAdlerPedAgent(id=1, position=(55,60), direction=Direction.North, maxSpeed=4, speed = 3)
+p2 = BlueAdlerPedAgent(id=1, position=(29,44), direction=Direction.West, maxSpeed=4, speed = 3)
+p3 = BlueAdlerPedAgent(id=1, position=(2,5), direction=Direction.South, maxSpeed=4, speed = 3)
+p4 = BlueAdlerPedAgent(id=1, position=(27,74), direction=Direction.North, maxSpeed=4, speed = 3)
 
 env.addVehicleAgent(v1)
 env.addVehicleAgent(v2)
