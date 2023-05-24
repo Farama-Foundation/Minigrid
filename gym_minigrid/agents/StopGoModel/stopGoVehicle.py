@@ -15,6 +15,7 @@ class StopGoVehicle(Vehicle):
         """
             Simply move forward
         """
+        self.followFrontVehicleSpeed(env)
         return Action(self, VehicleAction.KEEP)
     
     def followFrontVehicleSpeed(self, env):

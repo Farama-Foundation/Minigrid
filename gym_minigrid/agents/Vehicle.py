@@ -26,6 +26,6 @@ class Vehicle(Agent):
         )
         
         self.inRoad = inRoad
-        self.inLine = inLane
+        self.inLane = inLane
 
     
