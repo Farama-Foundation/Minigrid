@@ -77,21 +77,21 @@ class PedGrid(Grid):
                 #     self.set(crosswalk.topLeft[0], y, crosswalk)
                 #     self.set(crosswalk.bottomRight[0], y, crosswalk)
 
-        vehiclesOnSidewalks = []
+        vehiclesOnCrosswalks = []
         if len(vehicleAgents) != 0:
             for vehicle in vehicleAgents:
-                sidewalk = None
+                crosswalk = None
                 for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]+1):
                     for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]+1):
-                        if (self.get(x, y).__class__ == Sidewalk):
-                            sidewalk = self.get(x, y)
+                        if (self.get(x, y).__class__ == Crosswalk):
+                            crosswalk = self.get(x, y)
                         self.set(x, y, vehicle)
-                if sidewalk != None:
-                    vehiclesOnSidewalks.append(vehicle, sidewalk)
+                if crosswalk != None:
+                    vehiclesOnCrosswalks.append((vehicle, crosswalk))
 
-        if len(vehiclesOnSidewalks) != 0:
-            for vehicle, sidewalk in vehiclesOnSidewalks:
-                logging.warn("Vehicle with ID: " + str(vehicle.id) + " is on Sidewalk with ID: " + str(sidewalk.sidewalkID))
+        if len(vehiclesOnCrosswalks) != 0:
+            for vehicle, crosswalk in vehiclesOnCrosswalks:
+                logging.warn("Vehicle with ID: " + str(vehicle.id) + " is on Crosswalk with ID: " + str(crosswalk.crosswalkID))
 
         # Render the grid
         for j in range(0, self.height):
