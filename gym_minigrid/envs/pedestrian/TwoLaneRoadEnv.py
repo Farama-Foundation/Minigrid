@@ -82,30 +82,27 @@ class TwoLaneRoadEnv(PedestrianEnv):
     
     def forwardVehicle(self, agent: Vehicle):
         assert agent.direction >= 0 and agent.direction < 4
-        # fwd_pos = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
-        # if fwd_pos[0] < 0 or fwd_pos[0] + agent.width >= self.width \
-        #     or fwd_pos[1] < 0 or fwd_pos[1] + agent.height >= self.height:
-        #     logging.warn("Vehicle cannot be moved here - out of bounds")
+
         newTopLeft = agent.topLeft + agent.speed * DIR_TO_VEC[agent.direction]
         newBottomRight = agent.bottomRight + agent.speed * DIR_TO_VEC[agent.direction]
 
         if newTopLeft[0] < 0 or newBottomRight[0] >= self.width \
             or newTopLeft[1] < 0 or newBottomRight[1] >= self.height:
             logging.warn("Vehicle cannot be moved here - out of bounds")
-            agent.direction = (agent.direction + 2) % 4
+            # Vehicle should not charge direction, rather it should spawn at the other end
+            # agent.direction = (agent.direction + 2) % 4
+            if agent.direction == Direction.South:
+                height = agent.bottomRight[1] - agent.topLeft[1]
+                agent.topLeft[1] = 0
+                agent.bottomRight[1] = height
+            elif agent.direction == Direction.North:
+                height = agent.bottomRight[1] - agent.topLeft[1]
+                agent.topLeft[1] = self.height - height - 1
+                agent.bottomRight[1] = self.height - 1
         else:
             agent.topLeft = newTopLeft
             agent.bottomRight = newBottomRight
-        # Get the contents of the cell in front of the agent
-        # fwd_cell = self.grid.get(*fwd_pos)
 
-        # # Move forward if no overlap
-        # if fwd_cell == None or fwd_cell.can_overlap():
-        
-        # ^ can be problematic because moving objects may overlap with
-        # other objects' previous positions
-            # agent.topLeft = fwd_pos
-            # agent.bottomRight = (fwd_pos[0]+agent.width, fwd_pos[1]+agent.height)
 
     def executeVehicleAction(self, action: Action):
         if action is None:
