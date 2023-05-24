@@ -3,6 +3,7 @@ from gym_minigrid.minigrid import Grid, TILE_PIXELS
 from typing import List
 from gym_minigrid.agents import *
 from gym_minigrid.rendering import *
+import logging
 
 class PedGrid(Grid):
     
