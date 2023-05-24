@@ -66,21 +66,31 @@ class PedGrid(Grid):
         
         if len(crosswalks) != 0:
             for crosswalk in crosswalks:
-                # for x in range(crosswalk.topLeft[0], crosswalk.bottomRight[0]+1):
-                #     for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
-                #         self.set(x, y, crosswalk)
                 for x in range(crosswalk.topLeft[0], crosswalk.bottomRight[0]+1):
-                    self.set(x, crosswalk.topLeft[1], crosswalk)
-                    self.set(x, crosswalk.bottomRight[1], crosswalk)
-                for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
-                    self.set(crosswalk.topLeft[0], y, crosswalk)
-                    self.set(crosswalk.bottomRight[0], y, crosswalk)
+                    for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
+                        self.set(x, y, crosswalk)
+                # for x in range(crosswalk.topLeft[0], crosswalk.bottomRight[0]+1):
+                #     self.set(x, crosswalk.topLeft[1], crosswalk)
+                #     self.set(x, crosswalk.bottomRight[1], crosswalk)
+                # for y in range(crosswalk.topLeft[1], crosswalk.bottomRight[1]+1):
+                #     self.set(crosswalk.topLeft[0], y, crosswalk)
+                #     self.set(crosswalk.bottomRight[0], y, crosswalk)
 
+        vehiclesOnSidewalks = []
         if len(vehicleAgents) != 0:
             for vehicle in vehicleAgents:
+                sidewalk = None
                 for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]+1):
                     for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]+1):
+                        if (self.get(x, y).__class__ == Sidewalk):
+                            sidewalk = self.get(x, y)
                         self.set(x, y, vehicle)
+                if sidewalk != None:
+                    vehiclesOnSidewalks.append(vehicle, sidewalk)
+
+        if len(vehiclesOnSidewalks) != 0:
+            for vehicle, sidewalk in vehiclesOnSidewalks:
+                logging.warn("Vehicle with ID: " + str(vehicle.id) + " is on Sidewalk with ID: " + str(sidewalk.sidewalkID))
 
         # Render the grid
         for j in range(0, self.height):
