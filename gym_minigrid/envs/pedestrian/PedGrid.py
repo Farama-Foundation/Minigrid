@@ -83,7 +83,7 @@ class PedGrid(Grid):
                 crosswalk = None
                 for x in range(vehicle.topLeft[0], vehicle.bottomRight[0]+1):
                     for y in range(vehicle.topLeft[1], vehicle.bottomRight[1]+1):
-                        if (self.get(x, y).__class__ == Crosswalk):
+                        if (crosswalk == None and self.get(x, y).__class__ == Crosswalk):
                             crosswalk = self.get(x, y)
                         self.set(x, y, vehicle)
                 if crosswalk != None:
