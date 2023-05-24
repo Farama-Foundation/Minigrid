@@ -8,7 +8,7 @@ class Crosswalk(BaseObject):
         bottomRight: Tuple[int, int],
         crosswalkID: int,
         inRoad: int,
-        inLane: int,
+        inLanes: List[int],
         objectType="Crosswalk"
     ):
         super().__init__(
@@ -19,4 +19,4 @@ class Crosswalk(BaseObject):
         
         self.crosswalkID = crosswalkID
         self.inRoad = inRoad
-        self.inLane = inLane
+        self.inLanes = inLanes
