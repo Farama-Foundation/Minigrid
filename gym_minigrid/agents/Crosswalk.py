@@ -11,7 +11,7 @@ class Crosswalk(BaseObject):
         bottomRight: Tuple[int, int],
         crosswalkID: int,
         overlapRoad: int,
-        overlapLanes: List[int],
+        overlapLanes: List[int], # list of lane IDs
         objectType="Crosswalk"
     ):
         super().__init__(
