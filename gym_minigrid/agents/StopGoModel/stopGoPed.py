@@ -88,7 +88,7 @@ class StopGoPed(PedAgent):
         # TO-DO : We need to find the closest incoming vehicle in the lane of ped
         # Lane ID affects which side of crosswalk we need to look at
         closestCrosswalk.updateIncomingVehicles(env)
-        laneIndex = closestLane.laneID
+        laneIndex = closestCrosswalk.overlapLanes.index(closestLane.laneID)
         incomingVehicle = closestCrosswalk.incomingVehicles[laneIndex]
         if incomingVehicle == None:
             return math.inf

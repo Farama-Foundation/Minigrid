@@ -31,15 +31,15 @@ class Crosswalk(BaseObject):
         # calculate based on lane ID and direction
         vehicleAgents = env.vehicleAgents
 
-        vehicleInSameLanes = np.empty((len(self.overlapLanes),), Vehicle) # make this 2d array
+        vehicleInSameLanes = [[] for _ in range(len(self.overlapLanes))]
         for vehicle in vehicleAgents:
             if vehicle.inLane in self.overlapLanes:
                 vehicleInSameLanes[self.overlapLanes.index(vehicle.inLane)].append(vehicle)
 
         for i in range(0, len(self.overlapLanes)):
-            lanesInRoad = self.overlapRoad.lanes
+            lanesInRoad = env.road.lanes
             for lane in lanesInRoad:
-                if lane.id == self.overlapLanes[i]:
+                if lane.laneID == self.overlapLanes[i]:
                     laneDirection = lane.direction
 
             if laneDirection == Direction.North:
