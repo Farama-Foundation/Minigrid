@@ -24,3 +24,8 @@ class Crosswalk(BaseObject):
         self.overlapLanes = overlapLanes
         
         self.lastVehiclesCrossed = np.empty(len(overlapLanes), Vehicle)
+        self.incomingVehicles = np.empty(len(overlapLanes), Vehicle)
+
+    def updateIncomingVehicles(self, env):
+        # calculate based on lane ID and direction
+        pass
