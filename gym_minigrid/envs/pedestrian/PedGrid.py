@@ -91,6 +91,7 @@ class PedGrid(Grid):
 
         if len(vehiclesOnCrosswalks) != 0:
             for vehicle, crosswalk in vehiclesOnCrosswalks:
+                crosswalk.lastVehiclesCrossed[crosswalk.overlapLanes.index(vehicle.inLane)] = vehicle
                 logging.warn("Vehicle with ID: " + str(vehicle.id) + " is on Crosswalk with ID: " + str(crosswalk.crosswalkID))
 
         # Render the grid

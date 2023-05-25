@@ -1,5 +1,7 @@
 from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
+from .Vehicle import Vehicle
+import numpy as np
 
 class Crosswalk(BaseObject):
     def __init__(
@@ -20,3 +22,5 @@ class Crosswalk(BaseObject):
         self.crosswalkID = crosswalkID
         self.overlapRoad = overlapRoad
         self.overlapLanes = overlapLanes
+        
+        self.lastVehiclesCrossed = np.empty(len(overlapLanes), Vehicle)

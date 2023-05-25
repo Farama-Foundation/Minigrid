@@ -7,7 +7,7 @@ env = gym.make('TwoLaneRoadEnv30x80-v0')
 env.reset()
 
 v1 = SimpleVehicle(1, (7, 10), (12, 19), 1, 5, 5, 1, 1)
-v2 = SimpleVehicle(2, (17, 60), (22, 69), 3, 5, 5, 1, 1)
+v2 = SimpleVehicle(2, (17, 60), (22, 69), 3, 5, 5, 1, 2)
 p1 = BlueAdlerPedAgent(id=1, position=(0, 42), direction=Direction.East, maxSpeed=4, speed = 3)
 p2 = BlueAdlerPedAgent(id=2, position=(29,44), direction=Direction.West, maxSpeed=4, speed = 3)
 p3 = BlueAdlerPedAgent(id=3, position=(2,5), direction=Direction.South, maxSpeed=4, speed = 3)
