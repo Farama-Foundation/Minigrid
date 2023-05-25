@@ -1,5 +1,7 @@
 from typing import Tuple, List
 from gym_minigrid.lib.BaseObject import BaseObject
+from .Vehicle import Vehicle
+import numpy as np
 
 class Crosswalk(BaseObject):
     def __init__(
@@ -7,8 +9,8 @@ class Crosswalk(BaseObject):
         topLeft: Tuple[int, int],
         bottomRight: Tuple[int, int],
         crosswalkID: int,
-        inRoad: int,
-        inLanes: List[int],
+        overlapRoad: int,
+        overlapLanes: List[int],
         objectType="Crosswalk"
     ):
         super().__init__(
@@ -18,5 +20,12 @@ class Crosswalk(BaseObject):
         )
         
         self.crosswalkID = crosswalkID
-        self.inRoad = inRoad
-        self.inLanes = inLanes
+        self.overlapRoad = overlapRoad
+        self.overlapLanes = overlapLanes
+        
+        self.lastVehiclesCrossed = np.empty(len(overlapLanes), Vehicle)
+        self.incomingVehicles = np.empty(len(overlapLanes), Vehicle)
+
+    def updateIncomingVehicles(self, env):
+        # calculate based on lane ID and direction
+        pass
