@@ -56,21 +56,47 @@ class StopGoPed(PedAgent):
         return None
         
     def distanceBetweenTwoVehicles(self, env):
+        crosswalks = env.crosswalks
+        closestCrosswalk = None # closest crosswalk in the correct direction
+        closestDist = math.inf
+        for crosswalk in crosswalks:
+            if (self.direction == Direction.East and crosswalk.bottomRight[0] > self.position[0]) \
+                    or (self.direction == Direction.West and crosswalk.topLeft[0] < self.position[0]) \
+                    or (self.direction == Direction.North and crosswalk.topLeft[1] < self.position[1]) \
+                    or (self.direction == Direction.South and crosswalk.bottomRight[1] > self.position[1]):
+                newDist = (self.position[0] - crosswalk.center[0])**2 + (self.position[1] - crosswalk.center[1])**2
+                if newDist < closestDist:
+                        closestCrosswalk = crosswalk
+                        closestDist = newDist
+
+        lanes = closestCrosswalk.overlapLanes
+        closestLane = None
+        closestDist = math.inf
+        for lane in lanes:
+            newDist = (self.position[0] - lane.center[0])**2 + (self.position[1] - lane.center[1])**2
+            if newDist < closestDist:
+                closestLane = lane
+                closestDist = newDist
+        
         # TO-DO : We need to find out the vehicle in the crosswalk given the lane of ped
-        crossWalkVehicle = env.getVehicleInCrosswalk(self.inLane)
+        # crossWalkVehicle = env.getVehicleInCrosswalk(self.inLane)
         # TO-DO : We need to find the closest incoming vehicle in the lane of ped
         # Lane ID affects which side of crosswalk we need to look at
-        env.crosswalks[0].updateIncomingVehicles()
-        laneIndex = env.crosswalks[0].overlapLanes.index(self.inLane)
-        incomingVehicle = env.crosswalks[0].incomingVehicles[laneIndex]
+        closestCrosswalk.updateIncomingVehicles()
+        laneIndex = closestLane.laneID
+        incomingVehicle = closestCrosswalk.incomingVehicles[laneIndex]
         if incomingVehicle == None:
             return math.inf
-        
 
-        if crossWalkVehicle == None:
+        # if crossWalkVehicle == None:
             # Find the distance between incoming and middle of crosswalk
-            if self.direction == Direction.East:
-                return abs(incomingVehicle.topLeft[1] - env.crosswalks[0].topLeft[1])
-            elif self.direction == Direction.West:
-                return abs(incomingVehicle.bottomRight[1] - env.crosswalks[0].bottomRight[1])
+            # if self.direction == Direction.East:
+            #     return abs(incomingVehicle.topLeft[1] - env.crosswalks[0].topLeft[1])
+            # elif self.direction == Direction.West:
+            #     return abs(incomingVehicle.bottomRight[1] - env.crosswalks[0].bottomRight[1])
+
+        if self.direction == Direction.East:
+            return abs(incomingVehicle.topLeft[1] - closestCrosswalk.topLeft[1])
+        elif self.direction == Direction.West:
+            return abs(incomingVehicle.bottomRight[1] - closestCrosswalk.bottomRight[1])
         
