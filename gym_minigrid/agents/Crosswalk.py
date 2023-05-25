@@ -44,17 +44,17 @@ class Crosswalk(BaseObject):
 
             if laneDirection == Direction.North:
                 for vehicle in vehicleInSameLanes[i]:
-                    if vehicle.topLeft[1] > self.topLeft[1] and (self.incomingVehicles[i] == None or vehicle.topLeft[1] < self.incomingVehicles[i].topLeft[1]):
+                    if vehicle.topLeft[1] > self.bottomRight[1] and (self.incomingVehicles[i] == None or vehicle.topLeft[1] < self.incomingVehicles[i].topLeft[1]):
                         self.incomingVehicles[i] = vehicle
             elif laneDirection == Direction.South:
                 for vehicle in vehicleInSameLanes[i]:
-                    if vehicle.topLeft[1] < self.topLeft[1] and (self.incomingVehicles[i] == None or vehicle.topLeft[1] > self.incomingVehicles[i].topLeft[1]):
+                    if vehicle.topLeft[1] < self.bottomRight[1] and (self.incomingVehicles[i] == None or vehicle.topLeft[1] > self.incomingVehicles[i].topLeft[1]):
                         self.incomingVehicles[i] = vehicle
             elif laneDirection == Direction.West:
                 for vehicle in vehicleInSameLanes[i]:
-                    if vehicle.topLeft[0] < self.topLeft[0] and (self.incomingVehicles[i] == None or vehicle.topLeft[0] > self.incomingVehicles[i].topLeft[0]):
+                    if vehicle.topLeft[0] < self.bottomRight[0] and (self.incomingVehicles[i] == None or vehicle.topLeft[0] > self.incomingVehicles[i].topLeft[0]):
                         self.incomingVehicles[i] = vehicle
             elif laneDirection == Direction.East:
                 for vehicle in vehicleInSameLanes[i]:
-                    if vehicle.topLeft[0] > self.topLeft[0] and (self.incomingVehicles[i] == None or vehicle.topLeft[0] < self.incomingVehicles[i].topLeft[0]):
+                    if vehicle.topLeft[0] > self.bottomRight[0] and (self.incomingVehicles[i] == None or vehicle.topLeft[0] < self.incomingVehicles[i].topLeft[0]):
                         self.incomingVehicles[i] = vehicle
