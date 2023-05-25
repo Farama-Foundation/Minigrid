@@ -9,7 +9,7 @@ env = gym.make('TwoLaneRoadEnv60x80-v0')
 env.reset()
 
 v1 = StopGoVehicle(1, (14, 20), (20, 29), Direction.South, 5, 2, 1, 1)
-v2 = StopGoVehicle(2, (14, 35), (20, 43), Direction.South, 5, 4, 1, 1)
+v2 = StopGoVehicle(2, (14, 35), (20, 40), Direction.South, 5, 4, 1, 1)
 v3 = StopGoVehicle(3, (39, 60), (45, 69), Direction.North, 5, 5, 1, 2)
 p1 = StopGoPed(id=1, position=(0, 42), direction=Direction.East, maxSpeed=4, speed = 3)
 p2 = StopGoPed(id=2, position=(59,44), direction=Direction.West, maxSpeed=4, speed = 3)
