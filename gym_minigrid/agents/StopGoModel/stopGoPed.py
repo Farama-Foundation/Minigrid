@@ -42,8 +42,8 @@ class StopGoPed(PedAgent):
     def parallel1(self, env): # TODO add type
         if self.stepsPlanned == 0:
             # won't work now : finish distanceBetweenTwoVehicles
-            # if self.distanceBetweenTwoVehicles(env) > self.minTimeToCross:
-                # self.stepsPlanned = env.width / self.speed
+            if self.distanceBetweenTwoVehicles(env) > self.minTimeToCross:
+                self.stepsPlanned = env.width / self.speed
         # Calculated the whether the agent should stop or go 
         # if it has remaining steps to perform, don't do anything
             pass
@@ -69,10 +69,15 @@ class StopGoPed(PedAgent):
                         closestCrosswalk = crosswalk
                         closestDist = newDist
 
-        lanes = closestCrosswalk.overlapLanes
+        laneIDs = closestCrosswalk.overlapLanes
+        lanes = env.road.lanes
+        overlapLanes = []
+        for lane in lanes:
+            if lane.laneID in laneIDs:
+                overlapLanes.append(lane)
         closestLane = None
         closestDist = math.inf
-        for lane in lanes:
+        for lane in overlapLanes:
             newDist = (self.position[0] - lane.center[0])**2 + (self.position[1] - lane.center[1])**2
             if newDist < closestDist:
                 closestLane = lane
@@ -82,7 +87,7 @@ class StopGoPed(PedAgent):
         # crossWalkVehicle = env.getVehicleInCrosswalk(self.inLane)
         # TO-DO : We need to find the closest incoming vehicle in the lane of ped
         # Lane ID affects which side of crosswalk we need to look at
-        closestCrosswalk.updateIncomingVehicles()
+        closestCrosswalk.updateIncomingVehicles(env)
         laneIndex = closestLane.laneID
         incomingVehicle = closestCrosswalk.incomingVehicles[laneIndex]
         if incomingVehicle == None:
