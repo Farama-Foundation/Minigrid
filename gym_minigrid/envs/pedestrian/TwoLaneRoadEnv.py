@@ -196,16 +196,16 @@ class TwoLaneRoadEnv60x80(TwoLaneRoadEnv):
             topLeft=(10, 40),
             bottomRight=(24, 45),
             crosswalkID=1,
-            inRoad=1,
-            inLanes=[1]
+            overlapRoad=1,
+            overlapLanes=[1]
         )
 
         crosswalk2 = Crosswalk(
             topLeft=(35, 40),
             bottomRight=(49, 45),
             crosswalkID=2,
-            inRoad=1,
-            inLanes=[2]
+            overlapRoad=1,
+            overlapLanes=[2]
         )
 
         super().__init__(
@@ -255,8 +255,8 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
             topLeft=(5, 40),
             bottomRight=(24, 45),
             crosswalkID=1,
-            inRoad=1,
-            inLanes=[1, 2]
+            overlapRoad=1,
+            overlapLanes=[1, 2]
         )
 
         super().__init__(
