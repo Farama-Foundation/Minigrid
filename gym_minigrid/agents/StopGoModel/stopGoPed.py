@@ -12,7 +12,7 @@ from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.ForwardAction import ForwardAction
 from gym_minigrid.lib.Direction import Direction
-
+import logging
 
 class StopGoPed(PedAgent):
 
@@ -40,10 +40,13 @@ class StopGoPed(PedAgent):
         self.minTimeToCross = minTimeToCross
 
     def parallel1(self, env): # TODO add type
+        # logging.warn(f"pedestrian {self.id} has planned {self.stepsPlanned} steps")
         if self.stepsPlanned == 0:
             # won't work now : finish distanceBetweenTwoVehicles
-            if self.distanceBetweenTwoVehicles(env) > self.minTimeToCross:
-                self.stepsPlanned = env.width / self.speed
+            print(f"Distance between two vehicles for ped {self.id}: {self.timeBetweenTwoVehicles(env)}")
+            if self.timeBetweenTwoVehicles(env) > self.minTimeToCross:
+                self.stepsPlanned = env.width / (self.speed * 2)
+                logging.warn("pedestrian {} planned {} steps".format(self.id, self.stepsPlanned))
         # Calculated the whether the agent should stop or go 
         # if it has remaining steps to perform, don't do anything
             pass
@@ -55,7 +58,7 @@ class StopGoPed(PedAgent):
             return Action(self, ForwardAction.KEEP)
         return None
         
-    def distanceBetweenTwoVehicles(self, env):
+    def timeBetweenTwoVehicles(self, env):
         crosswalks = env.crosswalks
         closestCrosswalk = None # closest crosswalk in the correct direction
         closestDist = math.inf
@@ -99,9 +102,9 @@ class StopGoPed(PedAgent):
             #     return abs(incomingVehicle.topLeft[1] - env.crosswalks[0].topLeft[1])
             # elif self.direction == Direction.West:
             #     return abs(incomingVehicle.bottomRight[1] - env.crosswalks[0].bottomRight[1])
-
+        
         if self.direction == Direction.East:
-            return abs(incomingVehicle.topLeft[1] - closestCrosswalk.topLeft[1])
+            return abs(incomingVehicle.topLeft[1] - closestCrosswalk.topLeft[1]) / incomingVehicle.speed
         elif self.direction == Direction.West:
-            return abs(incomingVehicle.bottomRight[1] - closestCrosswalk.bottomRight[1])
+            return abs(incomingVehicle.bottomRight[1] - closestCrosswalk.bottomRight[1]) / incomingVehicle.speed
         
