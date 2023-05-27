@@ -28,6 +28,9 @@ class Crosswalk(BaseObject):
         self.incomingVehicles = np.empty(len(self.overlapLanes), Vehicle)
 
     def updateIncomingVehicles(self, env):
+        # first reset previous incoming vehicles
+        self.incomingVehicles = np.empty(len(self.overlapLanes), Vehicle)
+        
         # calculate based on lane ID and direction
         vehicleAgents = env.vehicleAgents
 
@@ -41,6 +44,7 @@ class Crosswalk(BaseObject):
             for lane in lanesInRoad:
                 if lane.laneID == self.overlapLanes[i]:
                     laneDirection = lane.direction
+                    break
 
             if laneDirection == Direction.North:
                 for vehicle in vehicleInSameLanes[i]:
