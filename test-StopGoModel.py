@@ -14,9 +14,11 @@ v3 = StopGoVehicle(3, (39, 60), (45, 69), Direction.North, 5, 5, 1, 2)
 
 p1 = StopGoPed(id=1, position=(0, 42), direction=Direction.East, minTimeToCross= 5, speed = 3)
 p2 = StopGoPed(id=2, position=(59,44), direction=Direction.West, minTimeToCross=6, speed = 3)
+p3 = StopGoPed(id=3, position=(0, 43), direction=Direction.East, minTimeToCross= 7, speed = 3)
+p4 = StopGoPed(id=4, position=(0,44), direction=Direction.East, minTimeToCross = 4, speed = 4)
 
-p3 = BlueAdlerPedAgent(id=3, position=(5,5), direction=Direction.South, maxSpeed=4, speed = 3)
-p4 = BlueAdlerPedAgent(id=4, position=(55,60), direction=Direction.North, maxSpeed=4, speed = 3)
+# p3 = BlueAdlerPedAgent(id=3, position=(5,5), direction=Direction.South, maxSpeed=4, speed = 3)
+# p4 = BlueAdlerPedAgent(id=4, position=(55,60), direction=Direction.North, maxSpeed=4, speed = 3)
 
 env.addVehicleAgent(v1)
 env.addVehicleAgent(v2)
