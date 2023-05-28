@@ -141,7 +141,8 @@ class TwoLaneRoadEnv(PedestrianEnv):
             crosswalks=self.crosswalks,
             agent_pos=self.agent_pos,
             agent_dir=self.agent_dir,
-            highlight_mask=None
+            highlight_mask=None,
+            step_count=self.step_count
             # highlight_mask=highlight_mask if highlight else None
         )
 
@@ -267,6 +268,40 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
             height=height
         )
 
+class TwoLaneRoadEnv900x270(TwoLaneRoadEnv):
+    def __init__(self):
+        width = 900
+        height = 270
+
+        lane1 = Lane(
+            topLeft=(0, 90),
+            bottomRight=(899, 179),
+            direction=1,
+            inRoad=1,
+            laneID=1,
+            posRelativeToCenter=-1
+        )
+        road1 = Road([lane1], roadID=1)
+
+        sidewalk1 = Sidewalk(
+            topLeft=(0, 0),
+            bottomRight=(899, 89),
+            sidewalkID=1
+        )
+
+        sidewalk2 = Sidewalk(
+            topLeft=(0, 180),
+            bottomRight=(899, 269),
+            sidewalkID=2
+        )
+
+        super().__init__(
+            road=road1,
+            sidewalks=[sidewalk1, sidewalk2],
+            width=width,
+            height=height
+        )
+
 register(
     id='TwoLaneRoadEnv60x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.TwoLaneRoadEnv:TwoLaneRoadEnv60x80'
@@ -275,4 +310,9 @@ register(
 register(
     id='TwoLaneRoadEnv30x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.TwoLaneRoadEnv:TwoLaneRoadEnv30x80'
+)
+
+register(
+    id='TwoLaneRoadEnv900x270-v0',
+    entry_point='gym_minigrid.envs.pedestrian.TwoLaneRoadEnv:TwoLaneRoadEnv900x270'
 )

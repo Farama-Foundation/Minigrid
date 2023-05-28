@@ -257,7 +257,8 @@ class PedestrianEnv(MiniGridEnv):
             pedAgents=self.pedAgents,
             agent_pos=self.agent_pos,
             agent_dir=self.agent_dir,
-            highlight_mask=None
+            highlight_mask=None,
+            step_count=self.step_count
             # highlight_mask=highlight_mask if highlight else None
         )
 
