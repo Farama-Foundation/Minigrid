@@ -10,7 +10,7 @@ import pandas as pd
 
 pedDict = {'pedX' : [], 'pedY' : [], 'vehX' : [], 'vehY' : [], 'TTC' : []}
 
-for trials in range(500):
+for trials in range(200):
     env = gym.make('TwoLaneRoadEnv900x270-v0')
     metricCollector = MetricCollector(env)
 
@@ -18,8 +18,7 @@ for trials in range(500):
     # print(env.getVehicleAgents())
 
     mean = 40
-    std_dev = 12 # z-score ~ 3
-    # std_dev = 14 # z-score ~ 2.5
+    std_dev = 35/3 # z-score = 3
     lower_bound = 5
     upper_bound = 75
 
@@ -27,9 +26,21 @@ for trials in range(500):
     random_dist_ahead = max(lower_bound, min(upper_bound, random_variable))  # Ensure the value is within the desired range
     dist_ahead_inTiles = round(random_dist_ahead * 10) # 0.1 m/tile
 
-    mean = 6.3
-    std_dev = 1.9 # z-score ~ 3
-    # std_dev = 2.3 # z-score ~ 2.5
+    if random_dist_ahead > 60:
+        # about 2.5 degree angle
+        mean = random_dist_ahead * math.tan(2.5/180*math.pi)
+    elif random_dist_ahead > 40:
+        # about 5 degree angle
+        mean = random_dist_ahead * math.tan(5/180*math.pi)
+    elif random_dist_ahead > 20:
+        # about 10 degree angle
+        mean = random_dist_ahead * math.tan(10/180*math.pi)
+    else:
+        # about 15 degree angle
+        mean = random_dist_ahead * math.tan(15/180*math.pi)
+    std_dev = 1.4 + 0.5 * (1/(abs(random_dist_ahead-37.5)+1))
+    # mean = 6.3
+    # std_dev = 5.7/3
     lower_bound = 0.6
     upper_bound = 12
 
@@ -91,4 +102,5 @@ for trials in range(500):
     env.close()
 
 data = pd.DataFrame(pedDict)
-data.to_csv('TTC.csv', index = False)
+data.to_csv('TTC2.csv', index = False)
+# ^ don't use "TTC.csv", it has pretty good data
