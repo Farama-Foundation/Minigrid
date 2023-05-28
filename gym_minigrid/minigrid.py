@@ -198,8 +198,7 @@ class Lava(WorldObj):
             fill_coords(img, point_in_line(0.1, ylo, 0.3, yhi, r=0.03), (0,0,0))
             fill_coords(img, point_in_line(0.3, yhi, 0.5, ylo, r=0.03), (0,0,0))
             fill_coords(img, point_in_line(0.5, ylo, 0.7, yhi, r=0.03), (0,0,0))
-            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0,0,0))
-            
+            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0,0,0)) 
 
 class Wall(WorldObj):
     def __init__(self, color='grey'):
@@ -442,14 +441,13 @@ class Grid:
         agent_dir=None,
         highlight=False,
         tile_size=TILE_PIXELS,
-        subdivs=3,
-        isVehicle = False
+        subdivs=3
     ):
         """
         Render a tile and cache the result
         """
         # Hash map lookup key for the cache
-        key = (agent_dir, isVehicle, highlight, tile_size)
+        key = (agent_dir, highlight, tile_size)
         key = obj.encode() + key if obj else key
 
         if key in cls.tile_cache:
@@ -459,16 +457,11 @@ class Grid:
 
         # Draw the grid lines (top and left edges)
         fill_coords(img, point_in_rect(0, 0.031, 0, 1), (100, 100, 100))
-        fill_coords(img, point_in_rect(0, 1, 0, 0.031), (100, 00, 00)) # top
+        fill_coords(img, point_in_rect(0, 1, 0, 0.031), (100, 100, 100))
 
-     
         if obj != None:
             obj.render(img)
         
-        # overlay vehicle
-        if isVehicle:
-            # print("rendering vehicle")
-            fill_coords(img, point_in_rect(0, 1, 0, 1), (125, 125, 0))
         # Overlay the agent on top
         if agent_dir is not None:
             tri_fn = point_in_triangle(
@@ -1248,6 +1241,7 @@ class MiniGridEnv(gym.Env):
         """
         Render the whole-grid human view
         """
+        
         if close:
             if self.window:
                 self.window.close()
