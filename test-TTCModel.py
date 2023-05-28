@@ -38,7 +38,7 @@ for trials in range(200):
     else:
         # about 15 degree angle
         mean = random_dist_ahead * math.tan(15/180*math.pi)
-    std_dev = 1.4 + 0.5 * (1/(abs(random_dist_ahead-37.5)+1))
+    std_dev = 1.4 + 0.5 * (1/(abs(random_dist_ahead-40)+1))
     # mean = 6.3
     # std_dev = 5.7/3
     lower_bound = 0.6
