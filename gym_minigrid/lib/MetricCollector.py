@@ -72,6 +72,9 @@ class MetricCollector:
         return [self.stepStats, self.volumeStats]
         pass
 
+    def getPositions(self):
+        return [self.pedestrianPositions, self.vehiclePositions]
+
     def collectVolume(self, env):
         revolutions = 0
         for agent in env.getPedAgents():
@@ -125,7 +128,7 @@ class MetricCollector:
                 self.pedestrianPositions[pedestrian][0] = self.previousState[pedestrian]["position"]
         
         for pedestrian in env.getPedAgents():
-            self.pedestrianPositions[pedestrian][0] = pedestrian.position
+            self.pedestrianPositions[pedestrian][env.step_count] = pedestrian.position
 
     def collectVehiclePositions(self, env):
         if env.step_count == 1:

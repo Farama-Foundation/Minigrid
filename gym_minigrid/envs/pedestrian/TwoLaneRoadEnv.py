@@ -273,31 +273,31 @@ class TwoLaneRoadEnv900x270(TwoLaneRoadEnv):
         width = 900
         height = 270
 
-        lane1 = Lane(
-            topLeft=(0, 90),
-            bottomRight=(899, 179),
-            direction=1,
-            inRoad=1,
-            laneID=1,
-            posRelativeToCenter=-1
-        )
-        road1 = Road([lane1], roadID=1)
+        # lane1 = Lane(
+        #     topLeft=(0, 90),
+        #     bottomRight=(899, 179),
+        #     direction=1,
+        #     inRoad=1,
+        #     laneID=1,
+        #     posRelativeToCenter=-1
+        # )
+        # road1 = Road([lane1], roadID=1)
 
-        sidewalk1 = Sidewalk(
-            topLeft=(0, 0),
-            bottomRight=(899, 89),
-            sidewalkID=1
-        )
+        # sidewalk1 = Sidewalk(
+        #     topLeft=(0, 0),
+        #     bottomRight=(899, 89),
+        #     sidewalkID=1
+        # )
 
-        sidewalk2 = Sidewalk(
-            topLeft=(0, 180),
-            bottomRight=(899, 269),
-            sidewalkID=2
-        )
+        # sidewalk2 = Sidewalk(
+        #     topLeft=(0, 180),
+        #     bottomRight=(899, 269),
+        #     sidewalkID=2
+        # )
 
         super().__init__(
-            road=road1,
-            sidewalks=[sidewalk1, sidewalk2],
+            # road=road1,
+            # sidewalks=[sidewalk1, sidewalk2],
             width=width,
             height=height
         )
