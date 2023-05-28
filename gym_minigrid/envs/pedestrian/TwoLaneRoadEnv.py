@@ -89,6 +89,7 @@ class TwoLaneRoadEnv(PedestrianEnv):
         if newTopLeft[0] < 0 or newBottomRight[0] >= self.width \
             or newTopLeft[1] < 0 or newBottomRight[1] >= self.height:
             logging.warn("Vehicle cannot be moved here - out of bounds")
+            print(newTopLeft + " " + newBottomRight)
             # Vehicle should not charge direction, rather it should spawn at the other end
             # agent.direction = (agent.direction + 2) % 4
             if agent.direction == Direction.South:
@@ -270,8 +271,8 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
 
 class TwoLaneRoadEnv900x270(TwoLaneRoadEnv):
     def __init__(self):
-        width = 900
-        height = 270
+        width = 1000
+        height = 300
 
         # lane1 = Lane(
         #     topLeft=(0, 90),
