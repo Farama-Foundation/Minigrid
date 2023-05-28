@@ -18,7 +18,7 @@ for trials in range(200):
     # print(env.getVehicleAgents())
 
     mean = 40
-    std_dev = 35/3 # z-score = 3
+    std_dev = 35/2.5 # z-score = 2.5
     lower_bound = 5
     upper_bound = 75
 
@@ -29,16 +29,25 @@ for trials in range(200):
     if random_dist_ahead > 60:
         # about 2.5 degree angle
         mean = random_dist_ahead * math.tan(2.5/180*math.pi)
+    elif random_dist_ahead > 50:
+        # about 3.75 degree angle
+        mean = random_dist_ahead * math.tan(3.75/180*math.pi)
     elif random_dist_ahead > 40:
         # about 5 degree angle
         mean = random_dist_ahead * math.tan(5/180*math.pi)
+    elif random_dist_ahead > 30:
+        # about 7.5 degree angle
+        mean = random_dist_ahead * math.tan(7.5/180*math.pi)
     elif random_dist_ahead > 20:
         # about 10 degree angle
         mean = random_dist_ahead * math.tan(10/180*math.pi)
-    else:
+    elif random_dist_ahead > 10:
         # about 15 degree angle
         mean = random_dist_ahead * math.tan(15/180*math.pi)
-    std_dev = 1.4 + 0.5 * (1/(abs(random_dist_ahead-40)+1))
+    else:
+        # about 30 degree angle
+        mean = random_dist_ahead * math.tan(30/180*math.pi)
+    std_dev = 1.4 + 0.5 * (1/((abs(random_dist_ahead-37.5) + 1)/10))
     # mean = 6.3
     # std_dev = 5.7/3
     lower_bound = 0.6
@@ -102,5 +111,5 @@ for trials in range(200):
     env.close()
 
 data = pd.DataFrame(pedDict)
-data.to_csv('TTC2.csv', index = False)
+data.to_csv('TTC.csv', index = False)
 # ^ don't use "TTC.csv", it has pretty good data
