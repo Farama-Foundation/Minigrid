@@ -111,5 +111,5 @@ for trials in range(200):
     env.close()
 
 data = pd.DataFrame(pedDict)
-data.to_csv('TTC.csv', index = False)
+data.to_csv('TTC2.csv', index = False)
 # ^ don't use "TTC.csv", it has pretty good data
