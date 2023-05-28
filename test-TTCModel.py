@@ -8,7 +8,7 @@ from gym_minigrid.lib.MetricCollector import MetricCollector
 import pickle
 import pandas as pd
 
-for i in range(1):
+for trials in range(100):
     env = gym.make('TwoLaneRoadEnv900x270-v0')       
     env.reset()
     metricCollector = MetricCollector(env)
@@ -75,8 +75,6 @@ for i in range(1):
     vehPosX = [pos[0] for pos in vehPositions[veh]["bottomRight"]]
     vehPosY = [(pos[1] - 25) for pos in vehPositions[veh]["bottomRight"]]
 
-    print(pedPosX)
-
-    pedDict = {'pedX' : pedPosX, 'pedy' : pedPosY, 'vehX' : vehPosX, 'vehY' : vehPosY}
+    pedDict = {'pedX' : pedPosX, 'pedY' : pedPosY, 'vehX' : vehPosX, 'vehY' : vehPosY, 'TTC' : [3, 2, 1]}
     data = pd.DataFrame(pedDict)
     data.to_csv('TTC.csv', index = False)

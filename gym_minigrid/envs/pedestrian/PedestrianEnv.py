@@ -325,7 +325,7 @@ class PedestrianEnv(MiniGridEnv):
         if envEvent == EnvEvent.stepBefore: 
             return [handler(self) for handler in self.stepBefore]
 
-        if envEvent == EnvEvent.stepAfter: 
+        if envEvent == EnvEvent.stepAfter:
             return [handler(self) for handler in self.stepAfter]
 
         # logging.debug(self.stepParallel1)

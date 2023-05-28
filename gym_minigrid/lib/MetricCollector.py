@@ -7,7 +7,7 @@ class MetricCollector:
 
     def __init__(self, 
             env: IMultiPedestrianEnv,
-            stepsToIgnoreAtTheBeginning = 100,
+            stepsToIgnoreAtTheBeginning = 0,
             stepsToRecord = 1100
         ):
 
@@ -125,17 +125,17 @@ class MetricCollector:
     def collectPedestrianPositions(self, env):
         if env.step_count == 1:
             for pedestrian in env.getPedAgents():
-                self.pedestrianPositions[pedestrian][0] = self.previousState[pedestrian]["position"]
+                self.pedestrianPositions[pedestrian].append(self.previousState[pedestrian]["position"])
         
         for pedestrian in env.getPedAgents():
-            self.pedestrianPositions[pedestrian][env.step_count] = pedestrian.position
+            self.pedestrianPositions[pedestrian].append(pedestrian.position)
 
     def collectVehiclePositions(self, env):
         if env.step_count == 1:
             for vehicle in env.getVehicleAgents():
-                self.vehiclePositions[vehicle]["topLeft"][0] = self.previousState[vehicle]["topLeft"]
-                self.vehiclePositions[vehicle]["bottomRight"][0] = self.previousState[vehicle]["bottomRight"]
+                self.vehiclePositions[vehicle]["topLeft"].append(self.previousState[vehicle]["topLeft"])
+                self.vehiclePositions[vehicle]["bottomRight"].append(self.previousState[vehicle]["bottomRight"])
         
         for vehicle in env.getVehicleAgents():
-                self.vehiclePositions[vehicle]["topLeft"][env.step_count] = vehicle.topLeft
-                self.vehiclePositions[vehicle]["bottomRight"][env.step_count] = vehicle.bottomRight
+                self.vehiclePositions[vehicle]["topLeft"].append(vehicle.topLeft)
+                self.vehiclePositions[vehicle]["bottomRight"].append(vehicle.bottomRight)
