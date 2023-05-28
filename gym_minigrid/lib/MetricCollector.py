@@ -39,8 +39,8 @@ class MetricCollector:
             self.previousState[agent]["topLeft"] = agent.topLeft
             self.previousState[agent]["bottomRight"] = agent.bottomRight
 
-        if env.step_count == 0:
-            env.unsubscribe(EnvEvent.stepBefore, self.handleStepBefore)
+        # if env.step_count == 0:
+        env.unsubscribe(EnvEvent.stepBefore, self.handleStepBefore)
 
     def handleStepAfter(self, env: IMultiPedestrianEnv):
         if env.step_count < self.stepsToIgnoreAtTheBeginning:
