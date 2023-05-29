@@ -21,9 +21,9 @@ from minigrid.wrappers import (
     ReseedWrapper,
     RGBImgObsWrapper,
     RGBImgPartialObsWrapper,
+    StochasticActionWrapper,
     SymbolicObsWrapper,
     ViewSizeWrapper,
-    StochasticActionWrapper,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
 
