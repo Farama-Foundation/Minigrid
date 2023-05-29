@@ -23,6 +23,7 @@ from minigrid.wrappers import (
     RGBImgPartialObsWrapper,
     SymbolicObsWrapper,
     ViewSizeWrapper,
+    StochasticActionWrapper,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
 
@@ -326,6 +327,23 @@ def test_symbolic_obs_wrapper(env_id):
         obs["image"][goal_pos[0], goal_pos[1], :]
         == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
     )
+    env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper(env_id):
+    env = gym.make(env_id)
+    env = StochasticActionWrapper(env, prob=0.2)
+    _, _ = env.reset()
+    for _ in range(20):
+        _, _, _, _, _ = env.step(0)
+    env.close()
+
+    env = gym.make(env_id)
+    env = StochasticActionWrapper(env, prob=0.2, random_action=1)
+    _, _ = env.reset()
+    for _ in range(20):
+        _, _, _, _, _ = env.step(0)
     env.close()
 
 
