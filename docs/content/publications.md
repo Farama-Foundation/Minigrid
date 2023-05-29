@@ -7,6 +7,7 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [DEIR: Efficient and Robust Exploration through Discriminative-Model-Based Episodic Intrinsic Rewards](https://arxiv.org/abs/2304.10770) (U-Tokyo, Google Brain, IJCAI 2023)
 - [Towards Improving Exploration in Self-Imitation Learning using Intrinsic Motivation](https://arxiv.org/abs/2211.16838) (TECNALIA, IEEE ADPRL 2022)
 - [An Evaluation Study of Intrinsic Motivation Techniques applied to Reinforcement Learning over Hard Exploration Environments](https://arxiv.org/abs/2205.11184) (TECNALIA, CD-MAKE 2022)
 - [Evolution Strategies for Sparse Reward Gridworld Environments.](https://link.springer.com/chapter/10.1007/978-3-031-22695-3_19) (DSTG, AJCAI 2022)

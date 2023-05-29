@@ -4,8 +4,13 @@ firstpage:
 lastpage:
 ---
 
-## Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.
+```{project-logo} _static/img/minigrid-text.svg
+:alt: Minigrid Logo
+```
 
+```{project-heading}
+Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.
+```
 
 ```{figure} ../figures/door-key-curriculum.gif
    :alt: door key environment gif
@@ -39,7 +44,7 @@ env.close()
 
 content/basic_usage
 content/publications
-context/create_env_tutorial
+content/create_env_tutorial
 ```
 
 ```{toctree}
