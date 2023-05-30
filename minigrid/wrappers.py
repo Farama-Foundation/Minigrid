@@ -786,6 +786,6 @@ class StochasticActionWrapper(ActionWrapper):
             return action
         else:
             if self.random_action is None:
-                return random.randint(0, 5)
+                return self.np_random.integers(0, high=6)
             else:
                 return self.random_action
