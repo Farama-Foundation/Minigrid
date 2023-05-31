@@ -379,7 +379,7 @@
 <span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">gymnasium</span> <span class="kn">import</span> <span class="n">logger</span><span class="p">,</span> <span class="n">spaces</span>
-<span class="kn">from</span> <span class="nn">gymnasium.core</span> <span class="kn">import</span> <span class="n">ObservationWrapper</span><span class="p">,</span> <span class="n">ObsType</span><span class="p">,</span> <span class="n">Wrapper</span>
+<span class="kn">from</span> <span class="nn">gymnasium.core</span> <span class="kn">import</span> <span class="n">ActionWrapper</span><span class="p">,</span> <span class="n">ObservationWrapper</span><span class="p">,</span> <span class="n">ObsType</span><span class="p">,</span> <span class="n">Wrapper</span>
 
 <span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_TO_IDX</span><span class="p">,</span> <span class="n">OBJECT_TO_IDX</span><span class="p">,</span> <span class="n">STATE_TO_IDX</span>
 <span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Goal</span>
@@ -1135,6 +1135,30 @@
         <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span>
 
         <span class="k">return</span> <span class="n">obs</span></div>
+
+
+<span class="k">class</span> <span class="nc">StochasticActionWrapper</span><span class="p">(</span><span class="n">ActionWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add stochasticity to the actions</span>
+
+<span class="sd">    If a random action is provided, it is returned with probability `1 - prob`.</span>
+<span class="sd">    Else, a random action is sampled from the action space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">random_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prob</span> <span class="o">=</span> <span class="n">prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span> <span class="o">=</span> <span class="n">random_action</span>
+
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">action</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span>
 </pre></div>
           </article>
         </div>
