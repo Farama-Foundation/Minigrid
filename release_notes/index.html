@@ -3,19 +3,19 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="">
+    <meta name="description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.">
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="" />
-    <meta property="og:url" content="https://minigrid.farama.org/release_notes.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
+    <meta property="og:url" content="https://minigrid.farama.org/release_notes.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="Boss Level No Unlock" href="../environments/babyai/BossLevelNoUnlock/" />
         <link rel="canonical" href="https://minigrid.farama.org/release_notes.html" />
 
     <link rel="shortcut icon" href="../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 5.2.3 and Furo 2022.12.07.dev1 -->
         <title>Release Notes - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=b0c92cd440df7c18a0306b0433406327ff2c572f" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -227,6 +227,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../content/basic_usage/">Basic Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../content/basic_usage/#training-an-agent">Training an Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../content/publications/">List of Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
@@ -345,8 +346,16 @@
             </svg>
             <span>Back to top</span>
           </a>
-          <div class="content-icon-container">
-            <div class="theme-toggle-container theme-toggle-content">
+          <div class="content-icon-container"><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/release_notes.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
               <button class="theme-toggle" title="Toggle color theme">
                 <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
                 <svg class="theme-icon-when-auto">
@@ -371,16 +380,40 @@
             
             <section id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this heading">#</a></h1>
+<section id="release-v2-3-0">
+<h2>v2.3.0 Release notes<a class="headerlink" href="#release-v2-3-0" title="Permalink to this heading">#</a></h2>
+<p><em>Released on 2023-06-09 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.3.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.3.0/">PyPI</a></em></p>
+<p>New release with a couple of small changes that shouldn't affect users along with a new tutorial and python 3.11 support. Let us know if anything new breaks</p>
+<h2>Breaking changes</h2>
+<ul>
+<li>Fix unintended observation space "image" size change in DictObservationWrapper by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/jbloomAus/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/jbloomAus">@jbloomAus</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1656530969" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/345" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/345/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/345">#345</a></li>
+<li>Fix assertion error message in Grid.set() by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/drmeerkat/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/drmeerkat">@drmeerkat</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1661386369" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/347" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/347/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/347">#347</a></li>
+</ul>
+<h2>New Features</h2>
+<ul>
+<li>Added Tutorial for Environment Creation by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/BolunDai0216/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/BolunDai0216">@BolunDai0216</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1668194638" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/348" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/348/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/348">#348</a></li>
+<li>Added a stochastic action wrapper by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/BolunDai0216/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/BolunDai0216">@BolunDai0216</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1730801996" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/355" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/355/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/355">#355</a></li>
+<li>Adds python 3.11 support and updates pygame to 2.4.0 by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/pseudo-rnd-thoughts/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/pseudo-rnd-thoughts">@pseudo-rnd-thoughts</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1749583369" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/361" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/361/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/361">#361</a></li>
+</ul>
+<h2>Documentation changes</h2>
+<ul>
+<li>Update home page to use new style, add view code sphinx extension, update copyright and improve SEO by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/mgoulao/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/mgoulao">@mgoulao</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1708883977" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/352" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/352/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/352">#352</a></li>
+<li>Adds DEIR: Efficient and Robust Exploration through Discriminative-Model-Based Episodic Intrinsic Rewards (U-Tokyo, Google Brain, IJCAI 2023) in publications by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/alpc104/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/alpc104">@alpc104</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1680360122" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/350" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/350/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/350">#350</a></li>
+<li>Adds "Minimal Value-Equivalent Partial Models for Scalable and Robust Planning in Lifelong Reinforcement Learning" by Alver and Precup, CoLLAs 2023 to publications by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/alversafa/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/alversafa">@alversafa</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1747779667" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/359" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/359/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/359">#359</a></li>
+</ul>
+<p><strong>Full Changelog</strong>: <a class="commit-link" href="https://github.com/Farama-Foundation/Minigrid/compare/v2.2.1...v2.3.0"><tt>v2.2.1...v2.3.0</tt></a></p></section>
 <section id="release-v2-2-1">
-<h2>v2.2.1: Minigrid 2.2.1 Release Notes: changed default screen size<a class="headerlink" href="#release-v2-2-1" title="Permalink to this heading">#</a></h2>
+<h2>v2.2.1: Minigrid 2.2.1<a class="headerlink" href="#release-v2-2-1" title="Permalink to this heading">#</a></h2>
 <p><em>Released on 2023-03-27 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.2.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.2.1/">PyPI</a></em></p>
+<h1>Minigrid 2.2.1 Release Notes</h1>
+<p>This release is a minor bugfix:</p>
 <ul>
 <li>Change the default screen size from 1 to 640 by <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/BolunDai0216/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/BolunDai0216">@BolunDai0216</a> in <a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1642350720" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Minigrid/issues/340" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Minigrid/pull/340/hovercard" href="https://github.com/Farama-Foundation/Minigrid/pull/340">#340</a></li>
 </ul></section>
 <section id="release-v2-2-0">
-<h2>v2.2.0<a class="headerlink" href="#release-v2-2-0" title="Permalink to this heading">#</a></h2>
+<h2>v2.2.0: Minigrid 2.2.0: added Pygame rendering support, fixed bug in wrappers and environments<a class="headerlink" href="#release-v2-2-0" title="Permalink to this heading">#</a></h2>
 <p><em>Released on 2023-03-23 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.2.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.2.0/">PyPI</a></em></p>
-<h1>Minigrid 2.2.0 Release Notes: added Pygame rendering support, fixed bug in wrappers and environments</h1>
+<h1>Minigrid 2.2.0 Release Notes</h1>
 <p>In this release, we added support for rendering using Pygame, which improves the previously Matplotlib-based rendering procedure, this is a breaking change that removes <code>minigrid.utils.window.Window</code>. A bug in the SymbolicObsWrapper that results in the wrong observation has been fixed. An error in the documentation regarding the reward function has been corrected. The <code>ObstructedMaze</code> environments are now ensured to be solvable. The class <code>minigrid_env.MiniGridEnv.Actions</code> is removed since it is the same as <code>minigrid.core.actions.Actions</code>.</p>
 <h2>Bug Fixes and Documentation Updates</h2>
 <ul>
@@ -562,7 +595,7 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2022
+                Copyright &#169; 2023 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -572,7 +605,7 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
             </div>
             <div class="right-details">
               <div class="icons">
-                <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid"
+                <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/"
                   aria-label="On GitHub">
                   <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -599,8 +632,9 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
             <div class="toc-tree">
               <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
-<li><a class="reference internal" href="#release-v2-2-1">v2.2.1: Minigrid 2.2.1 Release Notes: changed default screen size</a></li>
-<li><a class="reference internal" href="#release-v2-2-0">v2.2.0</a></li>
+<li><a class="reference internal" href="#release-v2-3-0">v2.3.0 Release notes</a></li>
+<li><a class="reference internal" href="#release-v2-2-1">v2.2.1: Minigrid 2.2.1</a></li>
+<li><a class="reference internal" href="#release-v2-2-0">v2.2.0: Minigrid 2.2.0: added Pygame rendering support, fixed bug in wrappers and environments</a></li>
 <li><a class="reference internal" href="#release-v2-1-1">v2.1.1: Version 2.1.1</a></li>
 <li><a class="reference internal" href="#release-v2-1-0">v2.1.0: Version 2.1.0</a></li>
 <li><a class="reference internal" href="#release-v2-0-0">v2.0.0: Version 2.0.0</a></li>
@@ -683,6 +717,7 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
     <script src="../_static/scripts/furo.js"></script>
     
     <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'json';

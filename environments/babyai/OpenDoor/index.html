@@ -3,19 +3,19 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="">
+    <meta name="description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.">
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="" />
-    <meta property="og:url" content="https://minigrid.farama.org/environments/babyai/OpenDoor.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
+    <meta property="og:url" content="https://minigrid.farama.org/environments/babyai/OpenDoor.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Open Two Doors" href="../OpenTwoDoors/" /><link rel="prev" title="Open Red Door" href="../OpenRedDoor/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/babyai/OpenDoor.html" />
 
     <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 5.2.3 and Furo 2022.12.07.dev1 -->
         <title>Open Door - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=b0c92cd440df7c18a0306b0433406327ff2c572f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -227,6 +227,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/">Basic Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
@@ -345,8 +346,7 @@
             </svg>
             <span>Back to top</span>
           </a>
-          <div class="content-icon-container">
-            <div class="theme-toggle-container theme-toggle-content">
+          <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
               <button class="theme-toggle" title="Toggle color theme">
                 <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
                 <svg class="theme-icon-when-auto">
@@ -495,7 +495,7 @@ The door to open is given by its color or by its location.
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2022
+                Copyright &#169; 2023 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -505,7 +505,7 @@ The door to open is given by its color or by its location.
             </div>
             <div class="right-details">
               <div class="icons">
-                <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid"
+                <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/"
                   aria-label="On GitHub">
                   <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -614,6 +614,7 @@ The door to open is given by its color or by its location.
     <script src="../../../_static/scripts/furo.js"></script>
     
     <script>
+      // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
         xhr.responseType = 'json';
