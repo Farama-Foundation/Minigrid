@@ -1,28 +1,18 @@
-__author__ = "Feng Gu"
-__email__ = "contact@fenggu.me"
-
-"""
-   isort:skip_file
-"""
+from __future__ import annotations
 
 import os
 import re
+from itertools import chain
 
 from gymnasium.envs.registration import registry
 from tqdm import tqdm
-from utils import trim
-from itertools import chain
 
-from utils import env_name_format
+from utils import env_name_format, trim
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     "README.md",
 )
-
-LAYOUT = "env"
-
-pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
 all_envs = list(registry.values())
 
