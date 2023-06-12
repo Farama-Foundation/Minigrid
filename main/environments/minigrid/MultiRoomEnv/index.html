@@ -374,6 +374,29 @@
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../../_images/MultiRoomEnv.gif"><img alt="Multi Room" src="../../../_images/MultiRoomEnv.gif" style="width: 200px;" /></a>
 </figure>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Action Space</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Observation Space</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">MultiRoomEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f25ca452790&gt;,</span> <span class="pre">None))</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Reward Range</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Creation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-MultiRoom-N6-v0&quot;)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
 <p>This environment has a series of connected rooms with doors that must be
