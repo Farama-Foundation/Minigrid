@@ -4,7 +4,7 @@ firstpage:
 lastpage:
 ---
 
-```{project-logo} _static/img/minigrid-text.svg
+```{project-logo} _static/img/minigrid-text.png
 :alt: Minigrid Logo
 ```
 

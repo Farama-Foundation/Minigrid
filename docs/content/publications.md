@@ -7,6 +7,8 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [Hierarchies of Reward Machines](https://arxiv.org/abs/2205.15752) (Imperial College London, ILASP, Universitat Pompeu Fabra, ICML 2023)
+- [Minimal Value-Equivalent Partial Models for Scalable and Robust Planning in Lifelong Reinforcement Learning](https://arxiv.org/abs/2301.10119) (Mila, McGill University, CoLLAs 2023)
 - [DEIR: Efficient and Robust Exploration through Discriminative-Model-Based Episodic Intrinsic Rewards](https://arxiv.org/abs/2304.10770) (U-Tokyo, Google Brain, IJCAI 2023)
 - [Towards Improving Exploration in Self-Imitation Learning using Intrinsic Motivation](https://arxiv.org/abs/2211.16838) (TECNALIA, IEEE ADPRL 2022)
 - [An Evaluation Study of Intrinsic Motivation Techniques applied to Reinforcement Learning over Hard Exploration Environments](https://arxiv.org/abs/2205.11184) (TECNALIA, CD-MAKE 2022)
