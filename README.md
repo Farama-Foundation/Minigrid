@@ -42,7 +42,7 @@ The original `gym-minigrid` environments were created as part of work done at [M
 To cite this project please use:
 
 ```
-@article{Minigrid23,
+@article{MinigridMiniworld23,
   author       = {Maxime Chevalier-Boisvert and
                   Bolun Dai and
                   Mark Towers and
