@@ -77,6 +77,7 @@ class WFCEnv(MiniGridEnv):
 
     This environment procedurally generates a level using the Wave Function Collapse algorithm.
     The environment supports a variety of different level structures but the default is a simple maze.
+    Requires the optional dependencies `imageio` and `networkx` to be installed with `pip install minigrid[wfc]`.
 
     ## Mission Space
 
