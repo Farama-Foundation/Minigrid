@@ -14,7 +14,7 @@ from minigrid.core.mission import MissionSpace
 from minigrid.minigrid_env import MiniGridEnv
 from minigrid.core.constants import OBJECT_TO_IDX
 
-from minigrid.envs.wfc.wfclogic import solver as wfc_solver, control as wfc_control
+from minigrid.envs.wfc.wfclogic.control import execute_wfc
 from minigrid.envs.wfc.graphtransforms import GraphTransforms, EdgeDescriptor
 
 PATTERN_PATH = Path(__file__).parent / "patterns"
@@ -22,7 +22,21 @@ PATTERN_PATH = Path(__file__).parent / "patterns"
 
 @dataclass
 class WFCConfig:
-    """ Dataclass for holding WFC configuration parameters."""
+    """ Dataclass for holding WFC configuration parameters.
+
+    This controls the behavior of the WFC algorithm. The parameters are passed directly to the WFC solver.
+
+    Attributes:
+        pattern_path: Path to the pattern image that will be automatically loaded.
+        tile_size: Size of the tiles in pixels to create from the pattern image.
+        pattern_width: Size of the patterns in tiles to take from the pattern image. (greater than 3 is quite slow)
+        rotations: Number of rotations for each tile.
+        output_periodic: Whether the output should be periodic (wraps over edges).
+        input_periodic: Whether the input should be periodic (wraps over edges).
+        loc_heuristic: Heuristic for choosing the next tile location to collapse.
+        choice_heuristic: Heuristic for choosing the next tile to use between possible tiles.
+        backtracking: Whether to backtrack when contradictions are discovered.
+        """
     pattern_path: Path
     tile_size: int = 1
     pattern_width: int = 2
@@ -150,7 +164,7 @@ class WFCEnv(MiniGridEnv):
 
         # Main call to generate a black and white pattern with WFC
         shape_unpadded = (shape[0] - 2 * self.padding, shape[1] - 2 * self.padding)
-        pattern, _stats = wfc_control.execute_wfc(
+        pattern, _stats = execute_wfc(
             attempt_limit=self.max_attempts,
             output_size=shape_unpadded,
             np_random=self.np_random,
@@ -175,13 +189,15 @@ class WFCEnv(MiniGridEnv):
         )
         graph = graph_raw[0]
 
+        # Stage 2: Graph processing
+        # Retain only the largest connected graph component, fill in the rest with walls
         if self.ensure_connected:
             graph = self._get_largest_component(graph)
 
-        # Stage 2: Add start and goal nodes
+        # Add start and goal nodes
         graph = self._place_start_and_goal_random(graph)
 
-        # Convert back to grid
+        # Convert graph back to grid
         grid_array = GraphTransforms.dense_graph_to_minigrid(graph, shape=shape, padding=self.padding)
 
         # Decode to minigrid and set variables
@@ -189,7 +205,6 @@ class WFCEnv(MiniGridEnv):
         self.agent_pos = next(zip(*np.nonzero(grid_array[:, :, 0] == OBJECT_TO_IDX["agent"])))
         self.grid, _vismask = Grid.decode(grid_array)
         self.mission = self._gen_mission()
-
 
     def _pattern_to_minigrid_layout(self, pattern: np.ndarray):
         if pattern.ndim != 3:
@@ -239,6 +254,7 @@ class WFCEnv(MiniGridEnv):
     def _place_start_and_goal_random(self, graph: nx.Graph) -> nx.Graph:
         node_set = "navigable"
 
+        # Get two random navigable nodes
         possible_nodes = [n for n, d in graph.nodes(data=True) if d[node_set]]
         inds = self.np_random.permutation(len(possible_nodes))[:2]
         start_node, goal_node = possible_nodes[inds[0]], possible_nodes[inds[1]]

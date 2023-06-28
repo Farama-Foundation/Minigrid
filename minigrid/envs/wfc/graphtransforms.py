@@ -231,17 +231,8 @@ class GraphTransforms:
                     pass
 
         wall_encoding = np.array(minigrid_object_to_encoding_map['wall'], dtype=np.uint8)
-        # padded_grid = np.transpose(grids, (0, 3, 1, 2))
         padded_grid = np.pad(grids, ((padding, padding), (padding, padding), (0, 0)), 'constant', constant_values=-1)
-        # padded_grid = einops.rearrange(grids, 'b h w c -> b c h w')
-        # padded_grid = torchvision.transforms.Pad(1, fill=-1, padding_mode='constant')(padded_grid)
-        # padded_grid = einops.rearrange(padded_grid, 'b c h w -> b h w c')
         padded_grid = np.where(padded_grid == -np.ones(3, dtype=np.uint8), wall_encoding, padded_grid)
-        # padded_grid = np.where(padded_grid[:,:,0] == -np.ones(3, dtype=np.uint8), padding,padding_grid)
-        # padded_grid[np.where(padded_grid[..., 0] == -1)] = np.array(list(padding), dtype=np.uint8)
-
-        # grids = padded_grid.cpu().numpy().astype(level_info['dtype'])
-
         return padded_grid
 
     @staticmethod
