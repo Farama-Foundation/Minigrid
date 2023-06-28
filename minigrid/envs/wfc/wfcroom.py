@@ -147,13 +147,17 @@ class WFCEnv(MiniGridEnv):
 
     def _gen_grid(self, width, height):
         shape = (height, width)
-        for seed in range(self.max_attempts):
-            pattern = self._run_wfc(seed, (shape[0] - 2 * self.padding, shape[1] - 2 * self.padding))
-            if pattern is not None:
-                break
-        else:
-            raise RuntimeError("Could not generate a valid pattern")
-        assert pattern is not None
+
+        # Main call to generate a black and white pattern with WFC
+        shape_unpadded = (shape[0] - 2 * self.padding, shape[1] - 2 * self.padding)
+        pattern, _stats = wfc_control.execute_wfc(
+            attempt_limit=self.max_attempts,
+            output_size=shape_unpadded,
+            np_random=self.np_random,
+            **self.config.wfc_kwargs
+        )
+        if pattern is None:
+            raise RuntimeError(f"Could not generate a valid pattern within {self.max_attempts} attempts")
 
         grid_raw = self._pattern_to_minigrid_layout(pattern)
 
@@ -187,21 +191,6 @@ class WFCEnv(MiniGridEnv):
         self.grid, _vismask = Grid.decode(grid_array)
         self.mission = self._gen_mission()
 
-    def _run_wfc(self, seed, shape):
-        try:
-            generated_pattern, stats = wfc_control.execute_wfc(
-                attempt_limit=1,
-                output_size=shape,
-                np_random=self.np_random,
-                **self.config.wfc_kwargs
-            )
-        except wfc_solver.TimedOut or wfc_solver.StopEarly or wfc_solver.Contradiction:
-            # logger.info(
-            #     f"WFC failed to generate a pattern. Outcome: {stats['outcome']}"
-            # )
-            return None
-
-        return generated_pattern
 
     def _pattern_to_minigrid_layout(self, pattern: np.ndarray):
         if pattern.ndim != 3:
@@ -251,15 +240,10 @@ class WFCEnv(MiniGridEnv):
     def _place_start_and_goal_random(self, graph: nx.Graph) -> nx.Graph:
         node_set = "navigable"
 
-        # possible_nodes = torch.where(graph.ndata[node_set])[0]
         possible_nodes = [n for n, d in graph.nodes(data=True) if d[node_set]]
-        # inds = torch.randperm(len(possible_nodes))[:2]
         inds = self.np_random.permutation(len(possible_nodes))[:2]
-        # start_node, goal_node = possible_nodes[inds]
         start_node, goal_node = possible_nodes[inds[0]], possible_nodes[inds[1]]
 
-        # graph.ndata["start"][start_node] = 1
-        # graph.ndata["goal"][goal_node] = 1
         graph.nodes[start_node]["start"] = 1
         graph.nodes[goal_node]["goal"] = 1
 
