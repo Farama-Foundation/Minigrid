@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import logging
 from typing import Any, Callable, Collection, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, TypeVar
-from scipy import sparse  # type: ignore
+# from scipy import sparse  # type: ignore
 import numpy
 import numpy as np
 import sys
 import math
 import itertools
 from numpy.typing import NBitBase, NDArray
-from hilbertcurve.hilbertcurve import HilbertCurve  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +135,9 @@ def makeAdj(
             # logger.debug(js)
             for j in js:
                 m[i, j] = 1
-        adjMatrices[d] = sparse.csr_matrix(m)
+        # If scipy is available, use sparse matrices.
+        # adjMatrices[d] = sparse.csr_matrix(m)
+        adjMatrices[d] = m
     return adjMatrices
 
 
@@ -243,6 +244,7 @@ def makeSpiralLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Calla
 
 
 def makeHilbertLocationHeuristic(preferences: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_]], Tuple[int, int]]:
+    from hilbertcurve.hilbertcurve import HilbertCurve  # type: ignore
     curve_size = math.ceil(math.sqrt(max(preferences.shape[0], preferences.shape[1])))
     logger.debug(curve_size)
     curve_size = 4
@@ -284,27 +286,31 @@ def lexicalPatternHeuristic(weights: NDArray[np.bool_], wave: NDArray[np.bool_])
     return numpy.nonzero(weights)[0][0].item()
 
 
-def makeWeightedPatternHeuristic(weights: NDArray[np.floating[Any]]):
+def makeWeightedPatternHeuristic(weights: NDArray[np.floating[Any]], np_random: Optional[numpy.random.Generator]=None):
     num_of_patterns = len(weights)
+    np_random = numpy.random.default_rng() if np_random is None else np_random
 
     def weightedPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
         weighted_wave: NDArray[np.floating[Any]] = weights * wave
         weighted_wave /= weighted_wave.sum()
-        result = numpy.random.choice(num_of_patterns, p=weighted_wave)
+        result = np_random.choice(num_of_patterns, p=weighted_wave)
         return result
 
     return weightedPatternHeuristic
 
 
-def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
+def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]], np_random: Optional[numpy.random.Generator] = None) \
+        -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the rarest (currently least-used) pattern."""
+    np_random = numpy.random.default_rng() if np_random is None else np_random
+
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
         logger.debug(total_wave.shape)
         # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
         # logger.debug(wave_sums)
-        selected_pattern = numpy.random.choice(
+        selected_pattern = np_random.choice(
             numpy.where(wave_sums == wave_sums.max())[0]
         )
         return selected_pattern
@@ -313,14 +319,16 @@ def makeRarestPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[
 
 
 def makeMostCommonPatternHeuristic(
-    weights: NDArray[np.floating[Any]]
+    weights: NDArray[np.floating[Any]], np_random: Optional[numpy.random.Generator] = None
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the most common (currently most-used) pattern."""
+    np_random = numpy.random.default_rng() if np_random is None else np_random
+
     def weightedPatternHeuristic(wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]) -> int:
         logger.debug(total_wave.shape)
         # [logger.debug(e) for e in wave]
         wave_sums = numpy.sum(total_wave, (1, 2))
-        selected_pattern = numpy.random.choice(
+        selected_pattern = np_random.choice(
             numpy.where(wave_sums == wave_sums.min())[0]
         )
         return selected_pattern
@@ -328,14 +336,16 @@ def makeMostCommonPatternHeuristic(
     return weightedPatternHeuristic
 
 
-def makeRandomPatternHeuristic(weights: NDArray[np.floating[Any]]) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
+def makeRandomPatternHeuristic(weights: NDArray[np.floating[Any]], np_random: Optional[numpy.random.Generator] = None) \
+        -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     num_of_patterns = len(weights)
+    np_random = numpy.random.default_rng() if np_random is None else np_random
 
     def randomPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
         weighted_wave = 1.0 * wave
         weighted_wave /= weighted_wave.sum()
-        result = numpy.random.choice(num_of_patterns, p=weighted_wave)
+        result = np_random.choice(num_of_patterns, p=weighted_wave)
         return result
 
     return randomPatternHeuristic
@@ -375,8 +385,8 @@ def propagate(
                 wave, ((0, 0), (1, 1), (1, 1)), mode="constant", constant_values=True
             )
 
-        # adj is the list of adjacencies. For each direction d in adjacency, 
-        # check which patterns are still valid... 
+        # adj is the list of adjacencies. For each direction d in adjacency,
+        # check which patterns are still valid...
         for d in adj:
             dx, dy = d
             # padded[] is a version of the adjacency matrix with the values wrapped around

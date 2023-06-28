@@ -565,6 +565,15 @@ def register_minigrid_envs():
         entry_point="minigrid.envs:UnlockPickupEnv",
     )
 
+    # WaveFunctionCollapse
+    # ----------------------------------------
+
+    register(
+        id="MiniGrid-WFC-SimpleMaze-v0",
+        entry_point="minigrid.envs:WFCEnv",
+        kwargs={"wfc_config": "SimpleMaze"},
+    )
+
     # BabyAI - Language based levels - GoTo
     # ----------------------------------------
 

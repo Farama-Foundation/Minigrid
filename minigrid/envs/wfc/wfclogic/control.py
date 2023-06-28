@@ -98,6 +98,7 @@ def execute_wfc(
     logging: bool = False,
     global_constraints: None = None,
     log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
+    np_random: Optional[np.random.Generator] = None,
     *,
     image: Optional[NDArray[np.integer]] = None,
 ) -> NDArray[np.integer]:
@@ -105,6 +106,7 @@ def execute_wfc(
     time_begin = time.perf_counter()
     output_destination = r"./output/"
     input_folder = r"./images/samples/"
+    np_random = np.random.default_rng() if np_random is None else np_random
 
     rotations -= 1  # change to zero-based
 
@@ -250,15 +252,15 @@ def execute_wfc(
     encoded_weights: NDArray[np.float64] = np.zeros((number_of_patterns), dtype=np.float64)
     for w_id, w_val in pattern_weights.items():
         encoded_weights[encode_patterns[w_id]] = w_val
-    choice_random_weighting: NDArray[np.float64] = np.random.random_sample(wave.shape[1:]) * 0.1
+    choice_random_weighting: NDArray[np.float64] = np_random.random(wave.shape[1:]) * 0.1
 
     pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int] = lexicalPatternHeuristic
     if choice_heuristic == "rarest":
-        pattern_heuristic = makeRarestPatternHeuristic(encoded_weights)
+        pattern_heuristic = makeRarestPatternHeuristic(encoded_weights, np_random)
     if choice_heuristic == "weighted":
-        pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights)
+        pattern_heuristic = makeWeightedPatternHeuristic(encoded_weights, np_random)
     if choice_heuristic == "random":
-        pattern_heuristic = makeRandomPatternHeuristic(encoded_weights)
+        pattern_heuristic = makeRandomPatternHeuristic(encoded_weights, np_random)
 
     logger.debug(loc_heuristic)
     location_heuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]] = lexicalLocationHeuristic
