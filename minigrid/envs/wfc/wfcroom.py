@@ -185,8 +185,7 @@ class WFCEnv(MiniGridEnv):
         grid_array = GraphTransforms.dense_graph_to_minigrid(graph, shape=shape, padding=self.padding)
 
         # Decode to minigrid and set variables
-        # TODO: set agent direction better?
-        self.agent_dir = 0
+        self.agent_dir = self._rand_int(0, 4)
         self.agent_pos = next(zip(*np.nonzero(grid_array[:, :, 0] == OBJECT_TO_IDX["agent"])))
         self.grid, _vismask = Grid.decode(grid_array)
         self.mission = self._gen_mission()
