@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Dict, Tuple
 import numpy as np
 from numpy.typing import NDArray
-from .wfc_utilities import hash_downto
+from .utilities import hash_downto
 
 
 def image_to_tiles(img: NDArray[np.integer], tile_size: int) -> NDArray[np.integer]:

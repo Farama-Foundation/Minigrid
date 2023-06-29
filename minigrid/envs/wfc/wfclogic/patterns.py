@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any, Dict, Mapping, Optional, Tuple
-from .wfc_utilities import hash_downto
+from .utilities import hash_downto
 from collections import Counter
 import numpy as np
 from numpy.typing import NDArray
