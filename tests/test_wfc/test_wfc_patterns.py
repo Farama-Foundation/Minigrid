@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import numpy as np
-from minigrid.envs.wfc.wfclogic import patterns as wfc_patterns, tiles as wfc_tiles
+
+from minigrid.envs.wfc.wfclogic import patterns as wfc_patterns
+from minigrid.envs.wfc.wfclogic import tiles as wfc_tiles
 
 
 def test_unique_patterns_2d(img_redmaze) -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import collections
 import logging
-from typing import Any, Dict, Tuple
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -13,7 +13,7 @@ CoordXY = collections.namedtuple("CoordXY", ["x", "y"])
 CoordRC = collections.namedtuple("CoordRC", ["row", "column"])
 
 
-def hash_downto(a: NDArray[np.integer], rank: int, seed: Any=0) -> NDArray[np.int64]:
+def hash_downto(a: NDArray[np.integer], rank: int, seed=0) -> NDArray[np.int64]:
     state = np.random.RandomState(seed)
     # np_random = np.random.default_rng(seed)
     assert rank < len(a.shape)
@@ -29,10 +29,11 @@ def find_pattern_center(wfc_ns):
     wfc_ns.pattern_center = (0, 0)
     return wfc_ns
 
+
 def tile_grid_to_image(
     tile_grid: NDArray[np.int64],
-    tile_catalog: Dict[int, NDArray[np.integer]],
-    tile_size: Tuple[int, int],
+    tile_catalog: dict[int, NDArray[np.integer]],
+    tile_size: tuple[int, int],
     partial: bool = False,
     color_channels: int = 3,
 ) -> NDArray[np.integer]:
@@ -61,8 +62,8 @@ def tile_grid_to_image(
                 for u in range(tile_size[0]):
                     for v in range(tile_size[1]):
                         pixel = [200, 0, 200]
-                        ## If we want to display a partial pattern, it is helpful to
-                        ## be able to show empty cells.
+                        # If we want to display a partial pattern, it is helpful to
+                        # be able to show empty cells.
                         pixel = tile_catalog[tile][u, v]
                         # TODO: will need to change if using an image with more than 3 channels
                         new_img[

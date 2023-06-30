@@ -2,16 +2,20 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Mapping, Optional, Tuple
-from .utilities import hash_downto
 from collections import Counter
+from typing import Any, Mapping
+
 import numpy as np
 from numpy.typing import NDArray
+
+from .utilities import hash_downto
 
 logger = logging.getLogger(__name__)
 
 
-def unique_patterns_2d(agrid: NDArray[np.int64], ksize: int, periodic_input: bool) -> Tuple[NDArray[np.int64], NDArray[np.int64], NDArray[np.int64]]:
+def unique_patterns_2d(
+    agrid: NDArray[np.int64], ksize: int, periodic_input: bool
+) -> tuple[NDArray[np.int64], NDArray[np.int64], NDArray[np.int64]]:
     assert ksize >= 1
     if periodic_input:
         agrid = np.pad(
@@ -44,7 +48,9 @@ def unique_patterns_2d(agrid: NDArray[np.int64], ksize: int, periodic_input: boo
     uc, ui = np.unique(patch_codes, return_index=True)
     locs = np.unravel_index(ui, patch_codes.shape)
     up: NDArray[np.int64] = patches[locs[0], locs[1]]
-    ids: NDArray[np.int64] = np.vectorize({code: ind for ind, code in enumerate(uc)}.get)(patch_codes)
+    ids: NDArray[np.int64] = np.vectorize(
+        {code: ind for ind, code in enumerate(uc)}.get
+    )(patch_codes)
     return ids, up, patch_codes
 
 
@@ -73,18 +79,16 @@ def unique_patterns_brute_force(grid, size, periodic_input):
 
 def make_pattern_catalog(
     tile_grid: NDArray[np.int64], pattern_width: int, input_is_periodic: bool = True
-) -> Tuple[Dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
-    """Returns a pattern catalog (dictionary of pattern hashes to consituent tiles), 
-an ordered list of pattern weights, and an ordered list of pattern contents."""
+) -> tuple[dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
+    """Returns a pattern catalog (dictionary of pattern hashes to constituent tiles),
+    an ordered list of pattern weights, and an ordered list of pattern contents."""
     _patterns_in_grid, pattern_contents_list, patch_codes = unique_patterns_2d(
         tile_grid, pattern_width, input_is_periodic
     )
-    dict_of_pattern_contents: Dict[int, NDArray[np.int64]] = {}
+    dict_of_pattern_contents: dict[int, NDArray[np.int64]] = {}
     for pat_idx in range(pattern_contents_list.shape[0]):
         p_hash = hash_downto(pattern_contents_list[pat_idx], 0)
-        dict_of_pattern_contents.update(
-            {p_hash.item(): pattern_contents_list[pat_idx]}
-        )
+        dict_of_pattern_contents.update({p_hash.item(): pattern_contents_list[pat_idx]})
     pattern_frequency = Counter(hash_downto(pattern_contents_list, 1))
     return (
         dict_of_pattern_contents,
@@ -111,13 +115,16 @@ def rotate_grid(grid):
 
 
 def make_pattern_catalog_with_rotations(
-    tile_grid: NDArray[np.int64], pattern_width: int, rotations: int = 7, input_is_periodic: bool = True
-) -> Tuple[Dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
+    tile_grid: NDArray[np.int64],
+    pattern_width: int,
+    rotations: int = 7,
+    input_is_periodic: bool = True,
+) -> tuple[dict[int, NDArray[np.int64]], Counter, NDArray[np.int64], NDArray[np.int64]]:
     rotated_tile_grid = tile_grid.copy()
-    merged_dict_of_pattern_contents: Dict[int, NDArray[np.int64]] = {}
+    merged_dict_of_pattern_contents: dict[int, NDArray[np.int64]] = {}
     merged_pattern_frequency: Counter = Counter()
-    merged_pattern_contents_list: Optional[NDArray[np.int64]] = None
-    merged_patch_codes: Optional[NDArray[np.int64]]  = None
+    merged_pattern_contents_list: NDArray[np.int64] | None = None
+    merged_patch_codes: NDArray[np.int64] | None = None
 
     def _make_catalog() -> None:
         nonlocal rotated_tile_grid, merged_dict_of_pattern_contents, merged_pattern_contents_list, merged_pattern_frequency, merged_patch_codes

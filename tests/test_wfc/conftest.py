@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import os.path
-
 import pytest
 from numpy import array, uint8
 
-from minigrid.envs.wfc.wfcroom import PATTERN_PATH
+from minigrid.envs.wfc.config import PATTERN_PATH
 
 
 class Resources:

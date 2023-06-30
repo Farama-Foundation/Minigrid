@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Set, Tuple
-from numpy.typing import NDArray
 import numpy as np
+from numpy.typing import NDArray
+
 from minigrid.envs.wfc.wfclogic import solver as wfc_solver
 
 
@@ -12,12 +12,12 @@ def test_makeWave() -> None:
     # print(wave.sum())
     # print((2*10*19) + (1*10*1))
     assert wave.sum() == (2 * 10 * 19) + (1 * 10 * 1)
-    assert wave[2, 5, 19] == True
-    assert wave[1, 5, 19] == False
+    assert wave[2, 5, 19]
+    assert not wave[1, 5, 19]
 
 
 def test_entropyLocationHeuristic() -> None:
-    wave = np.ones((5, 3, 4), dtype=bool)  # everthing is possible
+    wave = np.ones((5, 3, 4), dtype=bool)  # everything is possible
     wave[1:, 0, 0] = False  # first cell is fully observed
     wave[4, :, 2] = False
     preferences: NDArray[np.float_] = np.ones((3, 4), dtype=np.float_) * 0.5
@@ -32,7 +32,7 @@ def test_observe() -> None:
     my_wave = np.ones((5, 3, 4), dtype=np.bool_)
     my_wave[0, 1, 2] = False
 
-    def locHeu(wave: NDArray[np.bool_]) -> Tuple[int, int]:
+    def locHeu(wave: NDArray[np.bool_]) -> tuple[int, int]:
         assert np.array_equal(wave, my_wave)
         return 1, 2
 
@@ -106,7 +106,7 @@ def test_run() -> None:
 
     assert np.array_equal(first_result, expected_first_result)
 
-    event_log: List[Any] = []
+    event_log: list = []
 
     def onChoice(pattern: int, i: int, j: int) -> None:
         event_log.append((pattern, i, j))

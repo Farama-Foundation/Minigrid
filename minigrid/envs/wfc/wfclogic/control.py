@@ -1,47 +1,44 @@
 from __future__ import annotations
 
-import datetime
-from typing import Any, Callable, Dict, List, Literal, Optional, Set, Tuple
-from .tiles import make_tile_catalog
-from .patterns import (
-    pattern_grid_to_tiles,
-    make_pattern_catalog_with_rotations,
-)
+import logging
+import time
+from typing import Any, Callable, Literal
+
+import numpy as np
+from numpy.typing import NDArray
+
 from .adjacency import adjacency_extraction
+from .patterns import make_pattern_catalog_with_rotations, pattern_grid_to_tiles
 from .solver import (
-    run,
-    makeWave,
-    makeAdj,
-    lexicalLocationHeuristic,
-    lexicalPatternHeuristic,
-    makeWeightedPatternHeuristic,
     Contradiction,
     StopEarly,
-    makeEntropyLocationHeuristic,
+    TimedOut,
+    lexicalLocationHeuristic,
+    lexicalPatternHeuristic,
     make_global_use_all_patterns,
+    makeAdj,
+    makeAntiEntropyLocationHeuristic,
+    makeEntropyLocationHeuristic,
+    makeHilbertLocationHeuristic,
     makeRandomLocationHeuristic,
     makeRandomPatternHeuristic,
-    TimedOut,
-    simpleLocationHeuristic,
-    makeSpiralLocationHeuristic,
-    makeHilbertLocationHeuristic,
-    makeAntiEntropyLocationHeuristic,
     makeRarestPatternHeuristic,
+    makeSpiralLocationHeuristic,
+    makeWave,
+    makeWeightedPatternHeuristic,
+    run,
+    simpleLocationHeuristic,
 )
+from .tiles import make_tile_catalog
 from .utilities import tile_grid_to_image
-import imageio  # type: ignore
-import numpy as np
-import time
-import logging
-from numpy.typing import NDArray
 
 logger = logging.getLogger(__name__)
 
 
-def make_log_stats() -> Callable[[Dict[str, Any], str], None]:
+def make_log_stats() -> Callable[[dict[str, Any], str], None]:
     log_line = 0
 
-    def log_stats(stats: Dict[str, Any], filename: str) -> None:
+    def log_stats(stats: dict[str, Any], filename: str) -> None:
         nonlocal log_line
         if stats:
             log_line += 1
@@ -62,25 +59,25 @@ def execute_wfc(
     tile_size: int = 1,
     pattern_width: int = 2,
     rotations: int = 8,
-    output_size: Tuple[int, int] = (48, 48),
-    ground: Optional[int] = None,
+    output_size: tuple[int, int] = (48, 48),
+    ground: int | None = None,
     attempt_limit: int = 10,
     output_periodic: bool = True,
     input_periodic: bool = True,
-    loc_heuristic: Literal["lexical", "hilbert", "spiral", "entropy", "anti-entropy", "simple", "random"] = "entropy",
+    loc_heuristic: Literal[
+        "lexical", "hilbert", "spiral", "entropy", "anti-entropy", "simple", "random"
+    ] = "entropy",
     choice_heuristic: Literal["lexical", "rarest", "weighted", "random"] = "weighted",
     global_constraint: Literal[False, "allpatterns"] = False,
     backtracking: bool = False,
     log_filename: str = "log",
     logging: bool = False,
     global_constraints: None = None,
-    log_stats_to_output: Optional[Callable[[Dict[str, Any], str], None]] = None,
-    np_random: Optional[np.random.Generator] = None,
+    log_stats_to_output: Callable[[dict[str, Any], str], None] | None = None,
+    np_random: np.random.Generator | None = None,
 ) -> NDArray[np.integer]:
-    timecode = datetime.datetime.now().isoformat().replace(":", ".")
     time_begin = time.perf_counter()
     output_destination = r"./output/"
-    input_folder = r"./images/samples/"
     np_random = np.random.default_rng() if np_random is None else np_random
 
     rotations -= 1  # change to zero-based
@@ -102,7 +99,9 @@ def execute_wfc(
     # TODO: generalize this to more than the four cardinal directions
     direction_offsets = list(enumerate([(0, -1), (1, 0), (0, 1), (-1, 0)]))
 
-    tile_catalog, tile_grid, _code_list, _unique_tiles = make_tile_catalog(image, tile_size)
+    tile_catalog, tile_grid, _code_list, _unique_tiles = make_tile_catalog(
+        image, tile_size
+    )
     (
         pattern_catalog,
         pattern_weights,
@@ -128,24 +127,25 @@ def execute_wfc(
     logger.debug(f"# patterns: {number_of_patterns}")
     decode_patterns = dict(enumerate(pattern_list))
     encode_patterns = {x: i for i, x in enumerate(pattern_list)}
-    _encode_directions = {j: i for i, j in direction_offsets}
 
-    adjacency_list: Dict[Tuple[int, int], List[Set[int]]] = {}
+    adjacency_list: dict[tuple[int, int], list[set[int]]] = {}
     for _, adjacency in direction_offsets:
         adjacency_list[adjacency] = [set() for _ in pattern_weights]
     # logger.debug(adjacency_list)
     for adjacency, pattern1, pattern2 in adjacency_relations:
         # logger.debug(adjacency)
         # logger.debug(decode_patterns[pattern1])
-        adjacency_list[adjacency][encode_patterns[pattern1]].add(encode_patterns[pattern2])
+        adjacency_list[adjacency][encode_patterns[pattern1]].add(
+            encode_patterns[pattern2]
+        )
 
     logger.debug(f"adjacency: {len(adjacency_list)}")
 
     time_adjacency = time.perf_counter()
 
-    ### Ground ###
+    # Ground #
 
-    ground_list: Optional[NDArray[np.int64]] = None
+    ground_list: NDArray[np.int64] | None = None
     if ground:
         ground_list = np.vectorize(lambda x: encode_patterns[x])(
             pattern_grid.flat[(ground - 1) :]
@@ -153,26 +153,25 @@ def execute_wfc(
     if ground_list is None or ground_list.size == 0:
         ground_list = None
 
-    if ground_list is not None:
-        ground_catalog = {
-            encode_patterns[k]: v
-            for k, v in pattern_catalog.items()
-            if encode_patterns[k] in ground_list
-        }
-
     wave = makeWave(
         number_of_patterns, output_size[0], output_size[1], ground=ground_list
     )
     adjacency_matrix = makeAdj(adjacency_list)
 
-    ### Heuristics ###
+    # Heuristics #
 
-    encoded_weights: NDArray[np.float64] = np.zeros((number_of_patterns), dtype=np.float64)
+    encoded_weights: NDArray[np.float64] = np.zeros(
+        (number_of_patterns), dtype=np.float64
+    )
     for w_id, w_val in pattern_weights.items():
         encoded_weights[encode_patterns[w_id]] = w_val
-    choice_random_weighting: NDArray[np.float64] = np_random.random(wave.shape[1:]) * 0.1
+    choice_random_weighting: NDArray[np.float64] = (
+        np_random.random(wave.shape[1:]) * 0.1
+    )
 
-    pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int] = lexicalPatternHeuristic
+    pattern_heuristic: Callable[
+        [NDArray[np.bool_], NDArray[np.bool_]], int
+    ] = lexicalPatternHeuristic
     if choice_heuristic == "rarest":
         pattern_heuristic = makeRarestPatternHeuristic(encoded_weights, np_random)
     if choice_heuristic == "weighted":
@@ -181,7 +180,9 @@ def execute_wfc(
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights, np_random)
 
     logger.debug(loc_heuristic)
-    location_heuristic: Callable[[NDArray[np.bool_]], Tuple[int, int]] = lexicalLocationHeuristic
+    location_heuristic: Callable[
+        [NDArray[np.bool_]], tuple[int, int]
+    ] = lexicalLocationHeuristic
     if loc_heuristic == "anti-entropy":
         location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "entropy":
@@ -196,17 +197,22 @@ def execute_wfc(
         # This requires hilbert_curve to be installed
         location_heuristic = makeHilbertLocationHeuristic(choice_random_weighting)
 
-    ### Global Constraints ###
-    active_global_constraint = lambda wave: True
+    # Global Constraints #
+
     if global_constraint == "allpatterns":
         active_global_constraint = make_global_use_all_patterns()
+    else:
+
+        def active_global_constraint(wave) -> bool:
+            return True
+
     logger.debug(active_global_constraint)
     combined_constraints = [active_global_constraint]
 
     def combinedConstraints(wave: NDArray[np.bool_]) -> bool:
         return all(fn(wave) for fn in combined_constraints)
 
-    ### Solving ###
+    # Solving #
 
     time_solve_start = None
     time_solve_end = None
@@ -229,9 +235,7 @@ def execute_wfc(
                 checkFeasible=combinedConstraints,
             )
             solution_as_ids = np.vectorize(lambda x: decode_patterns[x])(solution)
-            solution_tile_grid = pattern_grid_to_tiles(
-                solution_as_ids, pattern_catalog
-            )
+            solution_tile_grid = pattern_grid_to_tiles(solution_as_ids, pattern_catalog)
 
             time_solve_end = time.perf_counter()
             stats.update({"outcome": "success"})
@@ -242,8 +246,8 @@ def execute_wfc(
         except TimedOut:
             logger.debug("Timed Out")
             stats.update({"outcome": "timed_out"})
-        except Contradiction as exc:
-            #logger.warning(f"Contradiction: {exc}")
+        except Contradiction:
+            # logger.warning(f"Contradiction: {exc}")
             stats.update({"outcome": "contradiction"})
         finally:
             # profiler.dump_stats(f"logs/profile_{filename}_{timecode}.txt")
@@ -267,9 +271,16 @@ def execute_wfc(
             )
             outstats.update(stats)
             if log_stats_to_output is not None:
-                log_stats_to_output(outstats, output_destination + log_filename + ".tsv")
+                log_stats_to_output(
+                    outstats, output_destination + log_filename + ".tsv"
+                )
         if solution_tile_grid is not None:
-            return tile_grid_to_image(solution_tile_grid, tile_catalog, (tile_size, tile_size)), outstats
+            return (
+                tile_grid_to_image(
+                    solution_tile_grid, tile_catalog, (tile_size, tile_size)
+                ),
+                outstats,
+            )
         else:
             return None, outstats
 

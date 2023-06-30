@@ -3,11 +3,9 @@ from __future__ import annotations
 
 import numpy as np
 
-from minigrid.envs.wfc.wfclogic import (
-    tiles as wfc_tiles,
-    patterns as wfc_patterns,
-    adjacency as wfc_adjacency,
-)
+from minigrid.envs.wfc.wfclogic import adjacency as wfc_adjacency
+from minigrid.envs.wfc.wfclogic import patterns as wfc_patterns
+from minigrid.envs.wfc.wfclogic import tiles as wfc_tiles
 
 
 def test_adjacency_extraction(img_redmaze: np.ndarray) -> None:
