@@ -567,12 +567,18 @@ def register_minigrid_envs():
 
     # WaveFunctionCollapse
     # ----------------------------------------
+    try:
+        import imageio, networkx
+        from minigrid.envs.wfc.config import WFC_PRESETS
 
-    register(
-        id="MiniGrid-WFC-SimpleMaze-v0",
-        entry_point="minigrid.envs:WFCEnv",
-        kwargs={"wfc_config": "SimpleMaze"},
-    )
+        for name in WFC_PRESETS.keys():
+            register(
+                id=f"MiniGrid-WFC-{name}-v0",
+                entry_point="minigrid.envs:WFCEnv",
+                kwargs={"wfc_config": name},
+            )
+    except ImportError:
+        print("networkx and/or imageio not found, skipping registering WFC environments")
 
     # BabyAI - Language based levels - GoTo
     # ----------------------------------------

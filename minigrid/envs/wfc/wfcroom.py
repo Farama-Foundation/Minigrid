@@ -1,66 +1,22 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass, asdict, field
-from pathlib import Path
-from typing import Literal
 
-import imageio
 import networkx as nx
 import numpy as np
 
+from minigrid.core.constants import OBJECT_TO_IDX
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
-from minigrid.minigrid_env import MiniGridEnv
-from minigrid.core.constants import OBJECT_TO_IDX
-
+from minigrid.envs.wfc.config import WFC_PRESETS, WFCConfig
+from minigrid.envs.wfc.graphtransforms import EdgeDescriptor, GraphTransforms
 from minigrid.envs.wfc.wfclogic.control import execute_wfc
-from minigrid.envs.wfc.graphtransforms import GraphTransforms, EdgeDescriptor
+from minigrid.minigrid_env import MiniGridEnv
 
-PATTERN_PATH = Path(__file__).parent / "patterns"
-
-
-@dataclass
-class WFCConfig:
-    """ Dataclass for holding WFC configuration parameters.
-
-    This controls the behavior of the WFC algorithm. The parameters are passed directly to the WFC solver.
-
-    Attributes:
-        pattern_path: Path to the pattern image that will be automatically loaded.
-        tile_size: Size of the tiles in pixels to create from the pattern image.
-        pattern_width: Size of the patterns in tiles to take from the pattern image. (greater than 3 is quite slow)
-        rotations: Number of rotations for each tile.
-        output_periodic: Whether the output should be periodic (wraps over edges).
-        input_periodic: Whether the input should be periodic (wraps over edges).
-        loc_heuristic: Heuristic for choosing the next tile location to collapse.
-        choice_heuristic: Heuristic for choosing the next tile to use between possible tiles.
-        backtracking: Whether to backtrack when contradictions are discovered.
-        """
-    pattern_path: Path
-    tile_size: int = 1
-    pattern_width: int = 2
-    rotations: int = 8
-    output_periodic: bool = False
-    input_periodic: bool = False
-    loc_heuristic: Literal["lexical", "spiral", "entropy", "anti-entropy", "simple", "random"] = "entropy"
-    choice_heuristic: Literal["lexical", "rarest", "weighted", "random"] = "weighted"
-    backtracking: bool = False
-
-    @property
-    def wfc_kwargs(self):
-        kwargs = asdict(self)
-        kwargs["image"] = imageio.v2.imread(kwargs.pop("pattern_path"))[:, :, :3]
-        return kwargs
-
-
-WFC_PRESETS = {
-    "SimpleMaze": WFCConfig(pattern_path=PATTERN_PATH / "SimpleMaze.png", tile_size=1, pattern_width=2,
-                            rotations=8, output_periodic=False, input_periodic=False, loc_heuristic="entropy",
-                            choice_heuristic="weighted", backtracking=False)
+FEATURE_DESCRIPTORS = {"empty", "wall", "lava", "start", "goal"} | {
+    "navigable",
+    "non_navigable",
 }
-
-FEATURE_DESCRIPTORS = {"empty", "wall", "lava", "start", "goal"} | {"navigable", "non_navigable"}
 
 EDGE_CONFIG = {
     "navigable": EdgeDescriptor(between=("navigable",), structure="grid"),
@@ -119,20 +75,23 @@ class WFCEnv(MiniGridEnv):
     S: size of map SxS.
 
     """
+
     PATTERN_COLOR_CONFIG = {
         "wall": (0, 0, 0),  # black
         "empty": (255, 255, 255),  # white
     }
 
     def __init__(
-            self,
-            wfc_config: WFCConfig | str = "SimpleMaze",
-            size: int = 25,
-            ensure_connected: bool = True,
-            max_steps: int | None = None,
-            **kwargs,
+        self,
+        wfc_config: WFCConfig | str = "MazeSimple",
+        size: int = 25,
+        ensure_connected: bool = True,
+        max_steps: int | None = None,
+        **kwargs,
     ):
-        self.config = wfc_config if isinstance(wfc_config, WFCConfig) else WFC_PRESETS[wfc_config]
+        self.config = (
+            wfc_config if isinstance(wfc_config, WFCConfig) else WFC_PRESETS[wfc_config]
+        )
         self.padding = 1
 
         # This controls whether to process the level such that there is only a single connected navigable area
@@ -141,9 +100,9 @@ class WFCEnv(MiniGridEnv):
         mission_space = MissionSpace(mission_func=self._gen_mission)
 
         if size < 3:
-            raise ValueError("Grid size must be at least 3 (currently {})".format(size))
+            raise ValueError(f"Grid size must be at least 3 (currently {size})")
         self.size = size
-        self.max_attempts = 5
+        self.max_attempts = 100
 
         if max_steps is None:
             max_steps = self.size * 20
@@ -169,19 +128,17 @@ class WFCEnv(MiniGridEnv):
             attempt_limit=self.max_attempts,
             output_size=shape_unpadded,
             np_random=self.np_random,
-            **self.config.wfc_kwargs
+            **self.config.wfc_kwargs,
         )
         if pattern is None:
-            raise RuntimeError(f"Could not generate a valid pattern within {self.max_attempts} attempts")
+            raise RuntimeError(
+                f"Could not generate a valid pattern within {self.max_attempts} attempts"
+            )
 
         grid_raw = self._pattern_to_minigrid_layout(pattern)
 
         # Stage 1: Make a navigable graph with only one main cavern
-        stage1_edge_config = {
-            k: v
-            for k, v in EDGE_CONFIG.items()
-            if k == "navigable"
-        }
+        stage1_edge_config = {k: v for k, v in EDGE_CONFIG.items() if k == "navigable"}
         graph_raw, _edge_graphs = GraphTransforms.minigrid_layout_to_dense_graph(
             grid_raw[np.newaxis],
             remove_border=False,
@@ -199,11 +156,15 @@ class WFCEnv(MiniGridEnv):
         graph = self._place_start_and_goal_random(graph)
 
         # Convert graph back to grid
-        grid_array = GraphTransforms.dense_graph_to_minigrid(graph, shape=shape, padding=self.padding)
+        grid_array = GraphTransforms.dense_graph_to_minigrid(
+            graph, shape=shape, padding=self.padding
+        )
 
         # Decode to minigrid and set variables
         self.agent_dir = self._rand_int(0, 4)
-        self.agent_pos = next(zip(*np.nonzero(grid_array[:, :, 0] == OBJECT_TO_IDX["agent"])))
+        self.agent_pos = next(
+            zip(*np.nonzero(grid_array[:, :, 0] == OBJECT_TO_IDX["agent"]))
+        )
         self.grid, _vismask = Grid.decode(grid_array)
         self.mission = self._gen_mission()
 
@@ -212,10 +173,7 @@ class WFCEnv(MiniGridEnv):
             raise ValueError(
                 f"Expected pattern to have 3 dimensions, but got {pattern.ndim}"
             )
-        layout = (
-                np.ones(pattern.shape, dtype=np.uint8)
-                * OBJECT_TO_IDX["empty"]
-        )
+        layout = np.ones(pattern.shape, dtype=np.uint8) * OBJECT_TO_IDX["empty"]
 
         wall_ids = np.where(pattern == self.PATTERN_COLOR_CONFIG["wall"])
         layout[wall_ids] = OBJECT_TO_IDX["wall"]
@@ -227,12 +185,14 @@ class WFCEnv(MiniGridEnv):
     def _get_largest_component(graph: nx.Graph) -> nx.Graph:
         wall_graph_attr = GraphTransforms.OBJECT_TO_DENSE_GRAPH_ATTRIBUTE["wall"]
         # Prepare graph
-        inactive_nodes = [x for x, y in graph.nodes(data=True) if y['navigable'] < .5]
+        inactive_nodes = [x for x, y in graph.nodes(data=True) if y["navigable"] < 0.5]
         graph.remove_nodes_from(inactive_nodes)
 
-        components = [graph.subgraph(c).copy() for c in
-                      sorted(nx.connected_components(graph), key=len, reverse=True) if
-                      len(c) > 1]
+        components = [
+            graph.subgraph(c).copy()
+            for c in sorted(nx.connected_components(graph), key=len, reverse=True)
+            if len(c) > 1
+        ]
         component = components[0]
         graph = graph.subgraph(component)
 

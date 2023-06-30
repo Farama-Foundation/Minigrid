@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os.path
+
 import pytest
 from numpy import array, uint8
 
