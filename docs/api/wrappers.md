@@ -75,3 +75,9 @@ lastpage:
 ```{eval-rst}
 .. autoclass:: minigrid.wrappers.ViewSizeWrapper
 ```
+
+# NoDeath
+
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.NoDeath
+```
