@@ -806,7 +806,7 @@ class NoDeath(Wrapper):
         >>> reward, term
         (0, True)
         >>>
-        >>> env = NoDeath(env, ["lava"], -1)
+        >>> env = NoDeath(env, no_death_types=("lava",), death_cost=-1.0)
         >>> _, _ = env.reset(seed=2)
         >>> _, _, _, _, _ = env.step(1)
         >>> _, reward, term, *_ = env.step(2)
@@ -820,14 +820,14 @@ class NoDeath(Wrapper):
         >>> reward, term
         (-1, True)
         >>>
-        >>> env = NoDeath(env, ["ball"], -1)
+        >>> env = NoDeath(env, no_death_types=("ball",), death_cost=-1.0)
         >>> _, _ = env.reset(seed=2)
         >>> _, reward, term, *_ = env.step(2)
         >>> reward, term
         (-2, False)
     """
 
-    def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.):
+    def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.0):
         """A wrapper to prevent death in specific cells.
 
         Args:

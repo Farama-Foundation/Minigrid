@@ -367,7 +367,7 @@ def test_no_death_wrapper():
     _, _, _, _, _ = env.step(1)
     _, reward, term, *_ = env.step(2)
 
-    env_wrap = NoDeath(env, ["lava"], death_cost)
+    env_wrap = NoDeath(env, ("lava",), death_cost)
     _, _ = env_wrap.reset(seed=2)
     _, _, _, _, _ = env_wrap.step(1)
     _, reward_wrap, term_wrap, *_ = env_wrap.step(2)
@@ -381,7 +381,7 @@ def test_no_death_wrapper():
     _, _ = env.reset(seed=2)
     _, reward, term, *_ = env.step(2)
 
-    env = NoDeath(env, ["ball"], death_cost)
+    env = NoDeath(env, ("ball",), death_cost)
     _, _ = env.reset(seed=2)
     _, reward_wrap, term_wrap, *_ = env.step(2)
 
