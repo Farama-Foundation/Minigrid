@@ -34,6 +34,12 @@ lastpage:
 .. autoclass:: minigrid.wrappers.FullyObsWrapper
 ```
 
+# No Death
+
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.NoDeath
+```
+
 # Observation
 
 ```{eval-rst}
@@ -74,10 +80,4 @@ lastpage:
 
 ```{eval-rst}
 .. autoclass:: minigrid.wrappers.ViewSizeWrapper
-```
-
-# NoDeath
-
-```{eval-rst}
-.. autoclass:: minigrid.wrappers.NoDeath
 ```

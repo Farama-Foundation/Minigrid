@@ -16,6 +16,7 @@ from minigrid.wrappers import (
     FlatObsWrapper,
     FullyObsWrapper,
     ImgObsWrapper,
+    NoDeath,
     OneHotPartialObsWrapper,
     PositionBonus,
     ReseedWrapper,
@@ -24,7 +25,6 @@ from minigrid.wrappers import (
     StochasticActionWrapper,
     SymbolicObsWrapper,
     ViewSizeWrapper,
-    NoDeath,
 )
 from tests.utils import all_testing_env_specs, assert_equals, minigrid_testing_env_specs
 
