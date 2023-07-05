@@ -811,7 +811,7 @@ class NoDeath(Wrapper):
         >>> _, _, _, _, _ = env.step(1)
         >>> _, reward, term, *_ = env.step(2)
         >>> reward, term
-        (-1, False)
+        (-1.0, False)
         >>>
         >>>
         >>> env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")
@@ -824,7 +824,7 @@ class NoDeath(Wrapper):
         >>> _, _ = env.reset(seed=2)
         >>> _, reward, term, *_ = env.step(2)
         >>> reward, term
-        (-2, False)
+        (-2.0, False)
     """
 
     def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.0):
