@@ -436,8 +436,8 @@ class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
 
 class MultiPedestrianEnv5x20(PedestrianEnv):
     def __init__(self):
-        width = 30
-        height = 6 # actual height: 10 + 2 gray square on top and bottom
+        width = 20
+        height = 5 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
@@ -455,6 +455,16 @@ class MultiPedestrianEnv1x20(PedestrianEnv):
             pedAgents=None
         )
 
+class MultiPedestrianEnv100x100(PedestrianEnv):
+    def __init__(self):
+        width = 100
+        height = 100 # actual height: 10 + 2 gray square on top and bottom
+        super().__init__(
+            width=width,
+            height=height,
+            pedAgents=None
+        )
+
 register(
     id='BidirectionPedestrianFlowEnv-20x80-v0',
     entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:BidirectionPedestrianFlowEnv20x80'
@@ -466,4 +476,9 @@ register(
 register(
     id='MultiPedestrian-Empty-1x20-v0',
     entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv1x20'
+)
+
+register(
+    id='MultiPedestrian-Empty-100x100-v0',
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv100x100'
 )
