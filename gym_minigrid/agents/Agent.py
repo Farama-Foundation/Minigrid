@@ -1,5 +1,5 @@
 from typing import Tuple
-from gym_minigrid.lib import BaseObject
+from gym_minigrid.lib.BaseObject import BaseObject
 import random
 import numpy as np
 
@@ -7,25 +7,24 @@ class Agent(BaseObject):
     def __init__(
         self, 
         id,
-        initTopLeft: Tuple[int, int],
-        initBottomRight: Tuple[int, int],
+        topLeft: Tuple[int, int],
+        bottomRight: Tuple[int, int],
         direction: int, # TODO convert direction to enum
         maxSpeed: float = 4,
         speed: float = 3,
-        DML: bool = False, # TODO this is not a property of the agent.
-        p_exchg: float = 0.0
-        ):
+        objectType="Agent"
+    ):
 
         self.id = id
 
-        self.DML = DML
-        self.p_exchg = p_exchg
-
         super().__init__(
-            initTopLeft=initTopLeft,
-            initBottomRight=initBottomRight
+            topLeft=topLeft,
+            bottomRight=bottomRight,
+            objectType=objectType
         )
 
+        self.initTopLeft = topLeft
+        self.initBottomRight = bottomRight
         self.initDirection = direction
 
         self.direction = direction
@@ -45,6 +44,7 @@ class Agent(BaseObject):
 
     def reset(self):
         # TODO 
-        super().reset()
+        self.topLeft = self.initTopLeft
+        self.bottomRight = self.initBottomRight
         self.direction = self.initDirection
         pass

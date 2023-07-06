@@ -1,22 +1,29 @@
 from typing import Tuple, List
-from gym_minigrid.agents.BaseObject import BaseObject
+from gym_minigrid.lib.BaseObject import BaseObject
 from gym_minigrid.agents.Lane import Lane
 
 class Road(BaseObject):
     def __init__(
         self,
-        roads: List[Lane]
+        lanes: List[Lane],
+        roadID: int,
+        objectType="Road"
     ):
-        self.roads = roads
-        self.roads.sort(key=lambda lane: lane.topLeft)
-        if roads.len() != 0:
-            self.topLeft = roads[0].topLeft
-            self.bottomRight = roads[roads.len()-1].bottomRight
+        self.lanes = lanes
+        self.lanes.sort(key=lambda lane: lane.topLeft)
+        if len(lanes) != 0:
+            self.topLeft = lanes[0].topLeft
+            self.bottomRight = lanes[len(lanes)-1].bottomRight
         else:
             self.topLeft = None
             self.bottomRight = None
 
-        super.__init__(
+        self.roadID = roadID
+
+        super().__init__(
             topLeft=self.topLeft,
-            bottomRight=self.bottomRight
+            bottomRight=self.bottomRight,
+            objectType=objectType
         )
+
+    # idea: add intersections in the future, either in this class or a separate one

@@ -32,11 +32,11 @@ class BlueAdlerPedAgent(PedAgent):
             position=position,
             direction=direction,
             maxSpeed=maxSpeed,
-            speed=speed,
-            DML=DML,
-            p_exchg=p_exchg
+            speed=speed
         )
 
+        self.DML = DML
+        self.p_exchg = p_exchg
         self.pedVmax = pedVmax
         # self.speedFixed = True
 
@@ -55,16 +55,16 @@ class BlueAdlerPedAgent(PedAgent):
             _type_: 0 to keep lane, 1 shiftLeft, 2 shiftRight
         """
         # self.speedFixed = False
-        agents = env.agents
+        agents = env.pedAgents
         #TODO Simulate lane change
         gaps = [None] * 3
         gaps[0] = self.computeGap(agents, LaneNum.currentLane, env)
         if self.canShiftLeft == True:
-            gaps[1] = self.computeGap(agents, Lanes.leftLane, env)
+            gaps[1] = self.computeGap(agents, LaneNum.leftLane, env)
         else:
             gaps[1] = -100, 0, 0, None
         if self.canShiftRight == True:
-            gaps[2] = self.computeGap(agents, Lanes.rightLane, env)
+            gaps[2] = self.computeGap(agents, LaneNum.rightLane, env)
         else:
             gaps[2] = -100, 0, 0, None
         
@@ -133,7 +133,7 @@ class BlueAdlerPedAgent(PedAgent):
         # if self.speedFixed == True:
         #     return Action(self, ForwardAction.KEEP)
 
-        agents = env.agents
+        agents = env.pedAgents
         self.speed = self.gap
         # if self.gap <= 1 and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
         if self.gap < self.pedVmax and self.gap == self.gapOpp: # self.gap may have to be 0 instead of 0 or 1
@@ -158,9 +158,9 @@ class BlueAdlerPedAgent(PedAgent):
         """
 
         laneOffset = 0
-        if lane == Lanes.leftLane:
+        if lane == LaneNum.leftLane:
             laneOffset = -1
-        elif lane == Lanes.rightLane:
+        elif lane == LaneNum.rightLane:
             laneOffset = 1
 
         sameAgents, oppositeAgents = self.getSameAndOppositeAgents(agents, laneOffset=laneOffset)

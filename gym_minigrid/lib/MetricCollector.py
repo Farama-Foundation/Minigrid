@@ -7,22 +7,40 @@ class MetricCollector:
 
     def __init__(self, 
             env: IMultiPedestrianEnv,
-            stepsToIgnoreAtTheBeginning = 100,
+            stepsToIgnoreAtTheBeginning = 0,
             stepsToRecord = 1100
         ):
 
         self.stepsToIgnoreAtTheBeginning = stepsToIgnoreAtTheBeginning
         self.stepsToRecord = stepsToRecord
 
-        self.previousState = defaultdict(lambda : defaultdict(lambda : None)) # TODO assuming previous state does not have values past the last step.
+        self.previousState = defaultdict(lambda : defaultdict(lambda : None))
+        # TODO assuming previous state does not have values past the last step.
+        # ^ resolved by using handleStepBefore initially
 
         # subscribe to the stepAfter event so that it can read the updated world state
         logging.info("Attaching metric collector the the stepAfter event")
+        env.subscribe(EnvEvent.stepBefore, self.handleStepBefore)
         env.subscribe(EnvEvent.stepAfter, self.handleStepAfter)
 
         self.stepStats = defaultdict(lambda: []) # average stuff in every step
         self.volumeStats = []
-    
+        self.pedestrianPositions = defaultdict(lambda : [])
+        self.vehiclePositions = defaultdict(lambda : defaultdict(lambda : []))
+
+    def handleStepBefore(self, env: IMultiPedestrianEnv):
+        # store initial state values
+        for agent in env.getPedAgents():
+            #reset
+            self.previousState[agent]["position"] = agent.position
+            self.previousState[agent]["direction"] = agent.direction
+        for agent in env.getVehicleAgents():
+            #reset
+            self.previousState[agent]["topLeft"] = agent.topLeft
+            self.previousState[agent]["bottomRight"] = agent.bottomRight
+
+        # if env.step_count == 0:
+        env.unsubscribe(EnvEvent.stepBefore, self.handleStepBefore)
 
     def handleStepAfter(self, env: IMultiPedestrianEnv):
         if env.step_count < self.stepsToIgnoreAtTheBeginning:
@@ -36,19 +54,30 @@ class MetricCollector:
         self.collectSpeed(env)
         # collect volume
         self.collectVolume(env)
+        # collect pedestrian positions
+        self.collectPedestrianPositions(env)
+        #collect vehicle positions
+        self.collectVehiclePositions(env)
 
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             #reset
             self.previousState[agent]["position"] = agent.position
             self.previousState[agent]["direction"] = agent.direction
+        for agent in env.getVehicleAgents():
+            #reset
+            self.previousState[agent]["topLeft"] = agent.topLeft
+            self.previousState[agent]["bottomRight"] = agent.bottomRight
     
     def getStatistics(self):
         return [self.stepStats, self.volumeStats]
         pass
 
+    def getPositions(self):
+        return [self.pedestrianPositions, self.vehiclePositions]
+
     def collectVolume(self, env):
         revolutions = 0
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             if self.previousState[agent]["direction"] is None:
                 self.previousState[agent]["direction"] = agent.direction
             # elif list(agent.position) != list(self.previousState[agent]["position"]) and agent.direction != self.previousState[agent]["direction"]:
@@ -68,7 +97,7 @@ class MetricCollector:
     def collectSpeed(self, env):
         totalXSpeed = 0
         totalYSpeed = 0
-        for agent in env.getAgents():
+        for agent in env.getPedAgents():
             if self.previousState[agent]["position"] is None:
                 self.previousState[agent]["position"] = agent.position
             else:
@@ -90,5 +119,23 @@ class MetricCollector:
                 self.previousState[agent]["xSpeed"] = xSpeed
                 self.previousState[agent]["ySpeed"] = ySpeed
         
-        self.stepStats["xSpeed"].append(totalXSpeed / len(env.getAgents()))
-        self.stepStats["ySpeed"].append(totalYSpeed / len(env.getAgents()))
+        self.stepStats["xSpeed"].append(totalXSpeed / len(env.getPedAgents()))
+        self.stepStats["ySpeed"].append(totalYSpeed / len(env.getPedAgents()))
+
+    def collectPedestrianPositions(self, env):
+        if env.step_count == 1:
+            for pedestrian in env.getPedAgents():
+                self.pedestrianPositions[pedestrian].append(self.previousState[pedestrian]["position"])
+        
+        for pedestrian in env.getPedAgents():
+            self.pedestrianPositions[pedestrian].append(pedestrian.position)
+
+    def collectVehiclePositions(self, env):
+        if env.step_count == 1:
+            for vehicle in env.getVehicleAgents():
+                self.vehiclePositions[vehicle]["topLeft"].append(self.previousState[vehicle]["topLeft"])
+                self.vehiclePositions[vehicle]["bottomRight"].append(self.previousState[vehicle]["bottomRight"])
+        
+        for vehicle in env.getVehicleAgents():
+                self.vehiclePositions[vehicle]["topLeft"].append(vehicle.topLeft)
+                self.vehiclePositions[vehicle]["bottomRight"].append(vehicle.bottomRight)

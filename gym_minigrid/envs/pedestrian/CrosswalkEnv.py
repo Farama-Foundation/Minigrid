@@ -1,17 +1,18 @@
-from .MultiPedestrianEnv import MultiPedestrianEnv
-
+from gym_minigrid.agents.Agent import Agent
+from .PedestrianEnv import MultiPedestrianEnv
+import typing as List
 
 class CrosswalkEnv(MultiPedestrianEnv):
 
-
+    # refactor if we have time (add Crosswalk object)
     
     def __init__(
         self,
         agents: List[Agent]=None,
         width=8,
         height=8,
-        crosswalkPosition=None
-        crosswalkOrigin=None
+        crosswalkPosition=None,
+        crosswalkOrigin=None,
         crosswalkSize = 3
     ):
 
@@ -23,11 +24,10 @@ class CrosswalkEnv(MultiPedestrianEnv):
         if crosswalkOrigin is None:
             crosswalkOrigin = (width // 2, crosswalkPosition[1] + (crosswalkSize // 2))
 
-        this.crosswalkOrigin = crosswalkOrigin
-        this.crosswalkPosition = crosswalkPosition
-        this.crosswalkSize = crosswalkSize
+        self.crosswalkOrigin = crosswalkOrigin
+        self.crosswalkPosition = crosswalkPosition
+        self.crosswalkSize = crosswalkSize
 
-    
     def getCrossWalkPoint(self, worldPoint):
         return (worldPoint[0] - self.crosswalkOrigin[0], worldPoint[1] - self.crosswalkOrigin[1])
 

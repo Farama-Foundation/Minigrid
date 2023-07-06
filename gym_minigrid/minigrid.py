@@ -158,7 +158,7 @@ class Goal(WorldObj):
     def can_overlap(self):
         return True
 
-    def render(self, img):
+    def render(self, img):        
         fill_coords(img, point_in_rect(0, 1, 0, 1), COLORS[self.color])
 
 class Floor(WorldObj):
@@ -198,7 +198,7 @@ class Lava(WorldObj):
             fill_coords(img, point_in_line(0.1, ylo, 0.3, yhi, r=0.03), (0,0,0))
             fill_coords(img, point_in_line(0.3, yhi, 0.5, ylo, r=0.03), (0,0,0))
             fill_coords(img, point_in_line(0.5, ylo, 0.7, yhi, r=0.03), (0,0,0))
-            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0,0,0))
+            fill_coords(img, point_in_line(0.7, yhi, 0.9, ylo, r=0.03), (0,0,0)) 
 
 class Wall(WorldObj):
     def __init__(self, color='grey'):
@@ -446,7 +446,6 @@ class Grid:
         """
         Render a tile and cache the result
         """
-
         # Hash map lookup key for the cache
         key = (agent_dir, highlight, tile_size)
         key = obj.encode() + key if obj else key
@@ -462,7 +461,7 @@ class Grid:
 
         if obj != None:
             obj.render(img)
-
+        
         # Overlay the agent on top
         if agent_dir is not None:
             tri_fn = point_in_triangle(
@@ -1242,7 +1241,7 @@ class MiniGridEnv(gym.Env):
         """
         Render the whole-grid human view
         """
-
+        
         if close:
             if self.window:
                 self.window.close()

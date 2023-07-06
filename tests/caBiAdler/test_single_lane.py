@@ -71,7 +71,7 @@ def test_2_agents(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -82,9 +82,7 @@ def test_2_agents(env):
     assert agent1.position == agent1Position
     assert agent2.position == agent2Position
 
-    assert False
-
-
+    # assert False
 
 @pytest.mark.caBiAdler
 def test_2_agents_exchange(env):
@@ -123,7 +121,7 @@ def test_2_agents_exchange(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -173,7 +171,7 @@ def test_2_agents_exchange_inthesameplace(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -235,7 +233,7 @@ def test_3_agents_stuck(env):
     agents.append(agent3)
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 

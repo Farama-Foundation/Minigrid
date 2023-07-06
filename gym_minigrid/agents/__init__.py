@@ -1,6 +1,12 @@
 from gym_minigrid.agents.Agent import *
 from gym_minigrid.agents.PedAgent import *
-from gym_minigrid.agents.LaneNum import LaneNum
-from gym_minigrid.agents.PedActions import PedActions
-from gym_minigrid.agents.BlueAdlerPedAgent import BlueAdlerPedAgent
-
+from gym_minigrid.agents.LaneNum import *
+from gym_minigrid.agents.PedActions import *
+from gym_minigrid.agents.BlueAdlerPedAgent import *
+from gym_minigrid.agents.Lane import *
+from gym_minigrid.agents.Road import *
+from gym_minigrid.agents.Vehicle import *
+from gym_minigrid.agents.Sidewalk import *
+from gym_minigrid.agents.Crosswalk import *
+from gym_minigrid.agents.SimpleVehicle import *
+from gym_minigrid.agents.SimplePedAgent import *

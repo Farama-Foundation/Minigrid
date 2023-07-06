@@ -73,7 +73,7 @@ def test_2_agents(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
@@ -119,7 +119,7 @@ def test_2_agents_for_diagram(env):
 
     # agent2 = BlueAdlerPedAgent(
 
-    env.addAgents(agents)
+    env.addPedAgents(agents)
 
     runSteps(env, 1, close=False)
 
