@@ -14,7 +14,7 @@
         <title>minigrid.wrappers - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
     
     
 
@@ -236,6 +236,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#reseed">Reseed</a></li>
@@ -1159,6 +1160,82 @@
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span>
+
+
+<div class="viewcode-block" id="NoDeath"><a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.NoDeath">[docs]</a><span class="k">class</span> <span class="nc">NoDeath</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper to prevent death in specific cells (e.g., lava cells).</span>
+<span class="sd">    Instead of dying, the agent will receive a negative reward.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
+<span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import NoDeath</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS9N1-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
+<span class="sd">        &gt;&gt;&gt; _, _, _, _, _ = env.step(1)</span>
+<span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
+<span class="sd">        &gt;&gt;&gt; reward, term</span>
+<span class="sd">        (0, True)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=(&quot;lava&quot;,), death_cost=-1.0)</span>
+<span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
+<span class="sd">        &gt;&gt;&gt; _, _, _, _, _ = env.step(1)</span>
+<span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
+<span class="sd">        &gt;&gt;&gt; reward, term</span>
+<span class="sd">        (-1.0, False)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Dynamic-Obstacles-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
+<span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
+<span class="sd">        &gt;&gt;&gt; reward, term</span>
+<span class="sd">        (-1, True)</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=(&quot;ball&quot;,), death_cost=-1.0)</span>
+<span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
+<span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
+<span class="sd">        &gt;&gt;&gt; reward, term</span>
+<span class="sd">        (-2.0, False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">death_cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper to prevent death in specific cells.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env: The environment to apply the wrapper</span>
+<span class="sd">            no_death_types: List of strings to identify death cells</span>
+<span class="sd">            death_cost: The negative reward received in death cells</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;goal&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_death_types</span><span class="p">,</span> <span class="s2">&quot;goal cannot be a death cell&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">death_cost</span> <span class="o">=</span> <span class="n">death_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no_death_types</span> <span class="o">=</span> <span class="n">no_death_types</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="c1"># In Dynamic-Obstacles, obstacles move after the agent moves,</span>
+        <span class="c1"># so we need to check for collision before self.env.step()</span>
+        <span class="n">front_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">front_pos</span><span class="p">)</span>
+        <span class="n">going_to_death</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">forward</span>
+            <span class="ow">and</span> <span class="n">front_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">front_cell</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_death_types</span>
+        <span class="p">)</span>
+
+        <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># We also check if the agent stays in death cells (e.g., lava)</span>
+        <span class="c1"># without moving</span>
+        <span class="n">current_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">)</span>
+        <span class="n">in_death</span> <span class="o">=</span> <span class="n">current_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">current_cell</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">no_death_types</span>
+
+        <span class="k">if</span> <span class="n">terminated</span> <span class="ow">and</span> <span class="p">(</span><span class="n">going_to_death</span> <span class="ow">or</span> <span class="n">in_death</span><span class="p">):</span>
+            <span class="n">terminated</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">death_cost</span>
+
+        <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span></div>
 </pre></div>
           </article>
         </div>
