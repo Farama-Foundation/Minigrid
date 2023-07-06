@@ -21,8 +21,8 @@ for dirSplitInt in range(5, 11):
     for densityInt in range(1, 20):
 
         # Load the gym environment
-        env = gym.make('MultiPedestrian-Empty-20x80-v0')
-        metricCollector = MetricCollector(env)
+        env = gym.make('MultiPedestrian-Empty-5x20-v0')
+        # metricCollector = MetricCollector(env)
         agents = []
 
         density = round(0.05 * densityInt, ndigits=2)
@@ -63,7 +63,7 @@ for dirSplitInt in range(5, 11):
                 )
             )
             del possibleCoordinates[randomIndex]
-        env.addAgents(agents)
+        env.addPedAgents(agents)
 
         env.reset()
 
@@ -80,20 +80,20 @@ for dirSplitInt in range(5, 11):
             if i % 100 == 0:
                 logging.info(f"Completed step {i+1}")
 
-            # time.sleep(2)
+            time.sleep(2)
 
         logging.info(env.getAverageSpeed())
 
-        stepStats = metricCollector.getStatistics()[0]
-        avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
-        logging.info("Average speed: " + str(avgSpeed))
-        volumeStats = metricCollector.getStatistics()[1]
-        avgVolume = sum(volumeStats) / len(volumeStats)
-        logging.info("Average volume: " + str(avgVolume))
+        # stepStats = metricCollector.getStatistics()[0]
+        # avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
+        # logging.info("Average speed: " + str(avgSpeed))
+        # volumeStats = metricCollector.getStatistics()[1]
+        # avgVolume = sum(volumeStats) / len(volumeStats)
+        # logging.info("Average volume: " + str(avgVolume))
 
-        values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
-        values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
-        values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
+        # values[dirSplitInt - 5][densityInt - 1][0] = avgSpeed
+        # values[dirSplitInt - 5][densityInt - 1][1] = avgVolume
+        # values[dirSplitInt - 5][densityInt - 1][2] = env.getAverageSpeed()
 
         # Test the close method
         env.close()
