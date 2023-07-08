@@ -58,31 +58,10 @@ WFC_PRESETS = {
         output_periodic=False,
         input_periodic=False,
     ),
-    "MazeKnot": WFCConfig(
-        pattern_path=PATTERN_PATH / "Knot.png",
-        tile_size=1,
-        pattern_width=3,
-        output_periodic=True,
-        input_periodic=True,
-    ),
-    "MazeWall": WFCConfig(
-        pattern_path=PATTERN_PATH / "SimpleWall.png",
-        tile_size=1,
-        pattern_width=2,
-        output_periodic=True,
-        input_periodic=True,
-    ),
     "DungeonMazeScaled": WFCConfig(
         pattern_path=PATTERN_PATH / "ScaledMaze.png",
         tile_size=1,
         pattern_width=2,
-        output_periodic=True,
-        input_periodic=True,
-    ),
-    "RoomsOffice": WFCConfig(
-        pattern_path=PATTERN_PATH / "Office.png",
-        tile_size=1,
-        pattern_width=3,
         output_periodic=True,
         input_periodic=True,
     ),
@@ -107,17 +86,42 @@ WFC_PRESETS = {
         output_periodic=True,
         input_periodic=True,
     ),
-    "ObstaclesHogs2": WFCConfig(
-        pattern_path=PATTERN_PATH / "Hogs.png",
-        tile_size=1,
-        pattern_width=2,
-        output_periodic=True,
-        input_periodic=True,
-    ),  # This is very inconsistent
     "ObstaclesHogs3": WFCConfig(
         pattern_path=PATTERN_PATH / "Hogs.png",
         tile_size=1,
         pattern_width=3,
+        output_periodic=True,
+        input_periodic=True,
+    ),
+}
+
+# Presets that take a large number of attempts to generate a consistent environment
+WFC_PRESETS_INCONSISTENT = {
+    "MazeKnot": WFCConfig(
+        pattern_path=PATTERN_PATH / "Knot.png",
+        tile_size=1,
+        pattern_width=3,
+        output_periodic=True,
+        input_periodic=True,
+    ), # This is not too inconsistent (often 10 attempts is enough)
+    "MazeWall": WFCConfig(
+        pattern_path=PATTERN_PATH / "SimpleWall.png",
+        tile_size=1,
+        pattern_width=2,
+        output_periodic=True,
+        input_periodic=True,
+    ),
+    "RoomsOffice": WFCConfig(
+        pattern_path=PATTERN_PATH / "Office.png",
+        tile_size=1,
+        pattern_width=3,
+        output_periodic=True,
+        input_periodic=True,
+    ),
+    "ObstaclesHogs2": WFCConfig(
+        pattern_path=PATTERN_PATH / "Hogs.png",
+        tile_size=1,
+        pattern_width=2,
         output_periodic=True,
         input_periodic=True,
     ),
