@@ -103,7 +103,7 @@ WFC_PRESETS_INCONSISTENT = {
         pattern_width=3,
         output_periodic=True,
         input_periodic=True,
-    ), # This is not too inconsistent (often 10 attempts is enough)
+    ),  # This is not too inconsistent (often 10 attempts is enough)
     "MazeWall": WFCConfig(
         pattern_path=PATTERN_PATH / "SimpleWall.png",
         tile_size=1,

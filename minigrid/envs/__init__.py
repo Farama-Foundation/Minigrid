@@ -25,4 +25,9 @@ from minigrid.envs.putnear import PutNearEnv
 from minigrid.envs.redbluedoors import RedBlueDoorEnv
 from minigrid.envs.unlock import UnlockEnv
 from minigrid.envs.unlockpickup import UnlockPickupEnv
-from minigrid.envs.wfc import WFC_PRESETS, WFC_PRESETS_INCONSISTENT, WFC_PRESETS_SLOW, WFCEnv
+from minigrid.envs.wfc import (
+    WFC_PRESETS,
+    WFC_PRESETS_INCONSISTENT,
+    WFC_PRESETS_SLOW,
+    WFCEnv,
+)

@@ -189,9 +189,7 @@ class GraphTransforms:
                     g, edge_config, list(features.keys()), dim_grid
                 )
                 for edge_n, edge_g in edge_layers.items():
-                    g.add_edges_from(
-                        edge_g.edges(data=True), label=edge_n
-                    )
+                    g.add_edges_from(edge_g.edges(data=True), label=edge_n)
                     edge_graphs[edge_n].append(edge_g)
             graphs.append(g)
 
@@ -264,9 +262,7 @@ class GraphTransforms:
 
         for i, attr in enumerate(node_attributes):
             if "wall" not in node_attributes:
-                if (
-                    attr == "navigable" and "wall" not in node_attributes
-                ):
+                if attr == "navigable" and "wall" not in node_attributes:
                     mapping = minigrid_object_to_encoding_map["wall"]
                     grids[features[attr] == 0] = np.array(mapping, dtype=np.uint8)
                 else:
