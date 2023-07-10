@@ -38,6 +38,18 @@ for _ in range(1000):
 env.close()
 ```
 
+To cite this project please use:
+
+```bibtex
+@article{MinigridMiniworld23,
+  author       = {Maxime Chevalier-Boisvert and Bolun Dai and Mark Towers and Rodrigo de Lazcano and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
+  title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  journal      = {CoRR},
+  volume       = {abs/2306.13831},
+  year         = {2023},
+}
+```
+
 ```{toctree}
 :hidden:
 :caption: Introduction
