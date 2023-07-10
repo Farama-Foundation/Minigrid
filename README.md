@@ -41,17 +41,9 @@ The original `gym-minigrid` environments were created as part of work done at [M
 
 To cite this project please use:
 
-```
+```bibtex
 @article{MinigridMiniworld23,
-  author       = {Maxime Chevalier-Boisvert and
-                  Bolun Dai and
-                  Mark Towers and
-                  Rodrigo de Lazcano and
-                  Lucas Willems and
-                  Salem Lahlou and
-                  Suman Pal and
-                  Pablo Samuel Castro and
-                  Jordan Terry},
+  author       = {Maxime Chevalier-Boisvert and Bolun Dai and Mark Towers and Rodrigo de Lazcano and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
   title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
   journal      = {CoRR},
   volume       = {abs/2306.13831},
@@ -61,7 +53,7 @@ To cite this project please use:
 
 If using the `BabyAI` environments please also cite the following:
 
-```
+```bibtex
 @article{chevalier2018babyai,
   title={Babyai: A platform to study the sample efficiency of grounded language learning},
   author={Chevalier-Boisvert, Maxime and Bahdanau, Dzmitry and Lahlou, Salem and Willems, Lucas and Saharia, Chitwan and Nguyen, Thien Huu and Bengio, Yoshua},
