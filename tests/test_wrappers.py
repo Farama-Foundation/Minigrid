@@ -16,6 +16,7 @@ from minigrid.wrappers import (
     FlatObsWrapper,
     FullyObsWrapper,
     ImgObsWrapper,
+    NoDeath,
     OneHotPartialObsWrapper,
     PositionBonus,
     ReseedWrapper,
@@ -356,3 +357,35 @@ def test_dict_observation_space_doesnt_clash_with_one_hot():
     assert obs["image"].shape == (7, 7, 20)
     assert env.observation_space["image"].shape == (7, 7, 20)
     env.close()
+
+
+def test_no_death_wrapper():
+    death_cost = -1
+
+    env = gym.make("MiniGrid-LavaCrossingS9N1-v0")
+    _, _ = env.reset(seed=2)
+    _, _, _, _, _ = env.step(1)
+    _, reward, term, *_ = env.step(2)
+
+    env_wrap = NoDeath(env, ("lava",), death_cost)
+    _, _ = env_wrap.reset(seed=2)
+    _, _, _, _, _ = env_wrap.step(1)
+    _, reward_wrap, term_wrap, *_ = env_wrap.step(2)
+
+    assert term and not term_wrap
+    assert reward_wrap == reward + death_cost
+    env.close()
+    env_wrap.close()
+
+    env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")
+    _, _ = env.reset(seed=2)
+    _, reward, term, *_ = env.step(2)
+
+    env = NoDeath(env, ("ball",), death_cost)
+    _, _ = env.reset(seed=2)
+    _, reward_wrap, term_wrap, *_ = env.step(2)
+
+    assert term and not term_wrap
+    assert reward_wrap == reward + death_cost
+    env.close()
+    env_wrap.close()
