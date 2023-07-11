@@ -78,7 +78,9 @@ def execute_wfc(
 ) -> NDArray[np.integer]:
     time_begin = time.perf_counter()
     output_destination = r"./output/"
-    np_random = np.random.default_rng() if np_random is None else np_random
+    np_random: np.random.Generator = (
+        np.random.default_rng() if np_random is None else np_random
+    )
 
     rotations -= 1  # change to zero-based
 

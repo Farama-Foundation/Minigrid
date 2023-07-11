@@ -321,7 +321,9 @@ def makeWeightedPatternHeuristic(
     np_random: numpy.random.Generator | None = None,
 ):
     num_of_patterns = len(weights)
-    np_random = numpy.random.default_rng() if np_random is None else np_random
+    np_random: numpy.random.Generator = (
+        numpy.random.default_rng() if np_random is None else np_random
+    )
 
     def weightedPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
@@ -338,7 +340,9 @@ def makeRarestPatternHeuristic(
     np_random: numpy.random.Generator | None = None,
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the rarest (currently least-used) pattern."""
-    np_random = numpy.random.default_rng() if np_random is None else np_random
+    np_random: numpy.random.Generator = (
+        numpy.random.default_rng() if np_random is None else np_random
+    )
 
     def weightedPatternHeuristic(
         wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]
@@ -360,7 +364,9 @@ def makeMostCommonPatternHeuristic(
     np_random: numpy.random.Generator | None = None,
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     """Return a function that chooses the most common (currently most-used) pattern."""
-    np_random = numpy.random.default_rng() if np_random is None else np_random
+    np_random: numpy.random.Generator = (
+        numpy.random.default_rng() if np_random is None else np_random
+    )
 
     def weightedPatternHeuristic(
         wave: NDArray[np.bool_], total_wave: NDArray[np.bool_]
@@ -381,7 +387,9 @@ def makeRandomPatternHeuristic(
     np_random: numpy.random.Generator | None = None,
 ) -> Callable[[NDArray[np.bool_], NDArray[np.bool_]], int]:
     num_of_patterns = len(weights)
-    np_random = numpy.random.default_rng() if np_random is None else np_random
+    np_random: numpy.random.Generator = (
+        numpy.random.default_rng() if np_random is None else np_random
+    )
 
     def randomPatternHeuristic(wave: NDArray[np.bool_], _: NDArray[np.bool_]) -> int:
         # TODO: there's maybe a faster, more controlled way to do this sampling...
