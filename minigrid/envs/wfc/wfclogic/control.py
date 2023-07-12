@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Any, Callable, Literal
+from typing import Any, Callable
+from typing_extensions import Literal
 
 import numpy as np
 from numpy.typing import NDArray
