@@ -3,6 +3,7 @@ from gym_minigrid.agents.PedAgent import *
 from gym_minigrid.agents.LaneNum import *
 from gym_minigrid.agents.PedActions import *
 from gym_minigrid.agents.BlueAdlerPedAgent import *
+from gym_minigrid.agents.TutorialPedAgent import *
 from gym_minigrid.agents.Lane import *
 from gym_minigrid.agents.Road import *
 from gym_minigrid.agents.Vehicle import *
