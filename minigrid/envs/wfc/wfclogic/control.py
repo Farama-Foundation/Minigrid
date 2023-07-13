@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 import time
 from typing import Any, Callable
-from typing_extensions import Literal
 
 import numpy as np
 from numpy.typing import NDArray
+from typing_extensions import Literal
 
 from .adjacency import adjacency_extraction
 from .patterns import make_pattern_catalog_with_rotations, pattern_grid_to_tiles
