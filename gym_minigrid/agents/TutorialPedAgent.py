@@ -5,7 +5,7 @@ from .PedAgent import PedAgent
 
 class TutorialPedAgent(PedAgent):
 
-    """Define a pedestrian that just moves forward in our first env
+    """Define a pedestrian that just moves forward in our Second env
     Assignment: make the pedestrian not always keep the same line."""
     
     def parallel1(self, env) -> Action:
