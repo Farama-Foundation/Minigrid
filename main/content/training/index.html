@@ -7,12 +7,12 @@
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
-    <meta property="og:url" content="https://minigrid.farama.org/environments/babyai/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Go To Red Ball Grey" href="GoToRedBallGrey/" /><link rel="prev" title="Unlock Pickup" href="../minigrid/UnlockPickupEnv/" />
-        <link rel="canonical" href="https://minigrid.farama.org/environments/babyai/index.html" />
+    <meta property="og:url" content="https://minigrid.farama.org/content/training.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Wrapper" href="../../api/wrapper/" /><link rel="prev" title="Tutorial on Creating Environments" href="../create_env_tutorial/" />
+        <link rel="canonical" href="https://minigrid.farama.org/content/training.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
-        <title>BabyAI Environments - MiniGrid Documentation</title>
+        <title>Training Minigrid Environments - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
@@ -223,15 +223,15 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/">Training Minigrid Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#create-custom-feature-extractor">Create Custom Feature Extractor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#train-a-ppo-agent">Train a PPO Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#further-reading">Further Reading</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/">Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/">List of Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../create_env_tutorial/">Tutorial on Creating Environments</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Training Minigrid Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#create-custom-feature-extractor">Create Custom Feature Extractor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#train-a-ppo-agent">Train a PPO Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#further-reading">Further Reading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
@@ -253,73 +253,73 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/CrossingEnv/">Crossing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/DistShiftEnv/">Dist Shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/DoorKeyEnv/">Door Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/DynamicObstaclesEnv/">Dynamic Obstacles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/EmptyEnv/">Empty</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/FetchEnv/">Fetch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/FourRoomsEnv/">Four Rooms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/GoToDoorEnv/">Go To Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/GoToObjectEnv/">Go To Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/KeyCorridorEnv/">Key Corridor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/LavaGapEnv/">Lava Gap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/LockedRoomEnv/">Locked Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/MemoryEnv/">Memory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/MultiRoomEnv/">Multi Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/ObstructedMaze_1Dlhb/">Obstructed Maze Dlhb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/ObstructedMaze_Full/">Obstructed Maze Full</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/PlaygroundEnv/">Playground</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/PutNearEnv/">Put Near</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/RedBlueDoorEnv/">Red Blue Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/UnlockEnv/">Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../minigrid/UnlockPickupEnv/">Unlock Pickup</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/CrossingEnv/">Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/DistShiftEnv/">Dist Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/DoorKeyEnv/">Door Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/DynamicObstaclesEnv/">Dynamic Obstacles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/EmptyEnv/">Empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/FetchEnv/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/FourRoomsEnv/">Four Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/GoToDoorEnv/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/GoToObjectEnv/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/KeyCorridorEnv/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/LavaGapEnv/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/LockedRoomEnv/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/MemoryEnv/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/MultiRoomEnv/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/ObstructedMaze_1Dlhb/">Obstructed Maze Dlhb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/ObstructedMaze_Full/">Obstructed Maze Full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/PlaygroundEnv/">Playground</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/PutNearEnv/">Put Near</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/RedBlueDoorEnv/">Red Blue Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/UnlockEnv/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/minigrid/UnlockPickupEnv/">Unlock Pickup</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">BabyAI Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="GoToRedBallGrey/">Go To Red Ball Grey</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToRedBall/">Go To Red Ball</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToRedBallNoDists/">Go To Red Ball No Dists</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToObj/">Go To Obj</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToLocal/">Go To Local</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoTo/">Go To</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToImpUnlock/">Go To Imp Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToSeq/">Go To Seq</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToRedBlueBall/">Go To Red Blue Ball</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToDoor/">Go To Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GoToObjDoor/">Go To Obj Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Open/">Open</a></li>
-<li class="toctree-l2"><a class="reference internal" href="OpenRedDoor/">Open Red Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="OpenDoor/">Open Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="OpenTwoDoors/">Open Two Doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="OpenDoorsOrder/">Open Doors Order</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Pickup/">Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="UnblockPickup/">Unblock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PickupLoc/">Pickup Loc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PickupDist/">Pickup Dist</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PickupAbove/">Pickup Above</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PutNextLocal/">Put Next Local</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PutNext/">Put Next</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Unlock/">Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="UnlockLocal/">Unlock Local</a></li>
-<li class="toctree-l2"><a class="reference internal" href="KeyInBox/">Key In Box</a></li>
-<li class="toctree-l2"><a class="reference internal" href="UnlockPickup/">Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BlockedUnlockPickup/">Blocked Unlock Pickup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="UnlockToUnlock/">Unlock To Unlock</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ActionObjDoor/">Action Obj Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FindObjS5/">Find Obj</a></li>
-<li class="toctree-l2"><a class="reference internal" href="KeyCorridor/">Key Corridor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="OneRoomS8/">One Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MoveTwoAcross/">Move Two Across</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Synth/">Synth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SynthLoc/">Synth Loc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SynthSeq/">Synth Seq</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MiniBossLevel/">Mini Boss Level</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BossLevel/">Boss Level</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BossLevelNoUnlock/">Boss Level No Unlock</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToRedBallGrey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToRedBall/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToRedBallNoDists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToObj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToLocal/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoTo/">Go To</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToImpUnlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToSeq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToRedBlueBall/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToDoor/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/GoToObjDoor/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/Open/">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/OpenRedDoor/">Open Red Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/OpenDoor/">Open Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/OpenTwoDoors/">Open Two Doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/OpenDoorsOrder/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/Pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/UnblockPickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/PickupLoc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/PickupDist/">Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/PickupAbove/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/PutNextLocal/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/PutNext/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/Unlock/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/UnlockLocal/">Unlock Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/KeyInBox/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/UnlockPickup/">Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/BlockedUnlockPickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/UnlockToUnlock/">Unlock To Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/ActionObjDoor/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/FindObjS5/">Find Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/KeyCorridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/OneRoomS8/">One Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/MoveTwoAcross/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/Synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/SynthLoc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/SynthSeq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/MiniBossLevel/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/BossLevel/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/babyai/BossLevelNoUnlock/">Boss Level No Unlock</a></li>
 </ul>
 </li>
 </ul>
@@ -352,7 +352,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/environments/babyai/index.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/content/training.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -383,495 +383,63 @@
           </div>
           <article role="main">
             
-            <section id="babyai-environments">
-<h1>BabyAI Environments<a class="headerlink" href="#babyai-environments" title="Permalink to this heading">#</a></h1>
+            <section id="training-minigrid-environments">
+<h1>Training Minigrid Environments<a class="headerlink" href="#training-minigrid-environments" title="Permalink to this heading">#</a></h1>
+<p>The environments in the Minigrid library can be trained easily using <a class="reference external" href="https://stable-baselines3.readthedocs.io/en/master/">StableBaselines3</a>. In this tutorial we show how a PPO agent can be trained on the <code class="docutils literal notranslate"><span class="pre">MiniGrid-Empty-16x16-v0</span></code> environment.</p>
+</section>
+<section id="create-custom-feature-extractor">
+<h1>Create Custom Feature Extractor<a class="headerlink" href="#create-custom-feature-extractor" title="Permalink to this heading">#</a></h1>
+<p>Although <code class="docutils literal notranslate"><span class="pre">StableBaselines3</span></code> is fully compatible with <code class="docutils literal notranslate"><span class="pre">Gymnasium</span></code>-based environments, including Minigrid, the default CNN architecture does not directly support the Minigrid observation space. Thus, to train an agent on Minigrid environments, we therefore need to create a custom feature extractor. This can be done by creating a feature extractor class that inherits from <code class="docutils literal notranslate"><span class="pre">stable_baselines3.common.torch_layers.BaseFeaturesExtractor</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MinigridFeaturesExtractor</span><span class="p">(</span><span class="n">BaseFeaturesExtractor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation_space</span><span class="p">:</span> <span class="n">gym</span><span class="o">.</span><span class="n">Space</span><span class="p">,</span> <span class="n">features_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="n">normalized_image</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">features_dim</span><span class="p">)</span>
+        <span class="n">n_input_channels</span> <span class="o">=</span> <span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">n_input_channels</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+        <span class="p">)</span>
 
-<div class="env-grid">
-    
-            <a href="GoToRedBallGrey">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBallGrey.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoredballgrey</span>
-                    </div>
-                </div>
-            </a>
-    
+        <span class="c1"># Compute shape by doing one forward pass</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">n_flatten</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnn</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">observation_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()[</span><span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-            <a href="GoToRedBall">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBall.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoredball</span>
-                    </div>
-                </div>
-            </a>
-    
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_flatten</span><span class="p">,</span> <span class="n">features_dim</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())</span>
 
-            <a href="GoToRedBallNoDists">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBallNoDists.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoredballnodists</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToObj">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToObj.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoobj</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToLocal">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToLocal.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotolocal</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoTo">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoTo.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Goto</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToImpUnlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToImpUnlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoimpunlock</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToSeq">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToSeq.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoseq</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToRedBlueBall">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBlueBall.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoredblueball</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotodoor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="GoToObjDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToObjDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Gotoobjdoor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Open">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Open.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Open</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OpenRedDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenRedDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Openreddoor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OpenDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Opendoor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OpenTwoDoors">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenTwoDoors.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Opentwodoors</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OpenDoorsOrder">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenDoorsOrder.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Opendoorsorder</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Pickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Pickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Pickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnblockPickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnblockPickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unblockpickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PickupLoc">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupLoc.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Pickuploc</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PickupDist">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupDist.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Pickupdist</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PickupAbove">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupAbove.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Pickupabove</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PutNextLocal">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PutNextLocal.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Putnextlocal</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PutNext">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PutNext.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Putnext</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Unlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Unlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlock</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockLocal">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockLocal.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlocklocal</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="KeyInBox">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/KeyInBox.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Keyinbox</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockPickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockPickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlockpickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BlockedUnlockPickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BlockedUnlockPickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Blockedunlockpickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockToUnlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockToUnlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlocktounlock</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="ActionObjDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/ActionObjDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Actionobjdoor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="FindObjS5">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/FindObjS5.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Findobjs5</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="KeyCorridor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/KeyCorridor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Keycorridor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OneRoomS8">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OneRoomS8.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Onerooms8</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="MoveTwoAcross">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/MoveTwoAcross.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Movetwoacross</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Synth">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Synth.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synth</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="SynthLoc">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/SynthLoc.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synthloc</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="SynthSeq">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/SynthSeq.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synthseq</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="MiniBossLevel">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/MiniBossLevel.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Minibosslevel</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BossLevel">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BossLevel.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Bosslevel</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BossLevelNoUnlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BossLevelNoUnlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Bosslevelnounlock</span>
-                    </div>
-                </div>
-            </a>
-    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observations</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cnn</span><span class="p">(</span><span class="n">observations</span><span class="p">))</span>
+</pre></div>
 </div>
+<p>This class is created based on the custom feature extractor <a class="reference external" href="https://stable-baselines3.readthedocs.io/en/master/guide/custom_policy.html#custom-feature-extractor:~:text=Custom%20Feature%20Extractor-,%EF%83%81,-If%20you%20want">documentation</a>, the CNN architecture is copied from Lucas Willems’ <a class="reference external" href="https://github.com/lcswillems/rl-starter-files/blob/317da04a9a6fb26506bbd7f6c7c7e10fc0de86e0/model.py#L18">rl-starter-files</a>.</p>
+</section>
+<section id="train-a-ppo-agent">
+<h1>Train a PPO Agent<a class="headerlink" href="#train-a-ppo-agent" title="Permalink to this heading">#</a></h1>
+<p>The using the custom feature extractor, we can train a PPO agent on the <code class="docutils literal notranslate"><span class="pre">MiniGrid-Empty-16x16-v0</span></code> environment. The following code snippet shows how this can be done.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">minigrid</span>
+<span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ImgObsWrapper</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3</span> <span class="kn">import</span> <span class="n">PPO</span>
 
-    
-<div class="toctree-wrapper compound">
+<span class="n">policy_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">features_extractor_class</span><span class="o">=</span><span class="n">MinigridFeaturesExtractor</span><span class="p">,</span>
+    <span class="n">features_extractor_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">features_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-16x16-v0&quot;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">ImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PPO</span><span class="p">(</span><span class="s2">&quot;CnnPolicy&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">policy_kwargs</span><span class="o">=</span><span class="n">policy_kwargs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="mf">2e5</span><span class="p">)</span>
+</pre></div>
 </div>
+<p>By default the observation of Minigrid environments are dictionaries. Since the <code class="docutils literal notranslate"><span class="pre">CnnPolicy</span></code> from StableBaseline3 by default takes in image observations, we need to wrap the environment using the <code class="docutils literal notranslate"><span class="pre">ImgObsWrapper</span></code> from the Minigrid library. This wrapper converts the dictionary observation to an image observation.</p>
+</section>
+<section id="further-reading">
+<h1>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this heading">#</a></h1>
+<p>One can also pass dictionary observations to StableBaseline3 policies, for a walkthrough the process of doing so see <a class="reference external" href="https://stable-baselines3.readthedocs.io/en/master/guide/custom_policy.html#multiple-inputs-and-dictionary-observations">here</a>. An implementation utilizing this functionality can be found <a class="reference external" href="https://github.com/BolunDai0216/MinigridMiniworldTransfer/blob/main/minigrid_gotoobj_train.py">here</a>.</p>
 </section>
 
           </article>
@@ -879,7 +447,17 @@
         <footer>
           
           <div class="related-pages">
-            
+            <a class="next-page" href="../../api/wrapper/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Wrapper</div>
+              </div>
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+            </a>
             
           </div>
           <div class="bottom-of-page">
