@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+title: Minigrid
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+authors:
+- family-names: Chevalier-Boisvert
+  given-names: Maxime
+- family-names: Dai
+  given-names: Bolun
+- family-names: Towers
+  given-names: Mark
+- family-names: de Lazcano
+  given-names: Rodrigo
+- family-names: Willems
+  given-names: Lucas
+- family-names: Lahlou
+  given-names: Salem
+- family-names: Pal
+  given-names: Suman
+- family-names: Castro
+  given-names: Pablo Samuel
+- family-names: Terry
+  given-names: Jordan
+url: "https://github.com/Farama-Foundation/Minigrid"
+
+preferred-citation:
+  type: article
+  authors:
+  - family-names: Chevalier-Boisvert
+    given-names: Maxime
+  - family-names: Dai
+    given-names: Bolun
+  - family-names: Towers
+    given-names: Mark
+  - family-names: de Lazcano
+    given-names: Rodrigo
+  - family-names: Willems
+    given-names: Lucas
+  - family-names: Lahlou
+    given-names: Salem
+  - family-names: Pal
+    given-names: Suman
+  - family-names: Castro
+    given-names: Pablo Samuel
+  - family-names: Terry
+    given-names: Jordan
+  journal: CoRR
+  title: Minigrid
+  volume: abs/2306.13831
+  year: 2023

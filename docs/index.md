@@ -57,6 +57,7 @@ To cite this project please use:
 content/basic_usage
 content/publications
 content/create_env_tutorial
+content/training
 ```
 
 ```{toctree}
