@@ -35,19 +35,13 @@ def manhattan_distance(pos, target):
 class Subgoal:
     """The base class for all possible Bot subgoals.
 
-    Parameters:
-    ----------
-    bot : BabyAIBot
-        The bot whose subgoal this is.
-    datum : object
-        The first parameter of the subgoal, e.g. a location or an object description.
-    reason : str
-        Why this subgoal was created. Subgoals created for different reasons require
-        similar but different behaviour.
-
+    Args:
+        bot (BabyAIBot): The bot whose subgoal this is.
+        datum (object): The first parameter of the subgoal, e.g. a location or an object description.
+        reason (str): Why this subgoal was created. Subgoals created for different reasons require
     """
 
-    def __init__(self, bot=None, datum=None, reason=None):
+    def __init__(self, bot: BabyAIBot, datum=None, reason=None):
         self.bot = bot
         self.datum = datum
         self.reason = reason
@@ -88,11 +82,8 @@ class Subgoal:
         from the stack or popping the top one.
 
         Returns:
-        -------
-        action : object
-            A suggection action if known, `None` the stack has been altered
-            and further replanning is required.
-
+            action (object): A suggested action if known, `None` the stack has been
+                altered and further replanning is required.
         """
         raise NotImplementedError()
 
@@ -119,20 +110,20 @@ class Subgoal:
     def _plan_undo_action(self, action_taken):
         """Plan how to undo the taken action."""
         if action_taken == self.actions.forward:
-            # check if the 'forward' action was succesful
+            # check if the 'forward' action was successful
             if not np.array_equal(self.bot.prev_agent_pos, self.pos):
                 self.bot.stack.append(GoNextToSubgoal(self.bot, self.pos))
         elif action_taken == self.actions.left:
             old_fwd_pos = self.pos + self.right_vec
-            self.bot.stack.append(GoNextToSubgoal(self.bot, self.pos + self.right_vec))
+            self.bot.stack.append(GoNextToSubgoal(self.bot, old_fwd_pos))
         elif action_taken == self.actions.right:
             old_fwd_pos = self.pos - self.right_vec
-            self.bot.stack.append(GoNextToSubgoal(self.bot, self.pos - self.right_vec))
+            self.bot.stack.append(GoNextToSubgoal(self.bot, old_fwd_pos))
         elif (
             action_taken == self.actions.drop
             and self.bot.prev_carrying != self.carrying
         ):
-            # get that thing back, if dropping was succesful
+            # get that thing back, if dropping was successful
             assert self.fwd_cell.type in ("key", "box", "ball")
             self.bot.stack.append(PickupSubgoal(self.bot))
         elif (
@@ -178,17 +169,14 @@ class CloseSubgoal(Subgoal):
 class OpenSubgoal(Subgoal):
     """Subgoal for opening doors.
 
-    Parameters:
-    ----------
-    reason : str
-        `None`, `"Unlock"`, or `"UnlockAndKeepKey"`. If the reason is `"Unlock"`,
-        the agent will plan dropping the key somewhere after it opens the door
-        (see `replan_after_action`). When the agent faces the door, and the
-        reason is `None`, this subgoals replaces itself with a similar one,
-        but with with the reason `"Unlock"`. `reason="UnlockAndKeepKey` means
-        that the agent should not schedule the dropping of the key
-        when it faces a locked door, and should instead keep the key.
-
+    Args:
+        reason (str): `None`, `"Unlock"`, or `"UnlockAndKeepKey"`. If the reason is
+            `"Unlock"`, the agent will plan dropping the key somewhere after it opens the
+            door (see `replan_after_action`). When the agent faces the door, and the reason
+            is `None`, this subgoals replaces itself with a similar one, but with with the
+            reason `"Unlock"`. `reason="UnlockAndKeepKey` means that the agent should not
+            schedule the dropping of the key when it faces a locked door, and should instead
+            keep the key.
     """
 
     def replan_before_action(self):
@@ -306,17 +294,15 @@ class PickupSubgoal(Subgoal):
 class GoNextToSubgoal(Subgoal):
     """The subgoal for going next to objects or positions.
 
-    Parameters:
-    ----------
-    datum : (int, int) tuple or `ObjDesc` or object reference
-        The position or the decription of the object or
-        the object to which we are going.
-    reason : str
-        One of the following:
-        - `None`: go the position (object) and face it
-        - `"PutNext"`: go face an empty position next to the object specified by `datum`
-        - `"Explore"`: going to a position, just like when the reason is `None`. The only
-            difference is that with this reason the subgoal will be considered exploratory
+    Args:
+        datum (int, int): tuple or `ObjDesc` or object reference
+            The position or the description of the object or
+            the object to which we are going.
+        reason (str): One of the following:
+            - `None`: go the position (object) and face it
+            - `"PutNext"`: go face an empty position next to the object specified by `datum`
+            - `"Explore"`: going to a position, just like when the reason is `None`. The only
+                difference is that with this reason the subgoal will be considered exploratory
 
     """
 
@@ -465,7 +451,7 @@ class GoNextToSubgoal(Subgoal):
         elif np.array_equal(next_cell - self.pos, -self.right_vec):
             return self.actions.left
 
-        # If we reacher this point in the code,  then the cell is behind us.
+        # If we reach this point in the code,  then the cell is behind us.
         # Instead of choosing left or right randomly,
         # let's do something that might be useful:
         # Because when we're GoingNextTo for the purpose of exploring,
@@ -571,9 +557,8 @@ class BabyAIBot:
 
     The main method of the bot (and the only one you are supposed to use) is `replan`.
 
-    Parameters:
-    ----------
-    mission : a freshly created BabyAI environment
+    Args:
+        mission: a freshly created BabyAI environment
 
     """
 
@@ -605,17 +590,13 @@ class BabyAIBot:
 
         Call this method once per every iteration of the environment.
 
-        Parameters:
-        ----------
-        action_taken
-            The last action that the agent took. Can be `None`,
-            in which case the bot assumes that the action it suggested
-            was taken (or that it is the first iteration).
+        Args:
+            action_taken: The last action that the agent took. Can be `None`, in which
+            case the bot assumes that the action it suggested was taken (or that it is
+            the first iteration).
 
         Returns:
-        -------
-        suggested_action
-            The action that the bot suggests. Can be `done` if the
+            suggested_action: The action that the bot suggests. Can be `done` if the
             bot thinks that the mission has been accomplished.
 
         """
@@ -730,7 +711,6 @@ class BabyAIBot:
         # Mark everything in front of us as visible
         for vis_j in range(0, view_size):
             for vis_i in range(0, view_size):
-
                 if not vis_mask[vis_i, vis_j]:
                     continue
 
@@ -909,7 +889,7 @@ class BabyAIBot:
             ]:
                 nb_pos = (i + k, j + l)
                 cell = grid.get(*nb_pos)
-                # compeletely blocked
+                # completely blocked
                 if self.vis_mask[nb_pos] and cell and cell.type == "wall":
                     cell_class.append(1)
                 # empty
