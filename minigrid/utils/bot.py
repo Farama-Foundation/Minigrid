@@ -37,7 +37,7 @@ class Subgoal:
 
     Parameters:
     ----------
-    bot : Bot
+    bot : BabyAIBot
         The bot whose subgoal this is.
     datum : object
         The first parameter of the subgoal, e.g. a location or an object description.
@@ -556,7 +556,7 @@ class ExploreSubgoal(Subgoal):
         return True
 
 
-class Bot:
+class BabyAIBot:
     """A bot that can solve all BabyAI levels.
 
     The bot maintains a plan, represented as a stack of the so-called

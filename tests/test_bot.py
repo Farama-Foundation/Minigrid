@@ -3,7 +3,7 @@ from __future__ import annotations
 import gymnasium as gym
 import numpy as np
 
-from minigrid.utils.bot import Bot
+from minigrid.utils.bot import BabyAIBot
 
 
 def test_bot():
@@ -21,7 +21,7 @@ def test_bot():
     env.render()
 
     # create expert bot
-    expert = Bot(env)
+    expert = BabyAIBot(env)
 
     last_action = None
     while True:
