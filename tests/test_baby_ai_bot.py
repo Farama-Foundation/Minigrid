@@ -15,11 +15,11 @@ for k_i in gym.envs.registry.keys():
 @pytest.mark.parametrize("env_id", babyai_envs)
 def test_bot(env_id):
     # Use the parameter env_id to make the environment
-    env = gym.make(env_id, render_mode="human")
+    env = gym.make(env_id)
+    # env = gym.make(env_id, render_mode="human") # for visual debugging
 
     # reset env
     env.reset()
-    env.render()
 
     # create expert bot
     expert = BabyAIBot(env)
