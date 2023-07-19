@@ -3,7 +3,7 @@ from __future__ import annotations
 import gymnasium as gym
 import numpy as np
 
-from minigrid.utils.bot import BabyAIBot
+from minigrid.utils.baby_ai_bot import BabyAIBot
 
 
 def test_bot():
