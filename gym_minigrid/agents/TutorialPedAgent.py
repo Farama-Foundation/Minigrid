@@ -10,7 +10,8 @@ class TutorialPedAgent(PedAgent):
     
     def parallel1(self, env) -> Action:
         # raise NotImplementedError("parallel1 is not implemented")
-        return None
+        return Action(self, ForwardAction.KEEP)
+        # return None
 
     def parallel2(self, env) -> Action:
         # raise NotImplementedError("parallel2 is not implemented")
