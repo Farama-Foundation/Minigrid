@@ -1,0 +1,18 @@
+@import 'theme.css';
+
+ol {
+    list-style: decimal;
+}
+
+ol.simple {
+    list-style: decimal;
+    margin-left: 2em;
+}
+
+ul.simple {
+    margin-left: 1em;
+}
+
+ol.simple > li {
+    list-style: decimal;
+}
