@@ -4,8 +4,7 @@ import gym_minigrid
 from gym_minigrid.agents import *
 import logging
 
-from gym_minigrid.agents.SimpleVehicle import SimpleVehicle
-env = gym.make('TwoLaneRoadEnv60x80-v0')       
+env = gym.make('TwoLaneRoadEnv60x80-v0')
 env.reset()
 
 v1 = SimpleVehicle(1, (14, 20), (20, 29), 1, 5, 5, 1, 1)

@@ -43,7 +43,7 @@ class MetricCollector:
         env.unsubscribe(EnvEvent.stepBefore, self.handleStepBefore)
 
     def handleStepAfter(self, env: IMultiPedestrianEnv):
-        if env.step_count < self.stepsToIgnoreAtTheBeginning:
+        if env.step_count < self.stepsToIgnoreAtTheBeginning or env.step_count > self.stepsToRecord + self.stepsToIgnoreAtTheBeginning:
             logging.debug(f"MetricCollector: ignoring step {env.step_count}")
             return None
 

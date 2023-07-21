@@ -455,10 +455,10 @@ class MultiPedestrianEnv1x20(PedestrianEnv):
             pedAgents=None
         )
 
-class MultiPedestrianEnv100x100(PedestrianEnv):
+class PedestrianEnv20x80(PedestrianEnv):
     def __init__(self):
-        width = 100
-        height = 100 # actual height: 10 + 2 gray square on top and bottom
+        width = 80
+        height = 20
         super().__init__(
             width=width,
             height=height,
@@ -479,6 +479,6 @@ register(
 )
 
 register(
-    id='MultiPedestrian-Empty-100x100-v0',
-    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:MultiPedestrianEnv100x100'
+    id='PedestrianEnv-20x80-v0',
+    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:PedestrianEnv20x80'
 )
