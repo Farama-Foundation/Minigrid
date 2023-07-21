@@ -436,8 +436,8 @@ class BidirectionPedestrianFlowEnv20x80(PedestrianEnv):
 
 class MultiPedestrianEnv5x20(PedestrianEnv):
     def __init__(self):
-        width = 30
-        height = 6 # actual height: 10 + 2 gray square on top and bottom
+        width = 20
+        height = 5 # actual height: 10 + 2 gray square on top and bottom
         super().__init__(
             width=width,
             height=height,
@@ -464,7 +464,6 @@ class PedestrianEnv20x80(PedestrianEnv):
             height=height,
             pedAgents=None
         )
-
 
 register(
     id='BidirectionPedestrianFlowEnv-20x80-v0',

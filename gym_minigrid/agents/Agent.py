@@ -2,6 +2,8 @@ from typing import Tuple
 from gym_minigrid.lib.BaseObject import BaseObject
 import random
 import numpy as np
+from gym_minigrid.lib.Action import Action
+from abc import abstractmethod
 
 class Agent(BaseObject):
     def __init__(
@@ -48,3 +50,11 @@ class Agent(BaseObject):
         self.bottomRight = self.initBottomRight
         self.direction = self.initDirection
         pass
+
+    @abstractmethod
+    def parallel1(self, env) -> Action:
+        raise NotImplementedError("parallel1 is not implemented")
+
+    @abstractmethod
+    def parallel2(self, env) -> Action:
+        raise NotImplementedError("parallel2 is not implemented")

@@ -3,5 +3,6 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.pythonPath": "C:\\Users\\adhocmaster\\.conda\\envs\\pedgrid\\python.exe"
 }
