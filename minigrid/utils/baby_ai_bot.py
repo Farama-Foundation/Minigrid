@@ -48,7 +48,7 @@ class Subgoal:
 
         self.update_agent_attributes()
 
-        self.actions = self.bot.mission.actions
+        self.actions = self.bot.mission.unwrapped.actions
 
     def __repr__(self):
         """Mainly for debugging purposes"""
@@ -63,12 +63,12 @@ class Subgoal:
 
     def update_agent_attributes(self):
         """Should be called at each step before the replanning methods."""
-        self.pos = self.bot.mission.agent_pos
-        self.dir_vec = self.bot.mission.dir_vec
-        self.right_vec = self.bot.mission.right_vec
+        self.pos = self.bot.mission.unwrapped.agent_pos
+        self.dir_vec = self.bot.mission.unwrapped.dir_vec
+        self.right_vec = self.bot.mission.unwrapped.right_vec
         self.fwd_pos = self.pos + self.dir_vec
-        self.fwd_cell = self.bot.mission.grid.get(*self.fwd_pos)
-        self.carrying = self.bot.mission.carrying
+        self.fwd_cell = self.bot.mission.unwrapped.grid.get(*self.fwd_pos)
+        self.carrying = self.bot.mission.unwrapped.carrying
 
     def replan_before_action(self):
         """Change the plan if needed and return a suggested action.
@@ -131,11 +131,11 @@ class Subgoal:
             and self.bot.prev_carrying != self.carrying
         ):
             # drop that thing where you found it
-            fwd_cell = self.bot.mission.grid.get(*self.fwd_pos)
+            fwd_cell = self.bot.mission.unwrapped.grid.get(*self.fwd_pos)
             self.bot.stack.append(DropSubgoal(self.bot))
         elif action_taken == self.actions.toggle:
             # if you opened or closed a door, bring it back in the original state
-            fwd_cell = self.bot.mission.grid.get(*self.fwd_pos)
+            fwd_cell = self.bot.mission.unwrapped.grid.get(*self.fwd_pos)
             if (
                 fwd_cell
                 and fwd_cell.type == "door"
@@ -264,7 +264,7 @@ class OpenSubgoal(Subgoal):
 
 class DropSubgoal(Subgoal):
     def replan_before_action(self):
-        assert self.bot.mission.carrying
+        assert self.bot.mission.unwrapped.carrying
         assert not self.fwd_cell
         return self.actions.drop
 
@@ -281,7 +281,7 @@ class DropSubgoal(Subgoal):
 
 class PickupSubgoal(Subgoal):
     def replan_before_action(self):
-        assert not self.bot.mission.carrying
+        assert not self.bot.mission.unwrapped.carrying
         return self.actions.pickup
 
     def replan_after_action(self, action_taken):
@@ -356,9 +356,13 @@ class GoNextToSubgoal(Subgoal):
 
             if steppable(self.fwd_cell):
                 return self.actions.forward
-            if steppable(self.bot.mission.grid.get(*(self.pos + self.right_vec))):
+            if steppable(
+                self.bot.mission.unwrapped.grid.get(*(self.pos + self.right_vec))
+            ):
                 return self.actions.right
-            if steppable(self.bot.mission.grid.get(*(self.pos - self.right_vec))):
+            if steppable(
+                self.bot.mission.unwrapped.grid.get(*(self.pos - self.right_vec))
+            ):
                 return self.actions.left
             # Spin and hope for the best
             return self.actions.left
@@ -521,7 +525,7 @@ class ExploreSubgoal(Subgoal):
 
         # Open the door
         if door_pos:
-            door_obj = self.bot.mission.grid.get(*door_pos)
+            door_obj = self.bot.mission.unwrapped.grid.get(*door_pos)
             # If we are going to a locked door, there are two cases:
             # - we already have the key, then we should not drop it
             # - we don't have the key, in which case eventually we should drop it
@@ -567,16 +571,18 @@ class BabyAIBot:
         self.mission = mission
 
         # Grid containing what has been mapped out
-        # self.grid = Grid(mission.width, mission.height)
+        # self.grid = Grid(mission.unwrapped.width, mission.unwrapped.height)
 
         # Visibility mask. True for explored/seen, false for unexplored.
-        self.vis_mask = np.zeros(shape=(mission.width, mission.height), dtype=bool)
+        self.vis_mask = np.zeros(
+            shape=(mission.unwrapped.width, mission.unwrapped.height), dtype=bool
+        )
 
         # Stack of tasks/subtasks to complete (tuples)
         self.stack = []
 
         # Process/parse the instructions
-        self._process_instr(mission.instrs)
+        self._process_instr(mission.unwrapped.instrs)
 
         # How many BFS searches this bot has performed
         self.bfs_counter = 0
@@ -627,7 +633,7 @@ class BabyAIBot:
             if suggested_action is not None:
                 break
         if not self.stack:
-            suggested_action = self.mission.actions.done
+            suggested_action = self.mission.unwrapped.actions.done
 
         self._remember_current_state()
 
@@ -646,7 +652,7 @@ class BabyAIBot:
             if obj_desc.obj_set[i].type == "wall":
                 continue
             try:
-                if obj_desc.obj_set[i] == self.mission.carrying:
+                if obj_desc.obj_set[i] == self.mission.unwrapped.carrying:
                     continue
                 obj_pos = obj_desc.obj_poss[i]
 
@@ -667,7 +673,7 @@ class BabyAIBot:
                         # (turn, drop, turn back, pick,
                         # turn to other direction, drop, turn back)
                         distance_to_obj = len(shortest_path_to_obj) + (
-                            7 if self.mission.carrying else 4
+                            7 if self.mission.unwrapped.carrying else 4
                         )
 
                     # If we looking for a door and we are currently in that cell
@@ -697,12 +703,12 @@ class BabyAIBot:
     def _process_obs(self):
         """Parse the contents of an observation/image and update our state."""
 
-        grid, vis_mask = self.mission.gen_obs_grid()
+        grid, vis_mask = self.mission.unwrapped.gen_obs_grid()
 
-        view_size = self.mission.agent_view_size
-        pos = self.mission.agent_pos
-        f_vec = self.mission.dir_vec
-        r_vec = self.mission.right_vec
+        view_size = self.mission.unwrapped.agent_view_size
+        pos = self.mission.unwrapped.agent_pos
+        f_vec = self.mission.unwrapped.dir_vec
+        r_vec = self.mission.unwrapped.right_vec
 
         # Compute the absolute coordinates of the top-left corner
         # of the agent's view area
@@ -725,9 +731,11 @@ class BabyAIBot:
                 self.vis_mask[abs_i, abs_j] = True
 
     def _remember_current_state(self):
-        self.prev_agent_pos = self.mission.agent_pos
-        self.prev_carrying = self.mission.carrying
-        fwd_cell = self.mission.grid.get(*self.mission.agent_pos + self.mission.dir_vec)
+        self.prev_agent_pos = self.mission.unwrapped.agent_pos
+        self.prev_carrying = self.mission.unwrapped.carrying
+        fwd_cell = self.mission.unwrapped.grid.get(
+            *self.mission.unwrapped.agent_pos + self.mission.unwrapped.dir_vec
+        )
         if fwd_cell and fwd_cell.type == "door":
             self.fwd_door_was_open = fwd_cell.is_open
         self.prev_fwd_cell = fwd_cell
@@ -738,9 +746,9 @@ class BabyAIBot:
             position_to_try = position + distance * direction
             # If the current position is outside the field of view,
             # stop everything and return the previous one
-            if not self.mission.in_view(*position_to_try):
+            if not self.mission.unwrapped.in_view(*position_to_try):
                 return distance - 1
-            cell = self.mission.grid.get(*position_to_try)
+            cell = self.mission.unwrapped.grid.get(*position_to_try)
             if cell and (cell.type.endswith("door") or cell.type == "wall"):
                 return distance
             distance += 1
@@ -756,7 +764,7 @@ class BabyAIBot:
         self.bfs_counter += 1
 
         queue = [(state, None) for state in initial_states]
-        grid = self.mission.grid
+        grid = self.mission.unwrapped.grid
         previous_pos = dict()
 
         while len(queue) > 0:
@@ -814,7 +822,9 @@ class BabyAIBot:
         """
 
         # Initial states to visit (BFS)
-        initial_states = [(*self.mission.agent_pos, *self.mission.dir_vec)]
+        initial_states = [
+            (*self.mission.unwrapped.agent_pos, *self.mission.unwrapped.dir_vec)
+        ]
 
         path = finish = None
         with_blockers = False
@@ -849,7 +859,7 @@ class BabyAIBot:
         Find a position where an object can be dropped, ideally without blocking anything.
         """
 
-        grid = self.mission.grid
+        grid = self.mission.unwrapped.grid
 
         def match_unblock(pos, cell):
             # Consider the region of 8 neighboring cells around the candidate cell.
@@ -857,7 +867,7 @@ class BabyAIBot:
             # then probably it is better to drop elsewhere.
 
             i, j = pos
-            agent_pos = tuple(self.mission.agent_pos)
+            agent_pos = tuple(self.mission.unwrapped.agent_pos)
 
             if np.array_equal(pos, agent_pos):
                 return False
@@ -930,7 +940,7 @@ class BabyAIBot:
         def match_empty(pos, cell):
             i, j = pos
 
-            if np.array_equal(pos, self.mission.agent_pos):
+            if np.array_equal(pos, self.mission.unwrapped.agent_pos):
                 return False
 
             if except_pos and np.array_equal(pos, except_pos):
@@ -998,10 +1008,10 @@ class BabyAIBot:
     def _check_erroneous_box_opening(self, action):
         """
         When the agent opens a box, we raise an error and mark the task unsolvable.
-        This is a tad conservative, because maybe the box is irrelevant to the mission.
+        This is a tad conservative, because maybe the box is irrelevant to the mission.unwrapped.
         """
         if (
-            action == self.mission.actions.toggle
+            action == self.mission.unwrapped.actions.toggle
             and self.prev_fwd_cell is not None
             and self.prev_fwd_cell.type == "box"
         ):
