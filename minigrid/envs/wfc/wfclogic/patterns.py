@@ -1,4 +1,4 @@
-"Extract patterns from grids of tiles."
+"Extract patterns from grids of tiles. Implementation based on https://github.com/ikarth/wfc_2019f"
 from __future__ import annotations
 
 import logging
