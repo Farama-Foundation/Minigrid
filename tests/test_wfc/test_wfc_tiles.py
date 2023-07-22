@@ -13,14 +13,5 @@ def test_image_to_tile(img_redmaze) -> None:
 
 def test_make_tile_catalog(img_redmaze) -> None:
     img = img_redmaze
-    print(img)
     tc, tg, cl, ut = wfc_tiles.make_tile_catalog(img, 1)
-    print("tile catalog")
-    print(tc)
-    print("tile grid")
-    print(tg)
-    print("code list")
-    print(cl)
-    print("unique tiles")
-    print(ut)
     assert ut[1][0] == 7

@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
 
-from .utilities import hash_downto
+from minigrid.envs.wfc.wfclogic.utilities import hash_downto
 
 
 def image_to_tiles(img: NDArray[np.integer], tile_size: int) -> NDArray[np.integer]:
@@ -62,7 +62,3 @@ def make_tile_catalog(
     for i, j in enumerate(code_list):
         tile_catalog[j] = tile_list[i]
     return tile_catalog, tile_grid, code_list, unique_tiles
-
-
-def tiles_to_images(tile_grid, tile_catalog):
-    return

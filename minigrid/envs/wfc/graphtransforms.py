@@ -72,20 +72,13 @@ class GraphTransforms:
 
     @staticmethod
     def minigrid_to_dense_graph(
-        minigrids: list[bytes] | np.ndarray | list[MiniGridEnv],
+        minigrids: np.ndarray | list[MiniGridEnv],
         node_attr=None,
         edge_config=None,
     ) -> list[nx.Graph]:
-        if isinstance(minigrids[0], np.ndarray) or isinstance(minigrids[0], bytes):
-            if isinstance(minigrids[0], bytes):
-                raise NotImplementedError("Decoding from bytes not yet implemented.")
-                # logger.info("Received minigrids as bytes. Decoding them using default LEVEL_INFO.")
-                # dtype = LEVEL_INFO['dtype']
-                # shape = LEVEL_INFO['shape']
-                # minigrids = [np.frombuffer(level_bytes, dtype=dtype).reshape(*shape) for level_bytes in minigrids]
+        if isinstance(minigrids[0], np.ndarray):
             minigrids = np.array(minigrids)
             layouts = minigrids[..., 0]
-            pass
         elif isinstance(minigrids[0], MiniGridEnv):
             layouts = [minigrid.grid.encode()[..., 0] for minigrid in minigrids]
             for i in range(len(minigrids)):
@@ -93,7 +86,7 @@ class GraphTransforms:
             layouts = np.array(layouts)
         else:
             raise TypeError(
-                f"minigrids must be of type List[bytes], List[np.ndarray], List[MiniGridEnv], "
+                f"minigrids must be of type List[np.ndarray], List[MiniGridEnv], "
                 f"List[MultiGridEnv], not {type(minigrids[0])}"
             )
         graphs, _ = GraphTransforms.minigrid_layout_to_dense_graph(

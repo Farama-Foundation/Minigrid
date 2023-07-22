@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 from numpy.typing import NDArray
 
 from minigrid.envs.wfc.wfclogic import solver as wfc_solver
@@ -8,9 +9,6 @@ from minigrid.envs.wfc.wfclogic import solver as wfc_solver
 
 def test_makeWave() -> None:
     wave = wfc_solver.makeWave(3, 10, 20, ground=[-1])
-    # print(wave)
-    # print(wave.sum())
-    # print((2*10*19) + (1*10*1))
     assert wave.sum() == (2 * 10 * 19) + (1 * 10 * 1)
     assert wave[2, 5, 19]
     assert not wave[1, 5, 19]
@@ -128,7 +126,6 @@ def test_run() -> None:
     expected_second_result = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
 
     assert np.array_equal(second_result, expected_second_result)
-    print(event_log)
     assert event_log == [(0, 0, 0), "backtrack", (2, 0, 0)]
 
     class Infeasible(Exception):
@@ -139,8 +136,8 @@ def test_run() -> None:
             raise Infeasible
         return False
 
-    try:
-        result = wfc_solver.run(
+    with pytest.raises(wfc_solver.Contradiction):
+        wfc_solver.run(
             wave.copy(),
             adj,
             locationHeuristic=wfc_solver.lexicalLocationHeuristic,
@@ -149,9 +146,3 @@ def test_run() -> None:
             backtracking=True,
             checkFeasible=explode,
         )
-        print(result)
-        happy = False
-    except wfc_solver.Contradiction:
-        happy = True
-
-    assert happy

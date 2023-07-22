@@ -8,7 +8,7 @@ from typing import Any, Mapping
 import numpy as np
 from numpy.typing import NDArray
 
-from .utilities import hash_downto
+from minigrid.envs.wfc.wfclogic.utilities import hash_downto
 
 logger = logging.getLogger(__name__)
 

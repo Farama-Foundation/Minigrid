@@ -3,12 +3,15 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from gymnasium.error import DependencyNotInstalled
 from typing_extensions import Literal
 
 try:
     import imageio
-except ImportError:
-    print("imageio not installed, WFC will not work")
+except ImportError as e:
+    raise DependencyNotInstalled(
+        'imageio is missing, please run `pip install "minigrid[wfc]"`'
+    ) from e
 
 PATTERN_PATH = Path(__file__).parent / "patterns"
 

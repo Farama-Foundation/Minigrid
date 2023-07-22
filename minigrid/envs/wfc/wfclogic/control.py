@@ -8,9 +8,12 @@ import numpy as np
 from numpy.typing import NDArray
 from typing_extensions import Literal
 
-from .adjacency import adjacency_extraction
-from .patterns import make_pattern_catalog_with_rotations, pattern_grid_to_tiles
-from .solver import (
+from minigrid.envs.wfc.wfclogic.adjacency import adjacency_extraction
+from minigrid.envs.wfc.wfclogic.patterns import (
+    make_pattern_catalog_with_rotations,
+    pattern_grid_to_tiles,
+)
+from minigrid.envs.wfc.wfclogic.solver import (
     Contradiction,
     StopEarly,
     TimedOut,
@@ -30,6 +33,7 @@ from .solver import (
     run,
     simpleLocationHeuristic,
 )
+
 from .tiles import make_tile_catalog
 from .utilities import tile_grid_to_image
 
