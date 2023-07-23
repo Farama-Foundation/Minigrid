@@ -48,7 +48,18 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#making-and-customizing-environments">Making and Customizing Environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use-the-metriccollector">How to Use the MetricCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-create-add-simple-pedestrians-vehicles-and-road-infrastructure-to-an-environment">How to Create &amp; Add Simple Pedestrians, Vehicles, and Road Infrastructure to an Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rendering">Rendering:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pedestrianenv">PedestrianEnv</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-space">Action Space:</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="dev-guide.html">Developer Guide</a></li>
 </ul>
 
@@ -78,6 +89,130 @@
              
   <section class="tex2jax_ignore mathjax_ignore" id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading"></a></h1>
+<section id="making-and-customizing-environments">
+<h2>Making and Customizing Environments<a class="headerlink" href="#making-and-customizing-environments" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Wrap the desired environment class</p></li>
+<li><p>Super initialize with custom parameters (*only height and width are supported as of now)</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PedestrianEnv20x80</span><span class="p">(</span><span class="n">PedestrianEnv</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">___init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">pedAgents</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Register the child class environment with gym-minigrid</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;PedestrianEnv-20x80-v0&#39;</span><span class="p">,</span>
+    <span class="n">entry_point</span><span class="o">=</span><span class="s1">&#39;gym_minigrid.envs.pedestrian.PedestrianEnv:PedestrianEnv20x80&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Make the environment with gym
+env = gym.make(‘PedestrianEnv-20x80-v0’)</p></li>
+</ol>
+<p>In the future, parameters will be incorporated into gym’s make function.</p>
+</section>
+<section id="how-to-use-the-metriccollector">
+<h2>How to Use the MetricCollector<a class="headerlink" href="#how-to-use-the-metriccollector" title="Permalink to this heading"></a></h2>
+<p>The MetricCollector observes an environment for a defined number of time steps and can be declared as such:</p>
+<p>metricCollector = MetricCollector(env, stepsToIgnoreAtTheBeginning = , stepsToRecord = )</p>
+<p>Suppose stepsToIgnoreAtTheBeginning = 100 and stepsToRecord = 1000; then, the MetricCollector will observe and maintain the metrics for time steps 101 to 1100.</p>
+</section>
+<section id="how-to-create-add-simple-pedestrians-vehicles-and-road-infrastructure-to-an-environment">
+<h2>How to Create &amp; Add Simple Pedestrians, Vehicles, and Road Infrastructure to an Environment<a class="headerlink" href="#how-to-create-add-simple-pedestrians-vehicles-and-road-infrastructure-to-an-environment" title="Permalink to this heading"></a></h2>
+<p>Example Pedestrian:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ped</span> <span class="o">=</span> <span class="n">PedAgent</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">North</span><span class="p">,</span> <span class="n">maxSpeed</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">addPedAgent</span><span class="p">(</span><span class="n">ped</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, a list of pedestrians can be appended at once:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">peds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ped_1</span><span class="p">,</span> <span class="n">ped_2</span><span class="p">,</span> <span class="n">ped_n</span><span class="p">]</span>
+<span class="n">env</span><span class="o">.</span><span class="n">addPedAgents</span><span class="p">(</span><span class="n">peds</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example Vehicle:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">veh</span> <span class="o">=</span> <span class="n">Vehicle</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">topLeft</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">),</span> <span class="n">bottomRight</span><span class="o">=</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">East</span><span class="p">,</span> <span class="n">maxSpeed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">inRoad</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inLane</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">addVehicleAgent</span><span class="p">(</span><span class="n">veh</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, a list of vehicles can be appended with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">addVehicleAgents</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Example Lane:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lane</span> <span class="o">=</span> <span class="n">Lane</span><span class="p">(</span>
+    <span class="n">topLeft</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">bottomRight</span><span class="o">=</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+    <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">South</span><span class="p">,</span>
+    <span class="n">inRoad</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">laneID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">posRelativeToCenter</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Example Road:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">(</span><span class="n">lanes</span><span class="o">=</span><span class="p">[</span><span class="n">lane1</span><span class="p">,</span> <span class="n">lane2</span><span class="p">],</span> <span class="n">roadID</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example Sidewalk:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sidewalk</span> <span class="o">=</span> <span class="n">Sidewalk</span><span class="p">(</span>
+    <span class="n">topLeft</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">bottomRight</span><span class="o">=</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+    <span class="n">sidewalkID</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Example Crosswalk:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">crosswalk1</span> <span class="o">=</span> <span class="n">Crosswalk</span><span class="p">(</span>
+    <span class="n">topLeft</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span>
+    <span class="n">bottomRight</span><span class="o">=</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span>
+    <span class="n">crosswalkID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">overlapRoad</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">overlapLanes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># laneIDs of the lanes</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rendering">
+<h2>Rendering:<a class="headerlink" href="#rendering" title="Permalink to this heading"></a></h2>
+<p>Suppose we want to run a simulation for 1,000 steps. Rendering each step would take considerable time. Thus, rendering can be turned off by commenting out env.render() or controlled to only render at interval steps via modulus. This way, the simulation will run much quicker.</p>
+</section>
+<section id="pedestrianenv">
+<h2>PedestrianEnv<a class="headerlink" href="#pedestrianenv" title="Permalink to this heading"></a></h2>
+<section id="description">
+<h3>Description:<a class="headerlink" href="#description" title="Permalink to this heading"></a></h3>
+<p>This environment models a simple grid for behavior simulation involving pedestrians, containing a G<sub>m x n</sub> grid with customizable length m and height n. PedestrianEnv only supports pedestrian agents, or PedAgents. No other static or dynamic objects are supported. Pedestrians may be added or removed any time during simulation.</p>
+</section>
+<section id="action-space">
+<h3>Action Space:<a class="headerlink" href="#action-space" title="Permalink to this heading"></a></h3>
+<p>PedGrid utilizes <strong><em>Action</em></strong> objects with properties <em>agent</em> with the agent reference and <em>action</em> as an enum. Currently, there are two enum classes defining dynamic agent movement.</p>
+<ul class="simple">
+<li><p>LaneAction</p>
+<ul>
+<li><p>.KEEP: agent keeps the current lane</p></li>
+<li><p>.LEFT: agent shifts a tile to the left</p></li>
+<li><p>.RIGHT: agent shifts a tile to the right</p></li>
+</ul>
+</li>
+<li><p>ForwardAction</p>
+<ul>
+<li><p>.KEEP: agent moves forward by agent.speed tiles</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Note:</strong> When a pedestrian agent reaches the end of the environment during a forward action, they automatically turn around in the opposite direction.</p>
+<p><img alt="Action Space" src="_images/action-space.png" /></p>
+</section>
+</section>
 </section>
 
 
