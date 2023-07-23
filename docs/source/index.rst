@@ -11,9 +11,9 @@ Welcome to PedGrid's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   source/installation.md
-   source/user-guide.md
-   source/dev-guide.md
+   installation.md
+   user-guide.md
+   dev-guide.md
 
 Indices and tables
 ==================
