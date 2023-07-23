@@ -7,6 +7,7 @@ Welcome to PedGrid's documentation!
 ===================================
 
 .. toctree::
+   :numbered:
    :maxdepth: 2
    :caption: Contents:
 
