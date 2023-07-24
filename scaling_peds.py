@@ -27,7 +27,7 @@ values = np.zeros((6, 19, 3)) # 6 directional split starting from 50/50 to 100/0
 for p_exchg in [0.5]:
     for dirSplitInt in range(5, 6):
         # for densityInt in range(30, 31):
-        for numPeds in range(250, 351, 50):
+        for numPeds in range(400, 401, 50):
         
         # Load the gym environment
             env = gym.make('PedestrianEnv-20x80-v0')

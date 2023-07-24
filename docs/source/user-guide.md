@@ -1,8 +1,11 @@
+
+
 # User Guide
 
 ## Making and Customizing Environments
 1. Wrap the desired environment class
-2. Super initialize with custom parameters (*only height and width are supported as of now)
+2. Create static objects and set custom parameters (*only height and width are currently supported) inside the \_\_init\_\_ function
+3. Pass the static objects and parameters in when super initializing
 
 ```python
 class PedestrianEnv20x80(PedestrianEnv):
@@ -14,9 +17,60 @@ class PedestrianEnv20x80(PedestrianEnv):
             height=height,
             pedAgents=None
         )
+
+class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
+    def __init__(self):
+        width = 30
+        height = 80
+
+        lane1 = Lane(
+            topLeft=(5, 0),
+            bottomRight=(14, 79),
+            direction=1,
+            inRoad=1,
+            laneID=1,
+            posRelativeToCenter=-1
+        )
+        lane2 = Lane(
+            topLeft=(15, 0),
+            bottomRight=(24, 79),
+            direction=3,
+            inRoad=1,
+            laneID=2,
+            posRelativeToCenter=1
+        )
+        road1 = Road([lane1, lane2], roadID=1)
+
+        sidewalk1 = Sidewalk(
+            topLeft=(0, 0),
+            bottomRight=(4, 79),
+            sidewalkID=1
+        )
+
+        sidewalk2 = Sidewalk(
+            topLeft=(25, 0),
+            bottomRight=(29, 79),
+            sidewalkID=2
+        )
+
+        crosswalk1 = Crosswalk(
+            topLeft=(5, 40),
+            bottomRight=(24, 45),
+            crosswalkID=1,
+            overlapRoad=1,
+            overlapLanes=[1, 2]
+        )
+
+        super().__init__(
+            road=road1,
+            sidewalks=[sidewalk1, sidewalk2],
+            crosswalks=[crosswalk1],
+            width=width,
+            height=height
+        )
 ```
 
-3. Register the child class environment with gym-minigrid
+4. Register the child class environment with gym-minigrid
 
 ```python
 register(
@@ -25,19 +79,18 @@ register(
 )
 ```
 
-4. Make the environment with gym
+5. Make the environment with gym
+```python
 env = gym.make('PedestrianEnv-20x80-v0')
+```
 
 In the future, parameters will be incorporated into gym's make function.
 
-## How to Use the MetricCollector
-The MetricCollector observes an environment for a defined number of time steps and can be declared as such:
+## Adding Simple Pedestrians, Vehicles, and Road Infrastructure to an Environment
 
-metricCollector = MetricCollector(env, stepsToIgnoreAtTheBeginning = , stepsToRecord = )
+### Dynamic Agents
+Dynamic agents are added to the environment in the test script before or during simulation.
 
-Suppose stepsToIgnoreAtTheBeginning = 100 and stepsToRecord = 1000; then, the MetricCollector will observe and maintain the metrics for time steps 101 to 1100.
-
-## How to Create & Add Simple Pedestrians, Vehicles, and Road Infrastructure to an Environment
 Example Pedestrian:
 ```python
 ped = PedAgent(id=1, position=(x, y), direction=Direction.North, maxSpeed=5, speed=5)
@@ -60,6 +113,9 @@ Similarly, a list of vehicles can be appended with:
 ```python
 env.addVehicleAgents()
 ```
+
+### Static Objects
+Static objects are added when the environment class is made and customized.
 
 Example Lane:
 ```python
@@ -98,8 +154,17 @@ crosswalk1 = Crosswalk(
 )
 ```
 
-## Rendering
+## Rendering Speed
 Suppose we want to run a simulation for 1,000 steps. Rendering each step would take considerable time. Thus, rendering can be turned off by commenting out env.render() or controlled to only render at interval steps via modulus. This way, the simulation will run much quicker.
+
+## Using the MetricCollector
+The MetricCollector observes an environment for a defined number of time steps and can be declared as such:
+
+```python
+metricCollector = MetricCollector(env, stepsToIgnoreAtTheBeginning = , stepsToRecord = )
+```
+
+Suppose stepsToIgnoreAtTheBeginning = 100 and stepsToRecord = 1000; then, the MetricCollector will observe and maintain the metrics for time steps 101 to 1100.
 
 ## PedestrianEnv
 
