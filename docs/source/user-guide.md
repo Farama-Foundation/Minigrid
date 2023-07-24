@@ -98,15 +98,15 @@ crosswalk1 = Crosswalk(
 )
 ```
 
-## Rendering:
+## Rendering
 Suppose we want to run a simulation for 1,000 steps. Rendering each step would take considerable time. Thus, rendering can be turned off by commenting out env.render() or controlled to only render at interval steps via modulus. This way, the simulation will run much quicker.
 
 ## PedestrianEnv
 
-### Description:
+### Description
 This environment models a simple grid for behavior simulation involving pedestrians, containing a G<sub>m x n</sub> grid with customizable length m and height n. PedestrianEnv only supports pedestrian agents, or PedAgents. No other static or dynamic objects are supported. Pedestrians may be added or removed any time during simulation.
 
-### Action Space:
+### Action Space
 PedGrid utilizes **_Action_** objects with properties _agent_ with the agent reference and _action_ as an enum. Currently, there are two enum classes defining dynamic agent movement.
 * LaneAction
     * .KEEP: agent keeps the current lane

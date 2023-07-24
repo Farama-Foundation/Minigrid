@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
+
 logging.basicConfig(level=logging.INFO)
 
 den = []
@@ -22,9 +23,9 @@ speeds = []
 speedy = []
 
 values = np.zeros((6, 19, 3)) # 6 directional split starting from 50/50 to 100/0, 19 densities, 2 values/trial
-for p_exchg in [0, 0.25, 0.5, 0.75, 1]:
-    for dirSplitInt in range(5, 11):
-        for densityInt in range(1, 40):
+for p_exchg in [0.5]:
+    for dirSplitInt in range(5, 6):
+        for densityInt in range(30, 31):
         
         # Load the gym environment
             env = gym.make('MultiPedestrian-Empty-5x20-v0')
@@ -67,8 +68,8 @@ for p_exchg in [0, 0.25, 0.5, 0.75, 1]:
             env.addPedAgents(agents)
 
             env.reset()
-
-            for i in range(120):
+            start = time.time()
+            for i in range(1200):
 
                 obs, reward, done, info = env.step(None)
                 
@@ -83,32 +84,10 @@ for p_exchg in [0, 0.25, 0.5, 0.75, 1]:
                     logging.info(f"Completed step {i+1}")
 
                 # time.sleep(2)
+            end = time.time()
+            logging.info(f"Elapsed time {end - start}s")
 
-            # logging.info(env.getAverageSpeed())
-
-            stepStats = metricCollector.getStatistics()[0]
-            avgSpeed = sum(stepStats["xSpeed"]) / len(stepStats["xSpeed"])
-            avgSpeedy = sum(stepStats["ySpeed"]) / len(stepStats["ySpeed"])
-            # logging.info("Average speed: " + str(avgSpeed))
-            volumeStats = metricCollector.getStatistics()[1]
-            avgVolume = sum(volumeStats) / len(volumeStats)
-            # logging.info("Average volume: " + str(avgVolume))
-            vols.append(avgVolume)
-            den.append(density)
-            p.append(p_exchg)
-            split.append(dirSplit)
-            # speeds.append(env.getAverageSpeed())
-            # speeds.append(avgSpeed) 
-            speedy.append(avgSpeedy)
 
             # Test the close method
 
             env.close()
-data = {"Density":den, "Volume":vols, "Probability": p, "Direction Split":split, "SpeedX":speeds, "SpeedY":speedy}
-data = pd.DataFrame(data)
-data.to_csv("data2")
-# print(data)
-# sns.lineplot(data=data, x="Density", y="SpeedX", hue="Direction Split", palette = "flag", markers=True)
-# plt.show()
-# with open(f"testing.pickle", "wb") as f:
-#     pickle.dump(values, f)
