@@ -34,10 +34,11 @@ class MetricCollector:
             #reset
             self.previousState[agent]["position"] = agent.position
             self.previousState[agent]["direction"] = agent.direction
-        for agent in env.getVehicleAgents():
-            #reset
-            self.previousState[agent]["topLeft"] = agent.topLeft
-            self.previousState[agent]["bottomRight"] = agent.bottomRight
+        if hasattr(env, "getVehicleAgents"):
+            for agent in env.getVehicleAgents():
+                #reset
+                self.previousState[agent]["topLeft"] = agent.topLeft
+                self.previousState[agent]["bottomRight"] = agent.bottomRight
 
         # if env.step_count == 0:
         env.unsubscribe(EnvEvent.stepBefore, self.handleStepBefore)
@@ -57,16 +58,18 @@ class MetricCollector:
         # collect pedestrian positions
         self.collectPedestrianPositions(env)
         #collect vehicle positions
-        self.collectVehiclePositions(env)
+        if hasattr(env, "getVehicleAgents"):
+            self.collectVehiclePositions(env)
 
         for agent in env.getPedAgents():
             #reset
             self.previousState[agent]["position"] = agent.position
             self.previousState[agent]["direction"] = agent.direction
-        for agent in env.getVehicleAgents():
-            #reset
-            self.previousState[agent]["topLeft"] = agent.topLeft
-            self.previousState[agent]["bottomRight"] = agent.bottomRight
+        if hasattr(env, "getVehicleAgents"):
+            for agent in env.getVehicleAgents():
+                #reset
+                self.previousState[agent]["topLeft"] = agent.topLeft
+                self.previousState[agent]["bottomRight"] = agent.bottomRight
     
     def getStatistics(self):
         return [self.stepStats, self.volumeStats]
