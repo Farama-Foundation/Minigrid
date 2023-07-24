@@ -98,9 +98,9 @@ for p_exchg in [0.5]:
             env.close()
 
 pedVStime = pd.DataFrame({'pedCount': ped_count, 'runTime': run_time})
-# pedVStime.to_csv('pedVStime1000steps.csv', index=False)
-pedVStime.to_csv('pedVStime1000steps.csv', mode='a', header=False, index=False)
-pedVStime = pd.read_csv('pedVStime1000steps.csv')
+# pedVStime.to_csv('outputs/pedVStime1000steps.csv', index=False)
+pedVStime.to_csv('outputs/pedVStime1000steps.csv', mode='a', header=False, index=False)
+pedVStime = pd.read_csv('outputs/pedVStime1000steps.csv')
 
 plt.plot(pedVStime['pedCount'], pedVStime['runTime'], marker='o', linestyle='-', color='b')
 plt.xlabel('Pedestrian Count')
@@ -108,6 +108,6 @@ plt.ylabel('Run Time (s)')
 plt.title('Performance Analysis:\ninterspersed flow, 1000 steps, $p_{exchg}$ = 0.5, direction split 50/50')
 plt.grid(True)
 
-plt.savefig('scaling1000steps.png')
+plt.savefig('outputs/scaling1000steps.png')
 
 plt.show()
