@@ -1,4 +1,20 @@
-# Minimalistic Gridworld Environment for Pedestrian Scenarios (PedGrid)
+# PedGrid: A Simple yet Expressive Simulation Environment for Pedestrian Behavior Modeling
+
+PedGrid is a minimal simulator for autonomous vehicle driving with a visualization tool. It's perfect for initial research method development with low computing resources and minimal learning curve. A team of high school and college students is creating challenging reinforcement learning tasks using OpenAI Gymnasium Framework. Currently, we are creating several indoor and outdoor environments for a variety of tasks related to human behavior and motion. Current environments:
+
+1. A corridor environment to model bidirectional pedestrian flow.
+2. A two-lane environment to model pedestrian crossing.
+
+# Details and User Guide
+We have a seperate website for documentation and tutorials **[here](https://pedgrid.readthedocs.io/)**.
+
+# Why use PedGrid:
+1. It's open source
+2. Easy to learn (we can get started with research in a week)
+3. Easy to setup: written in python using python packages only. 
+4. Grid-based: maths are easier to handle.
+5. Easy to get metrics: We have a set of commonly used metrics in research. Data is ready for your further analysis.
+
 
 ## Original documentation for learn the basics of MiniGrid code and APIs:
 This is a fork of the MiniGrid library. Please, refer to the original documentation library's documentation if you want to use this repository for your research purposes.Requirements:
