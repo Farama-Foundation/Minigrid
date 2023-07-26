@@ -70,7 +70,7 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
         )
 ```
 
-4. Register the child class environment with gym-minigrid
+4. Register the child class environment with gym-minigrid right under the child class
 
 ```python
 register(
@@ -79,7 +79,7 @@ register(
 )
 ```
 
-5. Make the environment with gym
+5. Make the environment with gym in the test script
 ```python
 env = gym.make('PedestrianEnv-20x80-v0')
 ```
@@ -180,7 +180,7 @@ PedGrid utilizes **_Action_** objects with properties _agent_ with the agent ref
 * ForwardAction
     * .KEEP: agent moves forward by agent.speed tiles
 
-**Note:** When a pedestrian agent reaches the end of the environment during a forward action, they automatically turn around in the opposite direction.
+**Note:** When a pedestrian agent exceeds the end of the environment during a forward action, they automatically turn around in the opposite direction.
 
 ![Action Space](action-space.png)
 
@@ -192,4 +192,6 @@ This environment models a grid that wraps PedestrianEnv for behavior simulation 
 ### Action Space
 Remains the same as PedestrianEnv.
 
-**Note:** When a dynamic agent reaches the end of the environment during a forward action, they automatically turn around in the opposite direction.
+**Note:** When a pedestrian agent exceeds the end of the environment during a forward action, they automatically turn around in the opposite direction. Vehicle agents will terminate the simulation when they exceed the end of the environment.
+
+## Tutorial 1 - Simple Pedestrians Moving Forward

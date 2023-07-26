@@ -11,6 +11,7 @@ import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+from scipy.optimize import curve_fit
 
 logging.basicConfig(level=logging.INFO)
 
@@ -107,6 +108,26 @@ plt.xlabel('Number of Pedestrians')
 plt.ylabel('Run Time (in minutes)')
 plt.title('Performance Analysis (Bi-directional Pedestrian Flow):\nInterspersed, 1000 Steps, $p_{exchg}$ = 0.5, Direction Split 50/50')
 plt.grid(True)
+
+# # Define the quadratic function to fit the data (y = ax^2 + bx + c)
+# def quadratic_function(x, a, b, c):
+#     return a * x**2 + b * x + c
+
+# # Perform curve fitting to find the coefficients (a, b, c)
+# popt, _ = curve_fit(quadratic_function, pedVStime['pedCount'], pedVStime['runTime']/60)
+
+# # Extract the coefficients (a, b, c)
+# a_fit, b_fit, c_fit = popt
+
+# # Generate points for the fitted curve using the quadratic function
+# x_fit = np.linspace(min(pedVStime['pedCount']), max(pedVStime['pedCount']), 100)
+# y_fit = quadratic_function(x_fit, a_fit, b_fit, c_fit)
+
+# # Plot the fitted quadratic curve
+# plt.plot(x_fit, y_fit, label='Fitted Curve', color='red')
+
+# # Add labels and title
+# plt.title('Quadratic Curve Fitting')
 
 plt.savefig('outputs/scaling1000steps.png')
 
