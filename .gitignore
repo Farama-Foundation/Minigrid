@@ -3,6 +3,7 @@
 *egg-info
 trained_models
 *.pickle
+run-docs-locally/*
 
 # PyPI
 build/*

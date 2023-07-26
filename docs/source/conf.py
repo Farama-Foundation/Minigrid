@@ -70,7 +70,7 @@ myst_enable_extensions = [
 
 language = "en"
 myst_html_meta = {
-    "description lang=en": "Procedural Generation of Intersections and HD Maps for Autonomous Vehicle Development and Test.",
-    "keywords": "JunctionArt, Road Generator, HD Map generator OpenDrive, Opendrive road generator, Carla HD Maps, Autonomous Vehicles Map Generator",
+    "description lang=en": "PedGrid",
+    "keywords": "Autonomous Vehicle Simulation",
     "property=og:locale":  "en_US"
 }
