@@ -5,6 +5,18 @@ PedGrid is a minimal simulator for autonomous vehicle driving with a visualizati
 1. A corridor environment to model bidirectional pedestrian flow.
 2. A two-lane environment to model pedestrian crossing.
 
+Please cite our accepted paper if you use PedGrid or doing relevant research (DOI pending):
+
+```
+
+@inproceedings{inproceedings,
+    author = {Muktadir, Golam Md and Huang, Taorui and Ikram, Zarif and Jawad, Abdul and Whitehead, Jim},
+    booktitle = {26th IEEE International Conference on Intelligent Transportation Systems ITSC 2023A (Bilbao, Bizkaia, Spain)}
+    year = {2023},
+    title = {PedGrid - A Simple yet Expressive Simulation Environment for Pedestrian Behavior Modeling}
+}
+```
+
 # Details and User Guide
 We have a seperate website for documentation and tutorials **[here](https://pedgrid.readthedocs.io/)**.
 
@@ -16,15 +28,6 @@ We have a seperate website for documentation and tutorials **[here](https://pedg
 5. Easy to get metrics: We have a set of commonly used metrics in research. Data is ready for your further analysis.
 
 
-## Original documentation for learn the basics of MiniGrid code and APIs:
-This is a fork of the MiniGrid library. Please, refer to the original documentation library's documentation if you want to use this repository for your research purposes.Requirements:
-
-Python 3.7 to 3.10
-OpenAI Gym v0.19 to v0.21
-NumPy 1.18+
-Matplotlib (optional, only needed for display) - 3.0+
-
-[./documentation/minigrid-basics.md](./documentation/minigrid-basics.md)
 
 ## Install dependencies via Conda
 ```
