@@ -4,7 +4,7 @@ title: Training Minigrid Environments
 firstpage:
 ---
 
-## Training Minigrid Environments
+# Training Minigrid Environments
 
 The environments in the Minigrid library can be trained easily using [StableBaselines3](https://stable-baselines3.readthedocs.io/en/master/). In this tutorial we show how a PPO agent can be trained on the `MiniGrid-Empty-16x16-v0` environment.
 
