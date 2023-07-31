@@ -323,7 +323,7 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(highlight=True, tile_size=self.tile_size)
+        rgb_img = self.get_frame(highlight=self.env.highlight, tile_size=self.tile_size)
 
         return {**obs, "image": rgb_img}
 
