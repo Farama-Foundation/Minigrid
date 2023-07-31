@@ -199,16 +199,12 @@ class MiniGridEnv(gym.Env):
         # check if self.agent_pos & self.agent_dir is None
         # should not be after env is reset
         if self.agent_pos is None:
-            _agent_pos = (1, 1)
-            _agent_dir = 0
-        else:
-            _agent_pos = self.agent_pos
-            _agent_dir = self.agent_dir
+            return super().__str__()
 
         for j in range(self.grid.height):
             for i in range(self.grid.width):
-                if i == _agent_pos[0] and j == _agent_pos[1]:
-                    output += 2 * AGENT_DIR_TO_STR[_agent_dir]
+                if i == self.agent_pos[0] and j == self.agent_pos[1]:
+                    output += 2 * AGENT_DIR_TO_STR[self.agent_dir]
                     continue
 
                 tile = self.grid.get(i, j)
