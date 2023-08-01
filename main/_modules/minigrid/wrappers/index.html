@@ -675,7 +675,11 @@
         <span class="n">new_image_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
             <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span>
-            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -684,7 +688,9 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="n">rgb_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span><span class="p">)</span>
+        <span class="n">rgb_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span>
+            <span class="n">highlight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">highlight</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">rgb_img</span><span class="p">}</span></div>
 
