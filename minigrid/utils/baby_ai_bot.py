@@ -547,7 +547,7 @@ class ExploreSubgoal(Subgoal):
 
 
 class BabyAIBot:
-    """A bot that can solve all BabyAI levels.
+    """A bot that can solve all BabyAI levels*.
 
     The bot maintains a plan, represented as a stack of the so-called
     subgoals. The initial set of subgoals is generated from the instruction.
@@ -560,6 +560,14 @@ class BabyAIBot:
     the actual action that the agent took.
 
     The main method of the bot (and the only one you are supposed to use) is `replan`.
+
+    * The bot can solve all BabyAI levels from the original paper. It can also solve
+    most of the bonus levels from the original BabyAI repository, but fails to solve the
+    following:
+      - "BabyAI-PutNextS5N2Carrying-v0",
+      - "BabyAI-PutNextS6N3Carrying-v0",
+      - "BabyAI-PutNextS7N4Carrying-v0",
+      - "BabyAI-KeyInBox-v0".
 
     Args:
         mission: a freshly created BabyAI environment

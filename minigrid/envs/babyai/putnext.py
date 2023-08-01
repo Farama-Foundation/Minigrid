@@ -139,6 +139,9 @@ class PutNext(RoomGridLevel):
     - `BabyAI-PutNextS6N3Carrying-v0`
     - `BabyAI-PutNextS7N4Carrying-v0`
 
+    ## Additional Notes
+
+    The BabyAI bot is unable to solve the bonus PutNextCarrying configurations.
     """
 
     def __init__(
