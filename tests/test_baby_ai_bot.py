@@ -5,11 +5,20 @@ import pytest
 
 from minigrid.utils.baby_ai_bot import BabyAIBot
 
-# get all babyai envs
+# see discussion starting here: https://github.com/Farama-Foundation/Minigrid/pull/381#issuecomment-1646800992
+broken_bonus_envs = {
+    "BabyAI-PutNextS5N2Carrying-v0",
+    "BabyAI-PutNextS6N3Carrying-v0",
+    "BabyAI-PutNextS7N4Carrying-v0",
+    "BabyAI-KeyInBox-v0",
+}
+
+# get all babyai envs (except the broken ones)
 babyai_envs = []
 for k_i in gym.envs.registry.keys():
     if k_i.split("-")[0] == "BabyAI":
-        babyai_envs.append(k_i)
+        if k_i not in broken_bonus_envs:
+            babyai_envs.append(k_i)
 
 
 @pytest.mark.parametrize("env_id", babyai_envs)
