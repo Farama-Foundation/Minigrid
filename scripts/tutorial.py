@@ -1,3 +1,4 @@
+exec(open("sys_path_hack.py").read())
 import gym
 import gym_minigrid
 from gym_minigrid.agents import BlueAdlerPedAgent
