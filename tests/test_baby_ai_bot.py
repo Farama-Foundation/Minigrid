@@ -32,19 +32,27 @@ def test_bot(env_id):
     # env = gym.make(env_id, render_mode="human") # for visual debugging
 
     # reset env
-    env.reset()
+    curr_seed = 0
 
-    # create expert bot
-    expert = BabyAIBot(env)
+    num_steps = 240
+    terminated = False
+    while not terminated:
+        env.reset(seed=curr_seed)
 
-    last_action = None
-    while True:
-        action = expert.replan(last_action)
-        obs, reward, terminated, truncated, info = env.step(action)
-        last_action = action
-        env.render()
+        # create expert bot
+        expert = BabyAIBot(env)
 
-        if terminated:
-            break
+        last_action = None
+        for _step in range(num_steps):
+            action = expert.replan(last_action)
+            obs, reward, terminated, truncated, info = env.step(action)
+            last_action = action
+            env.render()
+
+            if terminated:
+                break
+
+        # try again with a different seed
+        curr_seed += 1
 
     env.close()
