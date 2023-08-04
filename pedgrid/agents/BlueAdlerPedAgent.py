@@ -9,7 +9,6 @@ from pedgrid.agents import LaneNum
 from .PedAgent import PedAgent
 from pedgrid.lib.LaneAction import LaneAction
 from pedgrid.lib.Action import Action
-from pedgrid.lib.ForwardAction import ForwardAction
 from pedgrid.lib.ObjectAction import ObjectAction
 from pedgrid.lib.Direction import Direction
 

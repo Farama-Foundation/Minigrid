@@ -2,7 +2,6 @@ from pedgrid.agents.Agent import Agent
 from pedgrid.agents import LaneNum
 from pedgrid.lib.Action import Action
 from pedgrid.lib.LaneAction import LaneAction
-from pedgrid.lib.ForwardAction import ForwardAction
 import numpy as np
 import logging
 from typing import Tuple

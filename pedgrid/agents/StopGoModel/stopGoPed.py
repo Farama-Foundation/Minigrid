@@ -10,7 +10,6 @@ from pedgrid.agents.PedAgent import PedAgent
 
 from pedgrid.lib.LaneAction import LaneAction
 from pedgrid.lib.Action import Action
-from pedgrid.lib.ForwardAction import ForwardAction
 from pedgrid.lib.Direction import Direction
 import logging
 

@@ -7,7 +7,6 @@ from pedgrid.agents import Agent, PedActions, PedAgent
 from pedgrid.envs.pedestrian.PedGrid import PedGrid
 from pedgrid.lib.Action import Action
 from pedgrid.lib.LaneAction import LaneAction
-from pedgrid.lib.ForwardAction import ForwardAction
 from pedgrid.lib.VehicleAction import VehicleAction
 from pedgrid.lib.Direction import Direction
 from .EnvEvent import EnvEvent

@@ -1,6 +1,6 @@
 
+from pedgrid.lib import ObjectAction
 from pedgrid.lib.Action import Action
-from pedgrid.lib.ForwardAction import ForwardAction
 from pedgrid.lib.LaneAction import LaneAction
 from .PedAgent import PedAgent
 import numpy as np
@@ -12,7 +12,7 @@ class TutorialPedAgent(PedAgent):
     
     def parallel1(self, env) -> Action:
         # raise NotImplementedError("parallel1 is not implemented")
-        return Action(self, ForwardAction.KEEP)
+        return Action(self, ObjectAction.FORWARD)
         # return None
 
     def parallel2(self, env) -> Action:
