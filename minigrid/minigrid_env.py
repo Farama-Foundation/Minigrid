@@ -196,11 +196,6 @@ class MiniGridEnv(gym.Env):
 
         output = ""
 
-        # check if self.agent_pos & self.agent_dir is None
-        # should not be after env is reset
-        if self.agent_pos is None:
-            return super().__str__()
-
         for j in range(self.grid.height):
             for i in range(self.grid.width):
                 if i == self.agent_pos[0] and j == self.agent_pos[1]:
