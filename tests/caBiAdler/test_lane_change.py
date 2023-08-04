@@ -6,11 +6,11 @@ import pytest
 import gym
 import numpy as np
 
-import gym_minigrid
-from gym_minigrid.agents import BlueAdlerPedAgent
-from gym_minigrid.lib.MetricCollector import MetricCollector
-from gym_minigrid.wrappers import *
-from gym_minigrid.lib.Direction import Direction
+import pedgrid
+from pedgrid.agents import BlueAdlerPedAgent
+from pedgrid.lib.MetricCollector import MetricCollector
+from pedgrid.wrappers import *
+from pedgrid.lib.Direction import Direction
 
 
 logging.basicConfig(level=logging.INFO)

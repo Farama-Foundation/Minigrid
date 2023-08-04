@@ -18,7 +18,7 @@ Requirements:
 Please use this bibtex if you want to cite this repository in your publications:
 
 ```
-@misc{gym_minigrid,
+@misc{pedgrid,
   author = {Chevalier-Boisvert, Maxime and Willems, Lucas and Pal, Suman},
   title = {Minimalistic Gridworld Environment for OpenAI Gym},
   year = {2018},
@@ -123,7 +123,7 @@ field which can be used as an optional compass. Using dictionaries makes it
 easy for you to add additional information to observations
 if you need to, without having to encode everything into a single tensor.
 
-There are a variery of wrappers to change the observation format available in [gym_minigrid/wrappers.py](/gym_minigrid/wrappers.py). If your RL code expects one single tensor for observations, take a look at
+There are a variery of wrappers to change the observation format available in [pedgrid/wrappers.py](/pedgrid/wrappers.py). If your RL code expects one single tensor for observations, take a look at
 `FlatObsWrapper`. There is also an `ImgObsWrapper` that gets rid of the 'mission' field in observations,
 leaving only the image field tensor.
 
@@ -133,7 +133,7 @@ These values are **not pixels**. If you want to obtain an array of RGB pixels as
 use the `RGBImgPartialObsWrapper`. You can use it as follows:
 
 ```
-from gym_minigrid.wrappers import *
+from pedgrid.wrappers import *
 env = gym.make('MiniGrid-Empty-8x8-v0')
 env = RGBImgPartialObsWrapper(env) # Get pixel observations
 env = ImgObsWrapper(env) # Get rid of the 'mission' field
@@ -163,7 +163,7 @@ Actions in the basic environment:
 
 Default tile/observation encoding:
 - Each tile is encoded as a 3 dimensional tuple: (OBJECT_IDX, COLOR_IDX, STATE) 
-- OBJECT_TO_IDX and COLOR_TO_IDX mapping can be found in [gym_minigrid/minigrid.py](gym_minigrid/minigrid.py)
+- OBJECT_TO_IDX and COLOR_TO_IDX mapping can be found in [pedgrid/minigrid.py](pedgrid/minigrid.py)
 - e.g. door STATE -> 0: open, 1: closed, 2: locked
 
 By default, sparse rewards are given for reaching a green goal tile. A
@@ -172,11 +172,11 @@ environment-specific time step limit for completing the task.
 You can define your own reward function by creating a class derived
 from `MiniGridEnv`. Extending the environment with new object types or new actions
 should be very easy. If you wish to do this, you should take a look at the
-[gym_minigrid/minigrid.py](gym_minigrid/minigrid.py) source file.
+[pedgrid/minigrid.py](pedgrid/minigrid.py) source file.
 
 ## Included Environments
 
-The environments listed below are implemented in the [gym_minigrid/envs](/gym_minigrid/envs) directory.
+The environments listed below are implemented in the [pedgrid/envs](/pedgrid/envs) directory.
 Each environment provides one or more configurations registered with OpenAI gym. Each environment
 is also programmatically tunable in terms of size/complexity, which is useful for curriculum learning
 or to fine-tune difficulty.

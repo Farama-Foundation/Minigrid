@@ -12,14 +12,14 @@ with open("README.md") as fh:
             break
 
 setup(
-    name='gym_minigrid',
+    name='pedgrid',
     author="Farama Foundation",
     author_email="jkterry@farama.org",
     version='1.0.2',
     keywords='memory, environment, agent, rl, gym',
     url='https://github.com/Farama-Foundation/gym-minigrid',
     description='Minimalistic gridworld reinforcement learning environments',
-    packages=['gym_minigrid', 'gym_minigrid.envs'],
+    packages=['pedgrid', 'pedgrid.envs'],
     long_description=long_description,
     python_requires=">=3.7, <3.11",
     long_description_content_type="text/markdown",
