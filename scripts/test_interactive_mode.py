@@ -3,7 +3,7 @@
 import time
 import random
 import gym
-import gym_minigrid
+import pedgrid
 
 # Load the gym environment
 env = gym.make('MiniGrid-Empty-8x8-v0')

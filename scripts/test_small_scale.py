@@ -2,10 +2,10 @@ import time
 import random
 import gym
 import numpy as np
-import gym_minigrid
-from gym_minigrid.wrappers import *
-from gym_minigrid.agents import BlueAdlerPedAgent
-from gym_minigrid.lib.MetricCollector import MetricCollector
+import pedgrid
+from pedgrid.wrappers import *
+from pedgrid.agents import BlueAdlerPedAgent
+from pedgrid.lib.MetricCollector import MetricCollector
 import logging
 import pickle
 import matplotlib.pyplot as plt

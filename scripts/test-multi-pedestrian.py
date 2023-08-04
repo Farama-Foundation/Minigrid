@@ -8,14 +8,14 @@ import gym
 import numpy as np
 import pickle
 
-import gym_minigrid
-from gym_minigrid.agents import PedAgent
-from gym_minigrid.lib.MetricCollector import MetricCollector
-from gym_minigrid.wrappers import *
+import pedgrid
+from pedgrid.agents import PedAgent
+from pedgrid.lib.MetricCollector import MetricCollector
+from pedgrid.wrappers import *
 
 logging.basicConfig(level=logging.INFO)
 
-# from gym_minigrid.envs import MultiPedestrianEnv
+# from pedgrid.envs import MultiPedestrianEnv
 # %matplotlib auto
 # %load_ext autoreload
 # %autoreload 2

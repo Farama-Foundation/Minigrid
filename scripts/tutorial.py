@@ -1,9 +1,9 @@
 exec(open("sys_path_hack.py").read())
 import gym
-import gym_minigrid
-from gym_minigrid.agents import BlueAdlerPedAgent
-from gym_minigrid.agents import TutorialPedAgent
-from gym_minigrid.lib.Direction import Direction
+import pedgrid
+from pedgrid.agents import BlueAdlerPedAgent
+from pedgrid.agents import TutorialPedAgent
+from pedgrid.lib.Direction import Direction
 import time
 
 # Load the gym environment

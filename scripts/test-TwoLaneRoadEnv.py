@@ -1,7 +1,7 @@
 import time
 import gym
-import gym_minigrid
-from gym_minigrid.agents import *
+import pedgrid
+from pedgrid.agents import *
 import logging
 
 env = gym.make('TwoLaneRoadEnv60x80-v0')

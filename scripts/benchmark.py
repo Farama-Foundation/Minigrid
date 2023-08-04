@@ -2,9 +2,9 @@
 
 import time
 import argparse
-import gym_minigrid
+import pedgrid
 import gym
-from gym_minigrid.wrappers import *
+from pedgrid.wrappers import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

@@ -75,7 +75,7 @@ class TwoLaneRoadEnv30x80(TwoLaneRoadEnv):
 ```python
 register(
     id='PedestrianEnv-20x80-v0',
-    entry_point='gym_minigrid.envs.pedestrian.PedestrianEnv:PedestrianEnv20x80'
+    entry_point='pedgrid.envs.pedestrian.PedestrianEnv:PedestrianEnv20x80'
 )
 ```
 

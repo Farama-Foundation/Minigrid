@@ -1,7 +1,7 @@
 import pytest
-from gym_minigrid.lib.Direction import Direction
-from gym_minigrid.agents import BlueAdlerPedAgent
-from gym_minigrid.agents import LaneNum
+from pedgrid.lib.Direction import Direction
+from pedgrid.agents import BlueAdlerPedAgent
+from pedgrid.agents import LaneNum
 import math
 
 

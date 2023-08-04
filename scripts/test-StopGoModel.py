@@ -1,10 +1,10 @@
 import time
 import gym
-from gym_minigrid.agents import *
+from pedgrid.agents import *
 import logging
 
-from gym_minigrid.agents.StopGoModel.stopGoPed import StopGoPed
-from gym_minigrid.agents.StopGoModel.stopGoVehicle import StopGoVehicle
+from pedgrid.agents.StopGoModel.stopGoPed import StopGoPed
+from pedgrid.agents.StopGoModel.stopGoVehicle import StopGoVehicle
 env = gym.make('TwoLaneRoadEnv60x80-v0')       
 env.reset()
 

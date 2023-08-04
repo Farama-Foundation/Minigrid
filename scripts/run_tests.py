@@ -3,15 +3,15 @@
 import random
 import numpy as np
 import gym
-import gym_minigrid
-from gym_minigrid.register import env_list
-from gym_minigrid.minigrid import Grid, OBJECT_TO_IDX
+import pedgrid
+from pedgrid.register import env_list
+from pedgrid.minigrid import Grid, OBJECT_TO_IDX
 
 # Test specifically importing a specific environment
-from gym_minigrid.envs import DoorKeyEnv
+from pedgrid.envs import DoorKeyEnv
 
 # Test importing wrappers
-from gym_minigrid.wrappers import *
+from pedgrid.wrappers import *
 
 ##############################################################################
 
@@ -135,7 +135,7 @@ for env_idx, env_name in enumerate(env_list):
 ##############################################################################
 
 print('testing extra observations')
-class EmptyEnvWithExtraObs(gym_minigrid.envs.EmptyEnv5x5):
+class EmptyEnvWithExtraObs(pedgrid.envs.EmptyEnv5x5):
     """
     Custom environment with an extra observation
     """

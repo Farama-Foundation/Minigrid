@@ -4,9 +4,9 @@ import time
 import argparse
 import numpy as np
 import gym
-import gym_minigrid
-from gym_minigrid.wrappers import *
-from gym_minigrid.window import Window
+import pedgrid
+from pedgrid.wrappers import *
+from pedgrid.window import Window
 
 def redraw(img):
     if not args.agent_view:
@@ -105,7 +105,7 @@ if args.agent_view:
     env = RGBImgPartialObsWrapper(env)
     env = ImgObsWrapper(env)
 
-window = Window('gym_minigrid - ' + args.env)
+window = Window('pedgrid - ' + args.env)
 window.reg_key_handler(key_handler)
 
 reset()

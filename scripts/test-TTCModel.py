@@ -1,10 +1,10 @@
 import time
 import gym
-import gym_minigrid
-from gym_minigrid.agents import *
+import pedgrid
+from pedgrid.agents import *
 import logging
-from gym_minigrid.agents.SimpleVehicle import SimpleVehicle
-from gym_minigrid.lib.MetricCollector import MetricCollector
+from pedgrid.agents.SimpleVehicle import SimpleVehicle
+from pedgrid.lib.MetricCollector import MetricCollector
 import pickle
 import pandas as pd
 
