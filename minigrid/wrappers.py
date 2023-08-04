@@ -314,7 +314,11 @@ class RGBImgObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width * tile_size, self.env.height * tile_size, 3),
+            shape=(
+                self.unwrapped.width * tile_size,
+                self.unwrapped.height * tile_size,
+                3,
+            ),
             dtype="uint8",
         )
 
@@ -323,7 +327,9 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(highlight=True, tile_size=self.tile_size)
+        rgb_img = self.get_frame(
+            highlight=self.unwrapped.highlight, tile_size=self.tile_size
+        )
 
         return {**obs, "image": rgb_img}
 
