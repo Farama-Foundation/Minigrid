@@ -9,7 +9,8 @@ from gym_minigrid.agents import LaneNum
 from .PedAgent import PedAgent
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.Action import Action
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
+
 from gym_minigrid.lib.Direction import Direction
 
 
@@ -131,7 +132,7 @@ class BlueAdlerPedAgent(PedAgent):
 
     def parallel2(self, env): # TODO add type
         # if self.speedFixed == True:
-        #     return Action(self, ForwardAction.KEEP)
+        #     return Action(self, ObjectAction.FORWARD)
 
         agents = env.pedAgents
         self.speed = self.gap
@@ -149,14 +150,14 @@ class BlueAdlerPedAgent(PedAgent):
 
         # logging.info(f"gap: {self.gap}, speed: {self.speed}, gapOpp: {self.gapOpp}")
         
-        return Action(self, ForwardAction.KEEP)
+        return Action(self, ObjectAction.FORWARD)
         
 
     def computeGap(self, agents, lane, env=None) -> Tuple[int, int, int, PedAgent]:
         """
         Compute the gap (basically the possible speed ) according to the paper
         """
-
+        
         laneOffset = 0
         if lane == LaneNum.leftLane:
             laneOffset = -1

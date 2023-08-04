@@ -10,7 +10,7 @@ from gym_minigrid.agents.PedAgent import PedAgent
 
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.Action import Action
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
 from gym_minigrid.lib.Direction import Direction
 import logging
 
@@ -55,7 +55,7 @@ class StopGoPed(PedAgent):
     def parallel2(self, env): # TODO add type
         if self.stepsPlanned > 0:
             self.stepsPlanned -= 1
-            return Action(self, ForwardAction.KEEP)
+            return Action(self, ObjectAction.FORWARD)
         return None
         
     def timeBetweenTwoVehicles(self, env):

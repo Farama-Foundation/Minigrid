@@ -6,7 +6,7 @@ from gym_minigrid.agents import Agent, PedActions, PedAgent
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
 from gym_minigrid.lib.VehicleAction import VehicleAction
 from gym_minigrid.lib.Direction import Direction
 from .EnvEvent import EnvEvent
@@ -54,7 +54,7 @@ class PedestrianEnv(MiniGridEnv):
         
         self._actionHandlers = {
             LaneAction: self.executeLaneAction,
-            ForwardAction: self.executeForwardAction
+            ObjectAction: self.executeObjectAction
         }
 
     pass
@@ -336,9 +336,6 @@ class PedestrianEnv(MiniGridEnv):
         if envEvent == EnvEvent.stepParallel2: 
             return [handler(self) for handler in self.stepParallel2]
 
-
-    
-
     def step(self, action=None):
         """This step is tightly coupled with the research, how can we decouple it?
 
@@ -393,6 +390,16 @@ class PedestrianEnv(MiniGridEnv):
             self.shiftRight(action.agent)
         pass
     
+    def executeObjectAction(self, action: Action):
+        if action is None:
+            return
+
+        if action is ObjectAction.FORWARD:
+            self.executeForwardAction(self, action)
+       # elif action is ObjectAction.MOVETO:
+       #     self.executeMoveToAction(self, action)
+
+        
     def executeForwardAction(self, action: Action):
         if action is None:
             return 

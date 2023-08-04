@@ -9,7 +9,8 @@ from gym_minigrid.agents import LaneNum
 from .PedAgent import PedAgent
 from gym_minigrid.lib.LaneAction import LaneAction
 from gym_minigrid.lib.Action import Action
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
+
 from gym_minigrid.lib.Direction import Direction
 
 class SimplePedAgent(PedAgent):
@@ -23,7 +24,7 @@ class SimplePedAgent(PedAgent):
         """
             Simply move forward
         """
-        return Action(self, ForwardAction.KEEP)
+        return Action(self, ObjectAction.FORWARD)
     
     def parallel2(self, env):
         pass

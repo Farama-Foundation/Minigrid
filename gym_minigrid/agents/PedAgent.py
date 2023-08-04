@@ -2,7 +2,7 @@ from gym_minigrid.agents.Agent import Agent
 from gym_minigrid.agents import LaneNum
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
 import numpy as np
 import logging
 from typing import Tuple

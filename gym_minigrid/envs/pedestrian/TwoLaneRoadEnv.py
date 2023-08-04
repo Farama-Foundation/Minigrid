@@ -7,7 +7,7 @@ from gym_minigrid.agents import *
 from gym_minigrid.envs.pedestrian.PedGrid import PedGrid
 from gym_minigrid.lib.Action import Action
 from gym_minigrid.lib.LaneAction import LaneAction
-from gym_minigrid.lib.ForwardAction import ForwardAction
+from gym_minigrid.lib.ObjectAction import ObjectAction
 from gym_minigrid.lib.Direction import Direction
 from gym_minigrid.lib.VehicleAction import VehicleAction
 from .EnvEvent import EnvEvent
