@@ -10,7 +10,7 @@ The environments in the Minigrid library can be trained easily using [StableBase
 
 ## Create Custom Feature Extractor 
 
-Although `StableBaselines3` is fully compatible with `Gymnasium`-based environments, including Minigrid, the default CNN architecture does not directly support the Minigrid observation space. Thus, to train an agent on Minigrid environments, we therefore need to create a custom feature extractor. This can be done by creating a feature extractor class that inherits from `stable_baselines3.common.torch_layers.BaseFeaturesExtractor`
+Although `StableBaselines3` is fully compatible with `Gymnasium`-based environments (which includes Minigrid), the default CNN architecture does not directly support the Minigrid observation space. Thus, to train an agent on Minigrid environments, we need to create a custom feature extractor. This can be done by creating a feature extractor class that inherits from `stable_baselines3.common.torch_layers.BaseFeaturesExtractor`
 
 ```python
 class MinigridFeaturesExtractor(BaseFeaturesExtractor):
