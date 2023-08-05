@@ -172,12 +172,16 @@ class MiniGridEnv(gym.Env):
     def steps_remaining(self):
         return self.max_steps - self.step_count
 
-    def __str__(self):
+    def pprint_grid(self):
         """
         Produce a pretty string of the environment's grid along with the agent.
         A grid cell is represented by 2-character string, the first one for
         the object and the second one for the color.
         """
+        if self.agent_pos is None or self.agent_dir is None or self.grid is None:
+            raise ValueError(
+                "The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown."
+            )
 
         # Map of object types to short string
         OBJECT_TO_STR = {
