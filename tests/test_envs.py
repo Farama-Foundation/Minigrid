@@ -334,9 +334,17 @@ def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
     env = gym.make(env_id)
 
     env_repr = str(env)
-    assert env_repr == "<OrderEnforcing<PassiveEnvChecker<EmptyEnv<MiniGrid-Empty-8x8-v0>>>>"
+    assert (
+        env_repr
+        == "<OrderEnforcing<PassiveEnvChecker<EmptyEnv<MiniGrid-Empty-8x8-v0>>>>"
+    )
 
-    with pytest.raises(ValueError, match=re.escape("The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown.")):
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown."
+        ),
+    ):
         env.unwrapped.pprint_grid()
 
     env.reset()
