@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Locked Room" href="../LockedRoomEnv/" /><link rel="prev" title="Key Corridor" href="../KeyCorridorEnv/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/minigrid/LavaGapEnv.html" />
 
-    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.1.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.05.20.dev1 -->
         <title>Lava Gap - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=2b6f8eb5452c44539a42dd9ada0a48f56e5f404d" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=d98e5db1aa483f10fd0a50bf79700ebb0c5bab79" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=5d0deb98f4b2e6cecaee64745957f1068f205919" />
     
     
 
@@ -213,7 +213,7 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/training/">Training Minigrid Environments</a></li>
@@ -376,7 +376,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">LavaGapEnv._gen_mission_lava</span> <span class="pre">at</span> <span class="pre">0x7f82837c9310&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">LavaGapEnv._gen_mission_lava</span> <span class="pre">at</span> <span class="pre">0x7f636dd5e310&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Reward Range</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
@@ -775,7 +775,7 @@ is useful for studying safety and safe exploration.</p>
             const subSectionContainerElem = Object.assign(
                 document.createElement('div'), {
                   className:'farama-header-menu__subsections-container',
-                  style: key == "Mature Projects" ? "display: flex" : ""
+                  style: 'display: flex'
                 }
             )
             Object.keys(subSections).forEach((subKey, i) => {
@@ -790,7 +790,7 @@ is useful for studying safety and safe exploration.</p>
                   innerText: subKey
                 }
               ))
-              const ulElem = createProjectsList(subSections[subKey], key !== "Foundation");
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
               subSectionElem.appendChild(ulElem);
               subSectionContainerElem.appendChild(subSectionElem);
             })
