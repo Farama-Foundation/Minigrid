@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pickle
+import re
 import warnings
 
 import gymnasium as gym
@@ -327,3 +328,24 @@ def test_env_sync_vectorization(env_id):
     env.reset()
     env.step(env.action_space.sample())
     env.close()
+
+
+def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
+    env = gym.make(env_id)
+
+    env_repr = str(env)
+    assert (
+        env_repr
+        == "<OrderEnforcing<PassiveEnvChecker<EmptyEnv<MiniGrid-Empty-8x8-v0>>>>"
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown."
+        ),
+    ):
+        env.unwrapped.pprint_grid()
+
+    env.reset()
+    assert isinstance(env.unwrapped.pprint_grid(), str)
