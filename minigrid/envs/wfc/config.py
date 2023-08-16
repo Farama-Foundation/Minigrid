@@ -3,15 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from gymnasium.error import DependencyNotInstalled
 from typing_extensions import Literal
-
-try:
-    import imageio
-except ImportError as e:
-    raise DependencyNotInstalled(
-        'imageio is missing, please run `pip install "minigrid[wfc]"`'
-    ) from e
 
 PATTERN_PATH = Path(__file__).parent / "patterns"
 
@@ -48,8 +40,16 @@ class WFCConfig:
 
     @property
     def wfc_kwargs(self):
+        try:
+            from imageio.v2 import imread
+        except ImportError as e:
+            from gymnasium.error import DependencyNotInstalled
+
+            raise DependencyNotInstalled(
+                'imageio is missing, please run `pip install "minigrid[wfc]"`'
+            ) from e
         kwargs = asdict(self)
-        kwargs["image"] = imageio.v2.imread(kwargs.pop("pattern_path"))[:, :, :3]
+        kwargs["image"] = imread(kwargs.pop("pattern_path"))[:, :, :3]
         return kwargs
 
 
