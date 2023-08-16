@@ -243,7 +243,9 @@ class GoToObj(RoomGridLevel):
 
     - `BabyAI-GoToObj-v0`
     - `BabyAI-GoToObjS4-v0`
-    - `BabyAI-GoToObjS6-v0`
+    - `BabyAI-GoToObjS6-v1`
+
+    Notice: `BabyAI-GoToObjS6-v0` is no longer for use due to a bug in the registry parameters.
 
     """
 
