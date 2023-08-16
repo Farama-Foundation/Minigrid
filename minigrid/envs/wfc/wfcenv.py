@@ -102,7 +102,7 @@ class WFCEnv(MiniGridEnv):
         if size < 3:
             raise ValueError(f"Grid size must be at least 3 (currently {size})")
         self.size = size
-        self.max_attempts = 100
+        self.max_attempts = 1000
 
         if max_steps is None:
             max_steps = self.size * 20

@@ -15,7 +15,6 @@ from minigrid.minigrid_env import MiniGridEnv
 class EdgeDescriptor:
     between: tuple[str, str] | tuple[str]
     structure: str | None = None
-    weight = None
 
 
 # This is maybe general enough to be in utils

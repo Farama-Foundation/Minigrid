@@ -22,7 +22,7 @@ def img_redmaze(resources: Resources) -> array:
         import imageio  # type: ignore
 
         pattern = resources.get_pattern("RedMaze.png")
-        img = imageio.imread(pattern)
+        img = imageio.v2.imread(pattern)
     except ImportError:
         b = [0, 0, 0]
         w = [255, 255, 255]
