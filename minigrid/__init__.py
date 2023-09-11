@@ -595,9 +595,9 @@ def register_minigrid_envs():
     )
 
     register(
-        id="BabyAI-GoToObjS6-v0",
+        id="BabyAI-GoToObjS6-v1",
         entry_point="minigrid.envs.babyai:GoToObj",
-        kwargs={"room_size": 4},
+        kwargs={"room_size": 6},
     )
 
     register(

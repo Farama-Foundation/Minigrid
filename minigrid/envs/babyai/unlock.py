@@ -220,6 +220,9 @@ class KeyInBox(RoomGridLevel):
 
     - `BabyAI-KeyInBox-v0`
 
+    ## Additional Notes
+
+    The BabyAI bot is unable to solve this level.
     """
 
     def __init__(self, **kwargs):
