@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Action Bonus" href="../wrappers/" /><link rel="prev" title="Training Minigrid Environments" href="../../content/training/" />
         <link rel="canonical" href="https://minigrid.farama.org/api/wrapper.html" />
 
-    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.5 and Furo 2023.08.19.dev1 -->
         <title>Wrapper - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=2b6f8eb5452c44539a42dd9ada0a48f56e5f404d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=5d0deb98f4b2e6cecaee64745957f1068f205919" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -369,7 +369,7 @@
           <article role="main">
             
             <section id="wrapper">
-<h1>Wrapper<a class="headerlink" href="#wrapper" title="Permalink to this heading">#</a></h1>
+<h1>Wrapper<a class="headerlink" href="#wrapper" title="Link to this heading">#</a></h1>
 <p>Wraps an environment to allow a modular transformation of the :meth:<code class="docutils literal notranslate"><span class="pre">step</span></code> and :meth:<code class="docutils literal notranslate"><span class="pre">reset</span></code> methods. This class is the base class for all wrappers. The subclass could override some methods to change the behavior of the original environment without touching the original code. Note: Don’t forget to call <code class="docutils literal notranslate"><span class="pre">super().__init__(env)</span></code> if the subclass overrides :meth:<code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
 <p>MiniGrid is built to support tasks involving natural language and sparse rewards.
 The observations are dictionaries, with an ‘image’ field, partially observable
@@ -526,9 +526,9 @@ use the <code class="docutils literal notranslate"><span class="pre">RGBImgParti
         })()
       </script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=55c0f316"></script>
+    <script src="../../_static/documentation_options.js?v=7fa42598"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
