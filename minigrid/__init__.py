@@ -6,7 +6,7 @@ from minigrid import minigrid_env, wrappers
 from minigrid.core import roomgrid
 from minigrid.core.world_object import Wall
 
-__version__ = "2.3.0"
+__version__ = "2.3.1"
 
 
 try:
