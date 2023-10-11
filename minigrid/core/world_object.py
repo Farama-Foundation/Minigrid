@@ -74,7 +74,7 @@ class WorldObj:
         obj_type = IDX_TO_OBJECT[type_idx]
         color = IDX_TO_COLOR[color_idx]
 
-        if obj_type == "empty" or obj_type == "unseen":
+        if obj_type == "empty" or obj_type == "unseen" or obj_type == "agent":
             return None
 
         # State, 0: open, 1: closed, 2: locked

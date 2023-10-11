@@ -11,7 +11,7 @@ RUN apt-get -y update \
 COPY . /usr/local/minigrid/
 WORKDIR /usr/local/minigrid/
 
-RUN pip install .[testing] --no-cache-dir
+RUN pip install .[wfc,testing] --no-cache-dir
 
 RUN ["chmod", "+x", "/usr/local/minigrid/docker_entrypoint"]
 

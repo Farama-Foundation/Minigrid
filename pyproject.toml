@@ -37,6 +37,10 @@ testing = [
     "pytest-mock>=3.10.0",
     "matplotlib>=3.0"
 ]
+wfc = [
+    "networkx",
+    "imageio>=2.31.1",
+]
 
 [project.urls]
 Homepage = "https://farama.org"
