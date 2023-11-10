@@ -12,7 +12,7 @@ class DoorKeyEnv(MiniGridEnv):
     ## Description
 
     This environment has a key that the agent must pick up in order to unlock a
-    goal and then get to the green goal square. This environment is difficult,
+    door and then get to the green goal square. This environment is difficult,
     because of the sparse reward, to solve using classical RL algorithms. It is
     useful to experiment with curiosity or curriculum learning.
 
