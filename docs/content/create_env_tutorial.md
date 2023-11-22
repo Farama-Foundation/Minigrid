@@ -37,7 +37,7 @@ class SimpleEnv(MiniGridEnv):
         return "grand mission"
 ```
 
-First, we need to create a class the inherits from `MiniGridEnv`, we call our class `SimpleEnv`. Then, we define a mission space, the recommended way to do it is to define a static function
+First, we need to create a class that inherits from `MiniGridEnv`, we call our class `SimpleEnv`. Then, we define a mission space, the recommended way to do it is to define a static function.
 
 ```python
 @staticmethod
