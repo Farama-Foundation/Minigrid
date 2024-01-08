@@ -522,6 +522,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             "object",
             "from",
             "room",
+            "maze",
         ]
 
         all_words = colors + objects + verbs + extra_words

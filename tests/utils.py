@@ -1,6 +1,8 @@
 """Finds all the specs that we can test with"""
 from __future__ import annotations
 
+from importlib.util import find_spec
+
 import gymnasium as gym
 import numpy as np
 
@@ -12,6 +14,14 @@ all_testing_env_specs = [
         and env_spec.entry_point.startswith("minigrid.envs")
     )
 ]
+
+if find_spec("imageio") is None or find_spec("networkx") is None:
+    # Do not test WFC environments if dependencies are not installed
+    all_testing_env_specs = [
+        env_spec
+        for env_spec in all_testing_env_specs
+        if not env_spec.entry_point.startswith("minigrid.envs.wfc")
+    ]
 
 minigrid_testing_env_specs = [
     env_spec
