@@ -160,7 +160,6 @@ class FindObjS5(RoomGridLevel):
     """
 
     def __init__(self, room_size=5, max_steps: int | None = None, **kwargs):
-
         if max_steps is None:
             max_steps = 20 * room_size**2
 
