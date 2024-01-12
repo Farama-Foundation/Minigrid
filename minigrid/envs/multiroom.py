@@ -145,7 +145,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # For each room
         for idx, room in enumerate(roomList):
-
             topX, topY = room.top
             sizeX, sizeY = room.size
 
@@ -242,7 +241,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # Try placing the next room
         for i in range(0, 8):
-
             # Pick which wall to place the out door on
             wallSet = {0, 1, 2, 3}
             wallSet.remove(entryDoorWall)

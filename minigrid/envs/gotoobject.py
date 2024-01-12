@@ -64,7 +64,6 @@ class GoToObjectEnv(MiniGridEnv):
     """
 
     def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
-
         self.numObjs = numObjs
         self.size = size
         # Types of objects to be generated
