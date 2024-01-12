@@ -204,7 +204,7 @@ class SimpleEnv(MiniGridEnv):
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
-        # Generate verical separation wall
+        # Generate vertical separation wall
         for i in range(0, height):
             self.grid.set(5, i, Wall())
         

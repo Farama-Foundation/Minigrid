@@ -91,7 +91,6 @@ class FourRoomsEnv(MiniGridEnv):
 
         # For each row of rooms
         for j in range(0, 2):
-
             # For each column
             for i in range(0, 2):
                 xL = i * room_w
