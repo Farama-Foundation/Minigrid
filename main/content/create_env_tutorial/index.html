@@ -368,7 +368,7 @@
           </div>
           <article role="main">
             
-            <section id="tutorial-on-creating-environments">
+            <section class="tex2jax_ignore mathjax_ignore" id="tutorial-on-creating-environments">
 <h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Link to this heading">#</a></h1>
 <p>In this tutorial, we will go through the process of creating a new environment.</p>
 <section id="boilerplate-code">
@@ -399,7 +399,7 @@
         <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
 </pre></div>
 </div>
-<p>First, we need to create a class the inherits from <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define a mission space, the recommended way to do it is to define a static function</p>
+<p>First, we need to create a class that inherits from <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define a mission space, the recommended way to do it is to define a static function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
     <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
@@ -536,7 +536,7 @@
         <span class="c1"># Generate the surrounding walls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">wall_rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 
-        <span class="c1"># Generate verical separation wall</span>
+        <span class="c1"># Generate vertical separation wall</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Wall</span><span class="p">())</span>
         

@@ -7,12 +7,12 @@
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
-    <meta property="og:url" content="https://minigrid.farama.org/environments/minigrid/ObstructedMaze_1Dlhb.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Obstructed Maze Full" href="../ObstructedMaze_Full/" /><link rel="prev" title="Multi Room" href="../MultiRoomEnv/" />
-        <link rel="canonical" href="https://minigrid.farama.org/environments/minigrid/ObstructedMaze_1Dlhb.html" />
+    <meta property="og:url" content="https://minigrid.farama.org/environments/minigrid/ObstructedMaze_Full_V1.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" />
+        <link rel="canonical" href="https://minigrid.farama.org/environments/minigrid/ObstructedMaze_Full_V1.html" />
 
     <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
-        <title>Obstructed Maze Dlhb - MiniGrid Documentation</title>
+        <title>Obstructed Maze Full - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=49cbaffd" />
@@ -238,8 +238,8 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Minigrid Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../CrossingEnv/">Crossing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../DistShiftEnv/">Dist Shift</a></li>
@@ -255,7 +255,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../LockedRoomEnv/">Locked Room</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../MemoryEnv/">Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../MultiRoomEnv/">Multi Room</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Obstructed Maze Dlhb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ObstructedMaze_1Dlhb/">Obstructed Maze Dlhb</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ObstructedMaze_Full/">Obstructed Maze Full</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../PlaygroundEnv/">Playground</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../PutNearEnv/">Put Near</a></li>
@@ -359,10 +359,10 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="obstructed-maze-dlhb">
-<h1>Obstructed Maze Dlhb<a class="headerlink" href="#obstructed-maze-dlhb" title="Link to this heading">#</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="obstructed-maze-full">
+<h1>Obstructed Maze Full<a class="headerlink" href="#obstructed-maze-full" title="Link to this heading">#</a></h1>
 <figure class="align-default">
-<a class="reference internal image-reference" href="../../../_images/ObstructedMaze_1Dlhb.gif"><img alt="Obstructed Maze Dlhb" src="../../../_images/ObstructedMaze_1Dlhb.gif" style="width: 200px;" /></a>
+<a class="reference internal image-reference" href="_static/videos/minigrid/ObstructedMaze_Full_V1.gif"><img alt="Obstructed Maze Full" src="_static/videos/minigrid/ObstructedMaze_Full_V1.gif" style="width: 200px;" /></a>
 </figure>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
@@ -382,13 +382,16 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Creation</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-ObstructedMaze-1Dlhb-v0&quot;)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-ObstructedMaze-Full-v1&quot;)</span></code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>A blue ball is hidden in a 2x1 maze. A locked door separates
-rooms. Doors are obstructed by a ball and keys are hidden in boxes.</p>
+<p>A blue ball is hidden in one of the 4 corners of a 3x3 maze. Doors
+are locked, doors are obstructed by a ball and keys are hidden in
+boxes.</p>
+<p>All doors and their corresponding blocking balls will be added first,
+followed by the boxes containing the keys.</p>
 </section>
 
           </article>
@@ -396,30 +399,8 @@ rooms. Doors are obstructed by a ball and keys are hidden in boxes.</p>
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../ObstructedMaze_Full/">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Obstructed Maze Full</div>
-              </div>
-              <svg class="furo-related-icon">
-                <use href="#svg-arrow-right"></use>
-              </svg>
-            </a>
-            <a class="prev-page" href="../MultiRoomEnv/">
-              <svg class="furo-related-icon">
-                <use href="#svg-arrow-right"></use>
-              </svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Multi Room</div>
-                
-              </div>
-            </a>
+            
+            
           </div>
           <div class="bottom-of-page">
             <div class="left-details">

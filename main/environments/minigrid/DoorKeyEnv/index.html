@@ -359,7 +359,7 @@
           </div>
           <article role="main">
             
-            <section id="door-key">
+            <section class="tex2jax_ignore mathjax_ignore" id="door-key">
 <h1>Door Key<a class="headerlink" href="#door-key" title="Link to this heading">#</a></h1>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../../_images/DoorKeyEnv.gif"><img alt="Door Key" src="../../../_images/DoorKeyEnv.gif" style="width: 200px;" /></a>
@@ -376,7 +376,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">DoorKeyEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f7e46928ca0&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">DoorKeyEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f7f90aa55e0&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Reward Range</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
@@ -390,7 +390,7 @@
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p>This environment has a key that the agent must pick up in order to unlock a
-goal and then get to the green goal square. This environment is difficult,
+door and then get to the green goal square. This environment is difficult,
 because of the sparse reward, to solve using classical RL algorithms. It is
 useful to experiment with curiosity or curriculum learning.</p>
 </section>
