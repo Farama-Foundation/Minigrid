@@ -37,7 +37,7 @@ class SimpleEnv(MiniGridEnv):
         return "grand mission"
 ```
 
-First, we need to create a class the inherits from `MiniGridEnv`, we call our class `SimpleEnv`. Then, we define a mission space, the recommended way to do it is to define a static function
+First, we need to create a class that inherits from `MiniGridEnv`, we call our class `SimpleEnv`. Then, we define a mission space, the recommended way to do it is to define a static function.
 
 ```python
 @staticmethod
@@ -204,7 +204,7 @@ class SimpleEnv(MiniGridEnv):
         # Generate the surrounding walls
         self.grid.wall_rect(0, 0, width, height)
 
-        # Generate verical separation wall
+        # Generate vertical separation wall
         for i in range(0, height):
             self.grid.set(5, i, Wall())
         

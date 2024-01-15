@@ -49,7 +49,6 @@ for env_spec in tqdm(gymnasium.envs.registry.values()):
                 state, info = env.reset()
                 terminated, truncated = False, False
                 while not (terminated or truncated) and len(frames) <= LENGTH:
-
                     frame = env.render()
                     frames.append(Image.fromarray(frame))
                     action = env.action_space.sample()

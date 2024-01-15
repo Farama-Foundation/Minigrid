@@ -12,7 +12,7 @@ class DoorKeyEnv(MiniGridEnv):
     ## Description
 
     This environment has a key that the agent must pick up in order to unlock a
-    goal and then get to the green goal square. This environment is difficult,
+    door and then get to the green goal square. This environment is difficult,
     because of the sparse reward, to solve using classical RL algorithms. It is
     useful to experiment with curiosity or curriculum learning.
 
@@ -37,7 +37,7 @@ class DoorKeyEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards

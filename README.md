@@ -21,7 +21,7 @@ See the [Project Roadmap](https://github.com/Farama-Foundation/Minigrid/issues/3
 
 To install the Minigrid library use `pip install minigrid`.
 
-We support Python 3.7, 3.8, 3.9 and 3.10 on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
+We support Python 3.7, 3.8, 3.9, 3.10 and 3.11 on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
 
 # Environments
 The included environments can be divided in two groups. The original `Minigrid` environments and the `BabyAI` environments. 

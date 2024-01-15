@@ -47,7 +47,7 @@ class MultiRoomEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -145,7 +145,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # For each room
         for idx, room in enumerate(roomList):
-
             topX, topY = room.top
             sizeX, sizeY = room.size
 
@@ -242,7 +241,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # Try placing the next room
         for i in range(0, 8):
-
             # Pick which wall to place the out door on
             wallSet = {0, 1, 2, 3}
             wallSet.remove(entryDoorWall)
