@@ -77,19 +77,9 @@ if __name__ == "__main__":
         env_type = key
 
         page = generate_page({"id": key, "list": value})
-        # fp = open(
-        #     os.path.join(
-        #         os.path.dirname(__file__), "..", "environments", env_type, "list.html"
-        #     ),
-        #     "w",
-        #     encoding="utf-8",
-        # )
         fp = open(
             os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "environments/minigrid",
-                f"{env_type}.md",
+                os.path.dirname(__file__), "..", "environments", env_type, "list.html"
             ),
             "w",
             encoding="utf-8",
