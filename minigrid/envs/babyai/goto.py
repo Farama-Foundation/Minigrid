@@ -39,7 +39,7 @@ class GoToRedBallGrey(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -105,7 +105,7 @@ class GoToRedBall(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -168,7 +168,7 @@ class GoToRedBallNoDists(GoToRedBall):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -225,7 +225,7 @@ class GoToObj(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -294,7 +294,7 @@ class GoToLocal(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -370,7 +370,7 @@ class GoTo(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -460,7 +460,7 @@ class GoToImpUnlock(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -565,7 +565,7 @@ class GoToSeq(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -633,7 +633,7 @@ class GoToRedBlueBall(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -709,7 +709,7 @@ class GoToDoor(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -777,7 +777,7 @@ class GoToObjDoor(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards

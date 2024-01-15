@@ -260,7 +260,6 @@ def test_interactive_mode(env_id):
 
 
 def test_mission_space():
-
     # Test placeholders
     mission_space = MissionSpace(
         mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",

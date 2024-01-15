@@ -37,7 +37,7 @@ class FourRoomsEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -91,7 +91,6 @@ class FourRoomsEnv(MiniGridEnv):
 
         # For each row of rooms
         for j in range(0, 2):
-
             # For each column
             for i in range(0, 2):
                 xL = i * room_w
