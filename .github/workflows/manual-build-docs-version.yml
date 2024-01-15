@@ -37,7 +37,7 @@ jobs:
         run: pip install -r docs/requirements.txt
 
       - name: Register Envs
-        run: pip install -e .
+        run: pip install -e .[wfc]
 
       - name: Build Envs Docs
         run: python docs/_scripts/gen_env_docs.py
