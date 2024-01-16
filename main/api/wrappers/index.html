@@ -226,12 +226,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-observation">Image Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reseed">Reseed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rgb-partial-img-obs">RGB Partial Img Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#position-bonus">Position Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stochastic-action">Stochastic Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#view-size">View Size</a></li>
 </ul>
@@ -491,6 +494,28 @@ and combine these with observed images into one flat array.</p>
 </dd></dl>
 
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="image-observation">
+<h1>Image Observation<a class="headerlink" href="#image-observation" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ImgObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ImgObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ImgObsWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Use the image as the only observation output, no language/mission.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ImgObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;image&#39;, &#39;direction&#39;, &#39;mission&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">ImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(7, 7, 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 <section class="tex2jax_ignore mathjax_ignore" id="no-death">
 <h1>No Death<a class="headerlink" href="#no-death" title="Link to this heading">#</a></h1>
 <dl class="py class">
@@ -643,6 +668,34 @@ This can be used to have the agent to solve the gridworld in pixel space.</p>
 </dd></dl>
 
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="rgb-partial-img-obs">
+<h1>RGB Partial Img Obs<a class="headerlink" href="#rgb-partial-img-obs" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.RGBImgPartialObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#RGBImgPartialObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.RGBImgPartialObsWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Wrapper to use partially observable RGB image as observation.
+This can be used to have the agent to solve the gridworld in pixel space.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">RGBImgObsWrapper</span><span class="p">,</span> <span class="n">RGBImgPartialObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 <section class="tex2jax_ignore mathjax_ignore" id="position-bonus">
 <h1>Position Bonus<a class="headerlink" href="#position-bonus" title="Link to this heading">#</a></h1>
 <dl class="py class">
@@ -675,6 +728,17 @@ are visited on the grid.</p>
 <span class="go">0.7071067811865475</span>
 </pre></div>
 </div>
+</dd></dl>
+
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="stochastic-action">
+<h1>Stochastic Action<a class="headerlink" href="#stochastic-action" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.StochasticActionWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">StochasticActionWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#StochasticActionWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.StochasticActionWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Add stochasticity to the actions</p>
+<p>If a random action is provided, it is returned with probability <cite>1 - prob</cite>.
+Else, a random action is sampled from the action space.</p>
 </dd></dl>
 
 </section>
@@ -805,6 +869,10 @@ This cannot be used with fully observable wrappers.</p>
 <li><a class="reference internal" href="#minigrid.wrappers.FullyObsWrapper"><code class="docutils literal notranslate"><span class="pre">FullyObsWrapper</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#image-observation">Image Observation</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ImgObsWrapper"><code class="docutils literal notranslate"><span class="pre">ImgObsWrapper</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#no-death">No Death</a><ul>
 <li><a class="reference internal" href="#minigrid.wrappers.NoDeath"><code class="docutils literal notranslate"><span class="pre">NoDeath</span></code></a></li>
 </ul>
@@ -825,8 +893,16 @@ This cannot be used with fully observable wrappers.</p>
 <li><a class="reference internal" href="#minigrid.wrappers.RGBImgObsWrapper"><code class="docutils literal notranslate"><span class="pre">RGBImgObsWrapper</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#rgb-partial-img-obs">RGB Partial Img Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.RGBImgPartialObsWrapper"><code class="docutils literal notranslate"><span class="pre">RGBImgPartialObsWrapper</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#position-bonus">Position Bonus</a><ul>
 <li><a class="reference internal" href="#minigrid.wrappers.PositionBonus"><code class="docutils literal notranslate"><span class="pre">PositionBonus</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stochastic-action">Stochastic Action</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.StochasticActionWrapper"><code class="docutils literal notranslate"><span class="pre">StochasticActionWrapper</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a><ul>

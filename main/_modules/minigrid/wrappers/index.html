@@ -225,12 +225,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#image-observation">Image Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#reseed">Reseed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#rgb-partial-img-obs">RGB Partial Img Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#position-bonus">Position Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#stochastic-action">Stochastic Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#symbolic-obs">Symbolic Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#view-size">View Size</a></li>
 </ul>
@@ -557,6 +560,8 @@
 
 
 
+<div class="viewcode-block" id="ImgObsWrapper">
+<a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.ImgObsWrapper">[docs]</a>
 <span class="k">class</span> <span class="nc">ImgObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use the image as the only observation output, no language/mission.</span>
@@ -584,7 +589,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span></div>
+
 
 
 <div class="viewcode-block" id="OneHotPartialObsWrapper">
@@ -710,6 +716,8 @@
 
 
 
+<div class="viewcode-block" id="RGBImgPartialObsWrapper">
+<a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.RGBImgPartialObsWrapper">[docs]</a>
 <span class="k">class</span> <span class="nc">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper to use partially observable RGB image as observation.</span>
@@ -754,7 +762,8 @@
     <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
         <span class="n">rgb_img_partial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="n">tile_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">agent_pov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">rgb_img_partial</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">rgb_img_partial</span><span class="p">}</span></div>
+
 
 
 <div class="viewcode-block" id="FullyObsWrapper">
@@ -1167,6 +1176,8 @@
 
 
 
+<div class="viewcode-block" id="StochasticActionWrapper">
+<a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.StochasticActionWrapper">[docs]</a>
 <span class="k">class</span> <span class="nc">StochasticActionWrapper</span><span class="p">(</span><span class="n">ActionWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add stochasticity to the actions</span>
@@ -1188,7 +1199,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span></div>
+
 
 
 <div class="viewcode-block" id="NoDeath">
