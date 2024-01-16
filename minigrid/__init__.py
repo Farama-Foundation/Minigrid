@@ -478,7 +478,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-2Dlhb-v1",
-        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full_V1",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": True,
@@ -490,7 +490,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-1Q-v1",
-        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full_V1",
         kwargs={
             "agent_room": (1, 1),
             "key_in_box": True,
@@ -502,7 +502,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-2Q-v1",
-        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full_V1",
         kwargs={
             "agent_room": (2, 1),
             "key_in_box": True,
@@ -514,7 +514,7 @@ def register_minigrid_envs():
 
     register(
         id="MiniGrid-ObstructedMaze-Full-v1",
-        entry_point="minigrid.envs.obstructedmaze_v1:ObstructedMaze_Full",
+        entry_point="minigrid.envs:ObstructedMaze_Full_V1",
     )
 
     # Playground
