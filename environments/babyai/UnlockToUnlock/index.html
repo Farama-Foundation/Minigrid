@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Action Obj Door" href="../ActionObjDoor/" /><link rel="prev" title="Blocked Unlock Pickup" href="../BlockedUnlockPickup/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/babyai/UnlockToUnlock.html" />
 
-    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Unlock To Unlock - MiniGrid Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=2b6f8eb5452c44539a42dd9ada0a48f56e5f404d" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=d98e5db1aa483f10fd0a50bf79700ebb0c5bab79" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -213,13 +213,10 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/training/">Training Minigrid Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/training/#create-custom-feature-extractor">Create Custom Feature Extractor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/training/#train-a-ppo-agent">Train a PPO Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/training/#further-reading">Further Reading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
@@ -229,12 +226,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#image-observation">Image Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#reseed">Reseed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#rgb-partial-img-obs">RGB Partial Img Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#position-bonus">Position Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#stochastic-action">Stochastic Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#symbolic-obs">Symbolic Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/wrappers/#view-size">View Size</a></li>
 </ul>
@@ -362,8 +362,8 @@
           </div>
           <article role="main">
             
-            <section id="unlock-to-unlock">
-<h1>Unlock To Unlock<a class="headerlink" href="#unlock-to-unlock" title="Permalink to this heading">#</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="unlock-to-unlock">
+<h1>Unlock To Unlock<a class="headerlink" href="#unlock-to-unlock" title="Link to this heading">#</a></h1>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../../_images/UnlockToUnlock.gif"><img alt="Unlock To Unlock" src="../../../_images/UnlockToUnlock.gif" style="width: 200px;" /></a>
 </figure>
@@ -379,7 +379,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">BabyAIMissionSpace._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f87c5855700&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">BabyAIMissionSpace._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f813d9da940&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Reward Range</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
@@ -391,15 +391,15 @@
 </table>
 </div>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
 <p>Unlock a door A that requires to unlock a door B before</p>
 </section>
 <section id="mission-space">
-<h2>Mission Space<a class="headerlink" href="#mission-space" title="Permalink to this heading">#</a></h2>
+<h2>Mission Space<a class="headerlink" href="#mission-space" title="Link to this heading">#</a></h2>
 <p>“pick up the ball”</p>
 </section>
 <section id="action-space">
-<h2>Action Space<a class="headerlink" href="#action-space" title="Permalink to this heading">#</a></h2>
+<h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">#</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -442,21 +442,21 @@
 </div>
 </section>
 <section id="observation-encoding">
-<h2>Observation Encoding<a class="headerlink" href="#observation-encoding" title="Permalink to this heading">#</a></h2>
+<h2>Observation Encoding<a class="headerlink" href="#observation-encoding" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Each tile is encoded as a 3 dimensional tuple:
 <code class="docutils literal notranslate"><span class="pre">(OBJECT_IDX,</span> <span class="pre">COLOR_IDX,</span> <span class="pre">STATE)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">OBJECT_TO_IDX</span></code> and <code class="docutils literal notranslate"><span class="pre">COLOR_TO_IDX</span></code> mapping can be found in
-<a class="reference internal" href="#minigrid/minigrid.py"><span class="xref myst">minigrid/minigrid.py</span></a></p></li>
+<a class="reference internal" href="#minigrid/core/constants.py"><span class="xref myst">minigrid/core/constants.py</span></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">STATE</span></code> refers to the door state with 0=open, 1=closed and 2=locked</p></li>
 </ul>
 </section>
 <section id="rewards">
-<h2>Rewards<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h2>
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">#</a></h2>
 <p>A reward of ‘1 - 0.9 * (step_count / max_steps)’ is given for success, and ‘0’ for failure.</p>
 </section>
 <section id="termination">
-<h2>Termination<a class="headerlink" href="#termination" title="Permalink to this heading">#</a></h2>
+<h2>Termination<a class="headerlink" href="#termination" title="Link to this heading">#</a></h2>
 <p>The episode ends if any one of the following conditions is met:</p>
 <ol class="arabic simple">
 <li><p>The agent picks up the ball.</p></li>
@@ -464,7 +464,7 @@
 </ol>
 </section>
 <section id="registered-configurations">
-<h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Permalink to this heading">#</a></h2>
+<h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BabyAI-UnlockToUnlock-v0</span></code></p></li>
 </ul>
@@ -634,10 +634,10 @@
         })()
       </script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/documentation_options.js?v=7fa42598"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
 
@@ -767,7 +767,7 @@
             const subSectionContainerElem = Object.assign(
                 document.createElement('div'), {
                   className:'farama-header-menu__subsections-container',
-                  style: key == "Mature Projects" ? "display: flex" : ""
+                  style: 'display: flex'
                 }
             )
             Object.keys(subSections).forEach((subKey, i) => {
@@ -782,7 +782,7 @@
                   innerText: subKey
                 }
               ))
-              const ulElem = createProjectsList(subSections[subKey], key !== "Foundation");
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
               subSectionElem.appendChild(ulElem);
               subSectionContainerElem.appendChild(subSectionElem);
             })

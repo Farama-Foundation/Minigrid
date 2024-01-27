@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="List of Publications" href="../publications/" /><link rel="prev" title="&lt;no title&gt;" href="../../" />
         <link rel="canonical" href="https://minigrid.farama.org/content/basic_usage.html" />
 
-    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Basic Usage - MiniGrid Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=2b6f8eb5452c44539a42dd9ada0a48f56e5f404d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=d98e5db1aa483f10fd0a50bf79700ebb0c5bab79" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -213,13 +213,10 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../create_env_tutorial/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../training/">Training Minigrid Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../training/#create-custom-feature-extractor">Create Custom Feature Extractor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../training/#train-a-ppo-agent">Train a PPO Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../training/#further-reading">Further Reading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul>
@@ -229,12 +226,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#image-observation">Image Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#reseed">Reseed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#rgb-partial-img-obs">RGB Partial Img Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#position-bonus">Position Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#stochastic-action">Stochastic Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#symbolic-obs">Symbolic Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/wrappers/#view-size">View Size</a></li>
 </ul>
@@ -372,23 +372,26 @@
           <article role="main">
             
             <section id="basic-usage">
-<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h1>
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h1>
 <p>There is a UI application which allows you to manually control the agent with the arrow keys:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">minigrid</span><span class="o">/</span><span class="n">manual_control</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./minigrid/manual_control.py
 </pre></div>
 </div>
 <p>The environment being run can be selected with the <code class="docutils literal notranslate"><span class="pre">--env</span></code> option, eg:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">minigrid</span><span class="o">/</span><span class="n">manual_control</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">env</span> <span class="n">MiniGrid</span><span class="o">-</span><span class="n">Empty</span><span class="o">-</span><span class="mi">8</span><span class="n">x8</span><span class="o">-</span><span class="n">v0</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./minigrid/manual_control.py<span class="w"> </span>--env<span class="w"> </span>MiniGrid-Empty-8x8-v0
 </pre></div>
 </div>
 </section>
-<section id="training-an-agent">
-<h1>Training an Agent<a class="headerlink" href="#training-an-agent" title="Permalink to this heading">#</a></h1>
-<p>If you want to train an agent with reinforcement learning, I recommend using the code found in the <a class="reference external" href="https://github.com/lcswillems/torch-rl">torch-rl</a> repository.
-This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.</p>
-<p>A sample training command is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">torch</span><span class="o">-</span><span class="n">rl</span>
-<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">scripts</span><span class="o">.</span><span class="n">train</span> <span class="o">--</span><span class="n">env</span> <span class="n">MiniGrid</span><span class="o">-</span><span class="n">Empty</span><span class="o">-</span><span class="mi">8</span><span class="n">x8</span><span class="o">-</span><span class="n">v0</span> <span class="o">--</span><span class="n">algo</span> <span class="n">ppo</span>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
+<p>Minigrid call be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>minigrid
+</pre></div>
+</div>
+<p>To modify the codebase or contribute to Minigrid, you would need to install Minigrid from source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Farama-Foundation/Minigrid.git
+<span class="nb">cd</span><span class="w"> </span>Minigrid
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
@@ -519,10 +522,10 @@ This code has been tested and is known to work with this environment. The defaul
         })()
       </script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/documentation_options.js?v=7fa42598"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
 
@@ -652,7 +655,7 @@ This code has been tested and is known to work with this environment. The defaul
             const subSectionContainerElem = Object.assign(
                 document.createElement('div'), {
                   className:'farama-header-menu__subsections-container',
-                  style: key == "Mature Projects" ? "display: flex" : ""
+                  style: 'display: flex'
                 }
             )
             Object.keys(subSections).forEach((subKey, i) => {
@@ -667,7 +670,7 @@ This code has been tested and is known to work with this environment. The defaul
                   innerText: subKey
                 }
               ))
-              const ulElem = createProjectsList(subSections[subKey], key !== "Foundation");
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
               subSectionElem.appendChild(ulElem);
               subSectionContainerElem.appendChild(subSectionElem);
             })

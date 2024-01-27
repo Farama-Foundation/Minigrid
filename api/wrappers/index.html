@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Minigrid Environments" href="../../environments/minigrid/" /><link rel="prev" title="Wrapper" href="../wrapper/" />
         <link rel="canonical" href="https://minigrid.farama.org/api/wrappers.html" />
 
-    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Action Bonus - MiniGrid Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=2b6f8eb5452c44539a42dd9ada0a48f56e5f404d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=d98e5db1aa483f10fd0a50bf79700ebb0c5bab79" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -213,13 +213,10 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#training-an-agent">Training an Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/basic_usage/#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/publications/">List of Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/create_env_tutorial/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/training/">Training Minigrid Environments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#create-custom-feature-extractor">Create Custom Feature Extractor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#train-a-ppo-agent">Train a PPO Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../content/training/#further-reading">Further Reading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Wrappers</span></p>
 <ul class="current">
@@ -229,12 +226,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#direction-obs">Direction Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#flatobs">FlatObs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fully-obs">Fully Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-observation">Image Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#no-death">No Death</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#observation">Observation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#one-hot-partial-obs">One Hot Partial Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reseed">Reseed</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rgb-img-obs">RGB Img Obs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rgb-partial-img-obs">RGB Partial Img Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#position-bonus">Position Bonus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stochastic-action">Stochastic Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#view-size">View Size</a></li>
 </ul>
@@ -371,11 +371,11 @@
           </div>
           <article role="main">
             
-            <section id="action-bonus">
-<h1>Action Bonus<a class="headerlink" href="#action-bonus" title="Permalink to this heading">#</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="action-bonus">
+<h1>Action Bonus<a class="headerlink" href="#action-bonus" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.ActionBonus">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ActionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ActionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ActionBonus" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ActionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ActionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ActionBonus" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper which adds an exploration bonus.
 This is a reward to encourage exploration of less
 visited (state,action) pairs.</p>
@@ -403,11 +403,11 @@ visited (state,action) pairs.</p>
 </dd></dl>
 
 </section>
-<section id="dict-observation-space">
-<h1>Dict Observation Space<a class="headerlink" href="#dict-observation-space" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="dict-observation-space">
+<h1>Dict Observation Space<a class="headerlink" href="#dict-observation-space" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.DictObservationSpaceWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DictObservationSpaceWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_words_in_mission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DictObservationSpaceWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DictObservationSpaceWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DictObservationSpaceWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_words_in_mission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DictObservationSpaceWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DictObservationSpaceWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Transforms the observation space (that has a textual component) to a fully numerical observation space,
 where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.</p>
 <p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
@@ -428,11 +428,11 @@ where the textual instructions are replaced by arrays representing the indices o
 </dd></dl>
 
 </section>
-<section id="direction-obs">
-<h1>Direction Obs<a class="headerlink" href="#direction-obs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="direction-obs">
+<h1>Direction Obs<a class="headerlink" href="#direction-obs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.DirectionObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DirectionObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'slope'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DirectionObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DirectionObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DirectionObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'slope'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DirectionObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DirectionObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
 type = {slope , angle}</p>
 <p class="rubric">Example</p>
@@ -449,11 +449,11 @@ type = {slope , angle}</p>
 </dd></dl>
 
 </section>
-<section id="flatobs">
-<h1>FlatObs<a class="headerlink" href="#flatobs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="flatobs">
+<h1>FlatObs<a class="headerlink" href="#flatobs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.FlatObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FlatObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxStrLen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#FlatObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.FlatObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FlatObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxStrLen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#FlatObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.FlatObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Encode mission strings using a one-hot scheme,
 and combine these with observed images into one flat array.</p>
 <p>This wrapper is not applicable to BabyAI environments, given that these have their own language component.</p>
@@ -471,11 +471,11 @@ and combine these with observed images into one flat array.</p>
 </dd></dl>
 
 </section>
-<section id="fully-obs">
-<h1>Fully Obs<a class="headerlink" href="#fully-obs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="fully-obs">
+<h1>Fully Obs<a class="headerlink" href="#fully-obs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.FullyObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FullyObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#FullyObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.FullyObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">FullyObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#FullyObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.FullyObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Fully observable gridworld using a compact grid encoding instead of the agent view.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
@@ -494,11 +494,33 @@ and combine these with observed images into one flat array.</p>
 </dd></dl>
 
 </section>
-<section id="no-death">
-<h1>No Death<a class="headerlink" href="#no-death" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="image-observation">
+<h1>Image Observation<a class="headerlink" href="#image-observation" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.ImgObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ImgObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ImgObsWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Use the image as the only observation output, no language/mission.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">ImgObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;image&#39;, &#39;direction&#39;, &#39;mission&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">ImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(7, 7, 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="no-death">
+<h1>No Death<a class="headerlink" href="#no-death" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.NoDeath">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">NoDeath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_death_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">death_cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#NoDeath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.NoDeath" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">NoDeath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_death_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">death_cost</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#NoDeath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.NoDeath" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper to prevent death in specific cells (e.g., lava cells).
 Instead of dying, the agent will receive a negative reward.</p>
 <p class="rubric">Example</p>
@@ -536,11 +558,11 @@ Instead of dying, the agent will receive a negative reward.</p>
 </dd></dl>
 
 </section>
-<section id="observation">
-<h1>Observation<a class="headerlink" href="#observation" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="observation">
+<h1>Observation<a class="headerlink" href="#observation" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.ObservationWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ObservationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gymnasium/core/#ObservationWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ObservationWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ObservationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Env</span><span class="p"><span class="pre">[</span></span><span class="pre">ObsType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ActType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gymnasium/core/#ObservationWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ObservationWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Superclass of wrappers that can modify observations using <code class="xref py py-meth docutils literal notranslate"><span class="pre">observation()</span></code> for <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code>.</p>
 <p>If you would like to apply a function to only the observation before
 passing it to the learning code, you can simply inherit from <a class="reference internal" href="#minigrid.wrappers.ObservationWrapper" title="minigrid.wrappers.ObservationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObservationWrapper</span></code></a> and overwrite the method
@@ -552,11 +574,11 @@ index of the timestep to the observation.</p>
 </dd></dl>
 
 </section>
-<section id="one-hot-partial-obs">
-<h1>One Hot Partial Obs<a class="headerlink" href="#one-hot-partial-obs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="one-hot-partial-obs">
+<h1>One Hot Partial Obs<a class="headerlink" href="#one-hot-partial-obs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.OneHotPartialObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">OneHotPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#OneHotPartialObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.OneHotPartialObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">OneHotPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#OneHotPartialObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.OneHotPartialObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper to get a one-hot encoding of a partially observable
 agent view as observation.</p>
 <p class="rubric">Example</p>
@@ -588,11 +610,11 @@ agent view as observation.</p>
 </dd></dl>
 
 </section>
-<section id="reseed">
-<h1>Reseed<a class="headerlink" href="#reseed" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="reseed">
+<h1>Reseed<a class="headerlink" href="#reseed" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.ReseedWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ReseedWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ReseedWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ReseedWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ReseedWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ReseedWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ReseedWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper to always regenerate an environment with the same set of seeds.
 This can be used to force an environment to always keep the same
 configuration when reset.</p>
@@ -622,11 +644,11 @@ configuration when reset.</p>
 </dd></dl>
 
 </section>
-<section id="rgb-img-obs">
-<h1>RGB Img Obs<a class="headerlink" href="#rgb-img-obs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="rgb-img-obs">
+<h1>RGB Img Obs<a class="headerlink" href="#rgb-img-obs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.RGBImgObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#RGBImgObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.RGBImgObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#RGBImgObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.RGBImgObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper to use fully observable RGB image as observation,
 This can be used to have the agent to solve the gridworld in pixel space.</p>
 <p class="rubric">Example</p>
@@ -646,11 +668,39 @@ This can be used to have the agent to solve the gridworld in pixel space.</p>
 </dd></dl>
 
 </section>
-<section id="position-bonus">
-<h1>Position Bonus<a class="headerlink" href="#position-bonus" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="rgb-partial-img-obs">
+<h1>RGB Partial Img Obs<a class="headerlink" href="#rgb-partial-img-obs" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.RGBImgPartialObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">RGBImgPartialObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#RGBImgPartialObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.RGBImgPartialObsWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Wrapper to use partially observable RGB image as observation.
+This can be used to have the agent to solve the gridworld in pixel space.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minigrid.wrappers</span> <span class="kn">import</span> <span class="n">RGBImgObsWrapper</span><span class="p">,</span> <span class="n">RGBImgPartialObsWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="go">![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="position-bonus">
+<h1>Position Bonus<a class="headerlink" href="#position-bonus" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.PositionBonus">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">PositionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#PositionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.PositionBonus" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">PositionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#PositionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.PositionBonus" title="Link to this definition">#</a></dt>
 <dd><p>Adds an exploration bonus based on which positions
 are visited on the grid.</p>
 <div class="admonition note">
@@ -681,11 +731,22 @@ are visited on the grid.</p>
 </dd></dl>
 
 </section>
-<section id="symbolic-obs">
-<h1>Symbolic Obs<a class="headerlink" href="#symbolic-obs" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="stochastic-action">
+<h1>Stochastic Action<a class="headerlink" href="#stochastic-action" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="minigrid.wrappers.StochasticActionWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">StochasticActionWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#StochasticActionWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.StochasticActionWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Add stochasticity to the actions</p>
+<p>If a random action is provided, it is returned with probability <cite>1 - prob</cite>.
+Else, a random action is sampled from the action space.</p>
+</dd></dl>
+
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="symbolic-obs">
+<h1>Symbolic Obs<a class="headerlink" href="#symbolic-obs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.SymbolicObsWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">SymbolicObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#SymbolicObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.SymbolicObsWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">SymbolicObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#SymbolicObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.SymbolicObsWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Fully observable grid with a symbolic state representation.
 The symbol is a triple of (X, Y, IDX), where X and Y are
 the coordinates on the grid, and IDX is the id of the object.</p>
@@ -705,11 +766,11 @@ the coordinates on the grid, and IDX is the id of the object.</p>
 </dd></dl>
 
 </section>
-<section id="view-size">
-<h1>View Size<a class="headerlink" href="#view-size" title="Permalink to this heading">#</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="view-size">
+<h1>View Size<a class="headerlink" href="#view-size" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.ViewSizeWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ViewSizeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_view_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ViewSizeWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ViewSizeWrapper" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ViewSizeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_view_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ViewSizeWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ViewSizeWrapper" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper to customize the agent field of view size.
 This cannot be used with fully observable wrappers.</p>
 <p class="rubric">Example</p>
@@ -808,6 +869,10 @@ This cannot be used with fully observable wrappers.</p>
 <li><a class="reference internal" href="#minigrid.wrappers.FullyObsWrapper"><code class="docutils literal notranslate"><span class="pre">FullyObsWrapper</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#image-observation">Image Observation</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.ImgObsWrapper"><code class="docutils literal notranslate"><span class="pre">ImgObsWrapper</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#no-death">No Death</a><ul>
 <li><a class="reference internal" href="#minigrid.wrappers.NoDeath"><code class="docutils literal notranslate"><span class="pre">NoDeath</span></code></a></li>
 </ul>
@@ -828,8 +893,16 @@ This cannot be used with fully observable wrappers.</p>
 <li><a class="reference internal" href="#minigrid.wrappers.RGBImgObsWrapper"><code class="docutils literal notranslate"><span class="pre">RGBImgObsWrapper</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#rgb-partial-img-obs">RGB Partial Img Obs</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.RGBImgPartialObsWrapper"><code class="docutils literal notranslate"><span class="pre">RGBImgPartialObsWrapper</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#position-bonus">Position Bonus</a><ul>
 <li><a class="reference internal" href="#minigrid.wrappers.PositionBonus"><code class="docutils literal notranslate"><span class="pre">PositionBonus</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stochastic-action">Stochastic Action</a><ul>
+<li><a class="reference internal" href="#minigrid.wrappers.StochasticActionWrapper"><code class="docutils literal notranslate"><span class="pre">StochasticActionWrapper</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#symbolic-obs">Symbolic Obs</a><ul>
@@ -924,10 +997,10 @@ This cannot be used with fully observable wrappers.</p>
         })()
       </script>
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/documentation_options.js?v=7fa42598"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
 
@@ -1057,7 +1130,7 @@ This cannot be used with fully observable wrappers.</p>
             const subSectionContainerElem = Object.assign(
                 document.createElement('div'), {
                   className:'farama-header-menu__subsections-container',
-                  style: key == "Mature Projects" ? "display: flex" : ""
+                  style: 'display: flex'
                 }
             )
             Object.keys(subSections).forEach((subKey, i) => {
@@ -1072,7 +1145,7 @@ This cannot be used with fully observable wrappers.</p>
                   innerText: subKey
                 }
               ))
-              const ulElem = createProjectsList(subSections[subKey], key !== "Foundation");
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
               subSectionElem.appendChild(ulElem);
               subSectionContainerElem.appendChild(subSectionElem);
             })
