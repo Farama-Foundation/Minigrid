@@ -364,6 +364,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         self.tile_size = tile_size
 
         obs_shape = env.observation_space.spaces["image"].shape
+
         new_image_space = spaces.Box(
             low=0,
             high=255,
@@ -376,7 +377,10 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        rgb_img_partial = self.get_pov_render(
+            tile_size=self.tile_size,
+            agent_view_size=self.agent_view_size
+        )
 
         return {**obs, "image": rgb_img_partial}
 

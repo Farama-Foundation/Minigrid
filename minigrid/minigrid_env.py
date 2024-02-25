@@ -649,19 +649,27 @@ class MiniGridEnv(gym.Env):
 
         return obs
 
-    def get_pov_render(self, tile_size):
+    def get_pov_render(self, tile_size, agent_view_size=None):
         """
         Render an agent's POV observation for visualization
         """
-        grid, vis_mask = self.gen_obs_grid()
-
+        grid, vis_mask = self.gen_obs_grid(agent_view_size)
+        
         # Render the whole grid
-        img = grid.render(
-            tile_size,
-            agent_pos=(self.agent_view_size // 2, self.agent_view_size - 1),
-            agent_dir=3,
-            highlight_mask=vis_mask,
-        )
+        if agent_view_size is None:            
+            img = grid.render(
+                tile_size,
+                agent_pos=(self.agent_view_size // 2, self.agent_view_size - 1),
+                agent_dir=3,
+                highlight_mask=vis_mask,
+            )
+        else:
+            img = grid.render(
+                tile_size,
+                agent_pos=(agent_view_size // 2, agent_view_size - 1),
+                agent_dir=3,
+                highlight_mask=vis_mask,
+            )       
 
         return img
 
