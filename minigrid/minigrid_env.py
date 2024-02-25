@@ -654,6 +654,11 @@ class MiniGridEnv(gym.Env):
         Render an agent's POV observation for visualization
         """
         grid, vis_mask = self.gen_obs_grid(agent_view_size)
+        '''
+        Bug Fix for https://github.com/Farama-Foundation/Minigrid/issues/419
+        - Added the agent_view_size field and used it if provided without
+        breaking existing code
+        '''
         
         # Render the whole grid
         if agent_view_size is None:            
