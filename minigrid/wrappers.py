@@ -327,7 +327,7 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(
+        rgb_img = self.unwrapped.get_frame(
             highlight=self.unwrapped.highlight, tile_size=self.tile_size
         )
 
@@ -376,7 +376,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        rgb_img_partial = self.unwrapped.get_frame(tile_size=self.tile_size, agent_pov=True)
 
         return {**obs, "image": rgb_img_partial}
 
