@@ -8,7 +8,7 @@ firstpage:
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
 - [Learning from Active Human Involvement through Proxy Value Propagation](https://metadriverse.github.io/pvp/)(UCLA, NeurIPS Spotlight 2023)
-- [Go Beyond Imagination: Maximizing Episodic Reachability with World Models]([https://arxiv.org/abs/2205.15752](https://arxiv.org/pdf/2308.13661.pdf)) (UMich, ICML 2023)
+- [Go Beyond Imagination: Maximizing Episodic Reachability with World Models](https://arxiv.org/pdf/2308.13661.pdf) (UMich, ICML 2023)
 - [Hierarchies of Reward Machines](https://arxiv.org/abs/2205.15752) (Imperial College London, ILASP, Universitat Pompeu Fabra, ICML 2023)
 - [Minimal Value-Equivalent Partial Models for Scalable and Robust Planning in Lifelong Reinforcement Learning](https://arxiv.org/abs/2301.10119) (Mila, McGill University, CoLLAs 2023)
 - [DEIR: Efficient and Robust Exploration through Discriminative-Model-Based Episodic Intrinsic Rewards](https://arxiv.org/abs/2304.10770) (U-Tokyo, Google Brain, IJCAI 2023)
