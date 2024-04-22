@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Training Minigrid Environments" href="../training/" /><link rel="prev" title="List of Publications" href="../publications/" />
         <link rel="canonical" href="https://minigrid.farama.org/content/create_env_tutorial.html" />
 
-    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
         <title>Tutorial on Creating Environments - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
@@ -372,10 +372,10 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="tutorial-on-creating-environments">
-<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Link to this heading">#</a></h1>
+<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Link to this heading">¶</a></h1>
 <p>In this tutorial, we will go through the process of creating a new environment.</p>
 <section id="boilerplate-code">
-<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Link to this heading">#</a></h2>
+<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -415,7 +415,7 @@
 <p>Then, in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function, we pass the required arguments to the parent class. In this case we are passing the <code class="docutils literal notranslate"><span class="pre">mission_space</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_size</span></code> and <code class="docutils literal notranslate"><span class="pre">max_steps</span></code>. We also create <code class="docutils literal notranslate"><span class="pre">self.agent_start_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">self.agent_start_dir</span></code> so that member functions can have access to these two values.</p>
 </section>
 <section id="generate-the-grid-world">
-<h2>Generate the grid-world<a class="headerlink" href="#generate-the-grid-world" title="Link to this heading">#</a></h2>
+<h2>Generate the grid-world<a class="headerlink" href="#generate-the-grid-world" title="Link to this heading">¶</a></h2>
 <p>To create your own grid-world environment we override the function <code class="docutils literal notranslate"><span class="pre">_gen_grid</span></code>. We can see from the <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code> class</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MiniGridEnv._gen_grid</span>
 <span class="nd">@abstractmethod</span>
@@ -425,7 +425,7 @@
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">_gen_grid</span></code> takes in two inputs <code class="docutils literal notranslate"><span class="pre">width</span></code> and <code class="docutils literal notranslate"><span class="pre">height</span></code>, which are used to specify the size of the environment.</p>
 <section id="create-world">
-<h3>Create World<a class="headerlink" href="#create-world" title="Link to this heading">#</a></h3>
+<h3>Create World<a class="headerlink" href="#create-world" title="Link to this heading">¶</a></h3>
 <p>To create the environment, we first an empty grid using</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 </pre></div>
@@ -448,7 +448,7 @@
 </figure>
 </section>
 <section id="place-goal">
-<h3>Place Goal<a class="headerlink" href="#place-goal" title="Link to this heading">#</a></h3>
+<h3>Place Goal<a class="headerlink" href="#place-goal" title="Link to this heading">¶</a></h3>
 <p>To place a goal in the environment, we use the function</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">put_obj</span><span class="p">(</span><span class="n">Goal</span><span class="p">(),</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -459,7 +459,7 @@
 </figure>
 </section>
 <section id="create-separating-walls">
-<h3>Create Separating Walls<a class="headerlink" href="#create-separating-walls" title="Link to this heading">#</a></h3>
+<h3>Create Separating Walls<a class="headerlink" href="#create-separating-walls" title="Link to this heading">¶</a></h3>
 <p>To create a wall that separates the environment into two rooms, we use the command</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Wall</span><span class="p">())</span>
@@ -471,7 +471,7 @@
 </figure>
 </section>
 <section id="add-keys-and-doors">
-<h3>Add Keys and Doors<a class="headerlink" href="#add-keys-and-doors" title="Link to this heading">#</a></h3>
+<h3>Add Keys and Doors<a class="headerlink" href="#add-keys-and-doors" title="Link to this heading">¶</a></h3>
 <p>To add keys and doors, we would first need to import</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_NAMES</span>
 <span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Key</span>
@@ -490,7 +490,7 @@
 </section>
 </section>
 <section id="source-code">
-<h2>Source Code<a class="headerlink" href="#source-code" title="Link to this heading">#</a></h2>
+<h2>Source Code<a class="headerlink" href="#source-code" title="Link to this heading">¶</a></h2>
 <p>The source code of this tutorial is</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -729,7 +729,7 @@
       </script>
 
     <script src="../../_static/documentation_options.js?v=7fa42598"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     

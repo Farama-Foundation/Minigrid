@@ -11,7 +11,7 @@
 <link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Unlock Local" href="../UnlockLocal/" /><link rel="prev" title="Put Next" href="../PutNext/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/babyai/Unlock.html" />
 
-    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
         <title>Unlock - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
@@ -363,7 +363,7 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="unlock">
-<h1>Unlock<a class="headerlink" href="#unlock" title="Link to this heading">#</a></h1>
+<h1>Unlock<a class="headerlink" href="#unlock" title="Link to this heading">¶</a></h1>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../../_images/Unlock.gif"><img alt="Unlock" src="../../../_images/Unlock.gif" style="width: 200px;" /></a>
 </figure>
@@ -379,7 +379,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">BabyAIMissionSpace._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f3ec0df0040&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">BabyAIMissionSpace._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7fdd01b65160&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Reward Range</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
@@ -391,18 +391,18 @@
 </table>
 </div>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Unlock a door.</p>
 <p>Competencies: Maze, Open, Unlock. No unblocking.</p>
 </section>
 <section id="mission-space">
-<h2>Mission Space<a class="headerlink" href="#mission-space" title="Link to this heading">#</a></h2>
+<h2>Mission Space<a class="headerlink" href="#mission-space" title="Link to this heading">¶</a></h2>
 <p>“open the {color} door”</p>
 <p>{color} is the color of the box. Can be “red”, “green”, “blue”, “purple”,
 “yellow” or “grey”.</p>
 </section>
 <section id="action-space">
-<h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">#</a></h2>
+<h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -445,7 +445,7 @@
 </div>
 </section>
 <section id="observation-encoding">
-<h2>Observation Encoding<a class="headerlink" href="#observation-encoding" title="Link to this heading">#</a></h2>
+<h2>Observation Encoding<a class="headerlink" href="#observation-encoding" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Each tile is encoded as a 3 dimensional tuple:
 <code class="docutils literal notranslate"><span class="pre">(OBJECT_IDX,</span> <span class="pre">COLOR_IDX,</span> <span class="pre">STATE)</span></code></p></li>
@@ -455,11 +455,11 @@
 </ul>
 </section>
 <section id="rewards">
-<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">#</a></h2>
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
 <p>A reward of ‘1 - 0.9 * (step_count / max_steps)’ is given for success, and ‘0’ for failure.</p>
 </section>
 <section id="termination">
-<h2>Termination<a class="headerlink" href="#termination" title="Link to this heading">#</a></h2>
+<h2>Termination<a class="headerlink" href="#termination" title="Link to this heading">¶</a></h2>
 <p>The episode ends if any one of the following conditions is met:</p>
 <ol class="arabic simple">
 <li><p>The agent opens the correct door.</p></li>
@@ -467,7 +467,7 @@
 </ol>
 </section>
 <section id="registered-configurations">
-<h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Link to this heading">#</a></h2>
+<h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BabyAI-Unlock-v0</span></code></p></li>
 </ul>
@@ -638,7 +638,7 @@
       </script>
 
     <script src="../../../_static/documentation_options.js?v=7fa42598"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=7660844c"></script>
     
