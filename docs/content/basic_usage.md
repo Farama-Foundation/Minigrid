@@ -13,10 +13,10 @@ There is a UI application which allows you to manually control the agent with th
 ./minigrid/manual_control.py
 ```
 
-The environment being run can be selected with the `--env` option, eg:
+The environment being run can be selected with the `--env-id` option, eg:
 
 ```bash
-./minigrid/manual_control.py --env MiniGrid-Empty-8x8-v0
+./minigrid/manual_control.py --env-id MiniGrid-Empty-8x8-v0
 ```
 
 ## Installation
