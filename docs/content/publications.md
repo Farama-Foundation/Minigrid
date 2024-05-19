@@ -7,6 +7,7 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [Conviction-Based Planning for Sparse Reward Reinforcement Learning Problems](https://openreview.net/pdf?id=hbEVCxTBe6)(UQÀM, PRL @ ICAPS 2024)
 - [Learning from Active Human Involvement through Proxy Value Propagation](https://metadriverse.github.io/pvp/)(UCLA, NeurIPS Spotlight 2023)
 - [Go Beyond Imagination: Maximizing Episodic Reachability with World Models](https://arxiv.org/pdf/2308.13661.pdf) (UMich, ICML 2023)
 - [Hierarchies of Reward Machines](https://arxiv.org/abs/2205.15752) (Imperial College London, ILASP, Universitat Pompeu Fabra, ICML 2023)
