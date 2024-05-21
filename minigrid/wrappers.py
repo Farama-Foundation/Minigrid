@@ -174,9 +174,7 @@ class PositionBonus(Wrapper):
         tup = tuple(env.agent_pos)
 
         # Get the count for this key
-        pre_count = 0
-        if tup in self.counts:
-            pre_count = self.counts[tup]
+        pre_count = self.counts.get(tup, 0)
 
         # Update the count for this key
         new_count = pre_count + 1
