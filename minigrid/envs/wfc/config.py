@@ -222,6 +222,7 @@ WFC_PRESETS_SLOW = {
 
 WFC_PRESETS_ALL = ChainMap(WFC_PRESETS, WFC_PRESETS_INCONSISTENT, WFC_PRESETS_SLOW)
 
+
 def register_wfc_presets(wfc_presets: dict[str, WFCConfig], register_fn):
     # Register fn needs to be provided to avoid a circular import
     for name in wfc_presets.keys():

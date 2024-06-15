@@ -3,21 +3,27 @@ from __future__ import annotations
 import os
 
 import gymnasium
-from utils import env_name_format
 
 # Display bonus WFC presets
 from minigrid.envs.wfc import WFCEnv
-from minigrid.envs.wfc.config import register_wfc_presets, WFC_PRESETS_INCONSISTENT, WFC_PRESETS_SLOW
+from minigrid.envs.wfc.config import (
+    WFC_PRESETS_INCONSISTENT,
+    WFC_PRESETS_SLOW,
+    register_wfc_presets,
+)
+from utils import env_name_format
+
 register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
 register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
 
 # Read name from the actual class so it is updated if the class name changes
 WFCENV_NAME = WFCEnv.__name__
 
+
 def title_from_id(env_id):
     words = []
-    for chunk in env_id.split('_'):
-        words.extend(env_name_format(chunk).split(' '))
+    for chunk in env_id.split("_"):
+        words.extend(env_name_format(chunk).split(" "))
 
     return " ".join(w.title() for w in words)
 

@@ -34,7 +34,7 @@ class WFCEnv(MiniGridEnv):
     This environment procedurally generates a level using the Wave Function Collapse algorithm.
     The environment supports a variety of different level structures but the default is a simple maze.
     See [WFC module page](index) for sample images of the available presets.
-    
+
     Requires the optional dependencies `imageio` and `networkx` to be installed with `pip install minigrid[wfc]`.
 
     ## Mission Space
@@ -79,10 +79,10 @@ class WFCEnv(MiniGridEnv):
     - `MiniGrid-WFC-RoomsFabric-v0`
     - `MiniGrid-WFC-ObstaclesBlackdots-v0`
     - `MiniGrid-WFC-ObstaclesAngular-v0`
-    - `MiniGrid-WFC-ObstaclesHogs3-v0`    
+    - `MiniGrid-WFC-ObstaclesHogs3-v0`
 
     Note: There are many more unregistered configuration presets but they may take a long time to generate a consistent environment.
-    
+
     They can be registered with the following snippet:
     ```python
     import gymnasium
@@ -107,7 +107,9 @@ class WFCEnv(MiniGridEnv):
         **kwargs,
     ):
         self.config = (
-            wfc_config if isinstance(wfc_config, WFCConfig) else WFC_PRESETS_ALL[wfc_config]
+            wfc_config
+            if isinstance(wfc_config, WFCConfig)
+            else WFC_PRESETS_ALL[wfc_config]
         )
         self.padding = 1
 
