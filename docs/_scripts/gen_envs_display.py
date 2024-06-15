@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 
 import gymnasium
-# from utils import env_name_format
+from utils import env_name_format
 
 # Display bonus WFC presets
 from minigrid.envs.wfc import WFCEnv
@@ -15,7 +15,11 @@ register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
 WFCENV_NAME = WFCEnv.__name__
 
 def title_from_id(env_id):
-    return ' '.join(env_id.split('_')).title()
+    words = []
+    for chunk in env_id.split('_'):
+        words.extend(env_name_format(chunk).split(' '))
+
+    return " ".join(w.title() for w in words)
 
 
 def create_grid_cell(type_id, env_id, base_path):
