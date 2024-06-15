@@ -8,7 +8,7 @@ import numpy as np
 from minigrid.core.constants import OBJECT_TO_IDX
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
-from minigrid.envs.wfc.config import WFC_PRESETS, WFCConfig
+from minigrid.envs.wfc.config import WFC_PRESETS_ALL, WFCConfig
 from minigrid.envs.wfc.graphtransforms import EdgeDescriptor, GraphTransforms
 from minigrid.envs.wfc.wfclogic.control import execute_wfc
 from minigrid.minigrid_env import MiniGridEnv
@@ -33,6 +33,8 @@ class WFCEnv(MiniGridEnv):
 
     This environment procedurally generates a level using the Wave Function Collapse algorithm.
     The environment supports a variety of different level structures but the default is a simple maze.
+    See [WFC module page](index) for sample images of the available presets.
+    
     Requires the optional dependencies `imageio` and `networkx` to be installed with `pip install minigrid[wfc]`.
 
     ## Mission Space
@@ -57,7 +59,7 @@ class WFCEnv(MiniGridEnv):
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
         [minigrid/core/constants.py](minigrid/core/constants.py)
-    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked (unused)
 
     ## Rewards
 
@@ -72,8 +74,23 @@ class WFCEnv(MiniGridEnv):
 
     ## Registered Configurations
 
-    S: size of map SxS.
+    - `MiniGrid-WFC-MazeSimple-v0`
+    - `MiniGrid-WFC-DungeonMazeScaled-v0`
+    - `MiniGrid-WFC-RoomsFabric-v0`
+    - `MiniGrid-WFC-ObstaclesBlackdots-v0`
+    - `MiniGrid-WFC-ObstaclesAngular-v0`
+    - `MiniGrid-WFC-ObstaclesHogs3-v0`    
 
+    Note: There are many more unregistered configuration presets but they may take a long time to generate a consistent environment.
+    
+    They can be registered with the following snippet:
+    ```python
+    import gymnasium
+    from minigrid.envs.wfc.config import register_wfc_presets, WFC_PRESETS_INCONSISTENT, WFC_PRESETS_SLOW
+
+    register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
+    register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
+    ```
     """
 
     PATTERN_COLOR_CONFIG = {
@@ -90,7 +107,7 @@ class WFCEnv(MiniGridEnv):
         **kwargs,
     ):
         self.config = (
-            wfc_config if isinstance(wfc_config, WFCConfig) else WFC_PRESETS[wfc_config]
+            wfc_config if isinstance(wfc_config, WFCConfig) else WFC_PRESETS_ALL[wfc_config]
         )
         self.padding = 1
 
