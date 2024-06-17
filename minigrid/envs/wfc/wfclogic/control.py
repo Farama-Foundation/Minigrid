@@ -78,7 +78,6 @@ def execute_wfc(
     backtracking: bool = False,
     log_filename: str = "log",
     logging: bool = False,
-    global_constraints: None = None,
     log_stats_to_output: Callable[[dict[str, Any], str], None] | None = None,
     np_random: np.random.Generator | None = None,
 ) -> NDArray[np.integer]:
