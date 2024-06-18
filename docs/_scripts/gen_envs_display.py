@@ -4,16 +4,41 @@ import os
 
 import gymnasium
 
+# Display bonus WFC presets
+from minigrid.envs.wfc import WFCEnv
+from minigrid.envs.wfc.config import (
+    WFC_PRESETS_INCONSISTENT,
+    WFC_PRESETS_SLOW,
+    register_wfc_presets,
+)
+from utils import env_name_format
+
+register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
+register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
+
+# Read name from the actual class so it is updated if the class name changes
+WFCENV_NAME = WFCEnv.__name__
+
+
+def title_from_id(env_id):
+    words = []
+    for chunk in env_id.split("_"):
+        words.extend(env_name_format(chunk).split(" "))
+
+    return " ".join(w.title() for w in words)
+
 
 def create_grid_cell(type_id, env_id, base_path):
+    # All WFCEnv environments should link to WFCEnv page
+    href = f"{base_path}{env_id if type_id != 'wfc' else WFCENV_NAME}"
     return f"""
-            <a href="{base_path}{env_id}">
+            <a href="{href}">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
                         <img src="/_static/videos/{type_id}/{env_id}.gif">
                     </div>
                     <div class="cell__title">
-                        <span>{' '.join(env_id.split('_')).title()}</span>
+                        <span>{title_from_id(env_id)}</span>
                     </div>
                 </div>
             </a>
@@ -63,6 +88,10 @@ if __name__ == "__main__":
             env_module = split[0]
             env_name = split[-1].split(":")[-1]
             env_type = env_module if len(split) == 2 else split[-1].split(":")[0]
+
+            if env_name == WFCENV_NAME:
+                env_name = env_spec.kwargs["wfc_config"]
+                assert isinstance(env_name, str)
 
             if env_module == "minigrid":
                 if env_type not in type_dict.keys():

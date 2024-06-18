@@ -74,6 +74,7 @@ api/wrapper
 
 environments/minigrid/index
 environments/babyai/index
+environments/wfc/index
 ```
 
 ```{toctree}

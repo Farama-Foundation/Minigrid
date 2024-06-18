@@ -19,6 +19,7 @@ all_envs = list(registry.values())
 filtered_envs_by_type = {}
 env_names = []
 babyai_envs = {}
+wfc_envs = {}
 
 # Obtain filtered list
 for env_spec in tqdm(all_envs):
@@ -32,6 +33,9 @@ for env_spec in tqdm(all_envs):
             curr_babyai_env = split[2]
             babyai_env_name = curr_babyai_env.split(":")[1]
             babyai_envs[babyai_env_name] = env_spec
+        elif len(split) > 2 and "wfc" in split[2]:
+            curr_wfc_env = env_spec.kwargs["wfc_config"]
+            wfc_envs[curr_wfc_env] = env_spec
         elif env_module == "minigrid":
             env_name = split[1]
             filtered_envs_by_type[env_name] = env_spec
@@ -56,7 +60,13 @@ filtered_babyai_envs = {
     )
 }
 
-for env_name, env_spec in chain(filtered_envs.items(), filtered_babyai_envs.items()):
+# Because they share a class, only the default (MazeSimple) environment should be kept
+canonical_wfc_env_name = "MazeSimple"
+filtered_wfc_envs = {canonical_wfc_env_name: wfc_envs[canonical_wfc_env_name]}
+
+for env_name, env_spec in chain(
+    filtered_envs.items(), filtered_babyai_envs.items(), filtered_wfc_envs.items()
+):
     env = env_spec.make()
 
     docstring = trim(env.unwrapped.__doc__)

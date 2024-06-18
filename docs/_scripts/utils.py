@@ -32,7 +32,9 @@ def trim(docstring):
 
 def env_name_format(str):
     # KeyCorridorEnv
-    split = re.findall(r"[A-Z](?:[a-z]+|[A-Z]*(?=[A-Z]|$))", str)
+    split = re.findall(r"[A-Z](?:[a-z]+[0-9]*|[A-Z]*[0-9]*(?=[A-Z]|$))", str)
+    if not split:
+        split.append(str)
     # ['Key', 'Corridor', 'Env']
     split = filter(lambda x: x.upper() != "ENV", split)
     return " ".join(split)
