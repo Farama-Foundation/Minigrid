@@ -91,6 +91,19 @@ class WFCEnv(MiniGridEnv):
     register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
     register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
     ```
+
+    ## Research
+     
+    Adapted for `Minigrid` by the following work.
+
+    ```bibtex
+    @inproceedings{garcin2024dred,
+      title = {DRED: Zero-Shot Transfer in Reinforcement Learning via Data-Regularised Environment Design},
+      author = {Garcin, Samuel and Doran, James and Guo, Shangmin and Lucas, Christopher G and Albrecht, Stefano V},
+      booktitle = {Forty-first International Conference on Machine Learning},
+      year = {2024},
+    }
+    ```
     """
 
     PATTERN_COLOR_CONFIG = {
