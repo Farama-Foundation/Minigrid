@@ -93,7 +93,7 @@ class WFCEnv(MiniGridEnv):
     ```
 
     ## Research
-     
+
     Adapted for `Minigrid` by the following work.
 
     ```bibtex
