@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import ChainMap
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -218,3 +219,15 @@ WFC_PRESETS_SLOW = {
         input_periodic=True,
     ),  # ~10 mins
 }
+
+WFC_PRESETS_ALL = ChainMap(WFC_PRESETS, WFC_PRESETS_INCONSISTENT, WFC_PRESETS_SLOW)
+
+
+def register_wfc_presets(wfc_presets: dict[str, WFCConfig], register_fn):
+    # Register fn needs to be provided to avoid a circular import
+    for name in wfc_presets.keys():
+        register_fn(
+            id=f"MiniGrid-WFC-{name}-v0",
+            entry_point="minigrid.envs.wfc:WFCEnv",
+            kwargs={"wfc_config": name},
+        )
