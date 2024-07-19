@@ -8,10 +8,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/environments/wfc/WFCEnv.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" />
+<link rel="index" title="Index" href="../../../genindex/" /><link rel="search" title="Search" href="../../../search/" /><link rel="next" title="Release Notes" href="../../../release_notes/" /><link rel="prev" title="WFC Environments" href="../" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/wfc/WFCEnv.html" />
 
-    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.3.7 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.6 and Furo 2023.08.19.dev1 -->
         <title>WFC - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
@@ -241,7 +241,7 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../minigrid/BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../minigrid/CrossingEnv/">Crossing</a></li>
@@ -298,9 +298,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/BlockedUnlockPickup/">Blocked Unlock Pickup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/UnlockToUnlock/">Unlock To Unlock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/ActionObjDoor/">Action Obj Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../babyai/FindObjS5/">Find Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../babyai/FindObjS5/">Find Obj S5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/KeyCorridor/">Key Corridor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../babyai/OneRoomS8/">One Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../babyai/OneRoomS8/">One Room S8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/MoveTwoAcross/">Move Two Across</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/Synth/">Synth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/SynthLoc/">Synth Loc</a></li>
@@ -308,6 +308,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/MiniBossLevel/">Mini Boss Level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/BossLevel/">Boss Level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../babyai/BossLevelNoUnlock/">Boss Level No Unlock</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../">WFC Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">WFC</a></li>
 </ul>
 </li>
 </ul>
@@ -365,7 +369,7 @@
             <section class="tex2jax_ignore mathjax_ignore" id="wfc">
 <h1>WFC<a class="headerlink" href="#wfc" title="Link to this heading">¶</a></h1>
 <figure class="align-default">
-<a class="reference internal image-reference" href="_static/videos/wfc/WFCEnv.gif"><img alt="WFC" src="_static/videos/wfc/WFCEnv.gif" style="width: 200px;" />
+<a class="reference internal image-reference" href="../../../_images/WFCEnv.gif"><img alt="WFC" src="../../../_images/WFCEnv.gif" style="width: 200px;" />
 </a>
 </figure>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -380,13 +384,13 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f358ddb90d0&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f1dc34dc790&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Reward Range</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Creation</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-WFC-ObstaclesHogs3-v0&quot;)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-WFC-MazeSimple-v0&quot;)</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -395,7 +399,8 @@
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>This environment procedurally generates a level using the Wave Function Collapse algorithm.
 The environment supports a variety of different level structures but the default is a simple maze.
-Requires the optional dependencies <code class="docutils literal notranslate"><span class="pre">imageio</span></code> and <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">minigrid[wfc]</span></code>.</p>
+See <a class="reference internal" href="../"><span class="doc std std-doc">WFC module page</span></a> for sample images of the available presets.</p>
+<p>Requires the optional dependencies <code class="docutils literal notranslate"><span class="pre">imageio</span></code> and <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">minigrid[wfc]</span></code>.</p>
 </section>
 <section id="mission-space">
 <h2>Mission Space<a class="headerlink" href="#mission-space" title="Link to this heading">¶</a></h2>
@@ -451,7 +456,7 @@ Requires the optional dependencies <code class="docutils literal notranslate"><s
 <code class="docutils literal notranslate"><span class="pre">(OBJECT_IDX,</span> <span class="pre">COLOR_IDX,</span> <span class="pre">STATE)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">OBJECT_TO_IDX</span></code> and <code class="docutils literal notranslate"><span class="pre">COLOR_TO_IDX</span></code> mapping can be found in
 <a class="reference internal" href="#minigrid/core/constants.py"><span class="xref myst">minigrid/core/constants.py</span></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">STATE</span></code> refers to the door state with 0=open, 1=closed and 2=locked</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATE</span></code> refers to the door state with 0=open, 1=closed and 2=locked (unused)</p></li>
 </ul>
 </section>
 <section id="rewards">
@@ -468,7 +473,35 @@ Requires the optional dependencies <code class="docutils literal notranslate"><s
 </section>
 <section id="registered-configurations">
 <h2>Registered Configurations<a class="headerlink" href="#registered-configurations" title="Link to this heading">¶</a></h2>
-<p>S: size of map SxS.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-MazeSimple-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-DungeonMazeScaled-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-RoomsFabric-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-ObstaclesBlackdots-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-ObstaclesAngular-v0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-WFC-ObstaclesHogs3-v0</span></code></p></li>
+</ul>
+<p>Note: There are many more unregistered configuration presets but they may take a long time to generate a consistent environment.</p>
+<p>They can be registered with the following snippet:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
+<span class="kn">from</span> <span class="nn">minigrid.envs.wfc.config</span> <span class="kn">import</span> <span class="n">register_wfc_presets</span><span class="p">,</span> <span class="n">WFC_PRESETS_INCONSISTENT</span><span class="p">,</span> <span class="n">WFC_PRESETS_SLOW</span>
+
+<span class="n">register_wfc_presets</span><span class="p">(</span><span class="n">WFC_PRESETS_INCONSISTENT</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">register</span><span class="p">)</span>
+<span class="n">register_wfc_presets</span><span class="p">(</span><span class="n">WFC_PRESETS_SLOW</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">register</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="research">
+<h2>Research<a class="headerlink" href="#research" title="Link to this heading">¶</a></h2>
+<p>Adapted for <code class="docutils literal notranslate"><span class="pre">Minigrid</span></code> by the following work.</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@inproceedings</span><span class="p">{</span><span class="nl">garcin2024dred</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{DRED: Zero-Shot Transfer in Reinforcement Learning via Data-Regularised Environment Design}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Garcin, Samuel and Doran, James and Guo, Shangmin and Lucas, Christopher G and Albrecht, Stefano V}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">booktitle</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Forty-first International Conference on Machine Learning}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2024}</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -477,8 +510,30 @@ Requires the optional dependencies <code class="docutils literal notranslate"><s
         <footer>
           
           <div class="related-pages">
-            
-            
+            <a class="next-page" href="../../../release_notes/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Release Notes</div>
+              </div>
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+            </a>
+            <a class="prev-page" href="../">
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">WFC Environments</div>
+                
+              </div>
+            </a>
           </div>
           <div class="bottom-of-page">
             <div class="left-details">
@@ -527,6 +582,7 @@ Requires the optional dependencies <code class="docutils literal notranslate"><s
 <li><a class="reference internal" href="#rewards">Rewards</a></li>
 <li><a class="reference internal" href="#termination">Termination</a></li>
 <li><a class="reference internal" href="#registered-configurations">Registered Configurations</a></li>
+<li><a class="reference internal" href="#research">Research</a></li>
 </ul>
 </li>
 </ul>
