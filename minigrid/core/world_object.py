@@ -25,7 +25,6 @@ Point = Tuple[int, int]
 
 
 class WorldObj:
-
     """
     Base class for grid world objects
     """

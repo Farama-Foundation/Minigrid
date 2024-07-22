@@ -8,7 +8,6 @@ from minigrid.minigrid_env import MiniGridEnv
 
 
 class FetchEnv(MiniGridEnv):
-
     """
     ## Description
 
