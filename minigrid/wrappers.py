@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import math
-import operator
-from functools import reduce
 from typing import Any
 
 import gymnasium as gym
@@ -596,7 +594,9 @@ class FlatObsWrapper(ObservationWrapper):
             ), f"mission string too long ({len(mission)} chars)"
             mission = mission.lower()
 
-            str_array = np.zeros(shape=(self.maxStrLen, self.numCharCodes), dtype="uint8")
+            str_array = np.zeros(
+                shape=(self.maxStrLen, self.numCharCodes), dtype="uint8"
+            )
             # as `numCharCodes` < 255 then we can use `uint8`
 
             for idx, ch in enumerate(mission):

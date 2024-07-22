@@ -1,4 +1,5 @@
 """Wave Function Collapse solver. Implementation based on https://github.com/ikarth/wfc_2019f"""
+
 from __future__ import annotations
 
 import itertools
