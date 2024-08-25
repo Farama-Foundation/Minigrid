@@ -2,82 +2,33 @@
 
 from __future__ import annotations
 
+import cv2
 import gymnasium as gym
-import pygame
-from gymnasium import Env
-
-from minigrid.core.actions import Actions
-from minigrid.minigrid_env import MiniGridEnv
-from minigrid.wrappers import ImgObsWrapper, RGBImgPartialObsWrapper
 
 
-class ManualControl:
-    def __init__(
-        self,
-        env: Env,
-        seed=None,
-    ) -> None:
-        self.env = env
-        self.seed = seed
-        self.closed = False
+def process_key(key, env):
+    """Map key presses to actions and interact with the environment."""
+    key_to_action = {
+        # Move forward
+        ord("w"): env.actions.forward,
+        # Turn left
+        ord("a"): env.actions.left,
+        # Turn right
+        ord("d"): env.actions.right,
+        # Toggle (interact)
+        ord(" "): env.actions.toggle,
+        # Pickup
+        ord("p"): env.actions.pickup,
+        # Drop
+        ord("o"): env.actions.drop,
+        # Done
+        ord("e"): env.actions.done,
+        # Quit the game
+        ord("q"): None,
+        27: None,
+    }
 
-    def start(self):
-        """Start the window display with blocking event loop"""
-        self.reset(self.seed)
-
-        while not self.closed:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.env.close()
-                    break
-                if event.type == pygame.KEYDOWN:
-                    event.key = pygame.key.name(int(event.key))
-                    self.key_handler(event)
-
-    def step(self, action: Actions):
-        _, reward, terminated, truncated, _ = self.env.step(action)
-        print(f"step={self.env.step_count}, reward={reward:.2f}")
-
-        if terminated:
-            print("terminated!")
-            self.reset(self.seed)
-        elif truncated:
-            print("truncated!")
-            self.reset(self.seed)
-        else:
-            self.env.render()
-
-    def reset(self, seed=None):
-        self.env.reset(seed=seed)
-        self.env.render()
-
-    def key_handler(self, event):
-        key: str = event.key
-        print("pressed", key)
-
-        if key == "escape":
-            self.env.close()
-            return
-        if key == "backspace":
-            self.reset()
-            return
-
-        key_to_action = {
-            "left": Actions.left,
-            "right": Actions.right,
-            "up": Actions.forward,
-            "space": Actions.toggle,
-            "pageup": Actions.pickup,
-            "pagedown": Actions.drop,
-            "tab": Actions.pickup,
-            "left shift": Actions.drop,
-            "enter": Actions.done,
-        }
-        if key in key_to_action.keys():
-            action = key_to_action[key]
-            self.step(action)
-        else:
-            print(key)
+    return key_to_action.get(key, None)
 
 
 if __name__ == "__main__":
@@ -120,20 +71,58 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    env: MiniGridEnv = gym.make(
+    env = gym.make(
         args.env_id,
         tile_size=args.tile_size,
         render_mode="human",
         agent_pov=args.agent_view,
         agent_view_size=args.agent_view_size,
-        screen_size=args.screen_size,
     )
 
-    # TODO: check if this can be removed
-    if args.agent_view:
-        print("Using agent view")
-        env = RGBImgPartialObsWrapper(env, args.tile_size)
-        env = ImgObsWrapper(env)
+    # This now produces an RGB tensor only
+    obs, _ = env.reset()
 
-    manual_control = ManualControl(env, seed=args.seed)
-    manual_control.start()
+    while True:
+        data = obs["image"]
+
+        data = cv2.flip(
+            cv2.rotate(
+                data,
+                # rotate counter clockwise
+                cv2.ROTATE_90_COUNTERCLOCKWISE,
+            ),
+            0,  # flip vertically
+        )
+        print(data.sum(-1), data.sum(-1).shape)
+        # horizontally flip the image
+        cv2.imshow(
+            "Observation",
+            cv2.resize(data * 51, (256, 256), interpolation=cv2.INTER_NEAREST),
+        )
+
+        # Wait for key press
+        key = cv2.waitKey(0)
+
+        # Quit if 'q' is pressed
+        if key == ord("q") or key == 27:
+            break
+
+        # Map the key to an action
+        action = process_key(key, env)
+
+        # If a valid action was selected
+        if action is not None:
+            # Take a step in the environment
+            obs, _, done, truncated, _ = env.step(action)
+
+            if done or truncated:
+                # Reset the environment if done
+                obs, _ = env.reset()
+        else:
+            print(f"Invalid key: {key}")
+
+    cv2.destroyAllWindows()
+
+
+# python src/minigrid_experiments/manual_controls.py
+# python src/minigrid_experiments/manual_controls.py --agent-view
