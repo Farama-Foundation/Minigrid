@@ -45,7 +45,10 @@ preferred-citation:
     given-names: Pablo Samuel
   - family-names: Terry
     given-names: Jordan
-  journal: CoRR
-  title: Minigrid
-  volume: abs/2306.13831
+  title: "Minigrid & Miniworld: Modular & Customizable Reinforcement Learning Environments for Goal-Oriented Tasks"
+  type: inproceedings
   year: 2023
+  conference:
+    name: "Neural Information Processing Systems (NeurIPS)"
+  publisher:
+    name: "Proceedings of the Conference on Neural Information Processing Systems (NeurIPS)"

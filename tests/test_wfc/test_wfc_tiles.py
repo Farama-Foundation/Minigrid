@@ -1,4 +1,5 @@
 """Breaks an image into consituant tiles."""
+
 from __future__ import annotations
 
 from minigrid.envs.wfc.wfclogic import tiles as wfc_tiles

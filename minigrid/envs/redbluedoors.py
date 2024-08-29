@@ -7,7 +7,6 @@ from minigrid.minigrid_env import MiniGridEnv
 
 
 class RedBlueDoorEnv(MiniGridEnv):
-
     """
     ## Description
 

@@ -389,3 +389,13 @@ def test_no_death_wrapper():
     assert reward_wrap == reward + death_cost
     env.close()
     env_wrap.close()
+
+
+def test_non_square_RGBIMgObsWrapper():
+    """
+    Add test for non-square dimensions with RGBImgObsWrapper
+    (https://github.com/Farama-Foundation/Minigrid/issues/444).
+    """
+    env = RGBImgObsWrapper(gym.make("MiniGrid-BlockedUnlockPickup-v0"))
+    obs, info = env.reset()
+    assert env.observation_space["image"].shape == obs["image"].shape

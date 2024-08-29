@@ -9,7 +9,7 @@
   <img src="figures/door-key-curriculum.gif" width=200 alt="Figure Door Key Curriculum">
 </p>
 
-The Minigrid library contains a collection of discrete grid-world environments to conduct research on Reinforcement Learning. The environments follow the [Gymnasium]() standard API and they are designed to be lightweight, fast, and easily customizable. 
+The Minigrid library contains a collection of discrete grid-world environments to conduct research on Reinforcement Learning. The environments follow the [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) standard API and they are designed to be lightweight, fast, and easily customizable. 
 
 The documentation website is at [minigrid.farama.org](https://minigrid.farama.org/), and we have a public discord server (which we also use to coordinate development work) that you can join here: [https://discord.gg/bnJ6kubTg6](https://discord.gg/bnJ6kubTg6)
 
@@ -43,11 +43,11 @@ The original `gym-minigrid` environments were created as part of work done at [M
 To cite this project please use:
 
 ```bibtex
-@article{MinigridMiniworld23,
-  author       = {Maxime Chevalier-Boisvert and Bolun Dai and Mark Towers and Rodrigo de Lazcano and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
-  title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
-  journal      = {CoRR},
-  volume       = {abs/2306.13831},
+@inproceedings{MinigridMiniworld23,
+  author       = {Maxime Chevalier{-}Boisvert and Bolun Dai and Mark Towers and Rodrigo Perez{-}Vicente and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
+  title        = {Minigrid {\&} Miniworld: Modular {\&} Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  booktitle    = {Advances in Neural Information Processing Systems 36, New Orleans, LA, USA},
+  month        = {December},
   year         = {2023},
 }
 ```

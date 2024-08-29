@@ -16,7 +16,6 @@ class MultiRoom:
 
 
 class MultiRoomEnv(MiniGridEnv):
-
     """
     ## Description
 

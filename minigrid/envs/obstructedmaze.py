@@ -7,7 +7,6 @@ from minigrid.core.world_object import Ball, Box, Key
 
 
 class ObstructedMazeEnv(RoomGrid):
-
     """
     ## Description
 
