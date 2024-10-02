@@ -107,8 +107,8 @@ class WorldObj:
 
 
 class Goal(WorldObj):
-    def __init__(self):
-        super().__init__("goal", "green")
+    def __init__(self, color: str = "green"):
+        super().__init__("goal", color)
 
     def can_overlap(self):
         return True
