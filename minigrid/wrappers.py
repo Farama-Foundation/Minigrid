@@ -862,9 +862,9 @@ class NoDeath(Wrapper):
     def step(self, action):
         # In Dynamic-Obstacles, obstacles move after the agent moves,
         # so we need to check for collision before self.env.step()
-        front_cell = self.grid.get(*self.front_pos)
+        front_cell = self.unwrapped.grid.get(*self.unwrapped.front_pos)
         going_to_death = (
-            action == self.actions.forward
+            action == self.unwrapped.actions.forward
             and front_cell is not None
             and front_cell.type in self.no_death_types
         )
@@ -873,7 +873,7 @@ class NoDeath(Wrapper):
 
         # We also check if the agent stays in death cells (e.g., lava)
         # without moving
-        current_cell = self.grid.get(*self.agent_pos)
+        current_cell = self.unwrapped.grid.get(*self.unwrapped.agent_pos)
         in_death = current_cell is not None and current_cell.type in self.no_death_types
 
         if terminated and (going_to_death or in_death):
