@@ -141,7 +141,7 @@ def test_dict_observation_space_wrapper(env_spec):
     env = env_spec.make()
     env = DictObservationSpaceWrapper(env)
     env.reset()
-    mission = env.mission
+    mission = env.unwrapped.mission
     obs, _, _, _, _ = env.step(0)
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
@@ -273,10 +273,9 @@ def test_direction_obs_wrapper(env_id, type):
     env = gym.make(env_id)
     env = DirectionObsWrapper(env, type=type)
     obs, _ = env.reset()
-
     slope = np.divide(
-        env.goal_position[1] - env.agent_pos[1],
-        env.goal_position[0] - env.agent_pos[0],
+        env.unwrapped.goal_position[1] - env.unwrapped.agent_pos[1],
+        env.unwrapped.goal_position[0] - env.unwrapped.agent_pos[0],
     )
     if type == "slope":
         assert obs["goal_direction"] == slope
@@ -285,8 +284,8 @@ def test_direction_obs_wrapper(env_id, type):
 
     obs, _, _, _, _ = env.step(0)
     slope = np.divide(
-        env.goal_position[1] - env.agent_pos[1],
-        env.goal_position[0] - env.agent_pos[0],
+        env.unwrapped.goal_position[1] - env.unwrapped.agent_pos[1],
+        env.unwrapped.goal_position[0] - env.unwrapped.agent_pos[0],
     )
     if type == "slope":
         assert obs["goal_direction"] == slope
@@ -302,10 +301,10 @@ def test_symbolic_obs_wrapper(env_id):
 
     env = SymbolicObsWrapper(env)
     obs, _ = env.reset(seed=123)
-    agent_pos = env.agent_pos
-    goal_pos = env.goal_pos
+    agent_pos = env.unwrapped.agent_pos
+    goal_pos = env.unwrapped.goal_pos
 
-    assert obs["image"].shape == (env.width, env.height, 3)
+    assert obs["image"].shape == (env.unwrapped.width, env.unwrapped.height, 3)
     assert np.alltrue(
         obs["image"][agent_pos[0], agent_pos[1], :]
         == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
@@ -316,10 +315,10 @@ def test_symbolic_obs_wrapper(env_id):
     )
 
     obs, _, _, _, _ = env.step(2)
-    agent_pos = env.agent_pos
-    goal_pos = env.goal_pos
+    agent_pos = env.unwrapped.agent_pos
+    goal_pos = env.unwrapped.goal_pos
 
-    assert obs["image"].shape == (env.width, env.height, 3)
+    assert obs["image"].shape == (env.unwrapped.width, env.unwrapped.height, 3)
     assert np.alltrue(
         obs["image"][agent_pos[0], agent_pos[1], :]
         == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
