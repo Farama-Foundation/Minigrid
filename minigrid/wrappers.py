@@ -362,6 +362,7 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         self.tile_size = tile_size
 
         obs_shape = env.observation_space.spaces["image"].shape
+
         new_image_space = spaces.Box(
             low=0,
             high=255,
@@ -374,7 +375,17 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        '''
+        Bug Fix for https://github.com/Farama-Foundation/Minigrid/issues/419
+        
+        - Bypass self.get_frame() with self.get_pov_render(). The former method 
+        was not necessary in this context. 
+        - Add an "agent_view_size" field to the self.get_pov_render() method
+        '''
+        rgb_img_partial = self.get_pov_render(
+            tile_size=self.tile_size,
+            agent_view_size=self.agent_view_size
+        )
 
         return {**obs, "image": rgb_img_partial}
 
