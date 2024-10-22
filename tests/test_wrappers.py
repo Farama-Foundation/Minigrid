@@ -305,11 +305,11 @@ def test_symbolic_obs_wrapper(env_id):
     goal_pos = env.unwrapped.goal_pos
 
     assert obs["image"].shape == (env.unwrapped.width, env.unwrapped.height, 3)
-    assert np.alltrue(
+    assert np.all(
         obs["image"][agent_pos[0], agent_pos[1], :]
         == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
     )
-    assert np.alltrue(
+    assert np.all(
         obs["image"][goal_pos[0], goal_pos[1], :]
         == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
     )
@@ -319,11 +319,11 @@ def test_symbolic_obs_wrapper(env_id):
     goal_pos = env.unwrapped.goal_pos
 
     assert obs["image"].shape == (env.unwrapped.width, env.unwrapped.height, 3)
-    assert np.alltrue(
+    assert np.all(
         obs["image"][agent_pos[0], agent_pos[1], :]
         == np.array([agent_pos[0], agent_pos[1], OBJECT_TO_IDX["agent"]])
     )
-    assert np.alltrue(
+    assert np.all(
         obs["image"][goal_pos[0], goal_pos[1], :]
         == np.array([goal_pos[0], goal_pos[1], OBJECT_TO_IDX["goal"]])
     )
