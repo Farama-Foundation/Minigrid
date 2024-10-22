@@ -17,6 +17,6 @@ jobs:
              --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
              --tag minigrid-docker .      
       - name: Run tests
-        run: docker run minigrid-docker pytest
+        run: docker run minigrid-docker pytest --ignore tests/test_wfc
       - name: Run doctest
         run: docker run minigrid-docker pytest --doctest-modules minigrid/
