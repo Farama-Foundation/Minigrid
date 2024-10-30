@@ -51,3 +51,7 @@ from minigrid.envs.babyai.unlock import (
     UnlockPickup,
     UnlockToUnlock,
 )
+from minigrid.envs.babyai.mixed_seq_levels import (
+    Level_MixedTrainLocal,
+    Level_MixedTestLocal,
+)
