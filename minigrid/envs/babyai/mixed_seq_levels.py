@@ -1,3 +1,7 @@
+"""
+Copied and adapted from https://github.com/flowersteam/Grounding_LLMs_with_online_RL
+"""
+
 from minigrid.envs.babyai.core.verifier import (
     AfterInstr,
     BeforeInstr,
