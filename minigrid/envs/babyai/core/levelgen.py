@@ -96,18 +96,9 @@ class LevelGen(RoomGridLevel):
                 continue
 
             if color is not None:
-                door, _ = self.add_door(
-                    i, j,
-                    door_idx,
-                    color=color,
-                    locked=True
-                )
+                door, _ = self.add_door(i, j, door_idx, color=color, locked=True)
             else:
-                door, _ = self.add_door(
-                    i, j,
-                    door_idx,
-                    locked=True
-                )
+                door, _ = self.add_door(i, j, door_idx, locked=True)
 
             # Done adding locked room
             break

@@ -2,13 +2,20 @@
 Copied and adapted from https://github.com/flowersteam/Grounding_LLMs_with_online_RL
 """
 
+from __future__ import annotations
+
+from minigrid.envs.babyai.core.levelgen import (
+    GoToInstr,
+    LevelGen,
+    PickupInstr,
+    PutNextInstr,
+)
 from minigrid.envs.babyai.core.verifier import (
     AfterInstr,
     BeforeInstr,
     ObjDesc,
     OpenInstr,
 )
-from minigrid.envs.babyai.core.levelgen import LevelGen, GoToInstr, PickupInstr, PutNextInstr
 
 
 class Level_MixedTrainLocal(LevelGen):
@@ -33,20 +40,21 @@ class Level_MixedTrainLocal(LevelGen):
     """
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        instr_kinds=["action", "seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
-        if action == 'open':
+        action = self._rand_elem(
+            ["goto", "pickup", "open", "putnext", "pick up seq go to"]
+        )
+        if action == "open":
             num_cols = 2
             num_rows = 1
         # We add many distractors to increase the probability
@@ -66,23 +74,24 @@ class Level_MixedTrainLocal(LevelGen):
 
     # ['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'],
     def gen_mission(self):
-
         action = self._rand_elem(self.action_kinds)
         mission_accepted = False
         all_objects_reachable = False
-        if action == 'open':
-
+        if action == "open":
             while not mission_accepted or not all_objects_reachable:
-
                 self._regen_grid()
-                color_door = self._rand_elem(['yellow', 'green', 'blue', 'purple'])  # red and grey excluded
+                color_door = self._rand_elem(
+                    ["yellow", "green", "blue", "purple"]
+                )  # red and grey excluded
                 self.add_locked_room(color_door)
                 self.connect_all()
 
                 for j in range(self.num_rows):
                     for i in range(self.num_cols):
                         if self.get_room(i, j) is not self.locked_room:
-                            self.add_distractors(i, j, num_distractors=self.num_dists, all_unique=False)
+                            self.add_distractors(
+                                i, j, num_distractors=self.num_dists, all_unique=False
+                            )
 
                 # The agent must be placed after all the object to respect constraints
                 while True:
@@ -97,7 +106,7 @@ class Level_MixedTrainLocal(LevelGen):
 
                 color_in_instr = self._rand_elem([None, color_door])
 
-                desc = ObjDesc('door', color_in_instr)
+                desc = ObjDesc("door", color_in_instr)
                 self.instrs = OpenInstr(desc)
 
                 mission_accepted = not (self.exclude_substrings())
@@ -105,44 +114,50 @@ class Level_MixedTrainLocal(LevelGen):
                 """if color_in_instr is None and mission_accepted and all_objects_reachable:
                     print(color_door)"""
 
-        elif action == 'goto':
+        elif action == "goto":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
                 self.instrs = GoToInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pickup':
+        elif action == "pickup":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
-                while str(obj.type) == 'door':
+                while str(obj.type) == "door":
                     obj = self._rand_elem(objs)
                 self.instrs = PickupInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'putnext':
+        elif action == "putnext":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_1 = self._rand_elem(objs)
-                while str(obj_1.type) == 'door':
+                while str(obj_1.type) == "door":
                     obj_1 = self._rand_elem(objs)
                 desc1 = ObjDesc(obj_1.type, obj_1.color)
                 obj_2 = self._rand_elem(objs)
@@ -157,16 +172,18 @@ class Level_MixedTrainLocal(LevelGen):
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pick up seq go to':
+        elif action == "pick up seq go to":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_a = self._rand_elem(objs)
-                while str(obj_a.type) == 'door':
+                while str(obj_a.type) == "door":
                     obj_a = self._rand_elem(objs)
                 instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
                 obj_b = self._rand_elem(objs)
@@ -179,19 +196,24 @@ class Level_MixedTrainLocal(LevelGen):
                             obj_b = self._rand_elem(objs)
                 instr_b = GoToInstr(ObjDesc(obj_b.type, obj_b.color))
 
-                type_instr = self._rand_elem(['Before', 'After'])
+                type_instr = self._rand_elem(["Before", "After"])
 
-                if type_instr == 'Before':
+                if type_instr == "Before":
                     self.instrs = BeforeInstr(instr_a, instr_b)
                 else:
                     self.instrs = AfterInstr(instr_b, instr_a)
 
                 mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["yellow box", "red key", "red door", "green ball", "grey door"]
+        list_exclude_combinaison = [
+            "yellow box",
+            "red key",
+            "red door",
+            "green ball",
+            "grey door",
+        ]
 
         for sub_str in list_exclude_combinaison:
             str = self.instrs.surface(self)
@@ -230,28 +252,32 @@ class Level_MixedTrainLocal(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0
+
 
 class Level_MixedTestLocal(LevelGen):
     """
@@ -273,20 +299,21 @@ class Level_MixedTestLocal(LevelGen):
     """
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        instr_kinds=["action", "seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
-        if action == 'open':
+        action = self._rand_elem(
+            ["goto", "pickup", "open", "putnext", "pick up seq go to"]
+        )
+        if action == "open":
             num_cols = 2
             num_rows = 1
         # We add many distractors to increase the probability
@@ -305,23 +332,24 @@ class Level_MixedTestLocal(LevelGen):
         )
 
     def gen_mission(self):
-
         action = self._rand_elem(self.action_kinds)
         mission_accepted = False
         all_objects_reachable = False
-        if action == 'open':
-
+        if action == "open":
             while not mission_accepted or not all_objects_reachable:
-
                 self._regen_grid()
-                color_door = self._rand_elem(['red', 'grey'])   # only red and grey doors at test time
+                color_door = self._rand_elem(
+                    ["red", "grey"]
+                )  # only red and grey doors at test time
                 self.add_locked_room(color_door)
                 self.connect_all()
 
                 for j in range(self.num_rows):
                     for i in range(self.num_cols):
                         if self.get_room(i, j) is not self.locked_room:
-                            self.add_distractors(i, j, num_distractors=self.num_dists, all_unique=False)
+                            self.add_distractors(
+                                i, j, num_distractors=self.num_dists, all_unique=False
+                            )
 
                 # The agent must be placed after all the object to respect constraints
                 while True:
@@ -334,49 +362,55 @@ class Level_MixedTestLocal(LevelGen):
 
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
 
-                desc = ObjDesc('door', color_door)
+                desc = ObjDesc("door", color_door)
                 self.instrs = OpenInstr(desc)
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'goto':
+        elif action == "goto":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
                 self.instrs = GoToInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pickup':
+        elif action == "pickup":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
-                while str(obj.type) == 'door':
+                while str(obj.type) == "door":
                     obj = self._rand_elem(objs)
                 self.instrs = PickupInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'putnext':
+        elif action == "putnext":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_1 = self._rand_elem(objs)
-                while str(obj_1.type) == 'door':
+                while str(obj_1.type) == "door":
                     obj_1 = self._rand_elem(objs)
                 desc1 = ObjDesc(obj_1.type, obj_1.color)
                 obj_2 = self._rand_elem(objs)
@@ -391,16 +425,18 @@ class Level_MixedTestLocal(LevelGen):
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pick up seq go to':
+        elif action == "pick up seq go to":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_a = self._rand_elem(objs)
-                while str(obj_a.type) == 'door':
+                while str(obj_a.type) == "door":
                     obj_a = self._rand_elem(objs)
                 instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
                 obj_b = self._rand_elem(objs)
@@ -413,24 +449,38 @@ class Level_MixedTestLocal(LevelGen):
                             obj_b = self._rand_elem(objs)
                 instr_b = GoToInstr(ObjDesc(obj_b.type, obj_b.color))
 
-                type_instr = self._rand_elem(['Before', 'After'])
+                type_instr = self._rand_elem(["Before", "After"])
 
-                if type_instr == 'Before':
+                if type_instr == "Before":
                     self.instrs = BeforeInstr(instr_a, instr_b)
                 else:
                     self.instrs = AfterInstr(instr_b, instr_a)
 
                 mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["yellow key", "yellow ball", "yellow door",
-                                    "red box", "red ball",
-                                    "green box", "green key", "green door",
-                                    "grey box", "grey key", "grey ball",
-                                    "blue box", "blue key", "blue ball", "blue door",
-                                    "purple box", "purple key", "purple ball", "purple door"]
+        list_exclude_combinaison = [
+            "yellow key",
+            "yellow ball",
+            "yellow door",
+            "red box",
+            "red ball",
+            "green box",
+            "green key",
+            "green door",
+            "grey box",
+            "grey key",
+            "grey ball",
+            "blue box",
+            "blue key",
+            "blue ball",
+            "blue door",
+            "purple box",
+            "purple key",
+            "purple ball",
+            "purple door",
+        ]
 
         for sub_str in list_exclude_combinaison:
             if sub_str in self.instrs.surface(self):
@@ -468,51 +518,57 @@ class Level_MixedTestLocal(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0
+
 
 class Level_MixedTrainLocalFrench(LevelGen):
     """
     Same as MixedTrainLocal but in French
     """
+
     # TODO pas encore fini
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            language='french',
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        language="french",
+        instr_kinds=["action", "seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
-        if action == 'open':
+        action = self._rand_elem(
+            ["goto", "pickup", "open", "putnext", "pick up seq go to"]
+        )
+        if action == "open":
             num_cols = 2
             num_rows = 1
         # We add many distractors to increase the probability
@@ -533,23 +589,24 @@ class Level_MixedTrainLocalFrench(LevelGen):
 
     # ['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'],
     def gen_mission(self):
-
         action = self._rand_elem(self.action_kinds)
         mission_accepted = False
         all_objects_reachable = False
-        if action == 'open':
-
+        if action == "open":
             while not mission_accepted or not all_objects_reachable:
-
                 self._regen_grid()
-                color_door = self._rand_elem(['jaune', 'verte', 'bleue', 'violette'])  # red and grey excluded
+                color_door = self._rand_elem(
+                    ["jaune", "verte", "bleue", "violette"]
+                )  # red and grey excluded
                 self.add_locked_room(color_door)
                 self.connect_all()
 
                 for j in range(self.num_rows):
                     for i in range(self.num_cols):
                         if self.get_room(i, j) is not self.locked_room:
-                            self.add_distractors(i, j, num_distractors=self.num_dists, all_unique=False)
+                            self.add_distractors(
+                                i, j, num_distractors=self.num_dists, all_unique=False
+                            )
 
                 # The agent must be placed after all the object to respect constraints
                 while True:
@@ -564,7 +621,7 @@ class Level_MixedTrainLocalFrench(LevelGen):
 
                 color_in_instr = self._rand_elem([None, color_door])
 
-                desc = ObjDesc('door', color_in_instr)
+                desc = ObjDesc("door", color_in_instr)
                 self.instrs = OpenInstr(desc)
 
                 mission_accepted = not (self.exclude_substrings())
@@ -572,44 +629,50 @@ class Level_MixedTrainLocalFrench(LevelGen):
                 """if color_in_instr is None and mission_accepted and all_objects_reachable:
                     print(color_door)"""
 
-        elif action == 'goto':
+        elif action == "goto":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
                 self.instrs = GoToInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pickup':
+        elif action == "pickup":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 1, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 1, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj = self._rand_elem(objs)
-                while str(obj.type) == 'door':
+                while str(obj.type) == "door":
                     obj = self._rand_elem(objs)
                 self.instrs = PickupInstr(ObjDesc(obj.type, obj.color))
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'putnext':
+        elif action == "putnext":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_1 = self._rand_elem(objs)
-                while str(obj_1.type) == 'door':
+                while str(obj_1.type) == "door":
                     obj_1 = self._rand_elem(objs)
                 desc1 = ObjDesc(obj_1.type, obj_1.color)
                 obj_2 = self._rand_elem(objs)
@@ -624,16 +687,18 @@ class Level_MixedTrainLocalFrench(LevelGen):
 
                 mission_accepted = not (self.exclude_substrings())
 
-        elif action == 'pick up seq go to':
+        elif action == "pick up seq go to":
             self.num_cols = 1
             self.num_rows = 1
             while not mission_accepted or not all_objects_reachable:
                 self._regen_grid()
                 self.place_agent()
-                objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+                objs = self.add_distractors(
+                    num_distractors=self.num_dists + 2, all_unique=False
+                )
                 all_objects_reachable = self.check_objs_reachable(raise_exc=False)
                 obj_a = self._rand_elem(objs)
-                while str(obj_a.type) == 'door':
+                while str(obj_a.type) == "door":
                     obj_a = self._rand_elem(objs)
                 instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
                 obj_b = self._rand_elem(objs)
@@ -646,19 +711,24 @@ class Level_MixedTrainLocalFrench(LevelGen):
                             obj_b = self._rand_elem(objs)
                 instr_b = GoToInstr(ObjDesc(obj_b.type, obj_b.color))
 
-                type_instr = self._rand_elem(['Before', 'After'])
+                type_instr = self._rand_elem(["Before", "After"])
 
-                if type_instr == 'Before':
+                if type_instr == "Before":
                     self.instrs = BeforeInstr(instr_a, instr_b)
                 else:
                     self.instrs = AfterInstr(instr_b, instr_a)
 
                 mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["boîte jaune", "clef rouge", "porte rouge", "balle verte", "porte grise"]
+        list_exclude_combinaison = [
+            "boîte jaune",
+            "clef rouge",
+            "porte rouge",
+            "balle verte",
+            "porte grise",
+        ]
 
         for sub_str in list_exclude_combinaison:
             str = self.instrs.surface(self)
@@ -697,26 +767,29 @@ class Level_MixedTrainLocalFrench(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0
 
@@ -735,19 +808,18 @@ class Level_PickUpSeqGoToLocal(LevelGen):
     """
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        instr_kinds=["seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = 'pick up seq pick up '
+        action = "pick up seq pick up "
 
         # We add many distractors to increase the probability
         # of ambiguous locations within the same room
@@ -765,17 +837,18 @@ class Level_PickUpSeqGoToLocal(LevelGen):
         )
 
     def gen_mission(self):
-
         mission_accepted = False
         all_objects_reachable = False
 
         while not mission_accepted or not all_objects_reachable:
             self._regen_grid()
             self.place_agent()
-            objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+            objs = self.add_distractors(
+                num_distractors=self.num_dists + 2, all_unique=False
+            )
             all_objects_reachable = self.check_objs_reachable(raise_exc=False)
             obj_a = self._rand_elem(objs)
-            while str(obj_a.type) == 'door':
+            while str(obj_a.type) == "door":
                 obj_a = self._rand_elem(objs)
             instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
             obj_b = self._rand_elem(objs)
@@ -788,19 +861,24 @@ class Level_PickUpSeqGoToLocal(LevelGen):
                         obj_b = self._rand_elem(objs)
             instr_b = GoToInstr(ObjDesc(obj_b.type, obj_b.color))
 
-            type_instr = self._rand_elem(['Before', 'After'])
+            type_instr = self._rand_elem(["Before", "After"])
 
-            if type_instr == 'Before':
+            if type_instr == "Before":
                 self.instrs = BeforeInstr(instr_a, instr_b)
             else:
                 self.instrs = AfterInstr(instr_b, instr_a)
 
             mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["yellow box", "red key", "red door", "green ball", "grey door"]
+        list_exclude_combinaison = [
+            "yellow box",
+            "red key",
+            "red door",
+            "green ball",
+            "grey door",
+        ]
 
         for sub_str in list_exclude_combinaison:
             if sub_str in self.instrs.surface(self):
@@ -838,28 +916,32 @@ class Level_PickUpSeqGoToLocal(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0
+
 
 class Level_PickUpThenGoToLocal(LevelGen):
     """
@@ -875,19 +957,18 @@ class Level_PickUpThenGoToLocal(LevelGen):
     """
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        instr_kinds=["seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = 'pick up seq pick up '
+        action = "pick up seq pick up "
 
         # We add many distractors to increase the probability
         # of ambiguous locations within the same room
@@ -905,17 +986,18 @@ class Level_PickUpThenGoToLocal(LevelGen):
         )
 
     def gen_mission(self):
-
         mission_accepted = False
         all_objects_reachable = False
 
         while not mission_accepted or not all_objects_reachable:
             self._regen_grid()
             self.place_agent()
-            objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+            objs = self.add_distractors(
+                num_distractors=self.num_dists + 2, all_unique=False
+            )
             all_objects_reachable = self.check_objs_reachable(raise_exc=False)
             obj_a = self._rand_elem(objs)
-            while str(obj_a.type) == 'door':
+            while str(obj_a.type) == "door":
                 obj_a = self._rand_elem(objs)
             instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
             obj_b = self._rand_elem(objs)
@@ -932,10 +1014,15 @@ class Level_PickUpThenGoToLocal(LevelGen):
 
             mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["yellow box", "red key", "red door", "green ball", "grey door"]
+        list_exclude_combinaison = [
+            "yellow box",
+            "red key",
+            "red door",
+            "green ball",
+            "grey door",
+        ]
 
         for sub_str in list_exclude_combinaison:
             if sub_str in self.instrs.surface(self):
@@ -973,26 +1060,29 @@ class Level_PickUpThenGoToLocal(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0
 
@@ -1011,19 +1101,18 @@ class Level_GoToAfterPickUpLocal(LevelGen):
     """
 
     def __init__(
-            self,
-            room_size=8,
-            num_rows=1,
-            num_cols=1,
-            num_dists=8,
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            **kwargs,
+        self,
+        room_size=8,
+        num_rows=1,
+        num_cols=1,
+        num_dists=8,
+        instr_kinds=["seq1"],
+        locations=False,
+        unblocking=False,
+        implicit_unlock=False,
+        **kwargs,
     ):
-
-        action = 'pick up seq pick up '
+        action = "pick up seq pick up "
 
         # We add many distractors to increase the probability
         # of ambiguous locations within the same room
@@ -1041,17 +1130,18 @@ class Level_GoToAfterPickUpLocal(LevelGen):
         )
 
     def gen_mission(self):
-
         mission_accepted = False
         all_objects_reachable = False
 
         while not mission_accepted or not all_objects_reachable:
             self._regen_grid()
             self.place_agent()
-            objs = self.add_distractors(num_distractors=self.num_dists + 2, all_unique=False)
+            objs = self.add_distractors(
+                num_distractors=self.num_dists + 2, all_unique=False
+            )
             all_objects_reachable = self.check_objs_reachable(raise_exc=False)
             obj_a = self._rand_elem(objs)
-            while str(obj_a.type) == 'door':
+            while str(obj_a.type) == "door":
                 obj_a = self._rand_elem(objs)
             instr_a = PickupInstr(ObjDesc(obj_a.type, obj_a.color))
             obj_b = self._rand_elem(objs)
@@ -1068,10 +1158,15 @@ class Level_GoToAfterPickUpLocal(LevelGen):
 
             mission_accepted = not (self.exclude_substrings())
 
-
     def exclude_substrings(self):
         # True if contains excluded substring
-        list_exclude_combinaison = ["yellow box", "red key", "red door", "green ball", "grey door"]
+        list_exclude_combinaison = [
+            "yellow box",
+            "red key",
+            "red door",
+            "green ball",
+            "grey door",
+        ]
 
         for sub_str in list_exclude_combinaison:
             if sub_str in self.instrs.surface(self):
@@ -1109,25 +1204,28 @@ class Level_GoToAfterPickUpLocal(LevelGen):
                 room = self.room_grid[j][i]
 
                 x_l, y_l = (room.top[0] + 1, room.top[1] + 1)
-                x_m, y_m = (room.top[0] + room.size[0] - 1, room.top[1] + room.size[1] - 1)
+                x_m, y_m = (
+                    room.top[0] + room.size[0] - 1,
+                    room.top[1] + room.size[1] - 1,
+                )
 
                 # Door positions, order is right, down, left, up
                 if i < self.num_cols - 1:
-                    room.neighbors[0] = self.room_grid[j][i+1]
+                    room.neighbors[0] = self.room_grid[j][i + 1]
                     room.door_pos[0] = (x_m, self._rand_int(y_l, y_m))
                 if j < self.num_rows - 1:
-                    room.neighbors[1] = self.room_grid[j+1][i]
+                    room.neighbors[1] = self.room_grid[j + 1][i]
                     room.door_pos[1] = (self._rand_int(x_l, x_m), y_m)
                 if i > 0:
-                    room.neighbors[2] = self.room_grid[j][i-1]
+                    room.neighbors[2] = self.room_grid[j][i - 1]
                     room.door_pos[2] = room.neighbors[2].door_pos[0]
                 if j > 0:
-                    room.neighbors[3] = self.room_grid[j-1][i]
+                    room.neighbors[3] = self.room_grid[j - 1][i]
                     room.door_pos[3] = room.neighbors[3].door_pos[1]
 
         # The agent starts in the middle, facing right
         self.agent_pos = (
-            (self.num_cols // 2) * (self.room_size-1) + (self.room_size // 2),
-            (self.num_rows // 2) * (self.room_size-1) + (self.room_size // 2)
+            (self.num_cols // 2) * (self.room_size - 1) + (self.room_size // 2),
+            (self.num_rows // 2) * (self.room_size - 1) + (self.room_size // 2),
         )
         self.agent_dir = 0

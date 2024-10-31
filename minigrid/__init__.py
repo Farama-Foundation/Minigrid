@@ -1136,12 +1136,12 @@ def register_minigrid_envs():
 
     # BabyAI - Language based levels - Level_MixedTrainLocal and Level_MixedTestLocal
     # ----------------------------------------
-    
+
     register(
         id="BabyAI-MixedTrainLocal-v0",
         entry_point="minigrid.envs.babyai:Level_MixedTrainLocal",
     )
-    
+
     register(
         id="BabyAI-MixedTestLocal-v0",
         entry_point="minigrid.envs.babyai:Level_MixedTestLocal",
