@@ -38,6 +38,11 @@ class Level_MixedTrainLocal(LevelGen):
             num_rows=1,
             num_cols=1,
             num_dists=8,
+            instr_kinds=['action', 'seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
@@ -52,10 +57,11 @@ class Level_MixedTrainLocal(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     # ['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'],
@@ -272,6 +278,11 @@ class Level_MixedTestLocal(LevelGen):
             num_rows=1,
             num_cols=1,
             num_dists=8,
+            instr_kinds=['action', 'seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
@@ -286,10 +297,11 @@ class Level_MixedTestLocal(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     def gen_mission(self):
@@ -492,6 +504,11 @@ class Level_MixedTrainLocalFrench(LevelGen):
             num_cols=1,
             num_dists=8,
             language='french',
+            instr_kinds=['action', 'seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = self._rand_elem(['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'])
@@ -506,11 +523,12 @@ class Level_MixedTrainLocalFrench(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['action', 'seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False,
-            language=language
+            language=language,
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     # ['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'],
@@ -722,6 +740,11 @@ class Level_PickUpSeqGoToLocal(LevelGen):
             num_rows=1,
             num_cols=1,
             num_dists=8,
+            instr_kinds=['seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = 'pick up seq pick up '
@@ -734,10 +757,11 @@ class Level_PickUpSeqGoToLocal(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     def gen_mission(self):
@@ -856,6 +880,11 @@ class Level_PickUpThenGoToLocal(LevelGen):
             num_rows=1,
             num_cols=1,
             num_dists=8,
+            instr_kinds=['seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = 'pick up seq pick up '
@@ -868,10 +897,11 @@ class Level_PickUpThenGoToLocal(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     def gen_mission(self):
@@ -986,6 +1016,11 @@ class Level_GoToAfterPickUpLocal(LevelGen):
             num_rows=1,
             num_cols=1,
             num_dists=8,
+            instr_kinds=['seq1'],
+            locations=False,
+            unblocking=False,
+            implicit_unlock=False,
+            **kwargs,
     ):
 
         action = 'pick up seq pick up '
@@ -998,10 +1033,11 @@ class Level_GoToAfterPickUpLocal(LevelGen):
             num_cols=num_cols,
             num_dists=num_dists,
             action_kinds=[action],
-            instr_kinds=['seq1'],
-            locations=False,
-            unblocking=False,
-            implicit_unlock=False
+            instr_kinds=instr_kinds,
+            locations=locations,
+            unblocking=unblocking,
+            implicit_unlock=implicit_unlock,
+            **kwargs,
         )
 
     def gen_mission(self):
