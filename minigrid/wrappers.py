@@ -24,20 +24,20 @@ class ReseedWrapper(Wrapper):
         >>> from minigrid.wrappers import ReseedWrapper
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
         >>> _ = env.reset(seed=123)
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [0, 6, 5, 0, 9, 2, 2, 1, 3, 1]
         >>> env = ReseedWrapper(env, seeds=[0, 1], seed_idx=0)
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
     """
 
@@ -686,7 +686,7 @@ class DirectionObsWrapper(ObservationWrapper):
         >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
         >>> env_obs = DirectionObsWrapper(env, type="slope")
         >>> obs, _ = env_obs.reset()
-        >>> obs['goal_direction']
+        >>> obs['goal_direction'].item()
         1.0
     """
 
