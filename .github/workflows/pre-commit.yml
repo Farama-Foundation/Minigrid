@@ -4,7 +4,7 @@ name: Run pre-commit
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - run: pipx install pre-commit
+      - run: pip install pre-commit
       - run: pre-commit --version
       - run: pre-commit run --all-files
