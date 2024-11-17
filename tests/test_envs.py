@@ -121,13 +121,13 @@ def test_render_modes(spec):
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
     env = gym.make(env_id)
-    goal_pos = (env.grid.width - 2, env.grid.height - 2)
+    goal_pos = (env.unwrapped.grid.width - 2, env.unwrapped.grid.height - 2)
 
     # Test the env.agent_sees() function
     env.reset()
     # Test the "in" operator on grid objects
-    assert ("green", "goal") in env.grid
-    assert ("blue", "key") not in env.grid
+    assert ("green", "goal") in env.unwrapped.grid
+    assert ("blue", "key") not in env.unwrapped.grid
     for i in range(0, 500):
         action = env.action_space.sample()
         obs, reward, terminated, truncated, info = env.step(action)
@@ -135,7 +135,7 @@ def test_agent_sees_method(env_id):
         grid, _ = Grid.decode(obs["image"])
         goal_visible = ("green", "goal") in grid
 
-        agent_sees_goal = env.agent_sees(*goal_pos)
+        agent_sees_goal = env.unwrapped.agent_sees(*goal_pos)
         assert agent_sees_goal == goal_visible
         if terminated or truncated:
             env.reset()
