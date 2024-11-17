@@ -7,7 +7,7 @@ from minigrid.core import roomgrid
 from minigrid.core.world_object import Wall
 from minigrid.envs.wfc.config import WFC_PRESETS, register_wfc_presets
 
-__version__ = "3.0.0"
+__version__ = "2.5.0"
 
 
 def register_minigrid_envs():
