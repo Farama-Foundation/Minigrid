@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pickle
+import re
 import warnings
 
 import gymnasium as gym
@@ -120,13 +121,13 @@ def test_render_modes(spec):
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
     env = gym.make(env_id)
-    goal_pos = (env.grid.width - 2, env.grid.height - 2)
+    goal_pos = (env.unwrapped.grid.width - 2, env.unwrapped.grid.height - 2)
 
     # Test the env.agent_sees() function
     env.reset()
     # Test the "in" operator on grid objects
-    assert ("green", "goal") in env.grid
-    assert ("blue", "key") not in env.grid
+    assert ("green", "goal") in env.unwrapped.grid
+    assert ("blue", "key") not in env.unwrapped.grid
     for i in range(0, 500):
         action = env.action_space.sample()
         obs, reward, terminated, truncated, info = env.step(action)
@@ -134,7 +135,7 @@ def test_agent_sees_method(env_id):
         grid, _ = Grid.decode(obs["image"])
         goal_visible = ("green", "goal") in grid
 
-        agent_sees_goal = env.agent_sees(*goal_pos)
+        agent_sees_goal = env.unwrapped.agent_sees(*goal_pos)
         assert agent_sees_goal == goal_visible
         if terminated or truncated:
             env.reset()
@@ -259,7 +260,6 @@ def test_interactive_mode(env_id):
 
 
 def test_mission_space():
-
     # Test placeholders
     mission_space = MissionSpace(
         mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",
@@ -303,3 +303,48 @@ def test_mission_space():
 
     assert mission_space.contains("get the green key and the green key.")
     assert mission_space.contains("go fetch the red ball and the green key.")
+
+
+# not reasonable to test for all environments, test for a few of them.
+@pytest.mark.parametrize(
+    "env_id",
+    [
+        "MiniGrid-Empty-8x8-v0",
+        "MiniGrid-DoorKey-16x16-v0",
+        "MiniGrid-ObstructedMaze-1Dl-v0",
+    ],
+)
+def test_env_sync_vectorization(env_id):
+    def env_maker(env_id, **kwargs):
+        def env_func():
+            env = gym.make(env_id, **kwargs)
+            return env
+
+        return env_func
+
+    num_envs = 4
+    env = gym.vector.SyncVectorEnv([env_maker(env_id) for _ in range(num_envs)])
+    env.reset()
+    env.step(env.action_space.sample())
+    env.close()
+
+
+def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
+    env = gym.make(env_id)
+
+    env_repr = str(env)
+    assert (
+        env_repr
+        == "<OrderEnforcing<PassiveEnvChecker<EmptyEnv<MiniGrid-Empty-8x8-v0>>>>"
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown."
+        ),
+    ):
+        env.unwrapped.pprint_grid()
+
+    env.reset()
+    assert isinstance(env.unwrapped.pprint_grid(), str)

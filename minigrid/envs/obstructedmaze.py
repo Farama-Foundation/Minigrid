@@ -7,7 +7,6 @@ from minigrid.core.world_object import Ball, Box, Key
 
 
 class ObstructedMazeEnv(RoomGrid):
-
     """
     ## Description
 
@@ -36,12 +35,12 @@ class ObstructedMazeEnv(RoomGrid):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
 
-    A reward of '1' is given for success, and '0' for failure.
+    A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure.
 
     ## Termination
 
@@ -58,6 +57,9 @@ class ObstructedMazeEnv(RoomGrid):
     "Q" number of quarters that will have doors and keys out of the 9 that the
     map already has.
     "Full" 3x3 maze with "h" and "b" options.
+    "v1" prevents the key from being covered by the blocking ball. Only 2Dlhb, 1Q, 2Q, and Full are
+    updated to v1. Other configurations won't face this issue because there is no blocking ball (1Dl,
+    1Dlh, 2Dl, 2Dlh) or the only blocking ball is added before the key (1Dlhb).
 
     - `MiniGrid-ObstructedMaze-1Dl-v0`
     - `MiniGrid-ObstructedMaze-1Dlh-v0`
@@ -65,9 +67,13 @@ class ObstructedMazeEnv(RoomGrid):
     - `MiniGrid-ObstructedMaze-2Dl-v0`
     - `MiniGrid-ObstructedMaze-2Dlh-v0`
     - `MiniGrid-ObstructedMaze-2Dlhb-v0`
+    - `MiniGrid-ObstructedMaze-2Dlhb-v1`
     - `MiniGrid-ObstructedMaze-1Q-v0`
+    - `MiniGrid-ObstructedMaze-1Q-v1`
     - `MiniGrid-ObstructedMaze-2Q-v0`
+    - `MiniGrid-ObstructedMaze-2Q-v1`
     - `MiniGrid-ObstructedMaze-Full-v0`
+    - `MiniGrid-ObstructedMaze-Full-v1`
 
     """
 

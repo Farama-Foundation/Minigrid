@@ -7,12 +7,11 @@ from minigrid.minigrid_env import MiniGridEnv
 
 
 class DoorKeyEnv(MiniGridEnv):
-
     """
     ## Description
 
     This environment has a key that the agent must pick up in order to unlock a
-    goal and then get to the green goal square. This environment is difficult,
+    door and then get to the green goal square. This environment is difficult,
     because of the sparse reward, to solve using classical RL algorithms. It is
     useful to experiment with curiosity or curriculum learning.
 
@@ -37,12 +36,12 @@ class DoorKeyEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
 
-    A reward of '1' is given for success, and '0' for failure.
+    A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure.
 
     ## Termination
 
@@ -91,7 +90,7 @@ class DoorKeyEnv(MiniGridEnv):
         self.place_agent(size=(splitIdx, height))
 
         # Place a door in the wall
-        doorIdx = self._rand_int(1, width - 2)
+        doorIdx = self._rand_int(1, height - 2)
         self.put_obj(Door("yellow", is_locked=True), splitIdx, doorIdx)
 
         # Place a yellow key on the left side

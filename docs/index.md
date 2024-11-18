@@ -4,8 +4,13 @@ firstpage:
 lastpage:
 ---
 
-## Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.
+```{project-logo} _static/img/minigrid-text.png
+:alt: Minigrid Logo
+```
 
+```{project-heading}
+Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.
+```
 
 ```{figure} ../figures/door-key-curriculum.gif
    :alt: door key environment gif
@@ -33,12 +38,26 @@ for _ in range(1000):
 env.close()
 ```
 
+To cite this project please use:
+
+```bibtex
+@inproceedings{MinigridMiniworld23,
+  author       = {Maxime Chevalier{-}Boisvert and Bolun Dai and Mark Towers and Rodrigo Perez{-}Vicente and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
+  title        = {Minigrid {\&} Miniworld: Modular {\&} Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  booktitle    = {Advances in Neural Information Processing Systems 36, New Orleans, LA, USA},
+  month        = {December},
+  year         = {2023},
+}
+```
+
 ```{toctree}
 :hidden:
 :caption: Introduction
 
 content/basic_usage
 content/publications
+content/create_env_tutorial
+content/training
 ```
 
 ```{toctree}
@@ -55,12 +74,14 @@ api/wrapper
 
 environments/minigrid/index
 environments/babyai/index
+environments/wfc/index
 ```
 
 ```{toctree}
 :hidden:
 :caption: Development
 
+release_notes
 Github <https://github.com/Farama-Foundation/MiniGrid>
 ```
 

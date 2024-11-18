@@ -34,6 +34,17 @@ lastpage:
 .. autoclass:: minigrid.wrappers.FullyObsWrapper
 ```
 
+# Image Observation
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.ImgObsWrapper
+```
+
+# No Death
+
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.NoDeath
+```
+
 # Observation
 
 ```{eval-rst}
@@ -58,10 +69,20 @@ lastpage:
 .. autoclass:: minigrid.wrappers.RGBImgObsWrapper
 ```
 
-# State Bonus
+# RGB Partial Img Obs
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.RGBImgPartialObsWrapper
+```
+
+# Position Bonus
 
 ```{eval-rst}
-.. autoclass:: minigrid.wrappers.StateBonus
+.. autoclass:: minigrid.wrappers.PositionBonus
+```
+
+# Stochastic Action
+```{eval-rst}
+.. autoclass:: minigrid.wrappers.StochasticActionWrapper
 ```
 
 # Symbolic Obs

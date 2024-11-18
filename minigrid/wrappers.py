@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import math
-import operator
-from functools import reduce
+from typing import Any
 
 import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
-from gymnasium.core import ObservationWrapper, Wrapper
+from gymnasium import logger, spaces
+from gymnasium.core import ActionWrapper, ObservationWrapper, ObsType, Wrapper
 
 from minigrid.core.constants import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX
 from minigrid.core.world_object import Goal
@@ -18,20 +17,52 @@ class ReseedWrapper(Wrapper):
     Wrapper to always regenerate an environment with the same set of seeds.
     This can be used to force an environment to always keep the same
     configuration when reset.
+
+    Example:
+        >>> import minigrid
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import ReseedWrapper
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> _ = env.reset(seed=123)
+        >>> [env.np_random.integers(10).item() for i in range(10)]
+        [0, 6, 5, 0, 9, 2, 2, 1, 3, 1]
+        >>> env = ReseedWrapper(env, seeds=[0, 1], seed_idx=0)
+        >>> _, _ = env.reset()
+        >>> [env.np_random.integers(10).item() for i in range(10)]
+        [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
+        >>> _, _ = env.reset()
+        >>> [env.np_random.integers(10).item() for i in range(10)]
+        [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
+        >>> _, _ = env.reset()
+        >>> [env.np_random.integers(10).item() for i in range(10)]
+        [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
+        >>> _, _ = env.reset()
+        >>> [env.np_random.integers(10).item() for i in range(10)]
+        [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
     """
 
-    def __init__(self, env, seeds=[0], seed_idx=0):
+    def __init__(self, env, seeds=(0,), seed_idx=0):
+        """A wrapper that always regenerate an environment with the same set of seeds.
+
+        Args:
+            env: The environment to apply the wrapper
+            seeds: A list of seed to be applied to the env
+            seed_idx: Index of the initial seed in seeds
+        """
         self.seeds = list(seeds)
         self.seed_idx = seed_idx
         super().__init__(env)
 
-    def reset(self, **kwargs):
+    def reset(
+        self, *, seed: int | None = None, options: dict[str, Any] | None = None
+    ) -> tuple[ObsType, dict[str, Any]]:
+        if seed is not None:
+            logger.warn(
+                "A seed has been passed to `ReseedWrapper.reset` which is ignored."
+            )
         seed = self.seeds[self.seed_idx]
         self.seed_idx = (self.seed_idx + 1) % len(self.seeds)
-        return self.env.reset(seed=seed, **kwargs)
-
-    def step(self, action):
-        return self.env.step(action)
+        return self.env.reset(seed=seed, options=options)
 
 
 class ActionBonus(gym.Wrapper):
@@ -39,13 +70,39 @@ class ActionBonus(gym.Wrapper):
     Wrapper which adds an exploration bonus.
     This is a reward to encourage exploration of less
     visited (state,action) pairs.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import ActionBonus
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> _, _ = env.reset(seed=0)
+        >>> _, reward, _, _, _ = env.step(1)
+        >>> print(reward)
+        0
+        >>> _, reward, _, _, _ = env.step(1)
+        >>> print(reward)
+        0
+        >>> env_bonus = ActionBonus(env)
+        >>> _, _ = env_bonus.reset(seed=0)
+        >>> _, reward, _, _, _ = env_bonus.step(1)
+        >>> print(reward)
+        1.0
+        >>> _, reward, _, _, _ = env_bonus.step(1)
+        >>> print(reward)
+        1.0
     """
 
     def __init__(self, env):
+        """A wrapper that adds an exploration bonus to less visited (state,action) pairs.
+
+        Args:
+            env: The environment to apply the wrapper
+        """
         super().__init__(env)
         self.counts = {}
 
     def step(self, action):
+        """Steps through the environment with `action`."""
         obs, reward, terminated, truncated, info = self.env.step(action)
 
         env = self.unwrapped
@@ -65,21 +122,47 @@ class ActionBonus(gym.Wrapper):
 
         return obs, reward, terminated, truncated, info
 
-    def reset(self, **kwargs):
-        return self.env.reset(**kwargs)
 
-
-class StateBonus(Wrapper):
+class PositionBonus(Wrapper):
     """
     Adds an exploration bonus based on which positions
     are visited on the grid.
+
+    Note:
+        This wrapper was previously called ``StateBonus``.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import PositionBonus
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> _, _ = env.reset(seed=0)
+        >>> _, reward, _, _, _ = env.step(1)
+        >>> print(reward)
+        0
+        >>> _, reward, _, _, _ = env.step(1)
+        >>> print(reward)
+        0
+        >>> env_bonus = PositionBonus(env)
+        >>> obs, _ = env_bonus.reset(seed=0)
+        >>> obs, reward, terminated, truncated, info = env_bonus.step(1)
+        >>> print(reward)
+        1.0
+        >>> obs, reward, terminated, truncated, info = env_bonus.step(1)
+        >>> print(reward)
+        0.7071067811865475
     """
 
     def __init__(self, env):
+        """A wrapper that adds an exploration bonus to less visited positions.
+
+        Args:
+            env: The environment to apply the wrapper
+        """
         super().__init__(env)
         self.counts = {}
 
     def step(self, action):
+        """Steps through the environment with `action`."""
         obs, reward, terminated, truncated, info = self.env.step(action)
 
         # Tuple based on which we index the counts
@@ -101,16 +184,30 @@ class StateBonus(Wrapper):
 
         return obs, reward, terminated, truncated, info
 
-    def reset(self, **kwargs):
-        return self.env.reset(**kwargs)
-
 
 class ImgObsWrapper(ObservationWrapper):
     """
     Use the image as the only observation output, no language/mission.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import ImgObsWrapper
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs.keys()
+        dict_keys(['image', 'direction', 'mission'])
+        >>> env = ImgObsWrapper(env)
+        >>> obs, _ = env.reset()
+        >>> obs.shape
+        (7, 7, 3)
     """
 
     def __init__(self, env):
+        """A wrapper that makes image the only observation.
+
+        Args:
+            env: The environment to apply the wrapper
+        """
         super().__init__(env)
         self.observation_space = env.observation_space.spaces["image"]
 
@@ -122,9 +219,39 @@ class OneHotPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to get a one-hot encoding of a partially observable
     agent view as observation.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import OneHotPartialObsWrapper
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs["image"][0, :, :]
+        array([[2, 5, 0],
+               [2, 5, 0],
+               [2, 5, 0],
+               [2, 5, 0],
+               [2, 5, 0],
+               [2, 5, 0],
+               [2, 5, 0]], dtype=uint8)
+        >>> env = OneHotPartialObsWrapper(env)
+        >>> obs, _ = env.reset()
+        >>> obs["image"][0, :, :]
+        array([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]],
+              dtype=uint8)
     """
 
     def __init__(self, env, tile_size=8):
+        """A wrapper that makes the image observation a one-hot encoding of a partially observable agent view.
+
+        Args:
+            env: The environment to apply the wrapper
+        """
         super().__init__(env)
 
         self.tile_size = tile_size
@@ -162,6 +289,19 @@ class RGBImgObsWrapper(ObservationWrapper):
     """
     Wrapper to use fully observable RGB image as observation,
     This can be used to have the agent to solve the gridworld in pixel space.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import RGBImgObsWrapper
+        >>> env = gym.make("MiniGrid-Empty-5x5-v0")
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs['image'])  # doctest: +SKIP
+        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)
+        >>> env = RGBImgObsWrapper(env)
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs['image'])  # doctest: +SKIP
+        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)
     """
 
     def __init__(self, env, tile_size=8):
@@ -172,7 +312,11 @@ class RGBImgObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width * tile_size, self.env.height * tile_size, 3),
+            shape=(
+                self.unwrapped.height * tile_size,
+                self.unwrapped.width * tile_size,
+                3,
+            ),
             dtype="uint8",
         )
 
@@ -181,7 +325,9 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(highlight=True, tile_size=self.tile_size)
+        rgb_img = self.unwrapped.get_frame(
+            highlight=self.unwrapped.highlight, tile_size=self.tile_size
+        )
 
         return {**obs, "image": rgb_img}
 
@@ -190,6 +336,23 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import RGBImgObsWrapper, RGBImgPartialObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> plt.imshow(obs["image"])  # doctest: +SKIP
+        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)
+        >>> env_obs = RGBImgObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> plt.imshow(obs["image"])  # doctest: +SKIP
+        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)
+        >>> env_obs = RGBImgPartialObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> plt.imshow(obs["image"])  # doctest: +SKIP
+        ![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)
     """
 
     def __init__(self, env, tile_size=8):
@@ -211,14 +374,29 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        rgb_img_partial = self.unwrapped.get_frame(
+            tile_size=self.tile_size, agent_pov=True
+        )
 
         return {**obs, "image": rgb_img_partial}
 
 
 class FullyObsWrapper(ObservationWrapper):
     """
-    Fully observable gridworld using a compact grid encoding
+    Fully observable gridworld using a compact grid encoding instead of the agent view.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import FullyObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = FullyObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (11, 11, 3)
     """
 
     def __init__(self, env):
@@ -227,7 +405,11 @@ class FullyObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
 
@@ -251,6 +433,19 @@ class DictObservationSpaceWrapper(ObservationWrapper):
     where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.
 
     This wrapper is not applicable to BabyAI environments, given that these have their own language component.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import DictObservationSpaceWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['mission']
+        'avoid the lava and get to the green goal square'
+        >>> env_obs = DictObservationSpaceWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['mission'][:10]
+        [19, 31, 17, 36, 20, 38, 31, 2, 15, 35]
     """
 
     def __init__(self, env, max_words_in_mission=50, word_dict=None):
@@ -267,15 +462,9 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         self.max_words_in_mission = max_words_in_mission
         self.word_dict = word_dict
 
-        image_observation_space = spaces.Box(
-            low=0,
-            high=255,
-            shape=(self.agent_view_size, self.agent_view_size, 3),
-            dtype="uint8",
-        )
         self.observation_space = spaces.Dict(
             {
-                "image": image_observation_space,
+                "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
                 "mission": spaces.MultiDiscrete(
                     [len(self.word_dict.keys())] * max_words_in_mission
@@ -337,6 +526,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             "object",
             "from",
             "room",
+            "maze",
         ]
 
         all_words = colors + objects + verbs + extra_words
@@ -371,21 +561,29 @@ class FlatObsWrapper(ObservationWrapper):
     and combine these with observed images into one flat array.
 
     This wrapper is not applicable to BabyAI environments, given that these have their own language component.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import FlatObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> env_obs = FlatObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs.shape
+        (2835,)
     """
 
-    def __init__(self, env, maxStrLen=96):
+    def __init__(self, env, maxStrLen: int = 96):
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
         self.numCharCodes = 28
 
-        imgSpace = env.observation_space.spaces["image"]
-        imgSize = reduce(operator.mul, imgSpace.shape, 1)
-
+        img_size = np.prod(env.observation_space["image"].shape)
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(imgSize + self.numCharCodes * self.maxStrLen,),
+            shape=(img_size + self.numCharCodes * self.maxStrLen,),
             dtype="uint8",
         )
 
@@ -402,12 +600,13 @@ class FlatObsWrapper(ObservationWrapper):
             ), f"mission string too long ({len(mission)} chars)"
             mission = mission.lower()
 
-            strArray = np.zeros(
-                shape=(self.maxStrLen, self.numCharCodes), dtype="float32"
+            str_array = np.zeros(
+                shape=(self.maxStrLen, self.numCharCodes), dtype="uint8"
             )
+            # as `numCharCodes` < 255 then we can use `uint8`
 
             for idx, ch in enumerate(mission):
-                if ch >= "a" and ch <= "z":
+                if "a" <= ch <= "z":
                     chNo = ord(ch) - ord("a")
                 elif ch == " ":
                     chNo = ord("z") - ord("a") + 1
@@ -417,21 +616,33 @@ class FlatObsWrapper(ObservationWrapper):
                     raise ValueError(
                         f"Character {ch} is not available in mission string."
                     )
-                assert chNo < self.numCharCodes, "%s : %d" % (ch, chNo)
-                strArray[idx, chNo] = 1
+                assert chNo < self.numCharCodes, f"{ch} : {chNo:d}"
+                str_array[idx, chNo] = 1
 
             self.cachedStr = mission
-            self.cachedArray = strArray
+            self.cachedArray = str_array
 
         obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
         return obs
 
 
-class ViewSizeWrapper(Wrapper):
+class ViewSizeWrapper(ObservationWrapper):
     """
     Wrapper to customize the agent field of view size.
     This cannot be used with fully observable wrappers.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import ViewSizeWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = ViewSizeWrapper(env, agent_view_size=5)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (5, 5, 3)
     """
 
     def __init__(self, env, agent_view_size=7):
@@ -467,6 +678,16 @@ class DirectionObsWrapper(ObservationWrapper):
     """
     Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
     type = {slope , angle}
+
+    Example:
+        >>> import gymnasium as gym
+        >>> import matplotlib.pyplot as plt
+        >>> from minigrid.wrappers import DirectionObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> env_obs = DirectionObsWrapper(env, type="slope")
+        >>> obs, _ = env_obs.reset()
+        >>> obs['goal_direction'].item()
+        1.0
     """
 
     def __init__(self, env, type="slope"):
@@ -474,26 +695,35 @@ class DirectionObsWrapper(ObservationWrapper):
         self.goal_position: tuple = None
         self.type = type
 
-    def reset(self):
-        obs = self.env.reset()
+    def reset(
+        self, *, seed: int | None = None, options: dict[str, Any] | None = None
+    ) -> tuple[ObsType, dict[str, Any]]:
+        obs, info = self.env.reset()
+
         if not self.goal_position:
             self.goal_position = [
-                x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
+                x for x, y in enumerate(self.unwrapped.grid.grid) if isinstance(y, Goal)
             ]
             # in case there are multiple goals , needs to be handled for other env types
             if len(self.goal_position) >= 1:
                 self.goal_position = (
-                    int(self.goal_position[0] / self.height),
-                    self.goal_position[0] % self.width,
+                    int(self.goal_position[0] / self.unwrapped.height),
+                    self.goal_position[0] % self.unwrapped.width,
                 )
-        return obs
+
+        return self.observation(obs), info
 
     def observation(self, obs):
         slope = np.divide(
-            self.goal_position[1] - self.agent_pos[1],
-            self.goal_position[0] - self.agent_pos[0],
+            self.goal_position[1] - self.unwrapped.agent_pos[1],
+            self.goal_position[0] - self.unwrapped.agent_pos[0],
         )
-        obs["goal_direction"] = np.arctan(slope) if self.type == "angle" else slope
+
+        if self.type == "angle":
+            obs["goal_direction"] = np.arctan(slope)
+        else:
+            obs["goal_direction"] = slope
+
         return obs
 
 
@@ -502,6 +732,18 @@ class SymbolicObsWrapper(ObservationWrapper):
     Fully observable grid with a symbolic state representation.
     The symbol is a triple of (X, Y, IDX), where X and Y are
     the coordinates on the grid, and IDX is the id of the object.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import SymbolicObsWrapper
+        >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
+        >>> obs, _ = env.reset()
+        >>> obs['image'].shape
+        (7, 7, 3)
+        >>> env_obs = SymbolicObsWrapper(env)
+        >>> obs, _ = env_obs.reset()
+        >>> obs['image'].shape
+        (11, 11, 3)
     """
 
     def __init__(self, env):
@@ -510,7 +752,11 @@ class SymbolicObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=max(OBJECT_TO_IDX.values()),
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
         self.observation_space = spaces.Dict(
@@ -519,16 +765,221 @@ class SymbolicObsWrapper(ObservationWrapper):
 
     def observation(self, obs):
         objects = np.array(
-            [OBJECT_TO_IDX[o.type] if o is not None else -1 for o in self.grid.grid]
+            [
+                OBJECT_TO_IDX[o.type] if o is not None else -1
+                for o in self.unwrapped.grid.grid
+            ]
         )
-        agent_pos = self.env.agent_pos
-        w, h = self.width, self.height
-        grid = np.mgrid[:w, :h]
-        grid = np.concatenate([grid, objects.reshape(1, w, h)])
+        agent_pos = self.env.unwrapped.agent_pos
+        ncol, nrow = self.unwrapped.width, self.unwrapped.height
+        grid = np.mgrid[:ncol, :nrow]
+        _objects = np.transpose(objects.reshape(1, nrow, ncol), (0, 2, 1))
+
+        grid = np.concatenate([grid, _objects])
         grid = np.transpose(grid, (1, 2, 0))
         grid[agent_pos[0], agent_pos[1], 2] = OBJECT_TO_IDX["agent"]
         obs["image"] = grid
+
         return obs
+
+
+class StochasticActionWrapper(ActionWrapper):
+    """
+    Add stochasticity to the actions
+
+    If a random action is provided, it is returned with probability `1 - prob`.
+    Else, a random action is sampled from the action space.
+    """
+
+    def __init__(self, env=None, prob=0.9, random_action=None):
+        super().__init__(env)
+        self.prob = prob
+        self.random_action = random_action
+
+    def action(self, action):
+        """ """
+        if np.random.uniform() < self.prob:
+            return action
+        else:
+            if self.random_action is None:
+                return self.np_random.integers(0, high=6)
+            else:
+                return self.random_action
+
+
+class NoDeath(Wrapper):
+    """
+    Wrapper to prevent death in specific cells (e.g., lava cells).
+    Instead of dying, the agent will receive a negative reward.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import NoDeath
+        >>>
+        >>> env = gym.make("MiniGrid-LavaCrossingS9N1-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (0, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("lava",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1.0, False)
+        >>>
+        >>>
+        >>> env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("ball",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-2.0, False)
+    """
+
+    def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.0):
+        """A wrapper to prevent death in specific cells.
+
+        Args:
+            env: The environment to apply the wrapper
+            no_death_types: List of strings to identify death cells
+            death_cost: The negative reward received in death cells
+
+        """
+        assert "goal" not in no_death_types, "goal cannot be a death cell"
+
+        super().__init__(env)
+        self.death_cost = death_cost
+        self.no_death_types = no_death_types
+
+    def step(self, action):
+        # In Dynamic-Obstacles, obstacles move after the agent moves,
+        # so we need to check for collision before self.env.step()
+        front_cell = self.unwrapped.grid.get(*self.unwrapped.front_pos)
+        going_to_death = (
+            action == self.unwrapped.actions.forward
+            and front_cell is not None
+            and front_cell.type in self.no_death_types
+        )
+
+        obs, reward, terminated, truncated, info = self.env.step(action)
+
+        # We also check if the agent stays in death cells (e.g., lava)
+        # without moving
+        current_cell = self.unwrapped.grid.get(*self.unwrapped.agent_pos)
+        in_death = current_cell is not None and current_cell.type in self.no_death_types
+
+        if terminated and (going_to_death or in_death):
+            terminated = False
+            reward += self.death_cost
+
+        return obs, reward, terminated, truncated, info
+    
+class StochasticActionWrapper(ActionWrapper):
+    """
+    Add stochasticity to the actions
+
+    If a random action is provided, it is returned with probability `1 - prob`.
+    Else, a random action is sampled from the action space.
+    """
+
+    def __init__(self, env=None, prob=0.9, random_action=None):
+        super().__init__(env)
+        self.prob = prob
+        self.random_action = random_action
+
+    def action(self, action):
+        """ """
+        if np.random.uniform() < self.prob:
+            return action
+        else:
+            if self.random_action is None:
+                return self.np_random.integers(0, high=6)
+            else:
+                return self.random_action
+
+
+class NoDeath(Wrapper):
+    """
+    Wrapper to prevent death in specific cells (e.g., lava cells).
+    Instead of dying, the agent will receive a negative reward.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import NoDeath
+        >>>
+        >>> env = gym.make("MiniGrid-LavaCrossingS9N1-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (0, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("lava",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1.0, False)
+        >>>
+        >>>
+        >>> env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("ball",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-2.0, False)
+    """
+
+    def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.0):
+        """A wrapper to prevent death in specific cells.
+
+        Args:
+            env: The environment to apply the wrapper
+            no_death_types: List of strings to identify death cells
+            death_cost: The negative reward received in death cells
+
+        """
+        assert "goal" not in no_death_types, "goal cannot be a death cell"
+
+        super().__init__(env)
+        self.death_cost = death_cost
+        self.no_death_types = no_death_types
+
+    def step(self, action):
+        # In Dynamic-Obstacles, obstacles move after the agent moves,
+        # so we need to check for collision before self.env.step()
+        front_cell = self.unwrapped.grid.get(*self.unwrapped.front_pos)
+        going_to_death = (
+            action == self.unwrapped.actions.forward
+            and front_cell is not None
+            and front_cell.type in self.no_death_types
+        )
+
+        obs, reward, terminated, truncated, info = self.env.step(action)
+
+        # We also check if the agent stays in death cells (e.g., lava)
+        # without moving
+        current_cell = self.unwrapped.grid.get(*self.unwrapped.agent_pos)
+        in_death = current_cell is not None and current_cell.type in self.no_death_types
+
+        if terminated and (going_to_death or in_death):
+            terminated = False
+            reward += self.death_cost
+
+        return obs, reward, terminated, truncated, info
 
 
 class MoveActionWrapper(Wrapper):
@@ -563,3 +1014,4 @@ class MoveActionWrapper(Wrapper):
             return self.env.step(2)
         else:
             return self.env.step(action - 1)
+    

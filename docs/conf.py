@@ -15,22 +15,19 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
-# TODO: change to minigrid version
-# from TODO import __version__ as minigrid_version
-
 from __future__ import annotations
 
 import os
 import sys
-from typing import Any
+
+import minigrid
 
 project = "MiniGrid"
-copyright = "2022"
+copyright = "2023 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
-# TODO: change to minigrid version
-release = "1.2.1"
+release = minigrid.__version__
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -44,7 +41,9 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
+    "sphinx.ext.viewcode",
     "myst_parser",
+    "sphinx_github_changelog",
 ]
 
 source_suffix = {
@@ -79,15 +78,18 @@ html_favicon = "_static/img/minigrid-favicon.png"
 html_theme_options = {
     "light_logo": "img/minigrid.svg",
     "dark_logo": "img/minigrid-white.svg",
+    "image": "img/minigrid-github.png",
+    "description": "Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.",
     "gtag": "G-FBXJQQLXKD",
+    "versioning": True,
+    "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
+    "source_branch": "master",
+    "source_directory": "docs/",
 }
-html_context: dict[str, Any] = {}
-html_context["conf_py_path"] = "/docs/"
-html_context["display_github"] = True
-html_context["github_user"] = "Farama-Foundation"
-html_context["github_repo"] = "Minigrid"
-html_context["github_version"] = "master"
-html_context["slug"] = "minigrid"
 
 html_static_path = ["_static"]
 html_css_files = []
+
+# -- Generate Changelog -------------------------------------------------
+
+sphinx_github_changelog_token = os.environ.get("SPHINX_GITHUB_CHANGELOG_TOKEN")

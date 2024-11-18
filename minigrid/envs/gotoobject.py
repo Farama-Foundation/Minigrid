@@ -9,12 +9,61 @@ from minigrid.minigrid_env import MiniGridEnv
 
 class GoToObjectEnv(MiniGridEnv):
     """
-    Environment in which the agent is instructed to go to a given object
-    named using an English text string
+    ## Description
+
+    This environment is a room with colored objects. The agent
+    receives a textual (mission) string as input, telling it which colored object to go
+    to, (eg: "go to the red key"). It receives a positive reward for performing
+    the `done` action next to the correct object, as indicated in the mission
+    string.
+
+    ## Mission Space
+
+    "go to the {color} {obj_type}"
+
+    {color} is the color of the object. Can be "red", "green", "blue", "purple",
+    "yellow" or "grey".
+    {obj_type} is the type of the object. Can be "key", "ball", "box".
+
+    ## Action Space
+
+    | Num | Name         | Action               |
+    |-----|--------------|----------------------|
+    | 0   | left         | Turn left            |
+    | 1   | right        | Turn right           |
+    | 2   | forward      | Move forward         |
+    | 3   | pickup       | Unused               |
+    | 4   | drop         | Unused               |
+    | 5   | toggle       | Unused               |
+    | 6   | done         | Done completing task |
+
+    ## Observation Encoding
+
+    - Each tile is encoded as a 3 dimensional tuple:
+        `(OBJECT_IDX, COLOR_IDX, STATE)`
+    - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
+        [minigrid/core/constants.py](minigrid/core/constants.py)
+    - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
+
+    ## Rewards
+
+    A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure.
+
+    ## Termination
+
+    The episode ends if any one of the following conditions is met:
+
+    1. The agent stands next the correct door performing the `done` action.
+    2. Timeout (see `max_steps`).
+
+    ## Registered Configurations
+
+    - `MiniGrid-GoToObject-6x6-N2-v0`
+    - `MiniGrid-GoToObject-8x8-N2-v0`
+
     """
 
     def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
-
         self.numObjs = numObjs
         self.size = size
         # Types of objects to be generated
@@ -104,7 +153,7 @@ class GoToObjectEnv(MiniGridEnv):
 
         # Reward performing the done action next to the target object
         if action == self.actions.done:
-            if abs(ax - tx) <= 1 and abs(ay - ty) <= 1:
+            if (ax == tx and abs(ay - ty) == 1) or (ay == ty and abs(ax - tx) == 1):
                 reward = self._reward()
             terminated = True
 
