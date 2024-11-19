@@ -882,9 +882,10 @@ class NoDeath(Wrapper):
 
         return obs, reward, terminated, truncated, info
 
+
 class MoveActionWrapper(Wrapper):
     """
-    Wrapper to change the action space to move actions, intead of turn.
+    Wrapper to change the action space to move actions, instead of turn.
 
     Thus, the action space, become a Discrete(8) space, where the actions are:
     0: Move right
@@ -895,6 +896,9 @@ class MoveActionWrapper(Wrapper):
     5: drop
     5: toggle
     7: done
+
+    Note:
+        This wrapper is mostly useful with full observation, as the partial observation is rotated depending on the agent direction.
     """
 
     def __init__(self, env):
