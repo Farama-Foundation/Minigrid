@@ -16,4 +16,4 @@ WORKDIR /usr/local/minigrid/
 RUN pip install .[wfc,testing] --no-cache-dir
 RUN pip install gymnasium$GYMNASIUM_VERSION numpy$NUMPY_VERSION
 
-ENTRYPOINT ["/usr/local/minigrid/docker_entrypoint"]
+ENTRYPOINT ["/usr/local/minigrid/.github/docker/docker_entrypoint"]
