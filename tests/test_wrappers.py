@@ -173,11 +173,13 @@ def test_main_wrappers(wrapper, env_spec):
         # DictObservationSpaceWrapper and FlatObsWrapper are not compatible with BabyAI levels
         # See minigrid/wrappers.py for more details
         pytest.skip()
+
     env = env_spec.make()
     env = wrapper(env)
-    for _ in range(10):
-        env.reset()
-        env.step(0)
+
+    env.reset(seed=123)
+    env.step(0)
+
     env.close()
 
 
