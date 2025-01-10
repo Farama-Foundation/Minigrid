@@ -30,8 +30,8 @@ jobs:
       - run: |
           docker build -f .github/docker/py.Dockerfile \
              --build-arg PYTHON_VERSION="3.10" \
-             --build-arg GYMNASIUM_VERSION="<1.0" \
-             --build-arg NUMPY_VERSION="<2.0" \
+             --build-arg GYMNASIUM_VERSION="==0.29.1" \
+             --build-arg NUMPY_VERSION="==1.26" \
              --tag minigrid-docker .
       - name: Run tests
         run: docker run minigrid-docker pytest

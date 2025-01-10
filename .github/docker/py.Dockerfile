@@ -13,7 +13,6 @@ RUN apt-get -y update \
 COPY ../.. /usr/local/minigrid/
 WORKDIR /usr/local/minigrid/
 
-RUN pip install .[wfc,testing] --no-cache-dir
-RUN pip install gymnasium$GYMNASIUM_VERSION numpy$NUMPY_VERSION
+RUN pip install .[wfc,testing] gymnasium$GYMNASIUM_VERSION numpy$NUMPY_VERSION --no-cache-dir
 
 ENTRYPOINT ["/usr/local/minigrid/.github/docker/docker_entrypoint"]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import warnings
 
 import gymnasium as gym
 import numpy as np
@@ -40,8 +41,7 @@ def test_reseed_wrapper(env_spec):
     Test the ReseedWrapper with a list of SEEDS.
     """
     unwrapped_env = env_spec.make()
-    env = env_spec.make()
-    env = ReseedWrapper(env, seeds=SEEDS)
+    env = ReseedWrapper(env_spec.make(), seeds=SEEDS)
     env.action_space.seed(0)
 
     for seed in SEEDS:
@@ -177,7 +177,8 @@ def test_main_wrappers(wrapper, env_spec):
     env = env_spec.make()
     env = wrapper(env)
 
-    env.reset(seed=123)
+    with warnings.catch_warnings():
+        env.reset(seed=123)
     env.step(0)
 
     env.close()
