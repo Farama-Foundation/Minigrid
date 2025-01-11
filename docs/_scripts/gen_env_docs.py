@@ -4,17 +4,20 @@ import os
 import re
 from itertools import chain
 
-from gymnasium.envs.registration import registry
+import gymnasium
 from tqdm import tqdm
 
+import minigrid
 from utils import env_name_format, trim
+
+gymnasium.register_envs(minigrid)
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     "README.md",
 )
 
-all_envs = list(registry.values())
+all_envs = list(gymnasium.registry.values())
 
 filtered_envs_by_type = {}
 env_names = []
@@ -120,7 +123,6 @@ title: {formatted_env_name}
 |---|---|
 | Action Space | `{re.sub(' +', ' ', action_space_table)}` |
 | Observation Space | `{re.sub(' +', ' ', observation_space_table)}` |
-| Reward Range | `{env.reward_range}` |
 | Creation | `gymnasium.make("{env_spec.id}")` |
 """
 

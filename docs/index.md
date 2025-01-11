@@ -85,4 +85,3 @@ environments/wfc/index
 release_notes
 Github <https://github.com/Farama-Foundation/MiniGrid>
 ```
-
