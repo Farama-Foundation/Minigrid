@@ -11,6 +11,6 @@ RUN apt-get -y update \
 COPY ../.. /usr/local/minigrid/
 WORKDIR /usr/local/minigrid/
 
-RUN pip install .[wfc,testing] gymnasium==1.29.1 numpy==1.26
+RUN pip install .[wfc,testing] gymnasium==0.29.1 numpy==1.26.4
 
 ENTRYPOINT ["/usr/local/minigrid/.github/docker/docker_entrypoint"]
