@@ -13,9 +13,9 @@
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Tutorial on Creating Environments - MiniGrid Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -380,8 +380,8 @@
 <p>In this tutorial, we will go through the process of creating a new environment.</p>
 <section id="boilerplate-code">
 <h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
         <span class="n">agent_start_pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -402,13 +402,13 @@
         <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
 </pre></div>
 </div>
 <p>First, we need to create a class that inherits from <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define a mission space, the recommended way to do it is to define a static function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
     <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
 </pre></div>
 </div>
@@ -423,7 +423,7 @@
 <p>To create your own grid-world environment we override the function <code class="docutils literal notranslate"><span class="pre">_gen_grid</span></code>. We can see from the <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code> class</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MiniGridEnv._gen_grid</span>
 <span class="nd">@abstractmethod</span>
-<span class="k">def</span> <span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
     <span class="k">pass</span>
 </pre></div>
 </div>
@@ -480,8 +480,8 @@
 <section id="add-keys-and-doors">
 <h3>Add Keys and Doors<a class="headerlink" href="#add-keys-and-doors" title="Link to this heading">¶</a></h3>
 <p>To add keys and doors, we would first need to import</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_NAMES</span>
-<span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Key</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">COLOR_NAMES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.world_object</span><span class="w"> </span><span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Key</span>
 </pre></div>
 </div>
 <p>Then, we can simply place the door and key using the command</p>
@@ -500,18 +500,18 @@
 <section id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Link to this heading">¶</a></h2>
 <p>The source code of this tutorial is</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">minigrid.core.constants</span> <span class="kn">import</span> <span class="n">COLOR_NAMES</span>
-<span class="kn">from</span> <span class="nn">minigrid.core.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">from</span> <span class="nn">minigrid.core.mission</span> <span class="kn">import</span> <span class="n">MissionSpace</span>
-<span class="kn">from</span> <span class="nn">minigrid.core.world_object</span> <span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Goal</span><span class="p">,</span> <span class="n">Key</span><span class="p">,</span> <span class="n">Wall</span>
-<span class="kn">from</span> <span class="nn">minigrid.manual_control</span> <span class="kn">import</span> <span class="n">ManualControl</span>
-<span class="kn">from</span> <span class="nn">minigrid.minigrid_env</span> <span class="kn">import</span> <span class="n">MiniGridEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">COLOR_NAMES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.mission</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.core.world_object</span><span class="w"> </span><span class="kn">import</span> <span class="n">Door</span><span class="p">,</span> <span class="n">Goal</span><span class="p">,</span> <span class="n">Key</span><span class="p">,</span> <span class="n">Wall</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.manual_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">ManualControl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.minigrid_env</span><span class="w"> </span><span class="kn">import</span> <span class="n">MiniGridEnv</span>
 
 
-<span class="k">class</span> <span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleEnv</span><span class="p">(</span><span class="n">MiniGridEnv</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">agent_start_pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -537,10 +537,10 @@
         <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_gen_mission</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="c1"># Create an empty grid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 
@@ -550,7 +550,7 @@
         <span class="c1"># Generate vertical separation wall</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">Wall</span><span class="p">())</span>
-        
+
         <span class="c1"># Place the door and key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Door</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">is_locked</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">Key</span><span class="p">(</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -568,14 +568,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="s2">&quot;grand mission&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SimpleEnv</span><span class="p">(</span><span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
 
     <span class="c1"># enable manual control for testing</span>
     <span class="n">manual_control</span> <span class="o">=</span> <span class="n">ManualControl</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
     <span class="n">manual_control</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-    
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
@@ -736,7 +736,7 @@
         })()
       </script>
 
-    <script src="../../_static/documentation_options.js?v=7fa42598"></script>
+    <script src="../../_static/documentation_options.js?v=e34a887a"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>

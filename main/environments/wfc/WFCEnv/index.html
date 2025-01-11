@@ -13,9 +13,9 @@
 
     <link rel="shortcut icon" href="../../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>WFC - MiniGrid Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=49cbaffd" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -384,12 +384,9 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f02a0ca7ee0&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f7d9fc678b0&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Reward Range</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Creation</p></td>
+<tr class="row-even"><td><p>Creation</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-WFC-MazeSimple-v0&quot;)</span></code></p></td>
 </tr>
 </tbody>
@@ -483,8 +480,8 @@ See <a class="reference internal" href="../"><span class="doc std std-doc">WFC m
 </ul>
 <p>Note: There are many more unregistered configuration presets but they may take a long time to generate a consistent environment.</p>
 <p>They can be registered with the following snippet:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">from</span> <span class="nn">minigrid.envs.wfc.config</span> <span class="kn">import</span> <span class="n">register_wfc_presets</span><span class="p">,</span> <span class="n">WFC_PRESETS_INCONSISTENT</span><span class="p">,</span> <span class="n">WFC_PRESETS_SLOW</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.envs.wfc.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_wfc_presets</span><span class="p">,</span> <span class="n">WFC_PRESETS_INCONSISTENT</span><span class="p">,</span> <span class="n">WFC_PRESETS_SLOW</span>
 
 <span class="n">register_wfc_presets</span><span class="p">(</span><span class="n">WFC_PRESETS_INCONSISTENT</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">register</span><span class="p">)</span>
 <span class="n">register_wfc_presets</span><span class="p">(</span><span class="n">WFC_PRESETS_SLOW</span><span class="p">,</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">register</span><span class="p">)</span>
@@ -669,7 +666,7 @@ See <a class="reference internal" href="../"><span class="doc std std-doc">WFC m
         })()
       </script>
 
-    <script src="../../../_static/documentation_options.js?v=7fa42598"></script>
+    <script src="../../../_static/documentation_options.js?v=e34a887a"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=7660844c"></script>
