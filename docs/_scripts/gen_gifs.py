@@ -7,6 +7,10 @@ import gymnasium
 from PIL import Image
 from tqdm import tqdm
 
+import minigrid
+
+gymnasium.register_envs(minigrid)
+
 # snake to camel case: https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case # noqa: E501
 pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -22,7 +26,7 @@ os.makedirs(output_dir, exist_ok=True)
 envs_completed = []
 
 # iterate through all envspecs
-for env_spec in tqdm(gymnasium.envs.registry.values()):
+for env_spec in tqdm(gymnasium.registry.values()):
     # minigrid.envs:Env or minigrid.envs.babyai:Env
     if not isinstance(env_spec.entry_point, str):
         continue
@@ -44,6 +48,9 @@ for env_spec in tqdm(gymnasium.envs.registry.values()):
         # try catch in case missing some installs
         try:
             env = gymnasium.make(env_spec.id, render_mode="rgb_array")
+            env.reset(seed=123)
+            env.action_space.seed(123)
+
             # the gymnasium needs to be rgb renderable
             if not ("rgb_array" in env.metadata["render_modes"]):
                 continue

@@ -8,7 +8,7 @@ firstpage:
 
 The environments in the Minigrid library can be trained easily using [StableBaselines3](https://stable-baselines3.readthedocs.io/en/master/). In this tutorial we show how a PPO agent can be trained on the `MiniGrid-Empty-16x16-v0` environment.
 
-## Create Custom Feature Extractor 
+## Create Custom Feature Extractor
 
 Although `StableBaselines3` is fully compatible with `Gymnasium`-based environments (which includes Minigrid), the default CNN architecture does not directly support the Minigrid observation space. Thus, to train an agent on Minigrid environments, we need to create a custom feature extractor. This can be done by creating a feature extractor class that inherits from `stable_baselines3.common.torch_layers.BaseFeaturesExtractor`
 
