@@ -6,7 +6,7 @@ firstpage:
 
 # Tutorial on Creating Environments
 
-In this tutorial, we will go through the process of creating a new environment. 
+In this tutorial, we will go through the process of creating a new environment.
 
 ## Boilerplate Code
 
@@ -55,7 +55,7 @@ Then, in the `__init__` function, we pass the required arguments to the parent c
 
 ## Generate the grid-world
 
-To create your own grid-world environment we override the function `_gen_grid`. We can see from the `MiniGridEnv` class 
+To create your own grid-world environment we override the function `_gen_grid`. We can see from the `MiniGridEnv` class
 
 ```python
 # MiniGridEnv._gen_grid
@@ -64,7 +64,7 @@ def _gen_grid(self, width, height):
     pass
 ```
 
-`_gen_grid` takes in two inputs `width` and `height`, which are used to specify the size of the environment. 
+`_gen_grid` takes in two inputs `width` and `height`, which are used to specify the size of the environment.
 
 ### Create World
 
@@ -207,7 +207,7 @@ class SimpleEnv(MiniGridEnv):
         # Generate vertical separation wall
         for i in range(0, height):
             self.grid.set(5, i, Wall())
-        
+
         # Place the door and key
         self.grid.set(5, 6, Door(COLOR_NAMES[0], is_locked=True))
         self.grid.set(3, 6, Key(COLOR_NAMES[0]))
@@ -232,7 +232,7 @@ def main():
     manual_control = ManualControl(env, seed=42)
     manual_control.start()
 
-    
+
 if __name__ == "__main__":
     main()
 ```

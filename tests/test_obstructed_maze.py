@@ -15,13 +15,13 @@ TESTING_ENVS = [
 
 
 def find_ball_room(env):
-    for obj in env.grid.grid:
+    for obj in env.unwrapped.grid.grid:
         if isinstance(obj, Ball) and obj.color == COLOR_NAMES[0]:
-            return env.room_from_pos(*obj.cur_pos)
+            return env.unwrapped.room_from_pos(*obj.cur_pos)
 
 
 def find_target_key(env, color):
-    for obj in env.grid.grid:
+    for obj in env.unwrapped.grid.grid:
         if isinstance(obj, Box) and obj.contains.color == color:
             return True
     return False

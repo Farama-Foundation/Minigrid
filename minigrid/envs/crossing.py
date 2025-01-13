@@ -93,6 +93,7 @@ class CrossingEnv(MiniGridEnv):
     ):
         self.num_crossings = num_crossings
         self.obstacle_type = obstacle_type
+        self.goal_position = None
 
         if obstacle_type == Lava:
             mission_space = MissionSpace(mission_func=self._gen_mission_lava)
@@ -133,6 +134,7 @@ class CrossingEnv(MiniGridEnv):
 
         # Place a goal square in the bottom-right corner
         self.put_obj(Goal(), width - 2, height - 2)
+        self.goal_position = (width - 2, height - 2)
 
         # Place obstacles (lava or walls)
         v, h = object(), object()  # singleton `vertical` and `horizontal` objects

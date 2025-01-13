@@ -18,7 +18,7 @@ def test_entropyLocationHeuristic() -> None:
     wave = np.ones((5, 3, 4), dtype=bool)  # everything is possible
     wave[1:, 0, 0] = False  # first cell is fully observed
     wave[4, :, 2] = False
-    preferences: NDArray[np.float_] = np.ones((3, 4), dtype=np.float_) * 0.5
+    preferences: NDArray[np.float64] = np.ones((3, 4), dtype=np.float64) * 0.5
     preferences[1, 2] = 0.3
     preferences[1, 1] = 0.1
     heu = wfc_solver.makeEntropyLocationHeuristic(preferences)
