@@ -1,6 +1,7 @@
 """
 Copied and adapted from https://github.com/mila-iqia/babyai
 """
+
 from __future__ import annotations
 
 import os
@@ -108,6 +109,7 @@ class ObjDesc:
         the location of the object. e.g. A ball that was on "your right" initially will still be tracked as being "on
         your right" when you move.
         """
+        env = env.unwrapped
 
         if use_location:
             self.obj_set = []

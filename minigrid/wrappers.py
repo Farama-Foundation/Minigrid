@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import math
-import operator
-from functools import reduce
 from typing import Any
 
 import gymnasium as gym
@@ -26,20 +24,20 @@ class ReseedWrapper(Wrapper):
         >>> from minigrid.wrappers import ReseedWrapper
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
         >>> _ = env.reset(seed=123)
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [0, 6, 5, 0, 9, 2, 2, 1, 3, 1]
         >>> env = ReseedWrapper(env, seeds=[0, 1], seed_idx=0)
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
     """
 
@@ -315,8 +313,8 @@ class RGBImgObsWrapper(ObservationWrapper):
             low=0,
             high=255,
             shape=(
-                self.unwrapped.width * tile_size,
                 self.unwrapped.height * tile_size,
+                self.unwrapped.width * tile_size,
                 3,
             ),
             dtype="uint8",
@@ -327,7 +325,7 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(
+        rgb_img = self.unwrapped.get_frame(
             highlight=self.unwrapped.highlight, tile_size=self.tile_size
         )
 
@@ -376,7 +374,9 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        rgb_img_partial = self.unwrapped.get_frame(
+            tile_size=self.tile_size, agent_pov=True
+        )
 
         return {**obs, "image": rgb_img_partial}
 
@@ -405,7 +405,11 @@ class FullyObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
 
@@ -522,6 +526,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             "object",
             "from",
             "room",
+            "maze",
         ]
 
         all_words = colors + objects + verbs + extra_words
@@ -568,19 +573,17 @@ class FlatObsWrapper(ObservationWrapper):
         (2835,)
     """
 
-    def __init__(self, env, maxStrLen=96):
+    def __init__(self, env, maxStrLen: int = 96):
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
         self.numCharCodes = 28
 
-        imgSpace = env.observation_space.spaces["image"]
-        imgSize = reduce(operator.mul, imgSpace.shape, 1)
-
+        img_size = np.prod(env.observation_space["image"].shape)
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(imgSize + self.numCharCodes * self.maxStrLen,),
+            shape=(img_size + self.numCharCodes * self.maxStrLen,),
             dtype="uint8",
         )
 
@@ -597,12 +600,13 @@ class FlatObsWrapper(ObservationWrapper):
             ), f"mission string too long ({len(mission)} chars)"
             mission = mission.lower()
 
-            strArray = np.zeros(
-                shape=(self.maxStrLen, self.numCharCodes), dtype="float32"
+            str_array = np.zeros(
+                shape=(self.maxStrLen, self.numCharCodes), dtype="uint8"
             )
+            # as `numCharCodes` < 255 then we can use `uint8`
 
             for idx, ch in enumerate(mission):
-                if ch >= "a" and ch <= "z":
+                if "a" <= ch <= "z":
                     chNo = ord(ch) - ord("a")
                 elif ch == " ":
                     chNo = ord("z") - ord("a") + 1
@@ -612,11 +616,11 @@ class FlatObsWrapper(ObservationWrapper):
                     raise ValueError(
                         f"Character {ch} is not available in mission string."
                     )
-                assert chNo < self.numCharCodes, "%s : %d" % (ch, chNo)
-                strArray[idx, chNo] = 1
+                assert chNo < self.numCharCodes, f"{ch} : {chNo:d}"
+                str_array[idx, chNo] = 1
 
             self.cachedStr = mission
-            self.cachedArray = strArray
+            self.cachedArray = str_array
 
         obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
@@ -682,7 +686,7 @@ class DirectionObsWrapper(ObservationWrapper):
         >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
         >>> env_obs = DirectionObsWrapper(env, type="slope")
         >>> obs, _ = env_obs.reset()
-        >>> obs['goal_direction']
+        >>> obs['goal_direction'].item()
         1.0
     """
 
@@ -698,21 +702,21 @@ class DirectionObsWrapper(ObservationWrapper):
 
         if not self.goal_position:
             self.goal_position = [
-                x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
+                x for x, y in enumerate(self.unwrapped.grid.grid) if isinstance(y, Goal)
             ]
             # in case there are multiple goals , needs to be handled for other env types
             if len(self.goal_position) >= 1:
                 self.goal_position = (
-                    int(self.goal_position[0] / self.height),
-                    self.goal_position[0] % self.width,
+                    int(self.goal_position[0] / self.unwrapped.height),
+                    self.goal_position[0] % self.unwrapped.width,
                 )
 
         return self.observation(obs), info
 
     def observation(self, obs):
         slope = np.divide(
-            self.goal_position[1] - self.agent_pos[1],
-            self.goal_position[0] - self.agent_pos[0],
+            self.goal_position[1] - self.unwrapped.agent_pos[1],
+            self.goal_position[0] - self.unwrapped.agent_pos[0],
         )
 
         if self.type == "angle":
@@ -748,7 +752,11 @@ class SymbolicObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=max(OBJECT_TO_IDX.values()),
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
         self.observation_space = spaces.Dict(
@@ -757,10 +765,13 @@ class SymbolicObsWrapper(ObservationWrapper):
 
     def observation(self, obs):
         objects = np.array(
-            [OBJECT_TO_IDX[o.type] if o is not None else -1 for o in self.grid.grid]
+            [
+                OBJECT_TO_IDX[o.type] if o is not None else -1
+                for o in self.unwrapped.grid.grid
+            ]
         )
-        agent_pos = self.env.agent_pos
-        ncol, nrow = self.width, self.height
+        agent_pos = self.env.unwrapped.agent_pos
+        ncol, nrow = self.unwrapped.width, self.unwrapped.height
         grid = np.mgrid[:ncol, :nrow]
         _objects = np.transpose(objects.reshape(1, nrow, ncol), (0, 2, 1))
 
@@ -851,9 +862,9 @@ class NoDeath(Wrapper):
     def step(self, action):
         # In Dynamic-Obstacles, obstacles move after the agent moves,
         # so we need to check for collision before self.env.step()
-        front_cell = self.grid.get(*self.front_pos)
+        front_cell = self.unwrapped.grid.get(*self.unwrapped.front_pos)
         going_to_death = (
-            action == self.actions.forward
+            action == self.unwrapped.actions.forward
             and front_cell is not None
             and front_cell.type in self.no_death_types
         )
@@ -862,7 +873,7 @@ class NoDeath(Wrapper):
 
         # We also check if the agent stays in death cells (e.g., lava)
         # without moving
-        current_cell = self.grid.get(*self.agent_pos)
+        current_cell = self.unwrapped.grid.get(*self.unwrapped.agent_pos)
         in_death = current_cell is not None and current_cell.type in self.no_death_types
 
         if terminated and (going_to_death or in_death):

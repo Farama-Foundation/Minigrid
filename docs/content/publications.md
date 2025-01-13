@@ -7,9 +7,14 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [DRED: Zero-Shot Transfer in Reinforcement Learning via Data-Regularised Environment Design](https://arxiv.org/abs/2402.03479) (University of Edinburgh, ICML 2024)
+- [Conviction-Based Planning for Sparse Reward Reinforcement Learning Problems](https://prl-theworkshop.github.io/prl2024-icaps/papers/8.pdf)(UQÀM, PRL @ ICAPS 2024)
+- [Learning from Active Human Involvement through Proxy Value Propagation](https://metadriverse.github.io/pvp/)(UCLA, NeurIPS Spotlight 2023)
+- [Go Beyond Imagination: Maximizing Episodic Reachability with World Models](https://arxiv.org/pdf/2308.13661.pdf) (UMich, ICML 2023)
 - [Hierarchies of Reward Machines](https://arxiv.org/abs/2205.15752) (Imperial College London, ILASP, Universitat Pompeu Fabra, ICML 2023)
 - [Minimal Value-Equivalent Partial Models for Scalable and Robust Planning in Lifelong Reinforcement Learning](https://arxiv.org/abs/2301.10119) (Mila, McGill University, CoLLAs 2023)
 - [DEIR: Efficient and Robust Exploration through Discriminative-Model-Based Episodic Intrinsic Rewards](https://arxiv.org/abs/2304.10770) (U-Tokyo, Google Brain, IJCAI 2023)
+- [Contrastive Meta-Learning for Partially Observable Few-Shot Learning](https://arxiv.org/abs/2301.13136) (University of Edinburgh, Microsoft Research Cambridge, ICLR 2023)
 - [Towards Improving Exploration in Self-Imitation Learning using Intrinsic Motivation](https://arxiv.org/abs/2211.16838) (TECNALIA, IEEE ADPRL 2022)
 - [An Evaluation Study of Intrinsic Motivation Techniques applied to Reinforcement Learning over Hard Exploration Environments](https://arxiv.org/abs/2205.11184) (TECNALIA, CD-MAKE 2022)
 - [Evolution Strategies for Sparse Reward Gridworld Environments.](https://link.springer.com/chapter/10.1007/978-3-031-22695-3_19) (DSTG, AJCAI 2022)
@@ -36,7 +41,7 @@ List of publications & submissions using Minigrid or BabyAI (please open a pull 
 - [Working Memory Graphs](https://arxiv.org/abs/1911.07141) (MSR, Nov 2019)
 - [Fast Task-Adaptation for Tasks Labeled Using Natural Language in Reinforcement Learning](https://arxiv.org/pdf/1910.04040.pdf) (Oct 2019, University of Antwerp)
 - [Generalization in Reinforcement Learning with Selective Noise Injection and Information Bottleneck](https://arxiv.org/abs/1910.12911) (MSR, NeurIPS, Oct 2019)
-- [Recurrent Independent Mechanisms](https://arxiv.org/pdf/1909.10893.pdf) (Mila, Sept 2019) 
+- [Recurrent Independent Mechanisms](https://arxiv.org/pdf/1909.10893.pdf) (Mila, Sept 2019)
 - [Learning Effective Subgoals with Multi-Task Hierarchical Reinforcement Learning](http://surl.tirl.info/proceedings/SURL-2019_paper_10.pdf) (Tsinghua University, August 2019)
 - [Mastering emergent language: learning to guide in simulated navigation](https://arxiv.org/abs/1908.05135) (University of Amsterdam, Aug 2019)
 - [Transfer Learning by Modeling a Distribution over Policies](https://arxiv.org/abs/1906.03574) (Mila, June 2019)
@@ -56,4 +61,3 @@ List of publications & submissions using Minigrid or BabyAI (please open a pull 
 - [BabyAI: First Steps Towards Grounded Language Learning With a Human In the Loop](https://arxiv.org/abs/1810.08272) (Mila, ICLR, Oct 2018)
 
 This environment has been built as part of work done at [Mila](https://mila.quebec). The Dynamic obstacles environment has been added as part of work done at [IAS in TU Darmstadt](https://www.ias.informatik.tu-darmstadt.de/) and the University of Genoa for mobile robot navigation with dynamic obstacles.
-

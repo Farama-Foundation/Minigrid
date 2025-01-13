@@ -42,7 +42,7 @@ class GoToObjectEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -64,7 +64,6 @@ class GoToObjectEnv(MiniGridEnv):
     """
 
     def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
-
         self.numObjs = numObjs
         self.size = size
         # Types of objects to be generated
