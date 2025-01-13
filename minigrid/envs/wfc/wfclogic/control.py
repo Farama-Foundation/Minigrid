@@ -177,9 +177,9 @@ def execute_wfc(
         np_random.random(wave.shape[1:]) * 0.1
     )
 
-    pattern_heuristic: Callable[
-        [NDArray[np.bool_], NDArray[np.bool_]], int
-    ] = lexicalPatternHeuristic
+    pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int] = (
+        lexicalPatternHeuristic
+    )
     if choice_heuristic == "rarest":
         pattern_heuristic = makeRarestPatternHeuristic(encoded_weights, np_random)
     if choice_heuristic == "weighted":
@@ -188,9 +188,9 @@ def execute_wfc(
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights, np_random)
 
     logger.debug(loc_heuristic)
-    location_heuristic: Callable[
-        [NDArray[np.bool_]], tuple[int, int]
-    ] = lexicalLocationHeuristic
+    location_heuristic: Callable[[NDArray[np.bool_]], tuple[int, int]] = (
+        lexicalLocationHeuristic
+    )
     if loc_heuristic == "anti-entropy":
         location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "entropy":
