@@ -8,48 +8,34 @@ build-backend = "setuptools.build_meta"
 name = "minigrid"
 description = "Minimalistic gridworld reinforcement learning environments."
 readme = "README.md"
-requires-python = ">= 3.7"
+requires-python = ">= 3.8"
 authors = [{ name = "Farama Foundation", email = "contact@farama.org" }]
 license = { text = "MIT License" }
 keywords = ["Memory, Environment, Agent, RL, Gymnasium"]
 classifiers = [
-    "Development Status :: 4 - Beta",  # change to `5 - Production/Stable` when ready
+    "Development Status :: 4 - Beta",                             # change to `5 - Production/Stable` when ready
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     'Intended Audience :: Science/Research',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
 ]
-dependencies = [
-    "numpy>=1.18.0",
-    "gymnasium>=0.28.1",
-    "pygame>=2.4.0",
-]
+dependencies = ["numpy>=1.18.0", "gymnasium>=0.28.1", "pygame>=2.4.0"]
 dynamic = ["version"]
 
 [project.optional-dependencies]
-testing = [
-    "pytest>=7.0.1",
-    "pytest-mock>=3.10.0",
-    "matplotlib>=3.0"
-]
-wfc = [
-    "networkx",
-    "imageio>=2.31.1",
-]
+testing = ["pytest>=7.0.1", "pytest-mock>=3.10.0", "matplotlib>=3.0"]
+wfc = ["networkx", "imageio>=2.31.1"]
 
 [project.urls]
 Homepage = "https://farama.org"
 Repository = "https://minigrid.farama.org/"
 Documentation = "https://minigrid.farama.org/"
 "Bug Report" = "https://github.com/Farama-Foundation/Minigrid/issues"
-
-[project.entry-points."gymnasium.envs"]
-__root__ = "minigrid.__init__:register_minigrid_envs"
 
 [tool.setuptools]
 include-package-data = true
@@ -60,24 +46,18 @@ include = ["minigrid*"]
 # Linters and Test tools #######################################################
 
 [tool.black]
-safe = true
 
 [tool.isort]
 atomic = true
 profile = "black"
 append_only = true
 src_paths = ["minigrid", "tests"]
-add_imports = [ "from __future__ import annotations" ]
+add_imports = ["from __future__ import annotations"]
 
 [tool.pyright]
-include = [
-    "minigrid/**",
-]
+include = ["minigrid/**"]
 
-exclude = [
-    "**/node_modules",
-    "**/__pycache__",
-]
+exclude = ["**/node_modules", "**/__pycache__"]
 
 strict = []
 
@@ -98,8 +78,10 @@ reportPrivateUsage = "warning"
 reportUntypedFunctionDecorator = "none"
 reportMissingTypeStubs = false
 reportUnboundVariable = "warning"
-reportGeneralTypeIssues ="none"
+reportGeneralTypeIssues = "none"
 reportPrivateImportUsage = "none"
 
 [tool.pytest.ini_options]
-filterwarnings = ['ignore:.*step API.*:DeprecationWarning'] # TODO: to be removed when old step API is removed
+filterwarnings = [
+    'ignore:.*step API.*:DeprecationWarning',
+] # TODO: to be removed when old step API is removed

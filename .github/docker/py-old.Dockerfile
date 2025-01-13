@@ -8,12 +8,9 @@ RUN apt-get -y update \
     && apt-get install --no-install-recommends -y \
     xvfb
 
-COPY . /usr/local/minigrid/
+COPY ../.. /usr/local/minigrid/
 WORKDIR /usr/local/minigrid/
 
-RUN pip install .[wfc,testing] --no-cache-dir
+RUN pip install .[wfc,testing] gymnasium==0.29.1 numpy==1.26.4
 
-RUN ["chmod", "+x", "/usr/local/minigrid/docker_entrypoint"]
-
-ENTRYPOINT ["/usr/local/minigrid/docker_entrypoint"]
-
+ENTRYPOINT ["/usr/local/minigrid/.github/docker/docker_entrypoint"]
