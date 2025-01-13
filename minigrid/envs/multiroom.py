@@ -62,13 +62,18 @@ class MultiRoomEnv(MiniGridEnv):
 
     ## Registered Configurations
 
-    S: size of map SxS.
-    N: number of rooms.
-
     - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
     - `MiniGrid-MultiRoom-N4-S5-v0` (four rooms)
     - `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
+    ## Arguments
+
+    * `minNumRooms`: The minimum number of rooms generated
+    * `maxNumRooms`: The maximum number of rooms generated
+    * `maxRoomSize=10`: The maximum room size
+    * `width=25`: The width of the map
+    * `height=25`: The height of the map
+    * `max_steps=None`: If none, `maxNumRooms * 20` else the integer passed
     """
 
     def __init__(
@@ -76,6 +81,8 @@ class MultiRoomEnv(MiniGridEnv):
         minNumRooms,
         maxNumRooms,
         maxRoomSize=10,
+        width=25,
+        height=25,
         max_steps: int | None = None,
         **kwargs,
     ):
@@ -91,15 +98,13 @@ class MultiRoomEnv(MiniGridEnv):
 
         mission_space = MissionSpace(mission_func=self._gen_mission)
 
-        self.size = 25
-
         if max_steps is None:
             max_steps = maxNumRooms * 20
 
         super().__init__(
             mission_space=mission_space,
-            width=self.size,
-            height=self.size,
+            width=width,
+            height=height,
             max_steps=max_steps,
             **kwargs,
         )
