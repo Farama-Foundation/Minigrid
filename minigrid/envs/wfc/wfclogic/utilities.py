@@ -67,12 +67,12 @@ def tile_grid_to_image(
                         # be able to show empty cells.
                         pixel = tile_catalog[tile][u, v]
                         # TODO: will need to change if using an image with more than 3 channels
-                        new_img[
-                            (i * tile_size[0]) + u, (j * tile_size[1]) + v
-                        ] = np.resize(
-                            pixel,
-                            new_img[
-                                (i * tile_size[0]) + u, (j * tile_size[1]) + v
-                            ].shape,
+                        new_img[(i * tile_size[0]) + u, (j * tile_size[1]) + v] = (
+                            np.resize(
+                                pixel,
+                                new_img[
+                                    (i * tile_size[0]) + u, (j * tile_size[1]) + v
+                                ].shape,
+                            )
                         )
     return new_img
