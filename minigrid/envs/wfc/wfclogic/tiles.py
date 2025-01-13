@@ -1,4 +1,5 @@
 """Breaks an image into consituant tiles. Implementation based on https://github.com/ikarth/wfc_2019f"""
+
 from __future__ import annotations
 
 import numpy as np
@@ -30,9 +31,7 @@ def image_to_tiles(img: NDArray[np.integer], tile_size: int) -> NDArray[np.integ
     return tiles
 
 
-def make_tile_catalog(
-    image_data: NDArray[np.integer], tile_size: int
-) -> tuple[
+def make_tile_catalog(image_data: NDArray[np.integer], tile_size: int) -> tuple[
     dict[int, NDArray[np.integer]],
     NDArray[np.int64],
     NDArray[np.int64],

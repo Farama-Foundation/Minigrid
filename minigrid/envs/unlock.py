@@ -5,7 +5,6 @@ from minigrid.core.roomgrid import RoomGrid
 
 
 class UnlockEnv(RoomGrid):
-
     """
     ## Description
 

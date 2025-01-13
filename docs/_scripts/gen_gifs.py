@@ -7,6 +7,10 @@ import gymnasium
 from PIL import Image
 from tqdm import tqdm
 
+import minigrid
+
+gymnasium.register_envs(minigrid)
+
 # snake to camel case: https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case # noqa: E501
 pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -22,13 +26,19 @@ os.makedirs(output_dir, exist_ok=True)
 envs_completed = []
 
 # iterate through all envspecs
-for env_spec in tqdm(gymnasium.envs.registry.values()):
+for env_spec in tqdm(gymnasium.registry.values()):
     # minigrid.envs:Env or minigrid.envs.babyai:Env
+    if not isinstance(env_spec.entry_point, str):
+        continue
     split = env_spec.entry_point.split(".")
     # ignore minigrid.envs.env_type:Env
     env_module = split[0]
     env_name = split[-1].split(":")[-1]
     env_type = env_module if len(split) == 2 else split[-1].split(":")[0]
+
+    # Override env_name for WFC to include the preset name
+    if env_name == "WFCEnv":
+        env_name = env_spec.kwargs["wfc_config"]
 
     if env_module == "minigrid" and env_name not in envs_completed:
         os.makedirs(os.path.join(output_dir, env_type), exist_ok=True)
@@ -38,6 +48,9 @@ for env_spec in tqdm(gymnasium.envs.registry.values()):
         # try catch in case missing some installs
         try:
             env = gymnasium.make(env_spec.id, render_mode="rgb_array")
+            env.reset(seed=123)
+            env.action_space.seed(123)
+
             # the gymnasium needs to be rgb renderable
             if not ("rgb_array" in env.metadata["render_modes"]):
                 continue

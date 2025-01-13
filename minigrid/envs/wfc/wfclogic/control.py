@@ -1,4 +1,5 @@
 """Main WFC execution function. Implementation based on https://github.com/ikarth/wfc_2019f"""
+
 from __future__ import annotations
 
 import logging
@@ -78,7 +79,6 @@ def execute_wfc(
     backtracking: bool = False,
     log_filename: str = "log",
     logging: bool = False,
-    global_constraints: None = None,
     log_stats_to_output: Callable[[dict[str, Any], str], None] | None = None,
     np_random: np.random.Generator | None = None,
 ) -> NDArray[np.integer]:
@@ -177,9 +177,9 @@ def execute_wfc(
         np_random.random(wave.shape[1:]) * 0.1
     )
 
-    pattern_heuristic: Callable[
-        [NDArray[np.bool_], NDArray[np.bool_]], int
-    ] = lexicalPatternHeuristic
+    pattern_heuristic: Callable[[NDArray[np.bool_], NDArray[np.bool_]], int] = (
+        lexicalPatternHeuristic
+    )
     if choice_heuristic == "rarest":
         pattern_heuristic = makeRarestPatternHeuristic(encoded_weights, np_random)
     if choice_heuristic == "weighted":
@@ -188,9 +188,9 @@ def execute_wfc(
         pattern_heuristic = makeRandomPatternHeuristic(encoded_weights, np_random)
 
     logger.debug(loc_heuristic)
-    location_heuristic: Callable[
-        [NDArray[np.bool_]], tuple[int, int]
-    ] = lexicalLocationHeuristic
+    location_heuristic: Callable[[NDArray[np.bool_]], tuple[int, int]] = (
+        lexicalLocationHeuristic
+    )
     if loc_heuristic == "anti-entropy":
         location_heuristic = makeAntiEntropyLocationHeuristic(choice_random_weighting)
     if loc_heuristic == "entropy":

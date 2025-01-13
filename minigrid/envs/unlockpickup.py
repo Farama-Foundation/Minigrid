@@ -6,7 +6,6 @@ from minigrid.core.roomgrid import RoomGrid
 
 
 class UnlockPickupEnv(RoomGrid):
-
     """
     ## Description
 
@@ -53,7 +52,7 @@ class UnlockPickupEnv(RoomGrid):
 
     ## Registered Configurations
 
-    - `MiniGrid-Unlock-v0`
+    - `MiniGrid-UnlockPickup-v0`
 
     """
 

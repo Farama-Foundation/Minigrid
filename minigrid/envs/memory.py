@@ -10,7 +10,6 @@ from minigrid.minigrid_env import MiniGridEnv
 
 
 class MemoryEnv(MiniGridEnv):
-
     """
     ## Description
 

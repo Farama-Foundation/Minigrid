@@ -5,20 +5,9 @@ from gymnasium.envs.registration import register
 from minigrid import minigrid_env, wrappers
 from minigrid.core import roomgrid
 from minigrid.core.world_object import Wall
-from minigrid.envs.wfc.config import WFC_PRESETS
+from minigrid.envs.wfc.config import WFC_PRESETS, register_wfc_presets
 
-__version__ = "2.3.1"
-
-
-try:
-    import sys
-
-    from farama_notifications import notifications
-
-    if "minigrid" in notifications and __version__ in notifications["minigrid"]:
-        print(notifications["minigrid"][__version__], file=sys.stderr)
-except Exception:  # nosec
-    pass
+__version__ = "2.5.0"
 
 
 def register_minigrid_envs():
@@ -568,12 +557,7 @@ def register_minigrid_envs():
 
     # WaveFunctionCollapse
     # ----------------------------------------
-    for name in WFC_PRESETS.keys():
-        register(
-            id=f"MiniGrid-WFC-{name}-v0",
-            entry_point="minigrid.envs.wfc:WFCEnv",
-            kwargs={"wfc_config": name},
-        )
+    register_wfc_presets(WFC_PRESETS, register)
 
     # BabyAI - Language based levels - GoTo
     # ----------------------------------------
@@ -1138,3 +1122,16 @@ def register_minigrid_envs():
         id="BabyAI-BossLevelNoUnlock-v0",
         entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
     )
+
+
+register_minigrid_envs()
+
+try:
+    import sys
+
+    from farama_notifications import notifications
+
+    if "minigrid" in notifications and __version__ in notifications["minigrid"]:
+        print(notifications["minigrid"][__version__], file=sys.stderr)
+except Exception:  # nosec
+    pass

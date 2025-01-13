@@ -22,7 +22,6 @@ class LockedRoom:
 
 
 class LockedRoomEnv(MiniGridEnv):
-
     """
     ## Description
 
