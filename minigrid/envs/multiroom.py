@@ -62,13 +62,18 @@ class MultiRoomEnv(MiniGridEnv):
 
     ## Registered Configurations
 
-    S: size of map SxS.
-    N: number of rooms.
-
     - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
     - `MiniGrid-MultiRoom-N4-S5-v0` (four rooms)
     - `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
+    ## Arguments
+
+    * `minNumRooms`: The minimum number of rooms generated
+    * `maxNumRooms`: The maximum number of rooms generated
+    * `maxRoomSize=10`: The maximum room size
+    * `width=25`: The width of the map
+    * `height=25`: The height of the map
+    * `max_steps=None`: If none, `maxNumRooms * 20` else the integer passed
     """
 
     def __init__(
