@@ -7,6 +7,7 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [Using offline data to speed up Reinforcement Learning in procedurally generated environments](https://www.sciencedirect.com/science/article/pii/S0925231224018502) (TECNALIA, University of Edinburgh, Neurocomputing 2025)
 - [DRED: Zero-Shot Transfer in Reinforcement Learning via Data-Regularised Environment Design](https://arxiv.org/abs/2402.03479) (University of Edinburgh, ICML 2024)
 - [Conviction-Based Planning for Sparse Reward Reinforcement Learning Problems](https://prl-theworkshop.github.io/prl2024-icaps/papers/8.pdf)(UQÀM, PRL @ ICAPS 2024)
 - [Flexible Attention-Based Multi-Policy Fusion for Efficient Deep Reinforcement Learning](https://github.com/Pascalson/KGRL)(UC San Diego, UC Santa Barbara, NeurIPS 2023)
