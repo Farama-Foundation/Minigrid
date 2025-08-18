@@ -11,7 +11,7 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: |
            docker build -f .github/docker/py.Dockerfile \
              --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
@@ -24,7 +24,7 @@ jobs:
   build-old:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: |
           docker build -f .github/docker/py-old.Dockerfile \
              --build-arg PYTHON_VERSION="3.10" \
