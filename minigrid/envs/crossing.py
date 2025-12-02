@@ -187,12 +187,6 @@ class CrossingEnv(MiniGridEnv):
                 assert False
             self.grid.set(i, j, None)
 
-        self.mission = (
-            "avoid the lava and get to the green goal square"
-            if self.obstacle_type is Lava
-            else "find the opening and get to the green goal square"
-        )
-
     @staticmethod
     def _resolve_obstacle_type(obstacle_type: type[WorldObj] | str) -> type[WorldObj]:
         if isinstance(obstacle_type, str):
