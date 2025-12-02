@@ -51,25 +51,25 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N2-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N3-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS11N5-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": Wall},
+        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": "wall"},
     )
 
     # DistShift

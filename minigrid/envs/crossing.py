@@ -6,7 +6,7 @@ import numpy as np
 
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
-from minigrid.core.world_object import Goal, Lava
+from minigrid.core.world_object import Goal, Lava, Wall, WorldObj
 from minigrid.minigrid_env import MiniGridEnv
 
 
@@ -15,21 +15,24 @@ class CrossingEnv(MiniGridEnv):
     ## Description
 
     Depending on the `obstacle_type` parameter:
-    - `Lava` - The agent has to reach the green goal square on the other corner
+    - `Lava`/"lava" - The agent has to reach the green goal square on the other corner
         of the room while avoiding rivers of deadly lava which terminate the
         episode in failure. Each lava stream runs across the room either
         horizontally or vertically, and has a single crossing point which can be
         safely used; Luckily, a path to the goal is guaranteed to exist. This
         environment is useful for studying safety and safe exploration.
-    - otherwise - Similar to the `LavaCrossing` environment, the agent has to
+    - `Wall`/"wall" - Similar to the `LavaCrossing` environment, the agent has to
         reach the green goal square on the other corner of the room, however
         lava is replaced by walls. This MDP is therefore much easier and maybe
         useful for quickly testing your algorithms.
+    - other WorldObj subclass - Similar to the `LavaCrossing` and `SimpleCrossing`
+        environment, but with custom obstacles specified by the `obstacle_type` parameter.
 
     ## Mission Space
     Depending on the `obstacle_type` parameter:
-    - `Lava` - "avoid the lava and get to the green goal square"
-    - otherwise - "find the opening and get to the green goal square"
+    - `Lava`/"lava" - "avoid the lava and get to the green goal square"
+    - `Wall`/"wall" - "find the opening and get to the green goal square"
+    - other WorldObj subclass - "get to the green goal square"
 
     ## Action Space
 
@@ -75,7 +78,7 @@ class CrossingEnv(MiniGridEnv):
         - `MiniGrid-LavaCrossingS9N3-v0`
         - `MiniGrid-LavaCrossingS11N5-v0`
 
-    - otherwise :
+    - `Wall` :
         - `MiniGrid-SimpleCrossingS9N1-v0`
         - `MiniGrid-SimpleCrossingS9N2-v0`
         - `MiniGrid-SimpleCrossingS9N3-v0`
@@ -87,16 +90,18 @@ class CrossingEnv(MiniGridEnv):
         self,
         size=9,
         num_crossings=1,
-        obstacle_type=Lava,
+        obstacle_type: type[WorldObj] | str = Lava,
         max_steps: int | None = None,
         **kwargs,
     ):
         self.num_crossings = num_crossings
-        self.obstacle_type = obstacle_type
+        self.obstacle_type = self._resolve_obstacle_type(obstacle_type)
         self.goal_position = None
 
-        if obstacle_type == Lava:
+        if self.obstacle_type is Lava:
             mission_space = MissionSpace(mission_func=self._gen_mission_lava)
+        elif self.obstacle_type is Wall:
+            mission_space = MissionSpace(mission_func=self._gen_mission_wall)
         else:
             mission_space = MissionSpace(mission_func=self._gen_mission)
 
@@ -116,8 +121,12 @@ class CrossingEnv(MiniGridEnv):
         return "avoid the lava and get to the green goal square"
 
     @staticmethod
-    def _gen_mission():
+    def _gen_mission_wall():
         return "find the opening and get to the green goal square"
+
+    @staticmethod
+    def _gen_mission():
+        return "get to the green goal square"
 
     def _gen_grid(self, width, height):
         assert width % 2 == 1 and height % 2 == 1  # odd size
@@ -180,6 +189,26 @@ class CrossingEnv(MiniGridEnv):
 
         self.mission = (
             "avoid the lava and get to the green goal square"
-            if self.obstacle_type == Lava
+            if self.obstacle_type is Lava
             else "find the opening and get to the green goal square"
         )
+
+    @staticmethod
+    def _resolve_obstacle_type(obstacle_type: type[WorldObj] | str) -> type[WorldObj]:
+        if isinstance(obstacle_type, str):
+            obstacle_mapping = {"lava": Lava, "wall": Wall}
+            try:
+                obstacle_type = obstacle_mapping[obstacle_type.lower()]
+            except KeyError as exc:
+                raise ValueError(
+                    f"Unknown obstacle_type '{obstacle_type}', expected one of {list(obstacle_mapping)}"
+                ) from exc
+
+        if not isinstance(obstacle_type, type) or not issubclass(
+            obstacle_type, WorldObj
+        ):
+            raise TypeError(
+                "obstacle_type must be a WorldObj subclass or a supported string identifier"
+            )
+
+        return obstacle_type
