@@ -1,6 +1,8 @@
 ---
 title: Wrapper
 lastpage:
+myst:
+  all_links_external: true
 ---
 
 ## Wrapper
@@ -14,7 +16,7 @@ field which can be used as an optional compass. Using dictionaries makes it
 easy for you to add additional information to observations
 if you need to, without having to encode everything into a single tensor.
 
-There are a variety of wrappers to change the observation format available in [minigrid/wrappers.py](/minigrid/wrappers.py).
+There are a variety of wrappers to change the observation format available in [minigrid/wrappers.py](./../../_modules/minigrid/wrappers/).
 If your RL code expects one single tensor for observations, take a look at `FlatObsWrapper`.
 There is also an `ImgObsWrapper` that gets rid of the 'mission' field in observations, leaving only the image field tensor.
 
