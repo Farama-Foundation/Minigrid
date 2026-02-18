@@ -368,7 +368,14 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-MultiRoom-N4-S5-v0",
         entry_point="minigrid.envs:MultiRoomEnv",
+        # NOTE: kept for backwards compatibility; this legacy ID is configured for 6 rooms.
         kwargs={"minNumRooms": 6, "maxNumRooms": 6, "maxRoomSize": 5},
+    )
+
+    register(
+        id="MiniGrid-MultiRoom-N4-S5-v1",
+        entry_point="minigrid.envs:MultiRoomEnv",
+        kwargs={"minNumRooms": 4, "maxNumRooms": 4, "maxRoomSize": 5},
     )
 
     register(

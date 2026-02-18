@@ -63,7 +63,8 @@ class MultiRoomEnv(MiniGridEnv):
     ## Registered Configurations
 
     - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
-    - `MiniGrid-MultiRoom-N4-S5-v0` (four rooms)
+    - `MiniGrid-MultiRoom-N4-S5-v0` (legacy, misconfigured for 6 rooms)
+    - `MiniGrid-MultiRoom-N4-S5-v1` (fixed, four rooms)
     - `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
     ## Arguments
