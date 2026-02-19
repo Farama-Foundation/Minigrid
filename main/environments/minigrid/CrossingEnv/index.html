@@ -384,7 +384,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">CrossingEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f95dafee550&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">CrossingEnv._gen_mission_wall</span> <span class="pre">at</span> <span class="pre">0x7f2282cc6a60&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Creation</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-SimpleCrossingS11N5-v0&quot;)</span></code></p></td>
@@ -396,24 +396,27 @@
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Depending on the <code class="docutils literal notranslate"><span class="pre">obstacle_type</span></code> parameter:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Lava</span></code> - The agent has to reach the green goal square on the other corner
+<li><p><code class="docutils literal notranslate"><span class="pre">Lava</span></code>/”lava” - The agent has to reach the green goal square on the other corner
 of the room while avoiding rivers of deadly lava which terminate the
 episode in failure. Each lava stream runs across the room either
 horizontally or vertically, and has a single crossing point which can be
 safely used; Luckily, a path to the goal is guaranteed to exist. This
 environment is useful for studying safety and safe exploration.</p></li>
-<li><p>otherwise - Similar to the <code class="docutils literal notranslate"><span class="pre">LavaCrossing</span></code> environment, the agent has to
+<li><p><code class="docutils literal notranslate"><span class="pre">Wall</span></code>/”wall” - Similar to the <code class="docutils literal notranslate"><span class="pre">LavaCrossing</span></code> environment, the agent has to
 reach the green goal square on the other corner of the room, however
 lava is replaced by walls. This MDP is therefore much easier and maybe
 useful for quickly testing your algorithms.</p></li>
+<li><p>other WorldObj subclass - Similar to the <code class="docutils literal notranslate"><span class="pre">LavaCrossing</span></code> and <code class="docutils literal notranslate"><span class="pre">SimpleCrossing</span></code>
+environment, but with custom obstacles specified by the <code class="docutils literal notranslate"><span class="pre">obstacle_type</span></code> parameter.</p></li>
 </ul>
 </section>
 <section id="mission-space">
 <h2>Mission Space<a class="headerlink" href="#mission-space" title="Link to this heading">¶</a></h2>
 <p>Depending on the <code class="docutils literal notranslate"><span class="pre">obstacle_type</span></code> parameter:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Lava</span></code> - “avoid the lava and get to the green goal square”</p></li>
-<li><p>otherwise - “find the opening and get to the green goal square”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Lava</span></code>/”lava” - “avoid the lava and get to the green goal square”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wall</span></code>/”wall” - “find the opening and get to the green goal square”</p></li>
+<li><p>other WorldObj subclass - “get to the green goal square”</p></li>
 </ul>
 </section>
 <section id="action-space">
@@ -496,7 +499,7 @@ to the goal</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-LavaCrossingS11N5-v0</span></code></p></li>
 </ul>
 </li>
-<li><p>otherwise :</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">Wall</span></code> :</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-SimpleCrossingS9N1-v0</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">MiniGrid-SimpleCrossingS9N2-v0</span></code></p></li>
