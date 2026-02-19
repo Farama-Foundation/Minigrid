@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import pickle
 import re
 import warnings
@@ -116,6 +117,14 @@ def test_render_modes(spec):
             new_env.reset()
             new_env.step(new_env.action_space.sample())
             new_env.render()
+
+
+@pytest.mark.parametrize(
+    "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
+def test_spec_json_serialization(spec):
+    serialized = spec.to_json()
+    assert json.loads(serialized)["id"] == spec.id
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
