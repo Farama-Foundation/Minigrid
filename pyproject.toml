@@ -24,7 +24,7 @@ classifiers = [
     'Intended Audience :: Science/Research',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
 ]
-dependencies = ["numpy>=1.18.0", "gymnasium>=0.28.1", "pygame>=2.4.0"]
+dependencies = ["numpy>=1.18.0", "gymnasium>=0.28.1", "pygame-ce>=2.4.0"]
 dynamic = ["version"]
 
 [project.optional-dependencies]
