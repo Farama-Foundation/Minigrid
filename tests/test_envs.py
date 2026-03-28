@@ -21,8 +21,9 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space minimum value is -infinity. This is probably too low.",
         "A Box observation space maximum value is -infinity. This is probably too high.",
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
-        "The system font 'freesansbold.ttf' couldn't be found. Did you mean: 'freesansbold', 'freesans'? Verify your font name input. Using the default font instead.",
     ]
+] + [
+    "The system font 'freesansbold.ttf' couldn't be found. Did you mean: 'freesansbold', 'freesans'? Verify your font name input. Using the default font instead.",
 ]
 
 
