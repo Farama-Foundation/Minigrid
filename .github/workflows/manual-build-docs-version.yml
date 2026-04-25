@@ -16,7 +16,7 @@ permissions:
   contents: write
 jobs:
   docs:
-    name: Generate Website for new version
+    name: 'Generate Website for version {{inputs.version}}, commit: {{inputs.commit}}, latest: {{inputs.latest}}''
     runs-on: ubuntu-latest
     env:
       SPHINX_GITHUB_CHANGELOG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -32,6 +32,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
             python-version: '3.12'
+
+      - name: Use latest docs/_scripts
+        run: |
+          git fetch origin main
+          git checkout origin/main -- docs/_scripts
 
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
