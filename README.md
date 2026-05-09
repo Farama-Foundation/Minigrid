@@ -1,5 +1,7 @@
+[![PyPI version](https://badge.fury.io/py/minigrid.svg)](https://badge.fury.io/py/minigrid)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License](https://img.shields.io/github/license/Farama-Foundation/Minigrid)](https://github.com/Farama-Foundation/Minigrid/blob/main/LICENSE)
 
 <p align="center">
     <a href = "https://minigrid.farama.org/" target = "_blank" > <img src="https://raw.githubusercontent.com/Farama-Foundation/Minigrid/master/minigrid-text.png" width="500px"/> </a>
@@ -21,7 +23,7 @@ See the [Project Roadmap](https://github.com/Farama-Foundation/Minigrid/issues/3
 
 To install the Minigrid library use `pip install minigrid`.
 
-We support Python 3.7, 3.8, 3.9, 3.10 and 3.11 on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
+We support Python 3.10+ on Linux and macOS. We will accept PRs related to Windows, but do not officially support it.
 
 # Environments
 The included environments can be divided in two groups. The original `Minigrid` environments and the `BabyAI` environments.

@@ -22,8 +22,8 @@ import sys
 
 import minigrid
 
-project = "MiniGrid"
-copyright = "2023 Farama Foundation"
+project = "Minigrid"
+copyright = "2026 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
