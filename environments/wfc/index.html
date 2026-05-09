@@ -7,12 +7,12 @@
     <meta property="og:title" content="MiniGrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
-    <meta property="og:url" content="https://minigrid.farama.org/environments/babyai/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="WFC Environments" href="../wfc/" /><link rel="prev" title="Minigrid Environments" href="../minigrid/" />
-        <link rel="canonical" href="https://minigrid.farama.org/environments/babyai/index.html" />
+    <meta property="og:url" content="https://minigrid.farama.org/environments/wfc/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Release Notes" href="../../release_notes/" /><link rel="prev" title="BabyAI Environments" href="../babyai/" />
+        <link rel="canonical" href="https://minigrid.farama.org/environments/wfc/index.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>BabyAI Environments - MiniGrid Documentation</title>
+        <title>WFC Environments - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -245,10 +245,10 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">BabyAI Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../wfc/">WFC Environments</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">WFC Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -281,7 +281,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/environments/babyai/index.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/environments/wfc/index.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -312,486 +312,270 @@
           </div>
           <article role="main">
             
-            <section id="babyai-environments">
-<h1>BabyAI Environments<a class="headerlink" href="#babyai-environments" title="Link to this heading">¶</a></h1>
+            <section id="wfc-environments">
+<h1>WFC Environments<a class="headerlink" href="#wfc-environments" title="Link to this heading">¶</a></h1>
 
 <div class="env-grid">
     
-            <a href="GoToRedBallGrey">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBallGrey.gif">
+                        <img src="/_static/videos/wfc/MazeSimple.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Red Ball Grey</span>
+                        <span>Maze Simple</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToRedBall">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBall.gif">
+                        <img src="/_static/videos/wfc/DungeonMazeScaled.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Red Ball</span>
+                        <span>Dungeon Maze Scaled</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToRedBallNoDists">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBallNoDists.gif">
+                        <img src="/_static/videos/wfc/RoomsFabric.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Red Ball No Dists</span>
+                        <span>Rooms Fabric</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToObj">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToObj.gif">
+                        <img src="/_static/videos/wfc/ObstaclesBlackdots.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Obj</span>
+                        <span>Obstacles Blackdots</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToLocal">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToLocal.gif">
+                        <img src="/_static/videos/wfc/ObstaclesAngular.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Local</span>
+                        <span>Obstacles Angular</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoTo">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoTo.gif">
+                        <img src="/_static/videos/wfc/ObstaclesHogs3.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To</span>
+                        <span>Obstacles Hogs3</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToImpUnlock">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToImpUnlock.gif">
+                        <img src="/_static/videos/wfc/MazeKnot.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Imp Unlock</span>
+                        <span>Maze Knot</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToSeq">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToSeq.gif">
+                        <img src="/_static/videos/wfc/MazeWall.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Seq</span>
+                        <span>Maze Wall</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToRedBlueBall">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToRedBlueBall.gif">
+                        <img src="/_static/videos/wfc/RoomsOffice.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Red Blue Ball</span>
+                        <span>Rooms Office</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToDoor">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToDoor.gif">
+                        <img src="/_static/videos/wfc/ObstaclesHogs2.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Door</span>
+                        <span>Obstacles Hogs2</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="GoToObjDoor">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/GoToObjDoor.gif">
+                        <img src="/_static/videos/wfc/Skew2.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Go To Obj Door</span>
+                        <span>Skew2</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="Open">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Open.gif">
+                        <img src="/_static/videos/wfc/Maze.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Open</span>
+                        <span>Maze</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="OpenRedDoor">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenRedDoor.gif">
+                        <img src="/_static/videos/wfc/MazeSpirals.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Open Red Door</span>
+                        <span>Maze Spirals</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="OpenDoor">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenDoor.gif">
+                        <img src="/_static/videos/wfc/MazePaths.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Open Door</span>
+                        <span>Maze Paths</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="OpenTwoDoors">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenTwoDoors.gif">
+                        <img src="/_static/videos/wfc/Mazelike.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Open Two Doors</span>
+                        <span>Mazelike</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="OpenDoorsOrder">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OpenDoorsOrder.gif">
+                        <img src="/_static/videos/wfc/Dungeon.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Open Doors Order</span>
+                        <span>Dungeon</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="Pickup">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Pickup.gif">
+                        <img src="/_static/videos/wfc/DungeonRooms.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Pickup</span>
+                        <span>Dungeon Rooms</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="UnblockPickup">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnblockPickup.gif">
+                        <img src="/_static/videos/wfc/DungeonLessRooms.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Unblock Pickup</span>
+                        <span>Dungeon Less Rooms</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="PickupLoc">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupLoc.gif">
+                        <img src="/_static/videos/wfc/DungeonSpirals.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Pickup Loc</span>
+                        <span>Dungeon Spirals</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="PickupDist">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupDist.gif">
+                        <img src="/_static/videos/wfc/RoomsMagicOffice.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Pickup Dist</span>
+                        <span>Rooms Magic Office</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="PickupAbove">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PickupAbove.gif">
+                        <img src="/_static/videos/wfc/SkewCave.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Pickup Above</span>
+                        <span>Skew Cave</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="PutNextLocal">
+            <a href="WFCEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PutNextLocal.gif">
+                        <img src="/_static/videos/wfc/SkewLake.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Put Next Local</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="PutNext">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/PutNext.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Put Next</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Unlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Unlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlock</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockLocal">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockLocal.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlock Local</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="KeyInBox">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/KeyInBox.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Key In Box</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockPickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockPickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlock Pickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BlockedUnlockPickup">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BlockedUnlockPickup.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Blocked Unlock Pickup</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="UnlockToUnlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/UnlockToUnlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Unlock To Unlock</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="ActionObjDoor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/ActionObjDoor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Action Obj Door</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="FindObjS5">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/FindObjS5.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Find Obj S5</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="KeyCorridor">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/KeyCorridor.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Key Corridor</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="OneRoomS8">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/OneRoomS8.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>One Room S8</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="MoveTwoAcross">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/MoveTwoAcross.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Move Two Across</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="Synth">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/Synth.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synth</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="SynthLoc">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/SynthLoc.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synth Loc</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="SynthSeq">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/SynthSeq.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Synth Seq</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="MiniBossLevel">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/MiniBossLevel.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Mini Boss Level</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BossLevel">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BossLevel.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Boss Level</span>
-                    </div>
-                </div>
-            </a>
-    
-
-            <a href="BossLevelNoUnlock">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/videos/babyai/BossLevelNoUnlock.gif">
-                    </div>
-                    <div class="cell__title">
-                        <span>Boss Level No Unlock</span>
+                        <span>Skew Lake</span>
                     </div>
                 </div>
             </a>
