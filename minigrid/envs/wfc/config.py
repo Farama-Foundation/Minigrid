@@ -116,8 +116,31 @@ def _wfc_docstring(
     preset_name: str,
     description: str,
     *,
-    generation_note: str = "This preset is registered by default and is intended to generate in under a minute.",
+    registered_by_default: bool = True,
+    registration_group: str | None = None,
+    slow: bool = False,
+    generation_note: str = "This preset is intended to generate in under a minute.",
 ):
+    if registered_by_default:
+        registration_note = (
+            "This preset is registered by default and can be created directly with "
+            f'`gymnasium.make("MiniGrid-WFC-{preset_name}-v0")`.'
+        )
+        registration_snippet = ""
+    else:
+        registration_note = (
+            "This preset is not registered by default. Register the additional WFC "
+            "preset group before creating it."
+        )
+        registration_snippet = f"""
+```python
+import gymnasium
+from minigrid.envs.wfc.config import {registration_group}, register_wfc_presets
+
+register_wfc_presets({registration_group}, gymnasium.register)
+```
+"""
+
     return f"""
 ## Description
 
@@ -131,7 +154,18 @@ See [WFC module page](index) for sample images of the available presets.
 |   |   |
 |---|---|
 | Preset | `{preset_name}` |
-| Generation | {generation_note} |
+| Registered by default | {"Yes" if registered_by_default else "No"} |
+| Requires additional registration | {"No" if registered_by_default else "Yes"} |
+| Slow preset | {"Yes" if slow else "No"} |
+
+## Registration
+
+{registration_note}
+{registration_snippet}
+
+## Generation Notes
+
+{generation_note}
 
 {_WFC_COMMON_DOC}
 """
@@ -225,7 +259,9 @@ WFC_PRESETS_INCONSISTENT = {
             "MazeKnot",
             "learns from a knot-like maze pattern to create tight, tangled "
             "corridor structures.",
-            generation_note="This preset is not registered by default because it can require many attempts to generate a consistent level.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_INCONSISTENT",
+            generation_note="This preset is not marked as slow, but it can require many attempts to generate a consistent level.",
         ),
     ),  # This is not too inconsistent (often 10 attempts is enough)
     "MazeWall": WFCConfig(
@@ -238,7 +274,9 @@ WFC_PRESETS_INCONSISTENT = {
             "MazeWall",
             "learns from a simple wall pattern to create heavier maze barriers "
             "with repeated wall segments.",
-            generation_note="This preset is not registered by default because it can require many attempts to generate a consistent level.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_INCONSISTENT",
+            generation_note="This preset is not marked as slow, but it can require many attempts to generate a consistent level.",
         ),
     ),
     "RoomsOffice": WFCConfig(
@@ -251,7 +289,9 @@ WFC_PRESETS_INCONSISTENT = {
             "RoomsOffice",
             "learns from an office-like room pattern to create rectilinear rooms, "
             "hallways, and partitions.",
-            generation_note="This preset is not registered by default because it can require many attempts to generate a consistent level.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_INCONSISTENT",
+            generation_note="This preset is not marked as slow, but it can require many attempts to generate a consistent level.",
         ),
     ),
     "ObstaclesHogs2": WFCConfig(
@@ -264,7 +304,9 @@ WFC_PRESETS_INCONSISTENT = {
             "ObstaclesHogs2",
             "learns width-2 patterns from the Hogs source image to create smaller "
             "organic obstacle clusters.",
-            generation_note="This preset is not registered by default because it can require many attempts to generate a consistent level.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_INCONSISTENT",
+            generation_note="This preset is not marked as slow, but it can require many attempts to generate a consistent level.",
         ),
     ),
     "Skew2": WFCConfig(
@@ -277,7 +319,9 @@ WFC_PRESETS_INCONSISTENT = {
             "Skew2",
             "learns from a skewed pattern to create asymmetric cave-like layouts "
             "with angled wall contours.",
-            generation_note="This preset is not registered by default because it can require many attempts to generate a consistent level.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_INCONSISTENT",
+            generation_note="This preset is not marked as slow, but it can require many attempts to generate a consistent level.",
         ),
     ),
 }
@@ -293,7 +337,10 @@ WFC_PRESETS_SLOW = {
         docstring=_wfc_docstring(
             "Maze",
             "learns from a larger maze pattern to create complex corridor networks.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),  # This is unusually slow: ~20min per 25x25 room
     "MazeSpirals": WFCConfig(
@@ -306,7 +353,10 @@ WFC_PRESETS_SLOW = {
             "MazeSpirals",
             "learns from spiral motifs to create curling corridors and rounded "
             "maze-like structures.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "MazePaths": WFCConfig(
@@ -318,7 +368,10 @@ WFC_PRESETS_SLOW = {
         docstring=_wfc_docstring(
             "MazePaths",
             "learns from a path-heavy maze pattern to create branching walkways.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "Mazelike": WFCConfig(
@@ -331,7 +384,10 @@ WFC_PRESETS_SLOW = {
             "Mazelike",
             "learns from a maze-like pattern to create irregular wall structures "
             "and navigable channels.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "Dungeon": WFCConfig(
@@ -344,7 +400,10 @@ WFC_PRESETS_SLOW = {
             "Dungeon",
             "learns from an extracted dungeon pattern to create dense dungeon "
             "layouts with rooms and passages.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),  # ~10 mins
     "DungeonRooms": WFCConfig(
@@ -357,7 +416,10 @@ WFC_PRESETS_SLOW = {
             "DungeonRooms",
             "learns from a room-focused dungeon pattern to create larger chambered "
             "layouts.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "DungeonLessRooms": WFCConfig(
@@ -370,7 +432,10 @@ WFC_PRESETS_SLOW = {
             "DungeonLessRooms",
             "learns from a sparse dungeon-room pattern to create layouts with fewer "
             "large chambers and more dividing walls.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "DungeonSpirals": WFCConfig(
@@ -383,7 +448,10 @@ WFC_PRESETS_SLOW = {
             "DungeonSpirals",
             "learns from a negative spiral pattern to create dungeon layouts with "
             "curved-looking passages.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "RoomsMagicOffice": WFCConfig(
@@ -396,7 +464,10 @@ WFC_PRESETS_SLOW = {
             "RoomsMagicOffice",
             "learns from a magic-office pattern to create partitioned room layouts "
             "with varied interior structure.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "SkewCave": WFCConfig(
@@ -409,7 +480,10 @@ WFC_PRESETS_SLOW = {
             "SkewCave",
             "learns from a cave pattern to create skewed cavern shapes and uneven "
             "walls.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),
     "SkewLake": WFCConfig(
@@ -422,7 +496,10 @@ WFC_PRESETS_SLOW = {
             "SkewLake",
             "learns from a lake pattern to create skewed open regions enclosed by "
             "irregular walls.",
-            generation_note="This slow preset is not registered by default and can take several minutes to generate.",
+            registered_by_default=False,
+            registration_group="WFC_PRESETS_SLOW",
+            slow=True,
+            generation_note="This preset is slow and can take several minutes to generate.",
         ),
     ),  # ~10 mins
 }
