@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 import minigrid
 
-# Display bonus WFC presets
+# Generate env docs for bonus WFC presets
 from minigrid.envs.wfc.config import (
     WFC_PRESETS_INCONSISTENT,
     WFC_PRESETS_SLOW,
