@@ -8,13 +8,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/release_notes.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="WFC" href="../environments/wfc/WFCEnv/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="WFC Skew Lake" href="../environments/wfc/WFCSkewLakeEnv/" />
         <link rel="canonical" href="https://minigrid.farama.org/release_notes.html" />
 
     <link rel="shortcut icon" href="../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Release Notes - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
@@ -311,7 +311,28 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../environments/wfc/">WFC Environments</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCEnv/">WFC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazeSimpleEnv/">WFC Maze Simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCDungeonMazeScaledEnv/">WFC Dungeon Maze Scaled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCRoomsFabricEnv/">WFC Rooms Fabric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCObstaclesBlackdotsEnv/">WFC Obstacles Blackdots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCObstaclesAngularEnv/">WFC Obstacles Angular</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCObstaclesHogs3Env/">WFC Obstacles Hogs3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazeKnotEnv/">WFC Maze Knot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazeWallEnv/">WFC Maze Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCRoomsOfficeEnv/">WFC Rooms Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCObstaclesHogs2Env/">WFC Obstacles Hogs2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCSkew2Env/">WFC Skew2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazeEnv/">WFC Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazeSpiralsEnv/">WFC Maze Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazePathsEnv/">WFC Maze Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCMazelikeEnv/">WFC Mazelike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCDungeonEnv/">WFC Dungeon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCDungeonRoomsEnv/">WFC Dungeon Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCDungeonLessRoomsEnv/">WFC Dungeon Less Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCDungeonSpiralsEnv/">WFC Dungeon Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCRoomsMagicOfficeEnv/">WFC Rooms Magic Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCSkewCaveEnv/">WFC Skew Cave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wfc/WFCSkewLakeEnv/">WFC Skew Lake</a></li>
 </ul>
 </li>
 </ul>
@@ -378,9 +399,11 @@
             <section class="tex2jax_ignore mathjax_ignore" id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
 <section id="release-v2-5-0">
-<h2>v2.5.0: Minigrid 2.5.0<a class="headerlink" href="#release-v2-5-0" title="Link to this heading">¶</a></h2>
+<h2>v2.5.0: Minigrid 2.5.0 / 3.0.0 <a class="headerlink" href="#release-v2-5-0" title="Link to this heading">¶</a></h2>
 <p><em>Released on 2024-11-17 - <a class="reference external" href="https://github.com/Farama-Foundation/Minigrid/releases/tag/v2.5.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/minigrid/v2.5.0/">PyPI</a></em></p>
-<h1>Minigrid 2.5.0 Release Notes</h1>
+<h1>Minigrid 2.5.0 / 3.0.0 Release Notes</h1>
+<div class="markdown-alert markdown-alert-warning"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-alert mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p><p>Due to mistake v.2.5.0 and v3.0.0 on PyPI are exactly the same version.</p>
+</div>
 <p>In this release, we added support for Gymnasium 1.0.0 and NumPy 2.0.0+ and made many bug fixes.</p>
 <h2>New Features</h2>
 <ul>
@@ -675,7 +698,7 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
             <div class="toc-tree">
               <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
-<li><a class="reference internal" href="#release-v2-5-0">v2.5.0: Minigrid 2.5.0</a></li>
+<li><a class="reference internal" href="#release-v2-5-0">v2.5.0: Minigrid 2.5.0 / 3.0.0 </a></li>
 <li><a class="reference internal" href="#release-v2-4-0">v2.4.0: Minigrid 2.4.0</a></li>
 <li><a class="reference internal" href="#release-v2-3-1">v2.3.1: Minigrid 2.3.1</a></li>
 <li><a class="reference internal" href="#release-v2-3-0">v2.3.0: Minigrid 2.3.0</a></li>
@@ -838,14 +861,6 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -859,7 +874,14 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -875,8 +897,6 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -888,6 +908,13 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -932,7 +959,14 @@ env = gym.make('MiniGrid-PutNear-6x6-N2-v0')"><pre><span class="pl-c"># Old</spa
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

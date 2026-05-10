@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Installation - MiniGrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
@@ -311,7 +311,28 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../environments/wfc/">WFC Environments</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCEnv/">WFC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazeSimpleEnv/">WFC Maze Simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCDungeonMazeScaledEnv/">WFC Dungeon Maze Scaled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCRoomsFabricEnv/">WFC Rooms Fabric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCObstaclesBlackdotsEnv/">WFC Obstacles Blackdots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCObstaclesAngularEnv/">WFC Obstacles Angular</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCObstaclesHogs3Env/">WFC Obstacles Hogs3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazeKnotEnv/">WFC Maze Knot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazeWallEnv/">WFC Maze Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCRoomsOfficeEnv/">WFC Rooms Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCObstaclesHogs2Env/">WFC Obstacles Hogs2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCSkew2Env/">WFC Skew2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazeEnv/">WFC Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazeSpiralsEnv/">WFC Maze Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazePathsEnv/">WFC Maze Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCMazelikeEnv/">WFC Mazelike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCDungeonEnv/">WFC Dungeon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCDungeonRoomsEnv/">WFC Dungeon Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCDungeonLessRoomsEnv/">WFC Dungeon Less Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCDungeonSpiralsEnv/">WFC Dungeon Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCRoomsMagicOfficeEnv/">WFC Rooms Magic Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCSkewCaveEnv/">WFC Skew Cave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../environments/wfc/WFCSkewLakeEnv/">WFC Skew Lake</a></li>
 </ul>
 </li>
 </ul>
@@ -577,14 +598,6 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -598,7 +611,14 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -614,8 +634,6 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -627,6 +645,13 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -671,7 +696,14 @@ python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </s
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
