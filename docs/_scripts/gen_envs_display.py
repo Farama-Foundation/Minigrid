@@ -30,7 +30,7 @@ def title_from_id(env_id):
 
 def create_grid_cell(type_id, env_id, base_path):
     # All WFCEnv environments should link to WFCEnv page
-    href = f"{base_path}{env_id if type_id != 'wfc' else WFCENV_NAME}"
+    href = f"{base_path}{env_id}"
     return f"""
             <a href="{href}">
                 <div class="env-grid__cell">

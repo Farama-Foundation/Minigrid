@@ -8,9 +8,18 @@ import gymnasium
 from tqdm import tqdm
 
 import minigrid
+
+# Display bonus WFC presets
+from minigrid.envs.wfc.config import (
+    WFC_PRESETS_INCONSISTENT,
+    WFC_PRESETS_SLOW,
+    register_wfc_presets,
+)
 from utils import env_name_format, trim
 
 gymnasium.register_envs(minigrid)
+register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
+register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
