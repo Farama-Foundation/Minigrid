@@ -93,10 +93,6 @@ The episode ends if any one of the following conditions is met:
 1. The agent reaches the goal.
 2. Timeout (see `max_steps`).
 
-## Dependencies
-
-Requires the optional dependencies `imageio` and `networkx` to be installed with `pip install minigrid[wfc]`.
-
 ## Research
 
 Adapted for `Minigrid` by the following work.
@@ -148,6 +144,8 @@ This environment procedurally generates a level using the Wave Function Collapse
 The `{preset_name}` preset {description}
 
 See [WFC module page](index) for sample images of the available presets.
+
+Requires the optional dependencies `imageio` and `networkx` to be installed with `pip install minigrid[wfc]`.
 
 ## WFC Preset
 
