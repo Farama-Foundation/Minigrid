@@ -18,6 +18,7 @@ register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
 
 # Read name from the actual class so it is updated if the class name changes
 WFCENV_NAME = WFCEnv.__name__
+ENV_GRID_IMAGE_BASE_PATH = "../../_static/videos"
 
 
 def title_from_id(env_id):
@@ -31,11 +32,12 @@ def title_from_id(env_id):
 def create_grid_cell(type_id, env_id, base_path):
     # All WFCEnv environments should link to WFCEnv page
     href = f"{base_path}{env_id}"
+    img_src = f"{ENV_GRID_IMAGE_BASE_PATH}/{type_id}/{env_id}.gif"
     return f"""
             <a href="{href}">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/{type_id}/{env_id}.gif">
+                        <img src="{img_src}">
                     </div>
                     <div class="cell__title">
                         <span>{title_from_id(env_id)}</span>
