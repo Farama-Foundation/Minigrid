@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/environments/minigrid/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="BabyAI Environments" href="../babyai/" /><link rel="prev" title="Action Bonus" href="../../api/wrappers/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Blocked Unlock Pickup" href="BlockedUnlockPickupEnv/" /><link rel="prev" title="Action Bonus" href="../../api/wrappers/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/minigrid/index.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -242,13 +242,97 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Minigrid Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Minigrid Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CrossingEnv/">Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DistShiftEnv/">Dist Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DoorKeyEnv/">Door Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DynamicObstaclesEnv/">Dynamic Obstacles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EmptyEnv/">Empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FetchEnv/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FourRoomsEnv/">Four Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GoToDoorEnv/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GoToObjectEnv/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KeyCorridorEnv/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LavaGapEnv/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LockedRoomEnv/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MemoryEnv/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MultiRoomEnv/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObstructedMaze_1Dlhb/">Obstructed Maze Dlhb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObstructedMaze_Full/">Obstructed Maze Full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PlaygroundEnv/">Playground</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PutNearEnv/">Put Near</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RedBlueDoorEnv/">Red Blue Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UnlockEnv/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UnlockPickupEnv/">Unlock Pickup</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBallGrey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBall/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBallNoDists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToObj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToLocal/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoTo/">Go To</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToImpUnlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToSeq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBlueBall/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToDoor/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToObjDoor/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Open/">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenRedDoor/">Open Red Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenDoor/">Open Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenTwoDoors/">Open Two Doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenDoorsOrder/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnblockPickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupLoc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupDist/">Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupAbove/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PutNextLocal/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PutNext/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Unlock/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockLocal/">Unlock Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/KeyInBox/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockPickup/">Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BlockedUnlockPickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockToUnlock/">Unlock To Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/ActionObjDoor/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/FindObjS5/">Find Obj S5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/KeyCorridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OneRoomS8/">One Room S8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/MoveTwoAcross/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/SynthLoc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/SynthSeq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/MiniBossLevel/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BossLevel/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BossLevelNoUnlock/">Boss Level No Unlock</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../wfc/">WFC Environments</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../wfc/">WFC Environments</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazeSimpleEnv/">WFC Maze Simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCDungeonMazeScaledEnv/">WFC Dungeon Maze Scaled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCRoomsFabricEnv/">WFC Rooms Fabric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCObstaclesBlackdotsEnv/">WFC Obstacles Blackdots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCObstaclesAngularEnv/">WFC Obstacles Angular</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCObstaclesHogs3Env/">WFC Obstacles Hogs3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazeKnotEnv/">WFC Maze Knot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazeWallEnv/">WFC Maze Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCRoomsOfficeEnv/">WFC Rooms Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCObstaclesHogs2Env/">WFC Obstacles Hogs2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCSkew2Env/">WFC Skew2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazeEnv/">WFC Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazeSpiralsEnv/">WFC Maze Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazePathsEnv/">WFC Maze Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCMazelikeEnv/">WFC Mazelike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCDungeonEnv/">WFC Dungeon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCDungeonRoomsEnv/">WFC Dungeon Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCDungeonLessRoomsEnv/">WFC Dungeon Less Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCDungeonSpiralsEnv/">WFC Dungeon Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCRoomsMagicOfficeEnv/">WFC Rooms Magic Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCSkewCaveEnv/">WFC Skew Cave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wfc/WFCSkewLakeEnv/">WFC Skew Lake</a></li>
 </ul>
 </li>
 </ul>
@@ -324,7 +408,7 @@ or to fine-tune difficulty.</p>
             <a href="BlockedUnlockPickupEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/BlockedUnlockPickupEnv.gif">
+                        <img src="../../_static/videos/minigrid/BlockedUnlockPickupEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Blocked Unlock Pickup</span>
@@ -336,7 +420,7 @@ or to fine-tune difficulty.</p>
             <a href="CrossingEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/CrossingEnv.gif">
+                        <img src="../../_static/videos/minigrid/CrossingEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Crossing</span>
@@ -348,7 +432,7 @@ or to fine-tune difficulty.</p>
             <a href="DistShiftEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/DistShiftEnv.gif">
+                        <img src="../../_static/videos/minigrid/DistShiftEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Dist Shift</span>
@@ -360,7 +444,7 @@ or to fine-tune difficulty.</p>
             <a href="DoorKeyEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/DoorKeyEnv.gif">
+                        <img src="../../_static/videos/minigrid/DoorKeyEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Door Key</span>
@@ -372,7 +456,7 @@ or to fine-tune difficulty.</p>
             <a href="DynamicObstaclesEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/DynamicObstaclesEnv.gif">
+                        <img src="../../_static/videos/minigrid/DynamicObstaclesEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Dynamic Obstacles</span>
@@ -384,7 +468,7 @@ or to fine-tune difficulty.</p>
             <a href="EmptyEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/EmptyEnv.gif">
+                        <img src="../../_static/videos/minigrid/EmptyEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Empty</span>
@@ -396,7 +480,7 @@ or to fine-tune difficulty.</p>
             <a href="FetchEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/FetchEnv.gif">
+                        <img src="../../_static/videos/minigrid/FetchEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Fetch</span>
@@ -408,7 +492,7 @@ or to fine-tune difficulty.</p>
             <a href="FourRoomsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/FourRoomsEnv.gif">
+                        <img src="../../_static/videos/minigrid/FourRoomsEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Four Rooms</span>
@@ -420,7 +504,7 @@ or to fine-tune difficulty.</p>
             <a href="GoToDoorEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/GoToDoorEnv.gif">
+                        <img src="../../_static/videos/minigrid/GoToDoorEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Go To Door</span>
@@ -432,7 +516,7 @@ or to fine-tune difficulty.</p>
             <a href="GoToObjectEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/GoToObjectEnv.gif">
+                        <img src="../../_static/videos/minigrid/GoToObjectEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Go To Object</span>
@@ -444,7 +528,7 @@ or to fine-tune difficulty.</p>
             <a href="KeyCorridorEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/KeyCorridorEnv.gif">
+                        <img src="../../_static/videos/minigrid/KeyCorridorEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Key Corridor</span>
@@ -456,7 +540,7 @@ or to fine-tune difficulty.</p>
             <a href="LavaGapEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/LavaGapEnv.gif">
+                        <img src="../../_static/videos/minigrid/LavaGapEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Lava Gap</span>
@@ -468,7 +552,7 @@ or to fine-tune difficulty.</p>
             <a href="LockedRoomEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/LockedRoomEnv.gif">
+                        <img src="../../_static/videos/minigrid/LockedRoomEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Locked Room</span>
@@ -480,7 +564,7 @@ or to fine-tune difficulty.</p>
             <a href="MemoryEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/MemoryEnv.gif">
+                        <img src="../../_static/videos/minigrid/MemoryEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Memory</span>
@@ -492,7 +576,7 @@ or to fine-tune difficulty.</p>
             <a href="MultiRoomEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/MultiRoomEnv.gif">
+                        <img src="../../_static/videos/minigrid/MultiRoomEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Multi Room</span>
@@ -504,7 +588,7 @@ or to fine-tune difficulty.</p>
             <a href="ObstructedMaze_1Dlhb">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/ObstructedMaze_1Dlhb.gif">
+                        <img src="../../_static/videos/minigrid/ObstructedMaze_1Dlhb.gif">
                     </div>
                     <div class="cell__title">
                         <span>Obstructed Maze Dlhb</span>
@@ -516,7 +600,7 @@ or to fine-tune difficulty.</p>
             <a href="ObstructedMaze_Full">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/ObstructedMaze_Full.gif">
+                        <img src="../../_static/videos/minigrid/ObstructedMaze_Full.gif">
                     </div>
                     <div class="cell__title">
                         <span>Obstructed Maze Full</span>
@@ -528,7 +612,7 @@ or to fine-tune difficulty.</p>
             <a href="ObstructedMaze_Full_V1">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/ObstructedMaze_Full_V1.gif">
+                        <img src="../../_static/videos/minigrid/ObstructedMaze_Full_V1.gif">
                     </div>
                     <div class="cell__title">
                         <span>Obstructed Maze Full V1</span>
@@ -540,7 +624,7 @@ or to fine-tune difficulty.</p>
             <a href="PlaygroundEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/PlaygroundEnv.gif">
+                        <img src="../../_static/videos/minigrid/PlaygroundEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Playground</span>
@@ -552,7 +636,7 @@ or to fine-tune difficulty.</p>
             <a href="PutNearEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/PutNearEnv.gif">
+                        <img src="../../_static/videos/minigrid/PutNearEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Put Near</span>
@@ -564,7 +648,7 @@ or to fine-tune difficulty.</p>
             <a href="RedBlueDoorEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/RedBlueDoorEnv.gif">
+                        <img src="../../_static/videos/minigrid/RedBlueDoorEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Red Blue Door</span>
@@ -576,7 +660,7 @@ or to fine-tune difficulty.</p>
             <a href="UnlockEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/UnlockEnv.gif">
+                        <img src="../../_static/videos/minigrid/UnlockEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Unlock</span>
@@ -588,7 +672,7 @@ or to fine-tune difficulty.</p>
             <a href="UnlockPickupEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/minigrid/UnlockPickupEnv.gif">
+                        <img src="../../_static/videos/minigrid/UnlockPickupEnv.gif">
                     </div>
                     <div class="cell__title">
                         <span>Unlock Pickup</span>
@@ -613,7 +697,7 @@ or to fine-tune difficulty.</p>
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2023 Farama Foundation
+                Copyright &#169; 2026 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -718,7 +802,7 @@ or to fine-tune difficulty.</p>
         })()
       </script>
 
-    <script src="../../_static/documentation_options.js?v=cf600197"></script>
+    <script src="../../_static/documentation_options.js?v=df253959"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>

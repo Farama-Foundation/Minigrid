@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/environments/wfc/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Release Notes" href="../../release_notes/" /><link rel="prev" title="BabyAI Environments" href="../babyai/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="WFC Maze Simple" href="WFCMazeSimpleEnv/" /><link rel="prev" title="Boss Level No Unlock" href="../babyai/BossLevelNoUnlock/" />
         <link rel="canonical" href="https://minigrid.farama.org/environments/wfc/index.html" />
 
     <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -242,13 +242,97 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../minigrid/">Minigrid Environments</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Minigrid Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/BlockedUnlockPickupEnv/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/CrossingEnv/">Crossing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/DistShiftEnv/">Dist Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/DoorKeyEnv/">Door Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/DynamicObstaclesEnv/">Dynamic Obstacles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/EmptyEnv/">Empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/FetchEnv/">Fetch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/FourRoomsEnv/">Four Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/GoToDoorEnv/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/GoToObjectEnv/">Go To Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/KeyCorridorEnv/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/LavaGapEnv/">Lava Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/LockedRoomEnv/">Locked Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/MemoryEnv/">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/MultiRoomEnv/">Multi Room</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/ObstructedMaze_1Dlhb/">Obstructed Maze Dlhb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/ObstructedMaze_Full/">Obstructed Maze Full</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/PlaygroundEnv/">Playground</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/PutNearEnv/">Put Near</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/RedBlueDoorEnv/">Red Blue Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/UnlockEnv/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minigrid/UnlockPickupEnv/">Unlock Pickup</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../babyai/">BabyAI Environments</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of BabyAI Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBallGrey/">Go To Red Ball Grey</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBall/">Go To Red Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBallNoDists/">Go To Red Ball No Dists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToObj/">Go To Obj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToLocal/">Go To Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoTo/">Go To</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToImpUnlock/">Go To Imp Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToSeq/">Go To Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToRedBlueBall/">Go To Red Blue Ball</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToDoor/">Go To Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/GoToObjDoor/">Go To Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Open/">Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenRedDoor/">Open Red Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenDoor/">Open Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenTwoDoors/">Open Two Doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OpenDoorsOrder/">Open Doors Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Pickup/">Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnblockPickup/">Unblock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupLoc/">Pickup Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupDist/">Pickup Dist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PickupAbove/">Pickup Above</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PutNextLocal/">Put Next Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/PutNext/">Put Next</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Unlock/">Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockLocal/">Unlock Local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/KeyInBox/">Key In Box</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockPickup/">Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BlockedUnlockPickup/">Blocked Unlock Pickup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/UnlockToUnlock/">Unlock To Unlock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/ActionObjDoor/">Action Obj Door</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/FindObjS5/">Find Obj S5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/KeyCorridor/">Key Corridor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/OneRoomS8/">One Room S8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/MoveTwoAcross/">Move Two Across</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/Synth/">Synth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/SynthLoc/">Synth Loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/SynthSeq/">Synth Seq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/MiniBossLevel/">Mini Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BossLevel/">Boss Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../babyai/BossLevelNoUnlock/">Boss Level No Unlock</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">WFC Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">WFC Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of WFC Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazeSimpleEnv/">WFC Maze Simple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCDungeonMazeScaledEnv/">WFC Dungeon Maze Scaled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCRoomsFabricEnv/">WFC Rooms Fabric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCObstaclesBlackdotsEnv/">WFC Obstacles Blackdots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCObstaclesAngularEnv/">WFC Obstacles Angular</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCObstaclesHogs3Env/">WFC Obstacles Hogs3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazeKnotEnv/">WFC Maze Knot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazeWallEnv/">WFC Maze Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCRoomsOfficeEnv/">WFC Rooms Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCObstaclesHogs2Env/">WFC Obstacles Hogs2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCSkew2Env/">WFC Skew2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazeEnv/">WFC Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazeSpiralsEnv/">WFC Maze Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazePathsEnv/">WFC Maze Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCMazelikeEnv/">WFC Mazelike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCDungeonEnv/">WFC Dungeon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCDungeonRoomsEnv/">WFC Dungeon Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCDungeonLessRoomsEnv/">WFC Dungeon Less Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCDungeonSpiralsEnv/">WFC Dungeon Spirals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCRoomsMagicOfficeEnv/">WFC Rooms Magic Office</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCSkewCaveEnv/">WFC Skew Cave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WFCSkewLakeEnv/">WFC Skew Lake</a></li>
 </ul>
 </li>
 </ul>
@@ -317,265 +401,265 @@
 
 <div class="env-grid">
     
-            <a href="WFCEnv">
+            <a href="WFCMazeSimpleEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/MazeSimple.gif">
+                        <img src="../../_static/videos/wfc/WFCMazeSimpleEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze Simple</span>
+                        <span>Wfc Maze Simple</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCDungeonMazeScaledEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/DungeonMazeScaled.gif">
+                        <img src="../../_static/videos/wfc/WFCDungeonMazeScaledEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Dungeon Maze Scaled</span>
+                        <span>Wfc Dungeon Maze Scaled</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCRoomsFabricEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/RoomsFabric.gif">
+                        <img src="../../_static/videos/wfc/WFCRoomsFabricEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Rooms Fabric</span>
+                        <span>Wfc Rooms Fabric</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCObstaclesBlackdotsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/ObstaclesBlackdots.gif">
+                        <img src="../../_static/videos/wfc/WFCObstaclesBlackdotsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Obstacles Blackdots</span>
+                        <span>Wfc Obstacles Blackdots</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCObstaclesAngularEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/ObstaclesAngular.gif">
+                        <img src="../../_static/videos/wfc/WFCObstaclesAngularEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Obstacles Angular</span>
+                        <span>Wfc Obstacles Angular</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCObstaclesHogs3Env">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/ObstaclesHogs3.gif">
+                        <img src="../../_static/videos/wfc/WFCObstaclesHogs3Env.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Obstacles Hogs3</span>
+                        <span>Wfc Obstacles Hogs3</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazeKnotEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/MazeKnot.gif">
+                        <img src="../../_static/videos/wfc/WFCMazeKnotEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze Knot</span>
+                        <span>Wfc Maze Knot</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazeWallEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/MazeWall.gif">
+                        <img src="../../_static/videos/wfc/WFCMazeWallEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze Wall</span>
+                        <span>Wfc Maze Wall</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCRoomsOfficeEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/RoomsOffice.gif">
+                        <img src="../../_static/videos/wfc/WFCRoomsOfficeEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Rooms Office</span>
+                        <span>Wfc Rooms Office</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCObstaclesHogs2Env">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/ObstaclesHogs2.gif">
+                        <img src="../../_static/videos/wfc/WFCObstaclesHogs2Env.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Obstacles Hogs2</span>
+                        <span>Wfc Obstacles Hogs2</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCSkew2Env">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/Skew2.gif">
+                        <img src="../../_static/videos/wfc/WFCSkew2Env.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Skew2</span>
+                        <span>Wfc Skew2</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazeEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/Maze.gif">
+                        <img src="../../_static/videos/wfc/WFCMazeEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze</span>
+                        <span>Wfc Maze</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazeSpiralsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/MazeSpirals.gif">
+                        <img src="../../_static/videos/wfc/WFCMazeSpiralsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze Spirals</span>
+                        <span>Wfc Maze Spirals</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazePathsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/MazePaths.gif">
+                        <img src="../../_static/videos/wfc/WFCMazePathsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Maze Paths</span>
+                        <span>Wfc Maze Paths</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCMazelikeEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/Mazelike.gif">
+                        <img src="../../_static/videos/wfc/WFCMazelikeEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Mazelike</span>
+                        <span>Wfc Mazelike</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCDungeonEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/Dungeon.gif">
+                        <img src="../../_static/videos/wfc/WFCDungeonEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Dungeon</span>
+                        <span>Wfc Dungeon</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCDungeonRoomsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/DungeonRooms.gif">
+                        <img src="../../_static/videos/wfc/WFCDungeonRoomsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Dungeon Rooms</span>
+                        <span>Wfc Dungeon Rooms</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCDungeonLessRoomsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/DungeonLessRooms.gif">
+                        <img src="../../_static/videos/wfc/WFCDungeonLessRoomsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Dungeon Less Rooms</span>
+                        <span>Wfc Dungeon Less Rooms</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCDungeonSpiralsEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/DungeonSpirals.gif">
+                        <img src="../../_static/videos/wfc/WFCDungeonSpiralsEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Dungeon Spirals</span>
+                        <span>Wfc Dungeon Spirals</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCRoomsMagicOfficeEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/RoomsMagicOffice.gif">
+                        <img src="../../_static/videos/wfc/WFCRoomsMagicOfficeEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Rooms Magic Office</span>
+                        <span>Wfc Rooms Magic Office</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCSkewCaveEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/SkewCave.gif">
+                        <img src="../../_static/videos/wfc/WFCSkewCaveEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Skew Cave</span>
+                        <span>Wfc Skew Cave</span>
                     </div>
                 </div>
             </a>
     
 
-            <a href="WFCEnv">
+            <a href="WFCSkewLakeEnv">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="/_static/videos/wfc/SkewLake.gif">
+                        <img src="../../_static/videos/wfc/WFCSkewLakeEnv.gif">
                     </div>
                     <div class="cell__title">
-                        <span>Skew Lake</span>
+                        <span>Wfc Skew Lake</span>
                     </div>
                 </div>
             </a>
@@ -597,7 +681,7 @@
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2023 Farama Foundation
+                Copyright &#169; 2026 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -702,7 +786,7 @@
         })()
       </script>
 
-    <script src="../../_static/documentation_options.js?v=cf600197"></script>
+    <script src="../../_static/documentation_options.js?v=df253959"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
