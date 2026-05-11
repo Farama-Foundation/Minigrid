@@ -405,7 +405,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">Discrete(7)</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Observation Space</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7f3d73a0bc40&gt;,</span> <span class="pre">None))</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Dict('direction':</span> <span class="pre">Discrete(4),</span> <span class="pre">'image':</span> <span class="pre">Box(0,</span> <span class="pre">255,</span> <span class="pre">(7,</span> <span class="pre">7,</span> <span class="pre">3),</span> <span class="pre">uint8),</span> <span class="pre">'mission':</span> <span class="pre">MissionSpace(&lt;function</span> <span class="pre">WFCEnv._gen_mission</span> <span class="pre">at</span> <span class="pre">0x7fda2f0ffc40&gt;,</span> <span class="pre">None))</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Creation</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">gymnasium.make(&quot;MiniGrid-WFC-DungeonLessRooms-v0&quot;)</span></code></p></td>
@@ -418,6 +418,7 @@
 <p>This environment procedurally generates a level using the Wave Function Collapse algorithm.
 The <code class="docutils literal notranslate"><span class="pre">DungeonLessRooms</span></code> preset learns from a sparse dungeon-room pattern to create layouts with fewer large chambers and more dividing walls.</p>
 <p>See <a class="reference internal" href="../"><span class="doc std std-doc">WFC module page</span></a> for sample images of the available presets.</p>
+<p>Requires the optional dependencies <code class="docutils literal notranslate"><span class="pre">imageio</span></code> and <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">minigrid[wfc]</span></code>.</p>
 </section>
 <section id="wfc-preset">
 <h2>WFC Preset<a class="headerlink" href="#wfc-preset" title="Link to this heading">¶</a></h2>
@@ -528,10 +529,6 @@ The <code class="docutils literal notranslate"><span class="pre">DungeonLessRoom
 <li><p>Timeout (see <code class="docutils literal notranslate"><span class="pre">max_steps</span></code>).</p></li>
 </ol>
 </section>
-<section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
-<p>Requires the optional dependencies <code class="docutils literal notranslate"><span class="pre">imageio</span></code> and <code class="docutils literal notranslate"><span class="pre">networkx</span></code> to be installed with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">minigrid[wfc]</span></code>.</p>
-</section>
 <section id="research">
 <h2>Research<a class="headerlink" href="#research" title="Link to this heading">¶</a></h2>
 <p>Adapted for <code class="docutils literal notranslate"><span class="pre">Minigrid</span></code> by the following work.</p>
@@ -625,7 +622,6 @@ The <code class="docutils literal notranslate"><span class="pre">DungeonLessRoom
 <li><a class="reference internal" href="#observation-encoding">Observation Encoding</a></li>
 <li><a class="reference internal" href="#rewards">Rewards</a></li>
 <li><a class="reference internal" href="#termination">Termination</a></li>
-<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#research">Research</a></li>
 </ul>
 </li>
