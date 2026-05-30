@@ -83,7 +83,7 @@ html_theme_options = {
     "gtag": "G-FBXJQQLXKD",
     "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
-    "source_branch": "master",
+    "source_branch": "main",
     "source_directory": "docs/",
 }
 
