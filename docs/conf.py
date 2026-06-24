@@ -81,7 +81,7 @@ html_theme_options = {
     "image": "img/minigrid-github.png",
     "description": "Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.",
     "gtag": "G-FBXJQQLXKD",
-    "versioning": True,
+    "versioning": False,
     "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
     "source_branch": "main",
     "source_directory": "docs/",
