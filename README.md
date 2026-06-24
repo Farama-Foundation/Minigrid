@@ -1,3 +1,4 @@
+[![Python](https://img.shields.io/pypi/pyversions/minigrid.svg)](https://badge.fury.io/py/minigrid)
 [![PyPI version](https://badge.fury.io/py/minigrid.svg)](https://badge.fury.io/py/minigrid)
 [![Tests](https://github.com/Farama-Foundation/Minigrid/actions/workflows/tests.yml/badge.svg)](https://github.com/Farama-Foundation/Minigrid/actions/workflows/tests.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
