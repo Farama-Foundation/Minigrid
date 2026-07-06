@@ -72,7 +72,7 @@ class WFCEnv(MiniGridEnv):
     1. The agent reaches the goal.
     2. Timeout (see `max_steps`).
 
-    ## Registered Configurations
+    ## Default Registered Configurations
 
     - `MiniGrid-WFC-MazeSimple-v0`
     - `MiniGrid-WFC-DungeonMazeScaled-v0`
@@ -81,7 +81,31 @@ class WFCEnv(MiniGridEnv):
     - `MiniGrid-WFC-ObstaclesAngular-v0`
     - `MiniGrid-WFC-ObstaclesHogs3-v0`
 
-    Note: There are many more unregistered configuration presets but they may take a long time to generate a consistent environment.
+    ## Additional Configurations
+
+    The following presets are not registered by default. Some may require many attempts to generate
+    a consistent environment:
+
+    - `MiniGrid-WFC-MazeKnot-v0`
+    - `MiniGrid-WFC-MazeWall-v0`
+    - `MiniGrid-WFC-RoomsOffice-v0`
+    - `MiniGrid-WFC-ObstaclesHogs2-v0`
+    - `MiniGrid-WFC-Skew2-v0`
+
+    The following presets are not registered by default and are slow. Most take several minutes,
+    and some can take 10 minutes or more:
+
+    - `MiniGrid-WFC-Maze-v0`
+    - `MiniGrid-WFC-MazeSpirals-v0`
+    - `MiniGrid-WFC-MazePaths-v0`
+    - `MiniGrid-WFC-Mazelike-v0`
+    - `MiniGrid-WFC-Dungeon-v0`
+    - `MiniGrid-WFC-DungeonRooms-v0`
+    - `MiniGrid-WFC-DungeonLessRooms-v0`
+    - `MiniGrid-WFC-DungeonSpirals-v0`
+    - `MiniGrid-WFC-RoomsMagicOffice-v0`
+    - `MiniGrid-WFC-SkewCave-v0`
+    - `MiniGrid-WFC-SkewLake-v0`
 
     They can be registered with the following snippet:
     ```python

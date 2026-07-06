@@ -1,15 +1,9 @@
-# MiniGrid documentation
+# Minigrid documentation
 
-
-This folder contains the documentation for MiniGrid.
+This folder contains the documentation for Minigrid.
 
 For more information about how to contribute to the documentation go to our [CONTRIBUTING.md](https://github.com/Farama-Foundation/Celshast/blob/main/CONTRIBUTING.md)
 
-### Editing an environment page
-
-If you are editing an Atari environment, directly edit the Markdown file in this repository.
-
-Otherwise, fork Gym and edit the docstring in the environment's Python file. Then, pip install your Gym fork and run `docs/_scripts/gen_env_docs.py` in this repo. This will automatically generate a md documentation file for the environment.
 
 ## Build the Documentation
 
@@ -18,6 +12,13 @@ Install the required packages and Minigrid:
 ```
 pip install -r docs/requirements.txt
 pip install -e .
+```
+
+Generate the documentation files for the environments:
+
+```
+python docs/_scripts/gen_env_docs.py
+python docs/_scripts/gen_envs_display.py
 ```
 
 To build the documentation once:
