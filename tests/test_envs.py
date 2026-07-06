@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import pickle
 import re
 import warnings
@@ -21,6 +22,8 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space maximum value is -infinity. This is probably too high.",
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
     ]
+] + [
+    "The system font 'freesansbold.ttf' couldn't be found. Did you mean: 'freesansbold', 'freesans'? Verify your font name input. Using the default font instead.",
 ]
 
 
@@ -116,6 +119,14 @@ def test_render_modes(spec):
             new_env.reset()
             new_env.step(new_env.action_space.sample())
             new_env.render()
+
+
+@pytest.mark.parametrize(
+    "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
+def test_spec_json_serialization(spec):
+    serialized = spec.to_json()
+    assert json.loads(serialized)["id"] == spec.id
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
