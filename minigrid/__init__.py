@@ -7,7 +7,7 @@ from minigrid.core import roomgrid
 from minigrid.core.world_object import Wall
 from minigrid.envs.wfc.config import WFC_PRESETS, register_wfc_presets
 
-__version__ = "2.5.0"
+__version__ = "3.1.0"
 
 
 def register_minigrid_envs():
@@ -51,25 +51,25 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-SimpleCrossingS9N1-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 1, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N2-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 2, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS9N3-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": Wall},
+        kwargs={"size": 9, "num_crossings": 3, "obstacle_type": "wall"},
     )
 
     register(
         id="MiniGrid-SimpleCrossingS11N5-v0",
         entry_point="minigrid.envs:CrossingEnv",
-        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": Wall},
+        kwargs={"size": 11, "num_crossings": 5, "obstacle_type": "wall"},
     )
 
     # DistShift
@@ -368,7 +368,14 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-MultiRoom-N4-S5-v0",
         entry_point="minigrid.envs:MultiRoomEnv",
+        # NOTE: kept for backwards compatibility; this legacy ID is configured for 6 rooms.
         kwargs={"minNumRooms": 6, "maxNumRooms": 6, "maxRoomSize": 5},
+    )
+
+    register(
+        id="MiniGrid-MultiRoom-N4-S5-v1",
+        entry_point="minigrid.envs:MultiRoomEnv",
+        kwargs={"minNumRooms": 4, "maxNumRooms": 4, "maxRoomSize": 5},
     )
 
     register(

@@ -22,8 +22,8 @@ import sys
 
 import minigrid
 
-project = "MiniGrid"
-copyright = "2023 Farama Foundation"
+project = "Minigrid"
+copyright = "2026 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
@@ -83,7 +83,7 @@ html_theme_options = {
     "gtag": "G-FBXJQQLXKD",
     "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/Minigrid/",
-    "source_branch": "master",
+    "source_branch": "main",
     "source_directory": "docs/",
 }
 
@@ -93,3 +93,23 @@ html_css_files = []
 # -- Generate Changelog -------------------------------------------------
 
 sphinx_github_changelog_token = os.environ.get("SPHINX_GITHUB_CHANGELOG_TOKEN")
+
+
+# `viewcode` skips data-only modules in the module index, so add constants manually.
+def _add_constants_to_modules_index(app, pagename, templatename, context, doctree):
+    """Inject `minigrid.core.constants` into the viewcode modules index."""
+    if pagename != "_modules/index":
+        return
+
+    body = context.get("body", "")
+    if "minigrid/core/constants/" in body:
+        return
+
+    entry = '<li><a href="minigrid/core/constants/">minigrid.core.constants</a></li>'
+    marker = "</ul>"
+    if marker in body:
+        context["body"] = body.replace(marker, f"{entry}\n{marker}", 1)
+
+
+def setup(app):
+    app.connect("html-page-context", _add_constants_to_modules_index)

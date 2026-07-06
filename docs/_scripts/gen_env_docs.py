@@ -8,9 +8,18 @@ import gymnasium
 from tqdm import tqdm
 
 import minigrid
+
+# Generate env docs for bonus WFC presets
+from minigrid.envs.wfc.config import (
+    WFC_PRESETS_INCONSISTENT,
+    WFC_PRESETS_SLOW,
+    register_wfc_presets,
+)
 from utils import env_name_format, trim
 
 gymnasium.register_envs(minigrid)
+register_wfc_presets(WFC_PRESETS_INCONSISTENT, gymnasium.register)
+register_wfc_presets(WFC_PRESETS_SLOW, gymnasium.register)
 
 readme_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
@@ -65,7 +74,26 @@ filtered_babyai_envs = {
 
 # Because they share a class, only the default (MazeSimple) environment should be kept
 canonical_wfc_env_name = "MazeSimple"
-filtered_wfc_envs = {canonical_wfc_env_name: wfc_envs[canonical_wfc_env_name]}
+filtered_wfc_envs = {}
+for canonical_wfc_env_name in wfc_envs:
+    filtered_wfc_envs[canonical_wfc_env_name] = wfc_envs[canonical_wfc_env_name]
+
+SOURCE_PY_LINK_PATTERN = re.compile(r"\((/)?(minigrid/[A-Za-z0-9_./-]+)\.py\)")
+
+
+def _rewrite_doc_links(docstring: str) -> str:
+    """Rewrite source-style links into docs-relative links for generated pages.
+
+    Any markdown link target of the form `(minigrid/***.py)` becomes:
+    `(./../../_modules/minigrid/***/)`
+    """
+
+    def _to_modules_link(match: re.Match) -> str:
+        module_path = match.group(2)
+        return f"(./../../_modules/{module_path}/)"
+
+    return SOURCE_PY_LINK_PATTERN.sub(_to_modules_link, docstring)
+
 
 for env_name, env_spec in chain(
     filtered_envs.items(), filtered_babyai_envs.items(), filtered_wfc_envs.items()
@@ -73,6 +101,7 @@ for env_name, env_spec in chain(
     env = env_spec.make()
 
     docstring = trim(env.unwrapped.__doc__)
+    docstring = _rewrite_doc_links(docstring)
 
     # minigrid.envs:Env or minigrid.envs.babyai:Env
     split = env_spec.entry_point.split(".")
