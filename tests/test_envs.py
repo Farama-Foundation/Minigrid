@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import pickle
+import re
 import warnings
 
 import gymnasium as gym
@@ -20,6 +22,8 @@ CHECK_ENV_IGNORE_WARNINGS = [
         "A Box observation space maximum value is -infinity. This is probably too high.",
         "For Box action spaces, we recommend using a symmetric and normalized space (range=[-1, 1] or [0, 1]). See https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html for more information.",
     ]
+] + [
+    "The system font 'freesansbold.ttf' couldn't be found. Did you mean: 'freesansbold', 'freesans'? Verify your font name input. Using the default font instead.",
 ]
 
 
@@ -117,16 +121,24 @@ def test_render_modes(spec):
             new_env.render()
 
 
+@pytest.mark.parametrize(
+    "spec", all_testing_env_specs, ids=[spec.id for spec in all_testing_env_specs]
+)
+def test_spec_json_serialization(spec):
+    serialized = spec.to_json()
+    assert json.loads(serialized)["id"] == spec.id
+
+
 @pytest.mark.parametrize("env_id", ["MiniGrid-DoorKey-6x6-v0"])
 def test_agent_sees_method(env_id):
     env = gym.make(env_id)
-    goal_pos = (env.grid.width - 2, env.grid.height - 2)
+    goal_pos = (env.unwrapped.grid.width - 2, env.unwrapped.grid.height - 2)
 
     # Test the env.agent_sees() function
     env.reset()
     # Test the "in" operator on grid objects
-    assert ("green", "goal") in env.grid
-    assert ("blue", "key") not in env.grid
+    assert ("green", "goal") in env.unwrapped.grid
+    assert ("blue", "key") not in env.unwrapped.grid
     for i in range(0, 500):
         action = env.action_space.sample()
         obs, reward, terminated, truncated, info = env.step(action)
@@ -134,7 +146,7 @@ def test_agent_sees_method(env_id):
         grid, _ = Grid.decode(obs["image"])
         goal_visible = ("green", "goal") in grid
 
-        agent_sees_goal = env.agent_sees(*goal_pos)
+        agent_sees_goal = env.unwrapped.agent_sees(*goal_pos)
         assert agent_sees_goal == goal_visible
         if terminated or truncated:
             env.reset()
@@ -259,7 +271,6 @@ def test_interactive_mode(env_id):
 
 
 def test_mission_space():
-
     # Test placeholders
     mission_space = MissionSpace(
         mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",
@@ -327,3 +338,24 @@ def test_env_sync_vectorization(env_id):
     env.reset()
     env.step(env.action_space.sample())
     env.close()
+
+
+def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
+    env = gym.make(env_id)
+
+    env_repr = str(env)
+    assert (
+        env_repr
+        == "<OrderEnforcing<PassiveEnvChecker<EmptyEnv<MiniGrid-Empty-8x8-v0>>>>"
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "The environment hasn't been `reset` therefore the `agent_pos`, `agent_dir` or `grid` are unknown."
+        ),
+    ):
+        env.unwrapped.pprint_grid()
+
+    env.reset()
+    assert isinstance(env.unwrapped.pprint_grid(), str)

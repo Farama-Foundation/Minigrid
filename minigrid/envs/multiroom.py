@@ -16,7 +16,6 @@ class MultiRoom:
 
 
 class MultiRoomEnv(MiniGridEnv):
-
     """
     ## Description
 
@@ -47,7 +46,7 @@ class MultiRoomEnv(MiniGridEnv):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -63,13 +62,19 @@ class MultiRoomEnv(MiniGridEnv):
 
     ## Registered Configurations
 
-    S: size of map SxS.
-    N: number of rooms.
-
     - `MiniGrid-MultiRoom-N2-S4-v0` (two small rooms)
-    - `MiniGrid-MultiRoom-N4-S5-v0` (four rooms)
+    - `MiniGrid-MultiRoom-N4-S5-v0` (legacy, misconfigured for 6 rooms)
+    - `MiniGrid-MultiRoom-N4-S5-v1` (fixed, four rooms)
     - `MiniGrid-MultiRoom-N6-v0` (six rooms)
 
+    ## Arguments
+
+    * `minNumRooms`: The minimum number of rooms generated
+    * `maxNumRooms`: The maximum number of rooms generated
+    * `maxRoomSize=10`: The maximum room size
+    * `width=25`: The width of the map
+    * `height=25`: The height of the map
+    * `max_steps=None`: If none, `maxNumRooms * 20` else the integer passed
     """
 
     def __init__(
@@ -77,6 +82,8 @@ class MultiRoomEnv(MiniGridEnv):
         minNumRooms,
         maxNumRooms,
         maxRoomSize=10,
+        width=25,
+        height=25,
         max_steps: int | None = None,
         **kwargs,
     ):
@@ -92,15 +99,13 @@ class MultiRoomEnv(MiniGridEnv):
 
         mission_space = MissionSpace(mission_func=self._gen_mission)
 
-        self.size = 25
-
         if max_steps is None:
             max_steps = maxNumRooms * 20
 
         super().__init__(
             mission_space=mission_space,
-            width=self.size,
-            height=self.size,
+            width=width,
+            height=height,
             max_steps=max_steps,
             **kwargs,
         )
@@ -145,7 +150,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # For each room
         for idx, room in enumerate(roomList):
-
             topX, topY = room.top
             sizeX, sizeY = room.size
 
@@ -242,7 +246,6 @@ class MultiRoomEnv(MiniGridEnv):
 
         # Try placing the next room
         for i in range(0, 8):
-
             # Pick which wall to place the out door on
             wallSet = {0, 1, 2, 3}
             wallSet.remove(entryDoorWall)

@@ -2,6 +2,7 @@
 Copied and adapted from https://github.com/mila-iqia/babyai.
 Levels described in the Baby AI ICLR 2019 submission, with the `Unlock` instruction.
 """
+
 from __future__ import annotations
 
 from minigrid.core.constants import COLOR_NAMES
@@ -35,7 +36,7 @@ class Unlock(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -43,7 +44,7 @@ class Unlock(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -131,7 +132,7 @@ class UnlockLocal(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -139,7 +140,7 @@ class UnlockLocal(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -194,7 +195,7 @@ class KeyInBox(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -202,7 +203,7 @@ class KeyInBox(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -220,6 +221,9 @@ class KeyInBox(RoomGridLevel):
 
     - `BabyAI-KeyInBox-v0`
 
+    ## Additional Notes
+
+    The BabyAI bot is unable to solve this level.
     """
 
     def __init__(self, **kwargs):
@@ -261,7 +265,7 @@ class UnlockPickup(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -269,7 +273,7 @@ class UnlockPickup(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -336,7 +340,7 @@ class BlockedUnlockPickup(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -344,7 +348,7 @@ class BlockedUnlockPickup(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -409,7 +413,7 @@ class UnlockToUnlock(RoomGridLevel):
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
     | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -417,7 +421,7 @@ class UnlockToUnlock(RoomGridLevel):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards

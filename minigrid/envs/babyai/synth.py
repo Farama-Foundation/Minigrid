@@ -50,8 +50,8 @@ class Synth(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -59,7 +59,7 @@ class Synth(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -138,8 +138,8 @@ class SynthLoc(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -147,7 +147,7 @@ class SynthLoc(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -243,8 +243,8 @@ class SynthSeq(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -252,7 +252,7 @@ class SynthSeq(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -345,8 +345,8 @@ class MiniBossLevel(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -354,7 +354,7 @@ class MiniBossLevel(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -448,8 +448,8 @@ class BossLevel(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -457,7 +457,7 @@ class BossLevel(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards
@@ -544,8 +544,8 @@ class BossLevelNoUnlock(LevelGen):
     | 1   | right        | Turn right        |
     | 2   | forward      | Move forward      |
     | 3   | pickup       | Pick up an object |
-    | 4   | drop         | Unused            |
-    | 5   | toggle       | Unused            |
+    | 4   | drop         | Drops held item   |
+    | 5   | toggle       | Open/closes door  |
     | 6   | done         | Unused            |
 
     ## Observation Encoding
@@ -553,7 +553,7 @@ class BossLevelNoUnlock(LevelGen):
     - Each tile is encoded as a 3 dimensional tuple:
         `(OBJECT_IDX, COLOR_IDX, STATE)`
     - `OBJECT_TO_IDX` and `COLOR_TO_IDX` mapping can be found in
-        [minigrid/minigrid.py](minigrid/minigrid.py)
+        [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
     ## Rewards

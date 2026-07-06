@@ -6,7 +6,7 @@ title: "[Proposal] Proposal title"
 
 
 
-### Proposal 
+### Proposal
 
 A clear and concise description of the proposal.
 

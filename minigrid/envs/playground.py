@@ -43,7 +43,6 @@ class PlaygroundEnv(MiniGridEnv):
 
         # For each row of rooms
         for j in range(0, 3):
-
             # For each column
             for i in range(0, 3):
                 xL = i * roomW

@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import math
-import operator
-from functools import reduce
 from typing import Any
 
 import gymnasium as gym
 import numpy as np
 from gymnasium import logger, spaces
-from gymnasium.core import ObservationWrapper, ObsType, Wrapper
+from gymnasium.core import ActionWrapper, ObservationWrapper, ObsType, Wrapper
 
 from minigrid.core.constants import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX
 from minigrid.core.world_object import Goal
@@ -26,20 +24,20 @@ class ReseedWrapper(Wrapper):
         >>> from minigrid.wrappers import ReseedWrapper
         >>> env = gym.make("MiniGrid-Empty-5x5-v0")
         >>> _ = env.reset(seed=123)
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [0, 6, 5, 0, 9, 2, 2, 1, 3, 1]
         >>> env = ReseedWrapper(env, seeds=[0, 1], seed_idx=0)
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [8, 6, 5, 2, 3, 0, 0, 0, 1, 8]
         >>> _, _ = env.reset()
-        >>> [env.np_random.integers(10) for i in range(10)]
+        >>> [env.np_random.integers(10).item() for i in range(10)]
         [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]
     """
 
@@ -127,7 +125,7 @@ class ActionBonus(gym.Wrapper):
 
 class PositionBonus(Wrapper):
     """
-    Adds an exploration bonus based on which positions
+    Adds a scaled exploration bonus based on which positions
     are visited on the grid.
 
     Note:
@@ -144,7 +142,7 @@ class PositionBonus(Wrapper):
         >>> _, reward, _, _, _ = env.step(1)
         >>> print(reward)
         0
-        >>> env_bonus = PositionBonus(env)
+        >>> env_bonus = PositionBonus(env, scale=1)
         >>> obs, _ = env_bonus.reset(seed=0)
         >>> obs, reward, terminated, truncated, info = env_bonus.step(1)
         >>> print(reward)
@@ -154,7 +152,7 @@ class PositionBonus(Wrapper):
         0.7071067811865475
     """
 
-    def __init__(self, env):
+    def __init__(self, env, scale=1):
         """A wrapper that adds an exploration bonus to less visited positions.
 
         Args:
@@ -162,6 +160,7 @@ class PositionBonus(Wrapper):
         """
         super().__init__(env)
         self.counts = {}
+        self.scale = 1
 
     def step(self, action):
         """Steps through the environment with `action`."""
@@ -173,16 +172,14 @@ class PositionBonus(Wrapper):
         tup = tuple(env.agent_pos)
 
         # Get the count for this key
-        pre_count = 0
-        if tup in self.counts:
-            pre_count = self.counts[tup]
+        pre_count = self.counts.get(tup, 0)
 
         # Update the count for this key
         new_count = pre_count + 1
         self.counts[tup] = new_count
 
         bonus = 1 / math.sqrt(new_count)
-        reward += bonus
+        reward += bonus * self.scale
 
         return obs, reward, terminated, truncated, info
 
@@ -314,7 +311,11 @@ class RGBImgObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width * tile_size, self.env.height * tile_size, 3),
+            shape=(
+                self.unwrapped.height * tile_size,
+                self.unwrapped.width * tile_size,
+                3,
+            ),
             dtype="uint8",
         )
 
@@ -323,7 +324,9 @@ class RGBImgObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img = self.get_frame(highlight=True, tile_size=self.tile_size)
+        rgb_img = self.unwrapped.get_frame(
+            highlight=self.unwrapped.highlight, tile_size=self.tile_size
+        )
 
         return {**obs, "image": rgb_img}
 
@@ -370,7 +373,9 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.get_frame(tile_size=self.tile_size, agent_pov=True)
+        rgb_img_partial = self.unwrapped.get_frame(
+            tile_size=self.tile_size, agent_pov=True
+        )
 
         return {**obs, "image": rgb_img_partial}
 
@@ -399,7 +404,11 @@ class FullyObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=255,
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
 
@@ -516,6 +525,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             "object",
             "from",
             "room",
+            "maze",
         ]
 
         all_words = colors + objects + verbs + extra_words
@@ -562,19 +572,17 @@ class FlatObsWrapper(ObservationWrapper):
         (2835,)
     """
 
-    def __init__(self, env, maxStrLen=96):
+    def __init__(self, env, maxStrLen: int = 96):
         super().__init__(env)
 
         self.maxStrLen = maxStrLen
         self.numCharCodes = 28
 
-        imgSpace = env.observation_space.spaces["image"]
-        imgSize = reduce(operator.mul, imgSpace.shape, 1)
-
+        img_size = np.prod(env.observation_space["image"].shape)
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(imgSize + self.numCharCodes * self.maxStrLen,),
+            shape=(img_size + self.numCharCodes * self.maxStrLen,),
             dtype="uint8",
         )
 
@@ -591,12 +599,13 @@ class FlatObsWrapper(ObservationWrapper):
             ), f"mission string too long ({len(mission)} chars)"
             mission = mission.lower()
 
-            strArray = np.zeros(
-                shape=(self.maxStrLen, self.numCharCodes), dtype="float32"
+            str_array = np.zeros(
+                shape=(self.maxStrLen, self.numCharCodes), dtype="uint8"
             )
+            # as `numCharCodes` < 255 then we can use `uint8`
 
             for idx, ch in enumerate(mission):
-                if ch >= "a" and ch <= "z":
+                if "a" <= ch <= "z":
                     chNo = ord(ch) - ord("a")
                 elif ch == " ":
                     chNo = ord("z") - ord("a") + 1
@@ -606,11 +615,11 @@ class FlatObsWrapper(ObservationWrapper):
                     raise ValueError(
                         f"Character {ch} is not available in mission string."
                     )
-                assert chNo < self.numCharCodes, "%s : %d" % (ch, chNo)
-                strArray[idx, chNo] = 1
+                assert chNo < self.numCharCodes, f"{ch} : {chNo:d}"
+                str_array[idx, chNo] = 1
 
             self.cachedStr = mission
-            self.cachedArray = strArray
+            self.cachedArray = str_array
 
         obs = np.concatenate((image.flatten(), self.cachedArray.flatten()))
 
@@ -676,7 +685,7 @@ class DirectionObsWrapper(ObservationWrapper):
         >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
         >>> env_obs = DirectionObsWrapper(env, type="slope")
         >>> obs, _ = env_obs.reset()
-        >>> obs['goal_direction']
+        >>> obs['goal_direction'].item()
         1.0
     """
 
@@ -692,21 +701,21 @@ class DirectionObsWrapper(ObservationWrapper):
 
         if not self.goal_position:
             self.goal_position = [
-                x for x, y in enumerate(self.grid.grid) if isinstance(y, Goal)
+                x for x, y in enumerate(self.unwrapped.grid.grid) if isinstance(y, Goal)
             ]
             # in case there are multiple goals , needs to be handled for other env types
             if len(self.goal_position) >= 1:
                 self.goal_position = (
-                    int(self.goal_position[0] / self.height),
-                    self.goal_position[0] % self.width,
+                    int(self.goal_position[0] / self.unwrapped.height),
+                    self.goal_position[0] % self.unwrapped.width,
                 )
 
         return self.observation(obs), info
 
     def observation(self, obs):
         slope = np.divide(
-            self.goal_position[1] - self.agent_pos[1],
-            self.goal_position[0] - self.agent_pos[0],
+            self.goal_position[1] - self.unwrapped.agent_pos[1],
+            self.goal_position[0] - self.unwrapped.agent_pos[0],
         )
 
         if self.type == "angle":
@@ -742,7 +751,11 @@ class SymbolicObsWrapper(ObservationWrapper):
         new_image_space = spaces.Box(
             low=0,
             high=max(OBJECT_TO_IDX.values()),
-            shape=(self.env.width, self.env.height, 3),  # number of cells
+            shape=(
+                self.env.unwrapped.width,
+                self.env.unwrapped.height,
+                3,
+            ),  # number of cells
             dtype="uint8",
         )
         self.observation_space = spaces.Dict(
@@ -751,10 +764,13 @@ class SymbolicObsWrapper(ObservationWrapper):
 
     def observation(self, obs):
         objects = np.array(
-            [OBJECT_TO_IDX[o.type] if o is not None else -1 for o in self.grid.grid]
+            [
+                OBJECT_TO_IDX[o.type] if o is not None else -1
+                for o in self.unwrapped.grid.grid
+            ]
         )
-        agent_pos = self.env.agent_pos
-        ncol, nrow = self.width, self.height
+        agent_pos = self.env.unwrapped.agent_pos
+        ncol, nrow = self.unwrapped.width, self.unwrapped.height
         grid = np.mgrid[:ncol, :nrow]
         _objects = np.transpose(objects.reshape(1, nrow, ncol), (0, 2, 1))
 
@@ -764,3 +780,103 @@ class SymbolicObsWrapper(ObservationWrapper):
         obs["image"] = grid
 
         return obs
+
+
+class StochasticActionWrapper(ActionWrapper):
+    """
+    Add stochasticity to the actions
+
+    If a random action is provided, it is returned with probability `1 - prob`.
+    Else, a random action is sampled from the action space.
+    """
+
+    def __init__(self, env=None, prob=0.9, random_action=None):
+        super().__init__(env)
+        self.prob = prob
+        self.random_action = random_action
+
+    def action(self, action):
+        """ """
+        if np.random.uniform() < self.prob:
+            return action
+        else:
+            if self.random_action is None:
+                return self.np_random.integers(0, high=6)
+            else:
+                return self.random_action
+
+
+class NoDeath(Wrapper):
+    """
+    Wrapper to prevent death in specific cells (e.g., lava cells).
+    Instead of dying, the agent will receive a negative reward.
+
+    Example:
+        >>> import gymnasium as gym
+        >>> from minigrid.wrappers import NoDeath
+        >>>
+        >>> env = gym.make("MiniGrid-LavaCrossingS9N1-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (0, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("lava",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, _, _, _, _ = env.step(1)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1.0, False)
+        >>>
+        >>>
+        >>> env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-1, True)
+        >>>
+        >>> env = NoDeath(env, no_death_types=("ball",), death_cost=-1.0)
+        >>> _, _ = env.reset(seed=2)
+        >>> _, reward, term, *_ = env.step(2)
+        >>> reward, term
+        (-2.0, False)
+    """
+
+    def __init__(self, env, no_death_types: tuple[str, ...], death_cost: float = -1.0):
+        """A wrapper to prevent death in specific cells.
+
+        Args:
+            env: The environment to apply the wrapper
+            no_death_types: List of strings to identify death cells
+            death_cost: The negative reward received in death cells
+
+        """
+        assert "goal" not in no_death_types, "goal cannot be a death cell"
+
+        super().__init__(env)
+        self.death_cost = death_cost
+        self.no_death_types = no_death_types
+
+    def step(self, action):
+        # In Dynamic-Obstacles, obstacles move after the agent moves,
+        # so we need to check for collision before self.env.step()
+        front_cell = self.unwrapped.grid.get(*self.unwrapped.front_pos)
+        going_to_death = (
+            action == self.unwrapped.actions.forward
+            and front_cell is not None
+            and front_cell.type in self.no_death_types
+        )
+
+        obs, reward, terminated, truncated, info = self.env.step(action)
+
+        # We also check if the agent stays in death cells (e.g., lava)
+        # without moving
+        current_cell = self.unwrapped.grid.get(*self.unwrapped.agent_pos)
+        in_death = current_cell is not None and current_cell.type in self.no_death_types
+
+        if terminated and (going_to_death or in_death):
+            terminated = False
+            reward += self.death_cost
+
+        return obs, reward, terminated, truncated, info

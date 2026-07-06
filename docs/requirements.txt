@@ -1,4 +1,4 @@
-sphinx==5.2.3
+sphinx
 sphinx-notfound-page
 myst-parser
 git+https://github.com/Farama-Foundation/Celshast#egg=furo

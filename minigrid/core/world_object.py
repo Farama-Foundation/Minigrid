@@ -25,7 +25,6 @@ Point = Tuple[int, int]
 
 
 class WorldObj:
-
     """
     Base class for grid world objects
     """
@@ -74,7 +73,7 @@ class WorldObj:
         obj_type = IDX_TO_OBJECT[type_idx]
         color = IDX_TO_COLOR[color_idx]
 
-        if obj_type == "empty" or obj_type == "unseen":
+        if obj_type == "empty" or obj_type == "unseen" or obj_type == "agent":
             return None
 
         # State, 0: open, 1: closed, 2: locked
@@ -108,8 +107,8 @@ class WorldObj:
 
 
 class Goal(WorldObj):
-    def __init__(self):
-        super().__init__("goal", "green")
+    def __init__(self, color: str = "green"):
+        super().__init__("goal", color)
 
     def can_overlap(self):
         return True

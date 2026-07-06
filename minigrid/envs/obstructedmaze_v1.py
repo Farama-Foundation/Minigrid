@@ -6,7 +6,7 @@ from minigrid.core.world_object import Ball, Box, Key
 from minigrid.envs.obstructedmaze import ObstructedMazeEnv
 
 
-class ObstructedMaze_Full(ObstructedMazeEnv):
+class ObstructedMaze_Full_V1(ObstructedMazeEnv):
     """
     A blue ball is hidden in one of the 4 corners of a 3x3 maze. Doors
     are locked, doors are obstructed by a ball and keys are hidden in
