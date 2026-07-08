@@ -112,6 +112,37 @@ def test_position_bonus_wrapper(env_id):
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+@pytest.mark.parametrize("scale", [0.5, 2, 3.0])
+def test_position_bonus_wrapper_scale(env_id, scale):
+    env = gym.make(env_id)
+    wrapped_env = PositionBonus(gym.make(env_id), scale=scale)
+
+    action_forward = Actions.forward
+    action_left = Actions.left
+    action_right = Actions.right
+
+    for _ in range(10):
+        wrapped_env.reset()
+        for _ in range(5):
+            wrapped_env.step(action_forward)
+
+    # Turn left 3 times (check that actions don't influence bonus)
+    for _ in range(3):
+        _, wrapped_rew, _, _, _ = wrapped_env.step(action_left)
+
+    env.reset()
+    for _ in range(5):
+        env.step(action_forward)
+    # Turn right 3 times
+    for _ in range(3):
+        _, rew, _, _, _ = env.step(action_right)
+
+    expected_bonus_reward = rew + scale * (1 / math.sqrt(13))
+
+    assert expected_bonus_reward == wrapped_rew
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_action_bonus_wrapper(env_id):
     env = gym.make(env_id)
     wrapped_env = ActionBonus(gym.make(env_id))

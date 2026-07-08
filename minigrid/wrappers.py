@@ -157,10 +157,11 @@ class PositionBonus(Wrapper):
 
         Args:
             env: The environment to apply the wrapper
+            scale: The multiplier applied to the exploration bonus (default 1)
         """
         super().__init__(env)
         self.counts = {}
-        self.scale = 1
+        self.scale = scale
 
     def step(self, action):
         """Steps through the environment with `action`."""
