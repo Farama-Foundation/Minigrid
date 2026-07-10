@@ -746,7 +746,13 @@ class MiniGridEnv(gym.Env):
             if self.render_size is None:
                 self.render_size = img.shape[:2]
             if self.window is None:
-                pygame.init()
+                # Rendering only needs the freetype subsystem (for the mission
+                # text) and the display, both initialized below. A full
+                # pygame.init() also starts the audio/joystick subsystems, which
+                # can take several seconds on some platforms (e.g. enumerating
+                # audio devices on Windows).
+                # See https://github.com/Farama-Foundation/Minigrid/issues/497
+                pygame.freetype.init()
                 pygame.display.init()
                 self.window = pygame.display.set_mode(
                     (self.screen_size, self.screen_size)
