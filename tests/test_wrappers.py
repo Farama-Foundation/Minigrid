@@ -9,6 +9,7 @@ import pytest
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import OBJECT_TO_IDX
+from minigrid.core.grid import Grid
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -401,3 +402,67 @@ def test_non_square_RGBIMgObsWrapper():
     env = RGBImgObsWrapper(gym.make("MiniGrid-BlockedUnlockPickup-v0"))
     obs, info = env.reset()
     assert env.observation_space["image"].shape == obs["image"].shape
+
+
+@pytest.mark.parametrize("view_size", [3, 5, 7, 9])
+def test_rgb_img_partial_obs_wrapper_view_size(view_size):
+    """
+    RGBImgPartialObsWrapper must honour the view size of the env it wraps
+    (https://github.com/Farama-Foundation/Minigrid/issues/419).
+    """
+    env = RGBImgPartialObsWrapper(
+        ViewSizeWrapper(gym.make("MiniGrid-DoorKey-8x8-v0"), agent_view_size=view_size)
+    )
+    side = view_size * env.tile_size
+
+    obs, _ = env.reset(seed=10)
+    assert env.observation_space["image"].shape == (side, side, 3)
+    assert obs["image"].shape == (side, side, 3)
+    assert env.observation_space["image"].contains(obs["image"])
+
+    obs, _, _, _, _ = env.step(0)
+    assert obs["image"].shape == (side, side, 3)
+    assert env.observation_space["image"].contains(obs["image"])
+    env.close()
+
+
+@pytest.mark.parametrize("view_size", [3, 5, 7])
+def test_rgb_img_partial_obs_wrapper_matches_symbolic_obs(view_size):
+    """
+    The rendered image must depict exactly the cells reported by the symbolic
+    observation of the wrapped env, and no others.
+    """
+    env_id = "MiniGrid-DoorKey-8x8-v0"
+    sym_env = ViewSizeWrapper(gym.make(env_id), agent_view_size=view_size)
+    rgb_env = RGBImgPartialObsWrapper(
+        ViewSizeWrapper(gym.make(env_id), agent_view_size=view_size)
+    )
+
+    sym_obs, _ = sym_env.reset(seed=10)
+    rgb_obs, _ = rgb_env.reset(seed=10)
+
+    grid, vis_mask = Grid.decode(sym_obs["image"])
+    expected = grid.render(
+        rgb_env.tile_size,
+        agent_pos=(grid.width // 2, grid.height - 1),
+        agent_dir=3,
+        highlight_mask=vis_mask,
+    )
+
+    assert np.array_equal(rgb_obs["image"], expected)
+    sym_env.close()
+    rgb_env.close()
+
+
+def test_rgb_img_partial_obs_wrapper_default_view_size_unchanged():
+    """
+    Without ViewSizeWrapper the observation must stay identical to the agent
+    POV frame rendered by the underlying environment.
+    """
+    env = RGBImgPartialObsWrapper(gym.make("MiniGrid-LavaCrossingS11N5-v0"))
+    obs, _ = env.reset(seed=10)
+
+    expected = env.unwrapped.get_frame(tile_size=env.tile_size, agent_pov=True)
+    assert np.array_equal(obs["image"], expected)
+    assert env.observation_space["image"].shape == obs["image"].shape
+    env.close()
