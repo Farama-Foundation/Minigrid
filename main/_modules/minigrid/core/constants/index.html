@@ -406,43 +406,43 @@
 
 <span class="c1"># Map of color names to RGB values</span>
 <span class="n">COLORS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
-    <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
-    <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">]),</span>
-    <span class="s2">&quot;purple&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">112</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">195</span><span class="p">]),</span>
-    <span class="s2">&quot;yellow&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
-    <span class="s2">&quot;grey&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]),</span>
+    <span class="s2">"red"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="s2">"green"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="s2">"blue"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">]),</span>
+    <span class="s2">"purple"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">112</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">195</span><span class="p">]),</span>
+    <span class="s2">"yellow"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+    <span class="s2">"grey"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]),</span>
 <span class="p">}</span>
 
 <span class="n">COLOR_NAMES</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">COLORS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
 <span class="c1"># Used to map colors to integers</span>
-<span class="n">COLOR_TO_IDX</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;grey&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="n">COLOR_TO_IDX</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"red"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"green"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"purple"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"yellow"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"grey"</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
 
 <span class="n">IDX_TO_COLOR</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">COLOR_TO_IDX</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">COLOR_TO_IDX</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
 <span class="c1"># Map of object type to integers</span>
 <span class="n">OBJECT_TO_IDX</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;unseen&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;empty&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;wall&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="s2">&quot;door&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-    <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="s2">&quot;ball&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="s2">&quot;box&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-    <span class="s2">&quot;goal&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="s2">&quot;lava&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-    <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">"unseen"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">"empty"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"wall"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"floor"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"door"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">"key"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">"ball"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">"box"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">"goal"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s2">"lava"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">"agent"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">IDX_TO_OBJECT</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">OBJECT_TO_IDX</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">OBJECT_TO_IDX</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
 <span class="c1"># Map of state names to integers</span>
 <span class="n">STATE_TO_IDX</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s2">&quot;closed&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;locked&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"open"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">"closed"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"locked"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Map of agent direction indices to vectors</span>

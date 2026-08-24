@@ -424,13 +424,13 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
+        <span class="k">return</span> <span class="s2">"grand mission"</span>
 </pre></div>
 </div>
 <p>First, we need to create a class that inherits from <code class="docutils literal notranslate"><span class="pre">MiniGridEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define a mission space, the recommended way to do it is to define a static function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
-    <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
+    <span class="k">return</span> <span class="s2">"grand mission"</span>
 </pre></div>
 </div>
 <p>that only returns a string which corresponds to the mission. We then pass this function as an argument</p>
@@ -559,7 +559,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_gen_mission</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;grand mission&quot;</span>
+        <span class="k">return</span> <span class="s2">"grand mission"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_gen_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="c1"># Create an empty grid</span>
@@ -586,18 +586,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">place_agent</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="s2">&quot;grand mission&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="s2">"grand mission"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">SimpleEnv</span><span class="p">(</span><span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SimpleEnv</span><span class="p">(</span><span class="n">render_mode</span><span class="o">=</span><span class="s2">"human"</span><span class="p">)</span>
 
     <span class="c1"># enable manual control for testing</span>
     <span class="n">manual_control</span> <span class="o">=</span> <span class="n">ManualControl</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
     <span class="n">manual_control</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>

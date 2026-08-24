@@ -404,7 +404,7 @@
 <div class="viewcode-block" id="ReseedWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.ReseedWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReseedWrapper</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to always regenerate an environment with the same set of seeds.</span>
 <span class="sd">    This can be used to force an environment to always keep the same</span>
 <span class="sd">    configuration when reset.</span>
@@ -413,7 +413,7 @@
 <span class="sd">        &gt;&gt;&gt; import minigrid</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import ReseedWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; _ = env.reset(seed=123)</span>
 <span class="sd">        &gt;&gt;&gt; [env.np_random.integers(10).item() for i in range(10)]</span>
 <span class="sd">        [0, 6, 5, 0, 9, 2, 2, 1, 3, 1]</span>
@@ -430,16 +430,16 @@
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset()</span>
 <span class="sd">        &gt;&gt;&gt; [env.np_random.integers(10).item() for i in range(10)]</span>
 <span class="sd">        [4, 5, 7, 9, 0, 1, 8, 9, 2, 3]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="n">seed_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper that always regenerate an environment with the same set of seeds.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that always regenerate an environment with the same set of seeds.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
 <span class="sd">            seeds: A list of seed to be applied to the env</span>
 <span class="sd">            seed_idx: Index of the initial seed in seeds</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seeds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed_idx</span> <span class="o">=</span> <span class="n">seed_idx</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -449,7 +449,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;A seed has been passed to `ReseedWrapper.reset` which is ignored.&quot;</span>
+                <span class="s2">"A seed has been passed to `ReseedWrapper.reset` which is ignored."</span>
             <span class="p">)</span>
         <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_idx</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed_idx</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seeds</span><span class="p">)</span>
@@ -460,7 +460,7 @@
 <div class="viewcode-block" id="ActionBonus">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.ActionBonus">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ActionBonus</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Wrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper which adds an exploration bonus.</span>
 <span class="sd">    This is a reward to encourage exploration of less</span>
 <span class="sd">    visited (state,action) pairs.</span>
@@ -468,7 +468,7 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import ActionBonus</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=0)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, _, _, _ = env.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; print(reward)</span>
@@ -484,19 +484,19 @@
 <span class="sd">        &gt;&gt;&gt; _, reward, _, _, _ = env_bonus.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; print(reward)</span>
 <span class="sd">        1.0</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper that adds an exploration bonus to less visited (state,action) pairs.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that adds an exploration bonus to less visited (state,action) pairs.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Steps through the environment with `action`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Steps through the environment with `action`."""</span>
         <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
         <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span>
@@ -521,7 +521,7 @@
 <div class="viewcode-block" id="PositionBonus">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.PositionBonus">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PositionBonus</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Adds a scaled exploration bonus based on which positions</span>
 <span class="sd">    are visited on the grid.</span>
 
@@ -531,7 +531,7 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import PositionBonus</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=0)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, _, _, _ = env.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; print(reward)</span>
@@ -547,20 +547,20 @@
 <span class="sd">        &gt;&gt;&gt; obs, reward, terminated, truncated, info = env_bonus.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; print(reward)</span>
 <span class="sd">        0.7071067811865475</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper that adds an exploration bonus to less visited positions.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that adds an exploration bonus to less visited positions.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Steps through the environment with `action`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Steps through the environment with `action`."""</span>
         <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
         <span class="c1"># Tuple based on which we index the counts</span>
@@ -585,49 +585,49 @@
 <div class="viewcode-block" id="ImgObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.ImgObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ImgObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Use the image as the only observation output, no language/mission.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import ImgObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
 <span class="sd">        &gt;&gt;&gt; obs.keys()</span>
-<span class="sd">        dict_keys([&#39;image&#39;, &#39;direction&#39;, &#39;mission&#39;])</span>
+<span class="sd">        dict_keys(['image', 'direction', 'mission'])</span>
 <span class="sd">        &gt;&gt;&gt; env = ImgObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
 <span class="sd">        &gt;&gt;&gt; obs.shape</span>
 <span class="sd">        (7, 7, 3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper that makes image the only observation.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that makes image the only observation.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="OneHotPartialObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.OneHotPartialObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OneHotPartialObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to get a one-hot encoding of a partially observable</span>
 <span class="sd">    agent view as observation.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import OneHotPartialObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&quot;image&quot;][0, :, :]</span>
+<span class="sd">        &gt;&gt;&gt; obs["image"][0, :, :]</span>
 <span class="sd">        array([[2, 5, 0],</span>
 <span class="sd">               [2, 5, 0],</span>
 <span class="sd">               [2, 5, 0],</span>
@@ -637,7 +637,7 @@
 <span class="sd">               [2, 5, 0]], dtype=uint8)</span>
 <span class="sd">        &gt;&gt;&gt; env = OneHotPartialObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&quot;image&quot;][0, :, :]</span>
+<span class="sd">        &gt;&gt;&gt; obs["image"][0, :, :]</span>
 <span class="sd">        array([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
 <span class="sd">               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
 <span class="sd">               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
@@ -646,33 +646,33 @@
 <span class="sd">               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
 <span class="sd">               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]],</span>
 <span class="sd">              dtype=uint8)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper that makes the image observation a one-hot encoding of a partially observable agent view.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that makes the image observation a one-hot encoding of a partially observable agent view.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span> <span class="o">=</span> <span class="n">tile_size</span>
 
-        <span class="n">obs_shape</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">obs_shape</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Number of bits per cell</span>
         <span class="n">num_bits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">OBJECT_TO_IDX</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">COLOR_TO_IDX</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">STATE_TO_IDX</span><span class="p">)</span>
 
         <span class="n">new_image_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
-            <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">obs_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_bits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span>
+            <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">obs_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">num_bits</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
@@ -684,14 +684,14 @@
                 <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">OBJECT_TO_IDX</span><span class="p">)</span> <span class="o">+</span> <span class="n">color</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">OBJECT_TO_IDX</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">COLOR_TO_IDX</span><span class="p">)</span> <span class="o">+</span> <span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">out</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">out</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="RGBImgObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.RGBImgObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RGBImgObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to use fully observable RGB image as observation,</span>
 <span class="sd">    This can be used to have the agent to solve the gridworld in pixel space.</span>
 
@@ -699,15 +699,15 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import RGBImgObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Empty-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Empty-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; plt.imshow(obs[&#39;image&#39;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(obs['image'])  # doctest: +SKIP</span>
 <span class="sd">        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
 <span class="sd">        &gt;&gt;&gt; env = RGBImgObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; plt.imshow(obs[&#39;image&#39;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(obs['image'])  # doctest: +SKIP</span>
 <span class="sd">        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -722,11 +722,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span>
                 <span class="mi">3</span><span class="p">,</span>
             <span class="p">),</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
@@ -734,14 +734,14 @@
             <span class="n">highlight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">highlight</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">rgb_img</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">rgb_img</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="RGBImgPartialObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.RGBImgPartialObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to use partially observable RGB image as observation.</span>
 <span class="sd">    This can be used to have the agent to solve the gridworld in pixel space.</span>
 
@@ -749,19 +749,19 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import RGBImgObsWrapper, RGBImgPartialObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; plt.imshow(obs[&quot;image&quot;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(obs["image"])  # doctest: +SKIP</span>
 <span class="sd">        ![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = RGBImgObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; plt.imshow(obs[&quot;image&quot;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(obs["image"])  # doctest: +SKIP</span>
 <span class="sd">        ![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = RGBImgPartialObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; plt.imshow(obs[&quot;image&quot;])  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(obs["image"])  # doctest: +SKIP</span>
 <span class="sd">        ![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -769,16 +769,16 @@
         <span class="c1"># Rendering attributes for observations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span> <span class="o">=</span> <span class="n">tile_size</span>
 
-        <span class="n">obs_shape</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">obs_shape</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">new_image_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
             <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span>
             <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">obs_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span> <span class="n">obs_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
@@ -786,29 +786,29 @@
             <span class="n">tile_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">agent_pov</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">rgb_img_partial</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">rgb_img_partial</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="FullyObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.FullyObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FullyObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Fully observable gridworld using a compact grid encoding instead of the agent view.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import FullyObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (7, 7, 3)</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = FullyObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (11, 11, 3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -821,28 +821,28 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
                 <span class="mi">3</span><span class="p">,</span>
             <span class="p">),</span>  <span class="c1"># number of cells</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
         <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span>
         <span class="n">full_grid</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
         <span class="n">full_grid</span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">env</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">OBJECT_TO_IDX</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">COLOR_TO_IDX</span><span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">agent_dir</span><span class="p">]</span>
+            <span class="p">[</span><span class="n">OBJECT_TO_IDX</span><span class="p">[</span><span class="s2">"agent"</span><span class="p">],</span> <span class="n">COLOR_TO_IDX</span><span class="p">[</span><span class="s2">"red"</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">agent_dir</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">full_grid</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">full_grid</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="DictObservationSpaceWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.DictObservationSpaceWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DictObservationSpaceWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transforms the observation space (that has a textual component) to a fully numerical observation space,</span>
 <span class="sd">    where the textual instructions are replaced by arrays representing the indices of each word in a fixed vocabulary.</span>
 
@@ -852,22 +852,22 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import DictObservationSpaceWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;mission&#39;]</span>
-<span class="sd">        &#39;avoid the lava and get to the green goal square&#39;</span>
+<span class="sd">        &gt;&gt;&gt; obs['mission']</span>
+<span class="sd">        'avoid the lava and get to the green goal square'</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = DictObservationSpaceWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;mission&#39;][:10]</span>
+<span class="sd">        &gt;&gt;&gt; obs['mission'][:10]</span>
 <span class="sd">        [19, 31, 17, 36, 20, 38, 31, 2, 15, 35]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">max_words_in_mission</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">word_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        max_words_in_mission is the length of the array to represent a mission, value 0 for missing words</span>
 <span class="sd">        word_dict is a dictionary of words to use (keys=words, values=indices from 1 to &lt; max_words_in_mission),</span>
 <span class="sd">                  if None, use the Minigrid language</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">word_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -878,9 +878,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;direction&quot;</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
-                <span class="s2">&quot;mission&quot;</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">(</span>
+                <span class="s2">"image"</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">"image"</span><span class="p">],</span>
+                <span class="s2">"direction"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+                <span class="s2">"mission"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">(</span>
                     <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span> <span class="o">*</span> <span class="n">max_words_in_mission</span>
                 <span class="p">),</span>
             <span class="p">}</span>
@@ -888,59 +888,59 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_minigrid_words</span><span class="p">():</span>
-        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;grey&quot;</span><span class="p">]</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"red"</span><span class="p">,</span> <span class="s2">"green"</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">,</span> <span class="s2">"yellow"</span><span class="p">,</span> <span class="s2">"purple"</span><span class="p">,</span> <span class="s2">"grey"</span><span class="p">]</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;unseen&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;empty&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;wall&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;floor&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;box&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;key&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ball&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;door&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;goal&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;agent&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;lava&quot;</span><span class="p">,</span>
+            <span class="s2">"unseen"</span><span class="p">,</span>
+            <span class="s2">"empty"</span><span class="p">,</span>
+            <span class="s2">"wall"</span><span class="p">,</span>
+            <span class="s2">"floor"</span><span class="p">,</span>
+            <span class="s2">"box"</span><span class="p">,</span>
+            <span class="s2">"key"</span><span class="p">,</span>
+            <span class="s2">"ball"</span><span class="p">,</span>
+            <span class="s2">"door"</span><span class="p">,</span>
+            <span class="s2">"goal"</span><span class="p">,</span>
+            <span class="s2">"agent"</span><span class="p">,</span>
+            <span class="s2">"lava"</span><span class="p">,</span>
         <span class="p">]</span>
 
         <span class="n">verbs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;pick&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;avoid&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;find&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;put&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;use&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;open&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;go&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fetch&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;reach&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unlock&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;traverse&quot;</span><span class="p">,</span>
+            <span class="s2">"pick"</span><span class="p">,</span>
+            <span class="s2">"avoid"</span><span class="p">,</span>
+            <span class="s2">"get"</span><span class="p">,</span>
+            <span class="s2">"find"</span><span class="p">,</span>
+            <span class="s2">"put"</span><span class="p">,</span>
+            <span class="s2">"use"</span><span class="p">,</span>
+            <span class="s2">"open"</span><span class="p">,</span>
+            <span class="s2">"go"</span><span class="p">,</span>
+            <span class="s2">"fetch"</span><span class="p">,</span>
+            <span class="s2">"reach"</span><span class="p">,</span>
+            <span class="s2">"unlock"</span><span class="p">,</span>
+            <span class="s2">"traverse"</span><span class="p">,</span>
         <span class="p">]</span>
 
         <span class="n">extra_words</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;up&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;the&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;a&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;at&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;,&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;square&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;and&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;then&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;to&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;of&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;rooms&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;near&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;opening&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;must&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;you&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;matching&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;end&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;hallway&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;from&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;room&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;maze&quot;</span><span class="p">,</span>
+            <span class="s2">"up"</span><span class="p">,</span>
+            <span class="s2">"the"</span><span class="p">,</span>
+            <span class="s2">"a"</span><span class="p">,</span>
+            <span class="s2">"at"</span><span class="p">,</span>
+            <span class="s2">","</span><span class="p">,</span>
+            <span class="s2">"square"</span><span class="p">,</span>
+            <span class="s2">"and"</span><span class="p">,</span>
+            <span class="s2">"then"</span><span class="p">,</span>
+            <span class="s2">"to"</span><span class="p">,</span>
+            <span class="s2">"of"</span><span class="p">,</span>
+            <span class="s2">"rooms"</span><span class="p">,</span>
+            <span class="s2">"near"</span><span class="p">,</span>
+            <span class="s2">"opening"</span><span class="p">,</span>
+            <span class="s2">"must"</span><span class="p">,</span>
+            <span class="s2">"you"</span><span class="p">,</span>
+            <span class="s2">"matching"</span><span class="p">,</span>
+            <span class="s2">"end"</span><span class="p">,</span>
+            <span class="s2">"hallway"</span><span class="p">,</span>
+            <span class="s2">"object"</span><span class="p">,</span>
+            <span class="s2">"from"</span><span class="p">,</span>
+            <span class="s2">"room"</span><span class="p">,</span>
+            <span class="s2">"maze"</span><span class="p">,</span>
         <span class="p">]</span>
 
         <span class="n">all_words</span> <span class="o">=</span> <span class="n">colors</span> <span class="o">+</span> <span class="n">objects</span> <span class="o">+</span> <span class="n">verbs</span> <span class="o">+</span> <span class="n">extra_words</span>
@@ -948,23 +948,23 @@
         <span class="k">return</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_words</span><span class="p">)}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">string_to_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert a string to a list of indices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># adding space before and after commas</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot; , &quot;</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">" , "</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">word_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_dict</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown word: </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown word: </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">indices</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_to_indices</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_words_in_mission</span>
-        <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_words_in_mission</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">]))</span>
+        <span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_to_indices</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_words_in_mission</span>
+        <span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_words_in_mission</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">]))</span>
 
         <span class="k">return</span> <span class="n">obs</span></div>
 
@@ -973,7 +973,7 @@
 <div class="viewcode-block" id="FlatObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.FlatObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FlatObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Encode mission strings using a one-hot scheme,</span>
 <span class="sd">    and combine these with observed images into one flat array.</span>
 
@@ -983,12 +983,12 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import FlatObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = FlatObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
 <span class="sd">        &gt;&gt;&gt; obs.shape</span>
 <span class="sd">        (2835,)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">maxStrLen</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">96</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -996,44 +996,44 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">maxStrLen</span> <span class="o">=</span> <span class="n">maxStrLen</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span> <span class="o">=</span> <span class="mi">28</span>
 
-        <span class="n">img_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">img_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
             <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span>
             <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">img_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxStrLen</span><span class="p">,),</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cachedStr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
-        <span class="n">mission</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;mission&quot;</span><span class="p">]</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span>
+        <span class="n">mission</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s2">"mission"</span><span class="p">]</span>
 
         <span class="c1"># Cache the last-encoded mission string</span>
         <span class="k">if</span> <span class="n">mission</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cachedStr</span><span class="p">:</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">mission</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxStrLen</span>
-            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;mission string too long (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mission</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars)&quot;</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">"mission string too long (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mission</span><span class="p">)</span><span class="si">}</span><span class="s2"> chars)"</span>
             <span class="n">mission</span> <span class="o">=</span> <span class="n">mission</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
             <span class="n">str_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
-                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxStrLen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxStrLen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span>
             <span class="p">)</span>
             <span class="c1"># as `numCharCodes` &lt; 255 then we can use `uint8`</span>
 
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mission</span><span class="p">):</span>
-                <span class="k">if</span> <span class="s2">&quot;a&quot;</span> <span class="o">&lt;=</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span>
-                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
-                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">&quot;,&quot;</span><span class="p">:</span>
-                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
+                <span class="k">if</span> <span class="s2">"a"</span> <span class="o">&lt;=</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="s2">"z"</span><span class="p">:</span>
+                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">" "</span><span class="p">:</span>
+                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="s2">","</span><span class="p">:</span>
+                    <span class="n">chNo</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Character </span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2"> is not available in mission string.&quot;</span>
+                        <span class="sa">f</span><span class="s2">"Character </span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2"> is not available in mission string."</span>
                     <span class="p">)</span>
-                <span class="k">assert</span> <span class="n">chNo</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">chNo</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">assert</span> <span class="n">chNo</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">numCharCodes</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">chNo</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">"</span>
                 <span class="n">str_array</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">chNo</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">cachedStr</span> <span class="o">=</span> <span class="n">mission</span>
@@ -1048,22 +1048,22 @@
 <div class="viewcode-block" id="ViewSizeWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.ViewSizeWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ViewSizeWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to customize the agent field of view size.</span>
 <span class="sd">    This cannot be used with fully observable wrappers.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import ViewSizeWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (7, 7, 3)</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = ViewSizeWrapper(env, agent_view_size=5)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (5, 5, 3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">agent_view_size</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -1075,12 +1075,12 @@
 
         <span class="c1"># Compute observation space with specified view size</span>
         <span class="n">new_image_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
-            <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">agent_view_size</span><span class="p">,</span> <span class="n">agent_view_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span>
+            <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">agent_view_size</span><span class="p">,</span> <span class="n">agent_view_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span>
         <span class="p">)</span>
 
-        <span class="c1"># Override the environment&#39;s observation spaceexit</span>
+        <span class="c1"># Override the environment's observation spaceexit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
@@ -1091,14 +1091,14 @@
         <span class="c1"># Encode the partially observable view into a numpy array</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">vis_mask</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">image</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="DirectionObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.DirectionObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DirectionObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)</span>
 <span class="sd">    type = {slope , angle}</span>
 
@@ -1106,14 +1106,14 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import DirectionObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; env_obs = DirectionObsWrapper(env, type=&quot;slope&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
+<span class="sd">        &gt;&gt;&gt; env_obs = DirectionObsWrapper(env, type="slope")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;goal_direction&#39;].item()</span>
+<span class="sd">        &gt;&gt;&gt; obs['goal_direction'].item()</span>
 <span class="sd">        1.0</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;slope&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"slope"</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
@@ -1142,10 +1142,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;angle&quot;</span><span class="p">:</span>
-            <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;goal_direction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"angle"</span><span class="p">:</span>
+            <span class="n">obs</span><span class="p">[</span><span class="s2">"goal_direction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;goal_direction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">slope</span>
+            <span class="n">obs</span><span class="p">[</span><span class="s2">"goal_direction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">slope</span>
 
         <span class="k">return</span> <span class="n">obs</span></div>
 
@@ -1154,7 +1154,7 @@
 <div class="viewcode-block" id="SymbolicObsWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.SymbolicObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SymbolicObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Fully observable grid with a symbolic state representation.</span>
 <span class="sd">    The symbol is a triple of (X, Y, IDX), where X and Y are</span>
 <span class="sd">    the coordinates on the grid, and IDX is the id of the object.</span>
@@ -1162,15 +1162,15 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import SymbolicObsWrapper</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS11N5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS11N5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (7, 7, 3)</span>
 <span class="sd">        &gt;&gt;&gt; env_obs = SymbolicObsWrapper(env)</span>
 <span class="sd">        &gt;&gt;&gt; obs, _ = env_obs.reset()</span>
-<span class="sd">        &gt;&gt;&gt; obs[&#39;image&#39;].shape</span>
+<span class="sd">        &gt;&gt;&gt; obs['image'].shape</span>
 <span class="sd">        (11, 11, 3)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -1183,10 +1183,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
                 <span class="mi">3</span><span class="p">,</span>
             <span class="p">),</span>  <span class="c1"># number of cells</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="s2">"uint8"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span> <span class="s2">"image"</span><span class="p">:</span> <span class="n">new_image_space</span><span class="p">}</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
@@ -1203,8 +1203,8 @@
 
         <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">grid</span><span class="p">,</span> <span class="n">_objects</span><span class="p">])</span>
         <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">grid</span><span class="p">[</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">agent_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">OBJECT_TO_IDX</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">]</span>
-        <span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">agent_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">OBJECT_TO_IDX</span><span class="p">[</span><span class="s2">"agent"</span><span class="p">]</span>
+        <span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid</span>
 
         <span class="k">return</span> <span class="n">obs</span></div>
 
@@ -1213,12 +1213,12 @@
 <div class="viewcode-block" id="StochasticActionWrapper">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.StochasticActionWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StochasticActionWrapper</span><span class="p">(</span><span class="n">ActionWrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add stochasticity to the actions</span>
 
 <span class="sd">    If a random action is provided, it is returned with probability `1 - prob`.</span>
 <span class="sd">    Else, a random action is sampled from the action space.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prob</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">random_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
@@ -1226,7 +1226,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span> <span class="o">=</span> <span class="n">random_action</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">""" """</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">action</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1240,7 +1240,7 @@
 <div class="viewcode-block" id="NoDeath">
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.NoDeath">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NoDeath</span><span class="p">(</span><span class="n">Wrapper</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper to prevent death in specific cells (e.g., lava cells).</span>
 <span class="sd">    Instead of dying, the agent will receive a negative reward.</span>
 
@@ -1248,14 +1248,14 @@
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
 <span class="sd">        &gt;&gt;&gt; from minigrid.wrappers import NoDeath</span>
 <span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-LavaCrossingS9N1-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-LavaCrossingS9N1-v0")</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
 <span class="sd">        &gt;&gt;&gt; _, _, _, _, _ = env.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
 <span class="sd">        &gt;&gt;&gt; reward, term</span>
 <span class="sd">        (0, True)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=(&quot;lava&quot;,), death_cost=-1.0)</span>
+<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=("lava",), death_cost=-1.0)</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
 <span class="sd">        &gt;&gt;&gt; _, _, _, _, _ = env.step(1)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
@@ -1263,29 +1263,29 @@
 <span class="sd">        (-1.0, False)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; env = gym.make(&quot;MiniGrid-Dynamic-Obstacles-5x5-v0&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; env = gym.make("MiniGrid-Dynamic-Obstacles-5x5-v0")</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
 <span class="sd">        &gt;&gt;&gt; reward, term</span>
 <span class="sd">        (-1, True)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=(&quot;ball&quot;,), death_cost=-1.0)</span>
+<span class="sd">        &gt;&gt;&gt; env = NoDeath(env, no_death_types=("ball",), death_cost=-1.0)</span>
 <span class="sd">        &gt;&gt;&gt; _, _ = env.reset(seed=2)</span>
 <span class="sd">        &gt;&gt;&gt; _, reward, term, *_ = env.step(2)</span>
 <span class="sd">        &gt;&gt;&gt; reward, term</span>
 <span class="sd">        (-2.0, False)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">death_cost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A wrapper to prevent death in specific cells.</span>
+<span class="w">        </span><span class="sd">"""A wrapper to prevent death in specific cells.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
 <span class="sd">            no_death_types: List of strings to identify death cells</span>
 <span class="sd">            death_cost: The negative reward received in death cells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="s2">&quot;goal&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_death_types</span><span class="p">,</span> <span class="s2">&quot;goal cannot be a death cell&quot;</span>
+<span class="sd">        """</span>
+        <span class="k">assert</span> <span class="s2">"goal"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_death_types</span><span class="p">,</span> <span class="s2">"goal cannot be a death cell"</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">death_cost</span> <span class="o">=</span> <span class="n">death_cost</span>
