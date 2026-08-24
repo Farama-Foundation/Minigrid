@@ -71,7 +71,7 @@ napoleon_custom_sections = [("Returns", "params_style")]
 # a list of builtin themes.
 #
 html_theme = "celshast"
-html_title = "MiniGrid Documentation"
+html_title = "Minigrid Documentation"
 html_baseurl = "https://minigrid.farama.org/"
 html_copy_source = False
 html_favicon = "_static/img/minigrid-favicon.png"
