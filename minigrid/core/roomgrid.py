@@ -76,6 +76,7 @@ class RoomGrid(MiniGridEnv):
         num_cols: int = 3,
         max_steps: int = 100,
         agent_view_size: int = 7,
+        fix_empty_box_bug: bool = False,
         **kwargs,
     ):
         assert room_size > 0
@@ -85,6 +86,7 @@ class RoomGrid(MiniGridEnv):
         self.room_size = room_size
         self.num_rows = num_rows
         self.num_cols = num_cols
+        self.fix_empty_box_bug = fix_empty_box_bug
 
         height = (room_size - 1) * num_rows + 1
         width = (room_size - 1) * num_cols + 1
@@ -219,7 +221,7 @@ class RoomGrid(MiniGridEnv):
         elif kind == "ball":
             obj = Ball(color)
         elif kind == "box":
-            obj = Box(color)
+            obj = Box(color, fix_empty_box_bug=self.fix_empty_box_bug)
         else:
             raise ValueError(
                 f"{kind} object kind is not available in this environment."

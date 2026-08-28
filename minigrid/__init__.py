@@ -19,6 +19,12 @@ def register_minigrid_envs():
         entry_point="minigrid.envs:BlockedUnlockPickupEnv",
     )
 
+    register(
+        id="MiniGrid-BlockedUnlockPickup-v1",
+        entry_point="minigrid.envs:BlockedUnlockPickupEnv",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
     # LavaCrossing
     # ----------------------------------------
     register(
@@ -530,9 +536,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="MiniGrid-PutNear-6x6-N2-v1",
+        entry_point="minigrid.envs:PutNearEnv",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="MiniGrid-PutNear-8x8-N3-v0",
         entry_point="minigrid.envs:PutNearEnv",
         kwargs={"size": 8, "numObjs": 3},
+    )
+
+    register(
+        id="MiniGrid-PutNear-8x8-N3-v1",
+        entry_point="minigrid.envs:PutNearEnv",
+        kwargs={"size": 8, "numObjs": 3, "fix_empty_box_bug": True},
     )
 
     # RedBlueDoors
@@ -560,6 +578,12 @@ def register_minigrid_envs():
     register(
         id="MiniGrid-UnlockPickup-v0",
         entry_point="minigrid.envs:UnlockPickupEnv",
+    )
+
+    register(
+        id="MiniGrid-UnlockPickup-v1",
+        entry_point="minigrid.envs:UnlockPickupEnv",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     # WaveFunctionCollapse
@@ -852,8 +876,20 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-Pickup-v1",
+        entry_point="minigrid.envs.babyai:Pickup",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-UnblockPickup-v0",
         entry_point="minigrid.envs.babyai:UnblockPickup",
+    )
+
+    register(
+        id="BabyAI-UnblockPickup-v1",
+        entry_point="minigrid.envs.babyai:UnblockPickup",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     register(
@@ -862,8 +898,20 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PickupLoc-v1",
+        entry_point="minigrid.envs.babyai:PickupLoc",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PickupDist-v0",
         entry_point="minigrid.envs.babyai:PickupDist",
+    )
+
+    register(
+        id="BabyAI-PickupDist-v1",
+        entry_point="minigrid.envs.babyai:PickupDist",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     register(
@@ -873,8 +921,20 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PickupDistDebug-v1",
+        entry_point="minigrid.envs.babyai:PickupDist",
+        kwargs={"debug": True, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PickupAbove-v0",
         entry_point="minigrid.envs.babyai:PickupAbove",
+    )
+
+    register(
+        id="BabyAI-PickupAbove-v1",
+        entry_point="minigrid.envs.babyai:PickupAbove",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     # BabyAI - Language based levels - PutNext
@@ -886,9 +946,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PutNextLocal-v1",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PutNextLocalS5N3-v0",
         entry_point="minigrid.envs.babyai:PutNextLocal",
         kwargs={"room_size": 5, "num_objs": 3},
+    )
+
+    register(
+        id="BabyAI-PutNextLocalS5N3-v1",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+        kwargs={"room_size": 5, "num_objs": 3, "fix_empty_box_bug": True},
     )
 
     register(
@@ -898,9 +970,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PutNextLocalS6N4-v1",
+        entry_point="minigrid.envs.babyai:PutNextLocal",
+        kwargs={"room_size": 6, "num_objs": 4, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PutNextS4N1-v0",
         entry_point="minigrid.envs.babyai:PutNext",
         kwargs={"room_size": 4, "objs_per_room": 1},
+    )
+
+    register(
+        id="BabyAI-PutNextS4N1-v1",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 4, "objs_per_room": 1, "fix_empty_box_bug": True},
     )
 
     register(
@@ -910,9 +994,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PutNextS5N2-v1",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 5, "objs_per_room": 2, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PutNextS5N1-v0",
         entry_point="minigrid.envs.babyai:PutNext",
         kwargs={"room_size": 5, "objs_per_room": 1},
+    )
+
+    register(
+        id="BabyAI-PutNextS5N1-v1",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 5, "objs_per_room": 1, "fix_empty_box_bug": True},
     )
 
     register(
@@ -922,9 +1018,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-PutNextS6N3-v1",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 6, "objs_per_room": 3, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-PutNextS7N4-v0",
         entry_point="minigrid.envs.babyai:PutNext",
         kwargs={"room_size": 7, "objs_per_room": 4},
+    )
+
+    register(
+        id="BabyAI-PutNextS7N4-v1",
+        entry_point="minigrid.envs.babyai:PutNext",
+        kwargs={"room_size": 7, "objs_per_room": 4, "fix_empty_box_bug": True},
     )
 
     register(
@@ -975,14 +1083,32 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-UnlockPickup-v1",
+        entry_point="minigrid.envs.babyai:UnlockPickup",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-UnlockPickupDist-v0",
         entry_point="minigrid.envs.babyai:UnlockPickup",
         kwargs={"distractors": True},
     )
 
     register(
+        id="BabyAI-UnlockPickupDist-v1",
+        entry_point="minigrid.envs.babyai:UnlockPickup",
+        kwargs={"distractors": True, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-BlockedUnlockPickup-v0",
         entry_point="minigrid.envs.babyai:BlockedUnlockPickup",
+    )
+
+    register(
+        id="BabyAI-BlockedUnlockPickup-v1",
+        entry_point="minigrid.envs.babyai:BlockedUnlockPickup",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     register(
@@ -999,8 +1125,20 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-ActionObjDoor-v1",
+        entry_point="minigrid.envs.babyai:ActionObjDoor",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-FindObjS5-v0",
         entry_point="minigrid.envs.babyai:FindObjS5",
+    )
+
+    register(
+        id="BabyAI-FindObjS5-v1",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     register(
@@ -1010,9 +1148,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-FindObjS6-v1",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+        kwargs={"room_size": 6, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-FindObjS7-v0",
         entry_point="minigrid.envs.babyai:FindObjS5",
         kwargs={"room_size": 7},
+    )
+
+    register(
+        id="BabyAI-FindObjS7-v1",
+        entry_point="minigrid.envs.babyai:FindObjS5",
+        kwargs={"room_size": 7, "fix_empty_box_bug": True},
     )
 
     register(
@@ -1086,9 +1236,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-MoveTwoAcrossS5N2-v1",
+        entry_point="minigrid.envs.babyai:MoveTwoAcross",
+        kwargs={"room_size": 5, "objs_per_room": 2, "fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-MoveTwoAcrossS8N9-v0",
         entry_point="minigrid.envs.babyai:MoveTwoAcross",
         kwargs={"room_size": 8, "objs_per_room": 9},
+    )
+
+    register(
+        id="BabyAI-MoveTwoAcrossS8N9-v1",
+        entry_point="minigrid.envs.babyai:MoveTwoAcross",
+        kwargs={"room_size": 8, "objs_per_room": 9, "fix_empty_box_bug": True},
     )
 
     # BabyAI - Language based levels - Synth
@@ -1100,9 +1262,21 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-Synth-v1",
+        entry_point="minigrid.envs.babyai:Synth",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-SynthS5R2-v0",
         entry_point="minigrid.envs.babyai:Synth",
         kwargs={"room_size": 5, "num_rows": 2},
+    )
+
+    register(
+        id="BabyAI-SynthS5R2-v1",
+        entry_point="minigrid.envs.babyai:Synth",
+        kwargs={"room_size": 5, "num_rows": 2, "fix_empty_box_bug": True},
     )
 
     register(
@@ -1111,8 +1285,20 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-SynthLoc-v1",
+        entry_point="minigrid.envs.babyai:SynthLoc",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-SynthSeq-v0",
         entry_point="minigrid.envs.babyai:SynthSeq",
+    )
+
+    register(
+        id="BabyAI-SynthSeq-v1",
+        entry_point="minigrid.envs.babyai:SynthSeq",
+        kwargs={"fix_empty_box_bug": True},
     )
 
     register(
@@ -1121,13 +1307,31 @@ def register_minigrid_envs():
     )
 
     register(
+        id="BabyAI-MiniBossLevel-v1",
+        entry_point="minigrid.envs.babyai:MiniBossLevel",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-BossLevel-v0",
         entry_point="minigrid.envs.babyai:BossLevel",
     )
 
     register(
+        id="BabyAI-BossLevel-v1",
+        entry_point="minigrid.envs.babyai:BossLevel",
+        kwargs={"fix_empty_box_bug": True},
+    )
+
+    register(
         id="BabyAI-BossLevelNoUnlock-v0",
         entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
+    )
+
+    register(
+        id="BabyAI-BossLevelNoUnlock-v1",
+        entry_point="minigrid.envs.babyai:BossLevelNoUnlock",
+        kwargs={"fix_empty_box_bug": True},
     )
 
 

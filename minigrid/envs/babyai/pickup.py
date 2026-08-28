@@ -59,7 +59,11 @@ class Pickup(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when it was drawn as a box.
+
     - `BabyAI-Pickup-v0`
+    - `BabyAI-Pickup-v1`
 
     """
 
@@ -122,7 +126,11 @@ class UnblockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when it was drawn as a box.
+
     - `BabyAI-UnblockPickup-v0`
+    - `BabyAI-UnblockPickup-v1`
 
     """
 
@@ -192,7 +200,11 @@ class PickupLoc(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when it was drawn as a box.
+
     - `BabyAI-PickupLoc-v0`
+    - `BabyAI-PickupLoc-v1`
 
     """
 
@@ -264,8 +276,13 @@ class PickupDist(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when it was drawn as a box.
+
     - `BabyAI-PickupDist-v0`
+    - `BabyAI-PickupDist-v1`
     - `BabyAI-PickupDistDebug-v0`
+    - `BabyAI-PickupDistDebug-v1`
 
     """
 
@@ -340,7 +357,11 @@ class PickupAbove(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when it was drawn as a box.
+
     - `BabyAI-PickupAbove-v0`
+    - `BabyAI-PickupAbove-v1`
 
     """
 

@@ -289,8 +289,13 @@ class UnlockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable.
+
     - `BabyAI-UnlockPickup-v0`
+    - `BabyAI-UnlockPickup-v1`
     - `BabyAI-UnlockPickupDist-v0`
+    - `BabyAI-UnlockPickupDist-v1`
 
     """
 
@@ -364,7 +369,11 @@ class BlockedUnlockPickup(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable.
+
     - `BabyAI-BlockedUnlockPickup-v0`
+    - `BabyAI-BlockedUnlockPickup-v1`
 
     """
 

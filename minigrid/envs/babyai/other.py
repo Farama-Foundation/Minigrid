@@ -76,7 +76,11 @@ class ActionObjDoor(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup instruction on an empty box permanently unreachable.
+
     - `BabyAI-ActionObjDoor-v0`
+    - `BabyAI-ActionObjDoor-v1`
 
     """
 
@@ -154,9 +158,15 @@ class FindObjS5(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable when the randomly-chosen object was a box.
+
     - `BabyAI-FindObjS5-v0`
+    - `BabyAI-FindObjS5-v1`
     - `BabyAI-FindObjS6-v0`
+    - `BabyAI-FindObjS6-v1`
     - `BabyAI-FindObjS7-v0`
+    - `BabyAI-FindObjS7-v1`
 
     """
 
@@ -383,8 +393,13 @@ class MoveTwoAcross(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    move object permanently uncarryable when it was drawn as a box.
+
     - `BabyAI-MoveTwoAcrossS5N2-v0`
+    - `BabyAI-MoveTwoAcrossS5N2-v1`
     - `BabyAI-MoveTwoAcrossS8N9-v0`
+    - `BabyAI-MoveTwoAcrossS8N9-v1`
 
     """
 
