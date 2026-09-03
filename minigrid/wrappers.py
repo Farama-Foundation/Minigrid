@@ -631,6 +631,11 @@ class ViewSizeWrapper(ObservationWrapper):
     Wrapper to customize the agent field of view size.
     This cannot be used with fully observable wrappers.
 
+    The wrapper can be composed with ``RGBImgPartialObsWrapper`` or
+    ``OneHotPartialObsWrapper`` in either order.  The requested cell view is
+    propagated to the base environment and the image representation produced
+    by the inner wrapper is preserved.
+
     Example:
         >>> import gymnasium as gym
         >>> from minigrid.wrappers import ViewSizeWrapper
@@ -652,25 +657,117 @@ class ViewSizeWrapper(ObservationWrapper):
 
         self.agent_view_size = agent_view_size
 
-        # Compute observation space with specified view size
-        new_image_space = gym.spaces.Box(
-            low=0, high=255, shape=(agent_view_size, agent_view_size, 3), dtype="uint8"
-        )
-
-        # Override the environment's observation spaceexit
-        self.observation_space = spaces.Dict(
-            {**self.observation_space.spaces, "image": new_image_space}
-        )
+        # Configure the base environment before observations are generated.  In
+        # particular, this lets image-producing wrappers (for example
+        # ``RGBImgPartialObsWrapper``) see the requested view size instead of
+        # having their output silently replaced by a symbolic observation.
+        self._configure_view_size(env, agent_view_size)
 
     def observation(self, obs):
-        env = self.unwrapped
+        # The base environment (and any compatible image wrapper in the chain)
+        # has already generated an observation at ``self.agent_view_size``.
+        # Returning it unchanged keeps wrapper composition order-independent.
+        return obs
 
-        grid, vis_mask = env.gen_obs_grid(self.agent_view_size)
+    @staticmethod
+    def _replace_image_space(observation_space, shape):
+        """Return a Dict space with the image entry resized to ``shape``.
 
-        # Encode the partially observable view into a numpy array
-        image = grid.encode(vis_mask)
+        Minigrid's observation wrappers preserve the bounds and dtype of the
+        image space while changing only its shape.  Reusing those properties is
+        important for custom environments that do not use the default uint8
+        encoding.
+        """
 
-        return {**obs, "image": image}
+        if not isinstance(observation_space, spaces.Dict):
+            return observation_space
+
+        image_space = observation_space.spaces.get("image")
+        if image_space is None:
+            return observation_space
+
+        image_space = spaces.Box(
+            low=np.min(image_space.low),
+            high=np.max(image_space.high),
+            shape=shape,
+            dtype=image_space.dtype,
+        )
+        return spaces.Dict({**observation_space.spaces, "image": image_space})
+
+    def _configure_view_size(self, env, agent_view_size):
+        """Propagate a requested view size through compatible wrappers.
+
+        ``ViewSizeWrapper`` used to regenerate a symbolic image from
+        ``self.unwrapped``.  If it was placed outside an RGB or one-hot image
+        wrapper, that regenerated image discarded the inner wrapper's output.
+        We instead configure the base environment and update each known image
+        wrapper's space, so either wrapper order produces the representation
+        requested by the innermost image wrapper.
+        """
+
+        wrapper_chain = []
+        current = env
+        while isinstance(current, Wrapper):
+            wrapper_chain.append(current)
+            current = current.env
+
+        if not hasattr(current, "agent_view_size") or not hasattr(
+            current, "gen_obs_grid"
+        ):
+            raise TypeError(
+                "ViewSizeWrapper requires a MiniGrid environment with "
+                "agent_view_size and gen_obs_grid"
+            )
+
+        # A view-size change has no meaningful effect on full-observation or
+        # flattened image wrappers.  Rejecting these combinations prevents a
+        # misleading observation space and a silently discarded observation.
+        unsupported_wrappers = (
+            RGBImgObsWrapper,
+            SymbolicObsWrapper,
+            FullyObsWrapper,
+            ImgObsWrapper,
+            FlatObsWrapper,
+        )
+        if any(isinstance(wrapper, unsupported_wrappers) for wrapper in wrapper_chain):
+            raise ValueError(
+                "ViewSizeWrapper cannot wrap a full-observation or flattened "
+                "image wrapper; apply it to the base environment first"
+            )
+
+        # Change the source of observations first.  This also updates the
+        # image space exposed by the unwrapped MiniGrid environment.
+        current.agent_view_size = agent_view_size
+        current.observation_space = self._replace_image_space(
+            current.observation_space,
+            (agent_view_size, agent_view_size, 3),
+        )
+
+        image_shape = (agent_view_size, agent_view_size, 3)
+        # Apply updates from the base environment outwards.  Each image
+        # wrapper then derives its output shape from the already-configured
+        # source view.
+        for wrapper in reversed(wrapper_chain):
+            if isinstance(wrapper, ViewSizeWrapper):
+                wrapper.agent_view_size = agent_view_size
+            elif isinstance(wrapper, OneHotPartialObsWrapper):
+                num_bits = len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + len(STATE_TO_IDX)
+                image_shape = (agent_view_size, agent_view_size, num_bits)
+            elif isinstance(wrapper, RGBImgPartialObsWrapper):
+                image_shape = (
+                    agent_view_size * wrapper.tile_size,
+                    agent_view_size * wrapper.tile_size,
+                    3,
+                )
+
+            if isinstance(wrapper, ObservationWrapper):
+                wrapper.observation_space = self._replace_image_space(
+                    wrapper.observation_space, image_shape
+                )
+
+        self.observation_space = self._replace_image_space(
+            self.env.observation_space, image_shape
+        )
 
 
 class DirectionObsWrapper(ObservationWrapper):

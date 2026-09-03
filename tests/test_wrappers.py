@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from minigrid.core.actions import Actions
-from minigrid.core.constants import OBJECT_TO_IDX
+from minigrid.core.constants import COLOR_TO_IDX, OBJECT_TO_IDX, STATE_TO_IDX
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -267,6 +267,68 @@ def test_viewsize_wrapper(view_size):
     env.reset()
     obs, _, _, _, _ = env.step(0)
     assert obs["image"].shape == (view_size, view_size, 3)
+    env.close()
+
+
+@pytest.mark.parametrize(
+    "image_wrapper, expected_shape",
+    [
+        (RGBImgPartialObsWrapper, (40, 40, 3)),
+        (
+            OneHotPartialObsWrapper,
+            (5, 5, len(OBJECT_TO_IDX) + len(COLOR_TO_IDX) + len(STATE_TO_IDX)),
+        ),
+    ],
+)
+def test_viewsize_wrapper_preserves_inner_image_wrapper(image_wrapper, expected_shape):
+    """Changing the view size must not discard an inner image representation."""
+
+    env = gym.make("MiniGrid-Empty-8x8-v0", render_mode="rgb_array")
+    env = ViewSizeWrapper(image_wrapper(env), agent_view_size=5)
+
+    obs, _ = env.reset(seed=123)
+    assert obs["image"].shape == expected_shape
+    assert env.observation_space["image"].shape == expected_shape
+    assert env.observation_space.contains(obs)
+
+    obs, _, _, _, _ = env.step(0)
+    assert obs["image"].shape == expected_shape
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
+@pytest.mark.parametrize(
+    "image_wrapper", [RGBImgPartialObsWrapper, OneHotPartialObsWrapper]
+)
+def test_viewsize_wrapper_composition_is_order_independent(image_wrapper):
+    """Applying ViewSizeWrapper outside or inside an image wrapper is equivalent."""
+
+    env_outer = ViewSizeWrapper(
+        image_wrapper(gym.make("MiniGrid-Empty-8x8-v0", render_mode="rgb_array")),
+        agent_view_size=5,
+    )
+    env_inner = image_wrapper(
+        ViewSizeWrapper(
+            gym.make("MiniGrid-Empty-8x8-v0", render_mode="rgb_array"),
+            agent_view_size=5,
+        )
+    )
+
+    obs_outer, _ = env_outer.reset(seed=123)
+    obs_inner, _ = env_inner.reset(seed=123)
+    np.testing.assert_array_equal(obs_outer["image"], obs_inner["image"])
+    assert env_outer.observation_space == env_inner.observation_space
+
+    env_outer.close()
+    env_inner.close()
+
+
+def test_viewsize_wrapper_rejects_full_observation_wrapper():
+    """A full-observation wrapper cannot be resized by ViewSizeWrapper."""
+
+    env = RGBImgObsWrapper(gym.make("MiniGrid-Empty-8x8-v0", render_mode="rgb_array"))
+    with pytest.raises(ValueError, match="full-observation"):
+        ViewSizeWrapper(env, agent_view_size=5)
     env.close()
 
 
