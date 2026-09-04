@@ -465,8 +465,10 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             {
                 "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
+                # Word indices are offset by 1 (0 is padding), so the highest
+                # value emitted by `string_to_indices` is len(word_dict)
                 "mission": spaces.MultiDiscrete(
-                    [len(self.word_dict.keys())] * max_words_in_mission
+                    [len(self.word_dict.keys()) + 1] * max_words_in_mission
                 ),
             }
         )
