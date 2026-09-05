@@ -298,6 +298,32 @@ def test_direction_obs_wrapper(env_id, type):
     env.close()
 
 
+@pytest.mark.parametrize("env_id", ["MiniGrid-MultiRoom-N2-S4-v0"])
+def test_direction_obs_wrapper_seeding(env_id):
+    """A seeded reset through the wrapper must reproduce the layout.
+
+    The wrapper accepted ``seed`` and then called ``self.env.reset()`` without
+    it, so the underlying environment stayed unseeded and repeated resets with
+    the same seed gave different grids.
+    """
+    env = DirectionObsWrapper(gym.make(env_id), type="slope")
+
+    images = []
+    for _ in range(3):
+        obs, _ = env.reset(seed=42)
+        images.append(obs["image"].copy())
+    env.close()
+
+    for image in images[1:]:
+        assert np.array_equal(images[0], image)
+
+    # The same seed must also agree with the environment on its own.
+    plain_env = gym.make(env_id)
+    plain_obs, _ = plain_env.reset(seed=42)
+    plain_env.close()
+    assert np.array_equal(images[0], plain_obs["image"])
+
+
 @pytest.mark.parametrize("env_id", ["MiniGrid-DistShift1-v0"])
 def test_symbolic_obs_wrapper(env_id):
     env = gym.make(env_id)
