@@ -697,7 +697,10 @@ class DirectionObsWrapper(ObservationWrapper):
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None
     ) -> tuple[ObsType, dict[str, Any]]:
-        obs, info = self.env.reset()
+        # `seed` and `options` used to be dropped here, which left the
+        # underlying environment unseeded: a seeded reset through this wrapper
+        # was not reproducible.
+        obs, info = self.env.reset(seed=seed, options=options)
 
         if not self.goal_position:
             self.goal_position = [
