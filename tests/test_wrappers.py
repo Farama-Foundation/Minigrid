@@ -368,13 +368,7 @@ def test_symbolic_obs_wrapper(env_id):
     ],
 )
 def test_symbolic_obs_wrapper_observation_space(env_id):
-    """The declared space must contain what the wrapper returns.
-
-    The first two channels hold coordinates and reach ``width - 1``, which is
-    above ``max(OBJECT_TO_IDX.values())`` on a large grid; the third holds an
-    object index and is ``-1`` on an empty cell, which is below zero. A single
-    pair of bounds for all three channels was wrong at both ends.
-    """
+    """The declared image space must contain every symbolic observation."""
     env = SymbolicObsWrapper(gym.make(env_id))
     image_space = env.observation_space["image"]
 

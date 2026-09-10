@@ -729,8 +729,6 @@ class DirectionObsWrapper(ObservationWrapper):
         return obs
 
 
-# Pinned so the symbolic observation is the same on every platform. int64 is
-# what `np.mgrid` already produced on Linux and macOS, so only Windows changes.
 SYMBOLIC_OBS_DTYPE = np.int64
 
 
@@ -758,11 +756,6 @@ class SymbolicObsWrapper(ObservationWrapper):
 
         width, height = self.env.unwrapped.width, self.env.unwrapped.height
 
-        # One pair of bounds for all three channels was wrong at both ends. The
-        # first two channels hold the cell's coordinates, so they reach
-        # width - 1 and height - 1, which is above max(OBJECT_TO_IDX.values())
-        # on any grid larger than eleven cells; only the third holds an object
-        # index, and that is -1 where the cell is empty, which is below zero.
         low = np.zeros((width, height, 3), dtype=SYMBOLIC_OBS_DTYPE)
         low[:, :, 2] = -1
         high = np.empty((width, height, 3), dtype=SYMBOLIC_OBS_DTYPE)
@@ -794,9 +787,6 @@ class SymbolicObsWrapper(ObservationWrapper):
         grid = np.concatenate([grid, _objects])
         grid = np.transpose(grid, (1, 2, 0))
         grid[agent_pos[0], agent_pos[1], 2] = OBJECT_TO_IDX["agent"]
-        # `np.mgrid` follows the platform's default integer, so the observation
-        # was int32 on Windows and int64 elsewhere and no single declared dtype
-        # could match both.
         obs["image"] = grid.astype(SYMBOLIC_OBS_DTYPE)
 
         return obs
