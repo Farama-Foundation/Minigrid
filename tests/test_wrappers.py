@@ -390,6 +390,32 @@ def test_symbolic_obs_wrapper(env_id):
     env.close()
 
 
+@pytest.mark.parametrize(
+    "env_id",
+    [
+        "MiniGrid-DistShift1-v0",
+        "MiniGrid-LavaCrossingS11N5-v0",
+        "MiniGrid-FourRooms-v0",
+    ],
+)
+def test_symbolic_obs_wrapper_observation_space(env_id):
+    """The declared image space must contain every symbolic observation."""
+    env = SymbolicObsWrapper(gym.make(env_id))
+    image_space = env.observation_space["image"]
+
+    obs, _ = env.reset(seed=123)
+    assert image_space.contains(obs["image"])
+
+    for _ in range(20):
+        obs, _, terminated, truncated, _ = env.step(env.action_space.sample())
+        assert image_space.contains(obs["image"])
+        if terminated or truncated:
+            obs, _ = env.reset(seed=123)
+            assert image_space.contains(obs["image"])
+
+    env.close()
+
+
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_stochastic_action_wrapper(env_id):
     env = gym.make(env_id)
