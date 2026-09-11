@@ -808,11 +808,11 @@ class StochasticActionWrapper(ActionWrapper):
 
     def action(self, action):
         """ """
-        if np.random.uniform() < self.prob:
+        if self.np_random.random() < self.prob:
             return action
         else:
             if self.random_action is None:
-                return self.np_random.integers(0, high=6)
+                return self.np_random.integers(self.env.action_space.n)
             else:
                 return self.random_action
 
