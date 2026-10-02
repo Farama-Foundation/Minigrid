@@ -157,10 +157,11 @@ class PositionBonus(Wrapper):
 
         Args:
             env: The environment to apply the wrapper
+            scale: The multiplier applied to the exploration bonus (default 1)
         """
         super().__init__(env)
         self.counts = {}
-        self.scale = 1
+        self.scale = scale
 
     def step(self, action):
         """Steps through the environment with `action`."""
@@ -697,7 +698,10 @@ class DirectionObsWrapper(ObservationWrapper):
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None
     ) -> tuple[ObsType, dict[str, Any]]:
-        obs, info = self.env.reset()
+        # `seed` and `options` used to be dropped here, which left the
+        # underlying environment unseeded: a seeded reset through this wrapper
+        # was not reproducible.
+        obs, info = self.env.reset(seed=seed, options=options)
 
         if not self.goal_position:
             self.goal_position = [
@@ -726,6 +730,9 @@ class DirectionObsWrapper(ObservationWrapper):
         return obs
 
 
+SYMBOLIC_OBS_DTYPE = np.int64
+
+
 class SymbolicObsWrapper(ObservationWrapper):
     """
     Fully observable grid with a symbolic state representation.
@@ -748,15 +755,19 @@ class SymbolicObsWrapper(ObservationWrapper):
     def __init__(self, env):
         super().__init__(env)
 
+        width, height = self.env.unwrapped.width, self.env.unwrapped.height
+
+        low = np.zeros((width, height, 3), dtype=SYMBOLIC_OBS_DTYPE)
+        low[:, :, 2] = -1
+        high = np.empty((width, height, 3), dtype=SYMBOLIC_OBS_DTYPE)
+        high[:, :, 0] = width - 1
+        high[:, :, 1] = height - 1
+        high[:, :, 2] = max(OBJECT_TO_IDX.values())
+
         new_image_space = spaces.Box(
-            low=0,
-            high=max(OBJECT_TO_IDX.values()),
-            shape=(
-                self.env.unwrapped.width,
-                self.env.unwrapped.height,
-                3,
-            ),  # number of cells
-            dtype="uint8",
+            low=low,
+            high=high,
+            dtype=SYMBOLIC_OBS_DTYPE,
         )
         self.observation_space = spaces.Dict(
             {**self.observation_space.spaces, "image": new_image_space}
@@ -777,7 +788,7 @@ class SymbolicObsWrapper(ObservationWrapper):
         grid = np.concatenate([grid, _objects])
         grid = np.transpose(grid, (1, 2, 0))
         grid[agent_pos[0], agent_pos[1], 2] = OBJECT_TO_IDX["agent"]
-        obs["image"] = grid
+        obs["image"] = grid.astype(SYMBOLIC_OBS_DTYPE)
 
         return obs
 

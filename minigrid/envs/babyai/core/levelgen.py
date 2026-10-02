@@ -57,6 +57,13 @@ class LevelGen(RoomGridLevel):
         )
 
     def gen_mission(self):
+        # `add_locked_room()` below only runs some of the time, so without this
+        # a mission would inherit the previous one's room. The room grid is
+        # rebuilt before every mission, making any retained room stale, and
+        # `rand_obj()` samples against it -- so the leak would let one episode
+        # change the objects picked by the next.
+        self.locked_room = None
+
         if self._rand_float(0, 1) < self.locked_room_prob:
             self.add_locked_room()
 
