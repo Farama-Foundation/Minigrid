@@ -18,7 +18,21 @@ from minigrid.envs.babyai.core.verifier import (
 )
 
 
-class Level_MixedTrainLocal(LevelGen):
+class _MixedLocalLevel(LevelGen):
+    """Choose the task and layout after reset seeds the environment."""
+
+    def _gen_grid(self, width, height):
+        self._action = self._rand_elem(self.action_kinds)
+
+        self.num_rows = 1
+        self.num_cols = 2 if self._action == "open" else 1
+        self.width = (self.room_size - 1) * self.num_cols + 1
+        self.height = self.room_size
+
+        super()._gen_grid(self.width, self.height)
+
+
+class Level_MixedTrainLocal(_MixedLocalLevel):
     """
     Union of all instructions from PutNext, Open, Goto and PickUp.
     The agent does not need to move objects around.
@@ -51,12 +65,7 @@ class Level_MixedTrainLocal(LevelGen):
         implicit_unlock=False,
         **kwargs,
     ):
-        action = self._rand_elem(
-            ["goto", "pickup", "open", "putnext", "pick up seq go to"]
-        )
-        if action == "open":
-            num_cols = 2
-            num_rows = 1
+
         # We add many distractors to increase the probability
         # of ambiguous locations within the same room
         super().__init__(
@@ -64,7 +73,13 @@ class Level_MixedTrainLocal(LevelGen):
             num_rows=num_rows,
             num_cols=num_cols,
             num_dists=num_dists,
-            action_kinds=[action],
+            action_kinds=(
+                "goto",
+                "pickup",
+                "open",
+                "putnext",
+                "pick up seq go to",
+            ),
             instr_kinds=instr_kinds,
             locations=locations,
             unblocking=unblocking,
@@ -74,7 +89,7 @@ class Level_MixedTrainLocal(LevelGen):
 
     # ['goto', 'pickup', 'open', 'putnext', 'pick up seq go to'],
     def gen_mission(self):
-        action = self._rand_elem(self.action_kinds)
+        action = self._action
         mission_accepted = False
         all_objects_reachable = False
         if action == "open":
@@ -216,7 +231,6 @@ class Level_MixedTrainLocal(LevelGen):
         ]
 
         for sub_str in list_exclude_combinaison:
-            str = self.instrs.surface(self)
             if sub_str in self.instrs.surface(self):
                 return True
         return False
@@ -279,7 +293,7 @@ class Level_MixedTrainLocal(LevelGen):
         self.agent_dir = 0
 
 
-class Level_MixedTestLocal(LevelGen):
+class Level_MixedTestLocal(_MixedLocalLevel):
     """
     Union of all instructions from PutNext, Open, Goto and PickUp.
     The agent does not need to move objects around.
@@ -310,12 +324,7 @@ class Level_MixedTestLocal(LevelGen):
         implicit_unlock=False,
         **kwargs,
     ):
-        action = self._rand_elem(
-            ["goto", "pickup", "open", "putnext", "pick up seq go to"]
-        )
-        if action == "open":
-            num_cols = 2
-            num_rows = 1
+
         # We add many distractors to increase the probability
         # of ambiguous locations within the same room
         super().__init__(
@@ -323,7 +332,13 @@ class Level_MixedTestLocal(LevelGen):
             num_rows=num_rows,
             num_cols=num_cols,
             num_dists=num_dists,
-            action_kinds=[action],
+            action_kinds=(
+                "goto",
+                "pickup",
+                "open",
+                "putnext",
+                "pick up seq go to",
+            ),
             instr_kinds=instr_kinds,
             locations=locations,
             unblocking=unblocking,
@@ -332,7 +347,7 @@ class Level_MixedTestLocal(LevelGen):
         )
 
     def gen_mission(self):
-        action = self._rand_elem(self.action_kinds)
+        action = self._action
         mission_accepted = False
         all_objects_reachable = False
         if action == "open":
@@ -731,7 +746,6 @@ class Level_MixedTrainLocalFrench(LevelGen):
         ]
 
         for sub_str in list_exclude_combinaison:
-            str = self.instrs.surface(self)
             if sub_str in self.instrs.surface(self):
                 return True
         return False
