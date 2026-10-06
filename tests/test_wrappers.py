@@ -9,6 +9,7 @@ import pytest
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import OBJECT_TO_IDX
+from minigrid.core.world_object import Goal
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -326,6 +327,37 @@ def test_direction_obs_wrapper(env_id, type):
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
 
+    env.close()
+
+
+def test_direction_obs_wrapper_tracks_goal_across_resets():
+    """The goal is stored as (x, y) and looked up again on every reset.
+
+    FourRooms puts the goal somewhere else in each episode. The wrapper used to
+    keep the first goal it found, with x and y swapped.
+    """
+    env = DirectionObsWrapper(gym.make("MiniGrid-FourRooms-v0"), type="slope")
+    for seed in range(5):
+        obs, _ = env.reset(seed=seed)
+        grid = env.unwrapped.grid
+        goal = next(
+            (i, j)
+            for i in range(grid.width)
+            for j in range(grid.height)
+            if isinstance(grid.get(i, j), Goal)
+        )
+        assert env.goal_position == goal
+
+        agent_x, agent_y = env.unwrapped.agent_pos
+        expected = np.divide(goal[1] - agent_y, goal[0] - agent_x)
+        assert obs["goal_direction"] == expected
+    env.close()
+
+
+def test_direction_obs_wrapper_without_goal():
+    env = DirectionObsWrapper(gym.make("MiniGrid-GoToDoor-5x5-v0"))
+    with pytest.raises(ValueError, match="Goal"):
+        env.reset(seed=0)
     env.close()
 
 

@@ -703,16 +703,20 @@ class DirectionObsWrapper(ObservationWrapper):
         # was not reproducible.
         obs, info = self.env.reset(seed=seed, options=options)
 
-        if not self.goal_position:
-            self.goal_position = [
-                x for x, y in enumerate(self.unwrapped.grid.grid) if isinstance(y, Goal)
-            ]
-            # in case there are multiple goals , needs to be handled for other env types
-            if len(self.goal_position) >= 1:
-                self.goal_position = (
-                    int(self.goal_position[0] / self.unwrapped.height),
-                    self.goal_position[0] % self.unwrapped.width,
-                )
+        # The goal can move between episodes, so look it up on every reset.
+        # Grid cells are stored row by row, so cell i is at (i % width, i // width).
+        width = self.unwrapped.grid.width
+        goals = [
+            (i % width, i // width)
+            for i, obj in enumerate(self.unwrapped.grid.grid)
+            if isinstance(obj, Goal)
+        ]
+        if not goals:
+            raise ValueError(
+                "DirectionObsWrapper requires an environment with a Goal object."
+            )
+        # in case there are multiple goals , needs to be handled for other env types
+        self.goal_position = goals[0]
 
         return self.observation(obs), info
 
