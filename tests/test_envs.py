@@ -270,6 +270,27 @@ def test_interactive_mode(env_id):
     env.close()
 
 
+@pytest.mark.parametrize("color", ["green", "darkgreen", "verydarkgreen"])
+def test_mission_space_nested_placeholders(color):
+    mission_space = MissionSpace(
+        mission_func=lambda color: f"Get the {color} ball.",
+        ordered_placeholders=[["green", "darkgreen", "verydarkgreen"]],
+    )
+
+    assert mission_space.contains(f"Get the {color} ball.")
+    assert not mission_space.contains(f"Get the {color} key.")
+
+
+def test_mission_space_multiple_overlapping_placeholders():
+    mission_space = MissionSpace(
+        mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",
+        ordered_placeholders=[["green", "darkgreen"], ["ball", "football"]],
+    )
+
+    assert mission_space.contains("Get the darkgreen football.")
+    assert not mission_space.contains("Get the darkgreen football football.")
+
+
 def test_mission_space():
     # Test placeholders
     mission_space = MissionSpace(
