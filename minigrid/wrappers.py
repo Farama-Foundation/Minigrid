@@ -467,7 +467,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
                 "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
                 "mission": spaces.MultiDiscrete(
-                    [len(self.word_dict.keys())] * max_words_in_mission
+                    [len(self.word_dict) + 1] * max_words_in_mission
                 ),
             }
         )

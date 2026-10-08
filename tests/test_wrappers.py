@@ -177,6 +177,20 @@ def test_dict_observation_space_wrapper(env_spec):
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
     ]
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
+def test_dict_observation_space_covers_the_whole_vocabulary():
+    words = DictObservationSpaceWrapper.get_minigrid_words()
+    env = DictObservationSpaceWrapper(
+        gym.make("MiniGrid-Empty-5x5-v0"), max_words_in_mission=len(words) + 1
+    )
+    indices = env.string_to_indices(" ".join(words))
+    padded = indices + [0] * (env.max_words_in_mission - len(indices))
+
+    assert env.observation_space["mission"].contains(np.array(padded))
+
     env.close()
 
 
