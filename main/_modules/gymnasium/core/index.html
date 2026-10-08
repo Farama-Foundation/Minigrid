@@ -392,19 +392,24 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">TypeAlias</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">TypeAlias</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="kn">import</span> <span class="n">spaces</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecordConstructorArgs</span><span class="p">,</span> <span class="n">seeding</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
+
     <span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnvSpec</span><span class="p">,</span> <span class="n">WrapperSpec</span>
 
-<span class="n">ObsType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"ObsType"</span><span class="p">)</span>
-<span class="n">ActType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"ActType"</span><span class="p">)</span>
+<span class="c1"># All TypeVars default to `Any` so that generic classes can be partially subscripted,</span>
+<span class="c1"># e.g., `Env[np.ndarray]`, with the omitted parameters falling back to `Any`.</span>
+<span class="n">ObsType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"ObsType"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
+<span class="n">ActType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"ActType"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
 
 <span class="n">RenderFrame</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
 
@@ -497,6 +502,11 @@
 <span class="sd">                return undefined results. This was removed in OpenAI Gym v26 in favor of terminated and truncated attributes.</span>
 <span class="sd">                A done signal may be emitted for different reasons: Maybe the task underlying the environment was solved successfully,</span>
 <span class="sd">                a certain timelimit was exceeded, or the physics simulation has entered an invalid state.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Users commonly keep the data from every timestep, most obviously in a replay or rollout buffer, so each</span>
+<span class="sd">            call must return new observation and info objects rather than modifying and returning the same buffer.</span>
+<span class="sd">            :func:`gymnasium.utils.env_checker.check_env` checks this.</span>
 <span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -505,7 +515,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>  <span class="c1"># type: ignore</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ObsType</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">"""Resets the environment to an initial internal state, returning an initial observation and info.</span>
 
 <span class="sd">        This method generates a new starting state often with some randomness to ensure that the agent explores the</span>
@@ -540,6 +550,10 @@
 <span class="sd">                (typically a numpy array) and is analogous to the observation returned by :meth:`step`.</span>
 <span class="sd">            info (dictionary):  This dictionary contains auxiliary information complementing ``observation``. It should be analogous to</span>
 <span class="sd">                the ``info`` returned by :meth:`step`.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            As with :meth:`step`, the returned observation and info must be new data rather than a</span>
+<span class="sd">            buffer that a previous call already returned and that this call has mutated in place.</span>
 <span class="sd">        """</span>
         <span class="c1"># Initialize the RNG if the seed is manually passed</span>
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -644,11 +658,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&gt;&gt;"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Support with-statement for the environment."""</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Support with-statement for the environment and closes the environment."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="c1"># propagate exception</span>
@@ -670,8 +684,8 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="n">WrapperObsType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"WrapperObsType"</span><span class="p">)</span>
-<span class="n">WrapperActType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"WrapperActType"</span><span class="p">)</span>
+<span class="n">WrapperObsType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"WrapperObsType"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
+<span class="n">WrapperActType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"WrapperActType"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Wrapper</span><span class="p">(</span>
@@ -692,6 +706,8 @@
 <span class="sd">        If you inherit from :class:`Wrapper`, don't forget to call ``super().__init__(env)``</span>
 <span class="sd">    """</span>
 
+    <span class="n">env</span><span class="p">:</span> <span class="n">Env</span><span class="p">[</span><span class="n">WrapperObsType</span><span class="p">,</span> <span class="n">WrapperActType</span><span class="p">]</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Env</span><span class="p">[</span><span class="n">WrapperObsType</span><span class="p">,</span> <span class="n">WrapperActType</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">"""Wraps an environment to allow a modular transformation of the :meth:`step` and :meth:`reset` methods.</span>
 
@@ -699,9 +715,8 @@
 <span class="sd">            env: The environment to wrap</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Env</span><span class="p">),</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"Expected env to be a `gymnasium.Env` but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Env</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected env to be a `gymnasium.Env` but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_action_space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">[</span><span class="n">WrapperActType</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_observation_space</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Space</span><span class="p">[</span><span class="n">WrapperObsType</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
