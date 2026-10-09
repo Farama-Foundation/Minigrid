@@ -112,6 +112,37 @@ def test_position_bonus_wrapper(env_id):
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+@pytest.mark.parametrize("scale", [0.5, 2, 3.0])
+def test_position_bonus_wrapper_scale(env_id, scale):
+    env = gym.make(env_id)
+    wrapped_env = PositionBonus(gym.make(env_id), scale=scale)
+
+    action_forward = Actions.forward
+    action_left = Actions.left
+    action_right = Actions.right
+
+    for _ in range(10):
+        wrapped_env.reset()
+        for _ in range(5):
+            wrapped_env.step(action_forward)
+
+    # Turn left 3 times (check that actions don't influence bonus)
+    for _ in range(3):
+        _, wrapped_rew, _, _, _ = wrapped_env.step(action_left)
+
+    env.reset()
+    for _ in range(5):
+        env.step(action_forward)
+    # Turn right 3 times
+    for _ in range(3):
+        _, rew, _, _, _ = env.step(action_right)
+
+    expected_bonus_reward = rew + scale * (1 / math.sqrt(13))
+
+    assert expected_bonus_reward == wrapped_rew
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_action_bonus_wrapper(env_id):
     env = gym.make(env_id)
     wrapped_env = ActionBonus(gym.make(env_id))
@@ -298,6 +329,32 @@ def test_direction_obs_wrapper(env_id, type):
     env.close()
 
 
+@pytest.mark.parametrize("env_id", ["MiniGrid-MultiRoom-N2-S4-v0"])
+def test_direction_obs_wrapper_seeding(env_id):
+    """A seeded reset through the wrapper must reproduce the layout.
+
+    The wrapper accepted ``seed`` and then called ``self.env.reset()`` without
+    it, so the underlying environment stayed unseeded and repeated resets with
+    the same seed gave different grids.
+    """
+    env = DirectionObsWrapper(gym.make(env_id), type="slope")
+
+    images = []
+    for _ in range(3):
+        obs, _ = env.reset(seed=42)
+        images.append(obs["image"].copy())
+    env.close()
+
+    for image in images[1:]:
+        assert np.array_equal(images[0], image)
+
+    # The same seed must also agree with the environment on its own.
+    plain_env = gym.make(env_id)
+    plain_obs, _ = plain_env.reset(seed=42)
+    plain_env.close()
+    assert np.array_equal(images[0], plain_obs["image"])
+
+
 @pytest.mark.parametrize("env_id", ["MiniGrid-DistShift1-v0"])
 def test_symbolic_obs_wrapper(env_id):
     env = gym.make(env_id)
@@ -333,6 +390,32 @@ def test_symbolic_obs_wrapper(env_id):
     env.close()
 
 
+@pytest.mark.parametrize(
+    "env_id",
+    [
+        "MiniGrid-DistShift1-v0",
+        "MiniGrid-LavaCrossingS11N5-v0",
+        "MiniGrid-FourRooms-v0",
+    ],
+)
+def test_symbolic_obs_wrapper_observation_space(env_id):
+    """The declared image space must contain every symbolic observation."""
+    env = SymbolicObsWrapper(gym.make(env_id))
+    image_space = env.observation_space["image"]
+
+    obs, _ = env.reset(seed=123)
+    assert image_space.contains(obs["image"])
+
+    for _ in range(20):
+        obs, _, terminated, truncated, _ = env.step(env.action_space.sample())
+        assert image_space.contains(obs["image"])
+        if terminated or truncated:
+            obs, _ = env.reset(seed=123)
+            assert image_space.contains(obs["image"])
+
+    env.close()
+
+
 @pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
 def test_stochastic_action_wrapper(env_id):
     env = gym.make(env_id)
@@ -348,6 +431,29 @@ def test_stochastic_action_wrapper(env_id):
     for _ in range(20):
         _, _, _, _, _ = env.step(0)
     env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_follows_the_env_seed(env_id):
+    def sample_actions(global_seed):
+        np.random.seed(global_seed)
+        env = StochasticActionWrapper(gym.make(env_id), prob=0.5)
+        env.reset(seed=1)
+        actions = [int(env.action(Actions.left)) for _ in range(50)]
+        env.close()
+        return actions
+
+    assert sample_actions(0) == sample_actions(1)
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_can_sample_every_action(env_id):
+    env = StochasticActionWrapper(gym.make(env_id), prob=0.0)
+    env.reset(seed=1)
+    sampled = {int(env.action(Actions.left)) for _ in range(1000)}
+    env.close()
+
+    assert sampled == set(range(env.action_space.n))
 
 
 def test_dict_observation_space_doesnt_clash_with_one_hot():
