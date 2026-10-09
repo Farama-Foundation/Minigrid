@@ -17,6 +17,7 @@ from minigrid.wrappers import (
     FlatObsWrapper,
     FullyObsWrapper,
     ImgObsWrapper,
+    MoveActionWrapper,
     NoDeath,
     OneHotPartialObsWrapper,
     PositionBonus,
@@ -191,6 +192,7 @@ def test_dict_observation_space_wrapper(env_spec):
         OneHotPartialObsWrapper,
         RGBImgPartialObsWrapper,
         FullyObsWrapper,
+        MoveActionWrapper,
     ],
 )
 @pytest.mark.parametrize(
