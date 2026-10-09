@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from minigrid.envs.blockedunlockpickup import BlockedUnlockPickupEnv
 from minigrid.envs.crossing import CrossingEnv
-from minigrid.envs.maze import MazeEnv
 from minigrid.envs.distshift import DistShiftEnv
 from minigrid.envs.doorkey import DoorKeyEnv
 from minigrid.envs.dynamicobstacles import DynamicObstaclesEnv
@@ -14,6 +13,7 @@ from minigrid.envs.gotoobject import GoToObjectEnv
 from minigrid.envs.keycorridor import KeyCorridorEnv
 from minigrid.envs.lavagap import LavaGapEnv
 from minigrid.envs.lockedroom import LockedRoom, LockedRoomEnv
+from minigrid.envs.maze import MazeEnv
 from minigrid.envs.memory import MemoryEnv
 from minigrid.envs.multiroom import MultiRoom, MultiRoomEnv
 from minigrid.envs.obstructedmaze import (
