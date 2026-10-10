@@ -71,6 +71,9 @@ class ActionBonus(gym.Wrapper):
     This is a reward to encourage exploration of less
     visited (state,action) pairs.
 
+    Counts use the agent's position and direction before the action and persist
+    across resets. The bonus is ``1 / sqrt(count)`` including the current visit.
+
     Example:
         >>> import gymnasium as gym
         >>> from minigrid.wrappers import ActionBonus
@@ -103,10 +106,10 @@ class ActionBonus(gym.Wrapper):
 
     def step(self, action):
         """Steps through the environment with `action`."""
-        obs, reward, terminated, truncated, info = self.env.step(action)
-
         env = self.unwrapped
         tup = (tuple(env.agent_pos), env.agent_dir, action)
+
+        obs, reward, terminated, truncated, info = self.env.step(action)
 
         # Get the count for this (s,a) pair
         pre_count = 0
