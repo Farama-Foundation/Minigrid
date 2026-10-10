@@ -178,6 +178,21 @@ def test_dict_observation_space_wrapper(env_spec):
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
     ]
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
+def test_dict_observation_space_wrapper_mission_space_bounds():
+    """
+    Every word in the vocabulary must encode to a value inside the declared
+    mission space (word indices are offset by 1, with 0 reserved for padding).
+    """
+    env = DictObservationSpaceWrapper(gym.make("MiniGrid-Empty-5x5-v0"))
+    mission_space = env.observation_space["mission"]
+    for word in env.word_dict:
+        indices = env.string_to_indices(word)
+        indices += [0] * (env.max_words_in_mission - len(indices))
+        assert mission_space.contains(indices), word
     env.close()
 
 
@@ -463,6 +478,29 @@ def test_stochastic_action_wrapper(env_id):
     for _ in range(20):
         _, _, _, _, _ = env.step(0)
     env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_follows_the_env_seed(env_id):
+    def sample_actions(global_seed):
+        np.random.seed(global_seed)
+        env = StochasticActionWrapper(gym.make(env_id), prob=0.5)
+        env.reset(seed=1)
+        actions = [int(env.action(Actions.left)) for _ in range(50)]
+        env.close()
+        return actions
+
+    assert sample_actions(0) == sample_actions(1)
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_can_sample_every_action(env_id):
+    env = StochasticActionWrapper(gym.make(env_id), prob=0.0)
+    env.reset(seed=1)
+    sampled = {int(env.action(Actions.left)) for _ in range(1000)}
+    env.close()
+
+    assert sampled == set(range(env.action_space.n))
 
 
 def test_dict_observation_space_doesnt_clash_with_one_hot():

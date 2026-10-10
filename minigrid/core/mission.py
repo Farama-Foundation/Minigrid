@@ -132,7 +132,8 @@ class MissionSpace(spaces.Space[str]):
                             remove_placeholder_id.append(i)
                         else:
                             remove_placeholder_id.append(i + j + 1)
-            for id in remove_placeholder_id:
+            # Remove each index once, from the end, so earlier indices stay valid.
+            for id in sorted(set(remove_placeholder_id), reverse=True):
                 del ordered_placeholder_list[id]
 
             final_placeholders = [

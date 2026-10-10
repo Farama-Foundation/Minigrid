@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "minigrid"
 description = "Minimalistic gridworld reinforcement learning environments."
 readme = "README.md"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 authors = [{ name = "Farama Foundation", email = "contact@farama.org" }]
 license = { text = "MIT License" }
 keywords = ["Memory, Environment, Agent, RL, Gymnasium"]
@@ -16,7 +16,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -63,7 +62,7 @@ exclude = ["**/node_modules", "**/__pycache__"]
 strict = []
 
 typeCheckingMode = "basic"
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 typeshedPath = "typeshed"
 enableTypeIgnoreComments = true
 

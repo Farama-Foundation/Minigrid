@@ -466,8 +466,10 @@ class DictObservationSpaceWrapper(ObservationWrapper):
             {
                 "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
+                # Word indices are offset by 1 (0 is padding), so the highest
+                # value emitted by `string_to_indices` is len(word_dict)
                 "mission": spaces.MultiDiscrete(
-                    [len(self.word_dict.keys())] * max_words_in_mission
+                    [len(self.word_dict.keys()) + 1] * max_words_in_mission
                 ),
             }
         )
@@ -812,11 +814,11 @@ class StochasticActionWrapper(ActionWrapper):
 
     def action(self, action):
         """ """
-        if np.random.uniform() < self.prob:
+        if self.np_random.random() < self.prob:
             return action
         else:
             if self.random_action is None:
-                return self.np_random.integers(0, high=6)
+                return self.np_random.integers(self.env.action_space.n)
             else:
                 return self.random_action
 
