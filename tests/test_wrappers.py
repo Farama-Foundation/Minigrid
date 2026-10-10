@@ -163,6 +163,48 @@ def test_action_bonus_wrapper(env_id):
     assert expected_bonus_reward == wrapped_rew
 
 
+def test_action_bonus_distinguishes_move_from_blocked_action():
+    """Moving into a cell and hitting its wall are different state-action pairs."""
+    env = ActionBonus(EmptyEnv(size=5))
+    env.reset(seed=0)
+    rewards = [env.step(Actions.forward)[1] for _ in range(4)]
+    assert rewards == pytest.approx([1.0, 1.0, 1.0, 1 / math.sqrt(2)])
+    assert env.counts == {
+        ((1, 1), 0, Actions.forward): 1,
+        ((2, 1), 0, Actions.forward): 1,
+        ((3, 1), 0, Actions.forward): 2,
+    }
+    env.close()
+
+
+@pytest.mark.parametrize("action", [Actions.left, Actions.right, Actions.forward])
+def test_action_bonus_counts_source_state_across_resets(action):
+    """The count belongs to the position and direction before the action."""
+    env = ActionBonus(EmptyEnv(size=5))
+    for count in range(1, 4):
+        env.reset(seed=0)
+        assert env.step(action)[1] == pytest.approx(1 / math.sqrt(count))
+        assert env.counts == {((1, 1), 0, action): count}
+    env.close()
+
+
+@pytest.mark.parametrize("max_steps", [1, 100])
+def test_action_bonus_preserves_terminal_transition(max_steps):
+    """Add the bonus without changing the underlying reward or episode flags."""
+    plain = EmptyEnv(size=5, agent_start_pos=(2, 3), max_steps=max_steps)
+    env = ActionBonus(EmptyEnv(size=5, agent_start_pos=(2, 3), max_steps=max_steps))
+    plain.reset(seed=0)
+    env.reset(seed=0)
+    expected = plain.step(Actions.forward)
+    actual = env.step(Actions.forward)
+    assert_equals(actual[0], expected[0])
+    assert actual[1] == expected[1] + 1.0
+    assert actual[2:] == expected[2:]
+    assert env.counts == {((2, 3), 0, Actions.forward): 1}
+    plain.close()
+    env.close()
+
+
 @pytest.mark.parametrize(
     "env_spec",
     minigrid_testing_env_specs,
