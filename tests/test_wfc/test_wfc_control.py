@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from minigrid.envs.wfc.config import WFC_PRESETS
 from minigrid.envs.wfc.wfclogic import control
 from minigrid.envs.wfc.wfclogic.solver import Contradiction, StopEarly, TimedOut
 
@@ -51,3 +52,23 @@ def test_execute_wfc_stop_early_does_not_retry(mocker):
             attempt_limit=3,
         )
     assert run.call_count == 1
+
+
+def test_rooms_fabric_recovers_from_seeded_contradiction():
+    """Seed 1375 fails its first solve and needs the remaining attempt budget."""
+    pytest.importorskip("imageio")
+    kwargs = WFC_PRESETS["RoomsFabric"].wfc_kwargs
+    images = []
+    for _ in range(2):
+        image, stats = control.execute_wfc(
+            **kwargs,
+            output_size=(23, 23),
+            attempt_limit=1000,
+            np_random=np.random.default_rng(1375),
+        )
+        assert image is not None
+        assert image.shape == (23, 23, 3)
+        assert stats["outcome"] == "success"
+        images.append(image)
+    # Retrying must still produce the same output when the seed is repeated.
+    assert np.array_equal(*images)
