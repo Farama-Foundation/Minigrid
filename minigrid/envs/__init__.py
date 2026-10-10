@@ -13,6 +13,7 @@ from minigrid.envs.gotoobject import GoToObjectEnv
 from minigrid.envs.keycorridor import KeyCorridorEnv
 from minigrid.envs.lavagap import LavaGapEnv
 from minigrid.envs.lockedroom import LockedRoom, LockedRoomEnv
+from minigrid.envs.maze import MazeEnv
 from minigrid.envs.memory import MemoryEnv
 from minigrid.envs.multiroom import MultiRoom, MultiRoomEnv
 from minigrid.envs.obstructedmaze import (
