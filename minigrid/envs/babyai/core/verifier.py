@@ -479,7 +479,14 @@ class BeforeInstr(SeqInstr):
                 return "failure"
 
             if self.a_done == "success":
-                return self.verify(action)
+                # The action that completed a can complete b too, but it
+                # can't be a mistake for b. Otherwise a strict b, or any b
+                # with done actions, fails the mission on the very action
+                # that a asked for
+                self.b_done = self.instr_b.verify(action)
+                if self.b_done == "success":
+                    return "success"
+                return "continue"
 
             # In strict mode, completing b first means failure
             if self.strict:
@@ -520,7 +527,12 @@ class AfterInstr(SeqInstr):
                 return "failure"
 
             if self.b_done == "success":
-                return self.verify(action)
+                # The action that completed b can complete a too, but it
+                # can't be a mistake for a (see BeforeInstr)
+                self.a_done = self.instr_a.verify(action)
+                if self.a_done == "success":
+                    return "success"
+                return "continue"
 
             # In strict mode, completing a first means failure
             if self.strict:
