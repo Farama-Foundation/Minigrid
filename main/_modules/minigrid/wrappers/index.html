@@ -881,8 +881,10 @@
             <span class="p">{</span>
                 <span class="s2">"image"</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="p">[</span><span class="s2">"image"</span><span class="p">],</span>
                 <span class="s2">"direction"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+                <span class="c1"># Word indices are offset by 1 (0 is padding), so the highest</span>
+                <span class="c1"># value emitted by `string_to_indices` is len(word_dict)</span>
                 <span class="s2">"mission"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">MultiDiscrete</span><span class="p">(</span>
-                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span> <span class="o">*</span> <span class="n">max_words_in_mission</span>
+                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">max_words_in_mission</span>
                 <span class="p">),</span>
             <span class="p">}</span>
         <span class="p">)</span>
