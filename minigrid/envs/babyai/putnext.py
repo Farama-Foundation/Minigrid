@@ -191,12 +191,14 @@ class PutNext(RoomGridLevel):
         self.instrs = PutNextInstr(ObjDesc(a.type, a.color), ObjDesc(b.type, b.color))
 
     def reset(self, **kwargs):
-        obs = super().reset(**kwargs)
+        obs, info = super().reset(**kwargs)
 
         # If the agent starts off carrying the object
         if self.start_carrying:
             assert self.obj_a.init_pos is not None
             self.grid.set(*self.obj_a.init_pos, None)
             self.carrying = self.obj_a
+            self.instrs.preCarrying = self.obj_a
+            obs = self.gen_obs()
 
-        return obs
+        return obs, info
