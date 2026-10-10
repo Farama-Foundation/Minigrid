@@ -22,8 +22,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Some environments have multiple versions
 # For example, KeyCorridorEnv -> KeyCorridorS3R1, KeyCorridorS3R2, KeyCorridorS3R3, etc
-# We only want one as an example
-envs_completed = []
+# We only want one as an example. DoorKey's learned-policy animation is generated
+# separately by gen_doorkey_gif.py; keep it when regenerating the random policies.
+envs_completed = ["DoorKeyEnv"]
 
 # iterate through all envspecs
 for env_spec in tqdm(gymnasium.registry.values()):
