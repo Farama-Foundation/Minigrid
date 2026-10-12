@@ -11,6 +11,19 @@ __version__ = "3.1.0"
 
 
 def register_minigrid_envs():
+    # Windy gridworlds
+    # ----------------------------------------
+    register(
+        id="MiniGrid-Windy-8x8-v0",
+        entry_point="minigrid.envs:WindyEnv",
+        kwargs={"width": 8, "height": 8},
+    )
+    register(
+        id="MiniGrid-Windy-TwoRooms-12x9-v0",
+        entry_point="minigrid.envs:WindyEnv",
+        kwargs={"width": 12, "height": 9, "two_rooms": True},
+    )
+
     # BlockedUnlockPickup
     # ----------------------------------------
 
