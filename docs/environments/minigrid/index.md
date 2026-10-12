@@ -31,6 +31,7 @@ GoToObjectEnv
 KeyCorridorEnv
 LavaGapEnv
 LockedRoomEnv
+MazeEnv
 MemoryEnv
 MultiRoomEnv
 ObstructedMaze_1Dlhb
