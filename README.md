@@ -36,7 +36,39 @@ The list of the environments that were included in the original `Minigrid` libra
 These environments have been imported from the [BabyAI](https://github.com/mila-iqia/babyai) project library and the list of environments can also be found in the [documentation](https://minigrid.farama.org/environments/babyai/). The purpose of this collection of environments is to perform research on grounded language learning. The environments are derived from the `Minigrid` grid-world environments and include an additional functionality that generates synthetic
 natural-looking instructions (e.g. “put the red ball next to the box on your left”) that command the the agent to navigate the world (including unlocking doors) and move objects to specified locations in order to accomplish the task.
 
+## Optional multi-agent environments
+
+The `multiagent` extra adds the marlgrid task families discussed in
+[#514](https://github.com/Farama-Foundation/Minigrid/issues/514):
+Empty, Cluttered, DoorKey, GoalCycle and the visibility diagnostic. They use
+PettingZoo's Parallel API and do not change existing single-agent environments,
+Gymnasium registrations or wrappers.
+
+Install with `pip install -e ".[multiagent]"`:
+
+```python
+from minigrid.multiagent import DoorKeyParallelEnv
+
+env = DoorKeyParallelEnv(num_agents=2, start_in_left_room=True)
+observations, infos = env.reset(seed=42)
+while env.agents:
+    actions = {agent: env.action_space(agent).sample() for agent in env.agents}
+    observations, rewards, terminations, truncations, infos = env.step(actions)
+env.close()
+```
+
+For marlgrid-style action lists and four-value step returns, use the explicit
+`MarlgridListAdapter` or `make_marlgrid("MarlGrid-2AgentEmpty9x9-v0")` factory.
+These share the same environment implementation; they do not replace
+`gym.make()` or promise pixel-identical legacy observations.
+
+See the [multi-agent guide](docs/content/multiagent.md) for environment rules,
+respawning, delayed activation, observation formats, compatibility boundaries,
+and reproducible source-reference tests. This is an environment migration, not
+a new training algorithm or a trained-agent benchmark.
+
 # Training an Agent
+
 The [rl-starter-files](https://github.com/lcswillems/torch-rl) is a repository with examples on how to train `Minigrid` environments with RL algorithms. This code has been tested and is known to work with this environment. The default hyper-parameters are also known to converge.
 
 # Citation
