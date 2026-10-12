@@ -59,6 +59,7 @@ content/basic_usage
 content/publications
 content/create_env_tutorial
 content/training
+content/multiagent
 ```
 
 ```{toctree}
