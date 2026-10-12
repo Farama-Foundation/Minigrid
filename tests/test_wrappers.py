@@ -18,6 +18,7 @@ from minigrid.wrappers import (
     FlatObsWrapper,
     FullyObsWrapper,
     ImgObsWrapper,
+    MoveActionWrapper,
     NoDeath,
     OneHotPartialObsWrapper,
     PositionBonus,
@@ -207,6 +208,7 @@ def test_dict_observation_space_wrapper_mission_space_bounds():
         OneHotPartialObsWrapper,
         RGBImgPartialObsWrapper,
         FullyObsWrapper,
+        MoveActionWrapper,
     ],
 )
 @pytest.mark.parametrize(
