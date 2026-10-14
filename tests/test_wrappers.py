@@ -345,6 +345,51 @@ def test_direction_obs_wrapper(env_id, type):
     env.close()
 
 
+@pytest.mark.parametrize("type", ["slope", "angle"])
+def test_direction_obs_wrapper_observation_space(type):
+    env = DirectionObsWrapper(EmptyEnv(size=5), type=type)
+    try:
+        obs, _ = env.reset(seed=0)
+        assert env.observation_space.contains(obs)
+        assert "goal_direction" not in env.env.observation_space.spaces
+        assert obs["goal_direction"].shape == ()
+        assert obs["goal_direction"].dtype == np.float64
+        expected = 1.0 if type == "slope" else np.pi / 4
+        assert obs["goal_direction"] == pytest.approx(expected)
+
+        obs, _, _, _, _ = env.step(Actions.forward)
+        assert env.observation_space.contains(obs)
+        expected = 2.0 if type == "slope" else np.arctan(2.0)
+        assert obs["goal_direction"] == pytest.approx(expected)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle"])
+@pytest.mark.parametrize(
+    "vector_class", [gym.vector.SyncVectorEnv, gym.vector.AsyncVectorEnv]
+)
+def test_direction_obs_wrapper_vector_observation(type, vector_class):
+    kwargs = (
+        {"shared_memory": False} if vector_class is gym.vector.AsyncVectorEnv else {}
+    )
+    env = vector_class(
+        [lambda: DirectionObsWrapper(EmptyEnv(size=5), type=type)] * 2, **kwargs
+    )
+    try:
+        obs, _ = env.reset(seed=0)
+        expected = 1.0 if type == "slope" else np.pi / 4
+        np.testing.assert_allclose(obs["goal_direction"], [expected, expected])
+        assert env.observation_space.contains(obs)
+
+        obs, _, _, _, _ = env.step([Actions.forward, Actions.forward])
+        expected = 2.0 if type == "slope" else np.arctan(2.0)
+        np.testing.assert_allclose(obs["goal_direction"], [expected, expected])
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
 def test_direction_obs_wrapper_tracks_goal_across_resets():
     """The goal is stored as (x, y) and looked up again on every reset.
 

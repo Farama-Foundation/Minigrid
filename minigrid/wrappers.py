@@ -681,6 +681,9 @@ class DirectionObsWrapper(ObservationWrapper):
     Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
     type = {slope , angle}
 
+    The ``goal_direction`` observation is a scalar float64 array, declared in
+    the observation space so vector environments retain it when batching.
+
     Example:
         >>> import gymnasium as gym
         >>> import matplotlib.pyplot as plt
@@ -696,6 +699,14 @@ class DirectionObsWrapper(ObservationWrapper):
         super().__init__(env)
         self.goal_position: tuple = None
         self.type = type
+        self.observation_space = spaces.Dict(
+            {
+                **env.observation_space.spaces,
+                "goal_direction": spaces.Box(
+                    -np.inf, np.inf, shape=(), dtype=np.float64
+                ),
+            }
+        )
 
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None
@@ -729,9 +740,9 @@ class DirectionObsWrapper(ObservationWrapper):
         )
 
         if self.type == "angle":
-            obs["goal_direction"] = np.arctan(slope)
+            obs["goal_direction"] = np.array(np.arctan(slope))
         else:
-            obs["goal_direction"] = slope
+            obs["goal_direction"] = np.array(slope)
 
         return obs
 
