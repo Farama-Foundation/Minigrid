@@ -61,14 +61,27 @@ class PutNearEnv(MiniGridEnv):
 
     N: number of objects.
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    move object permanently uncarryable if it was drawn as an empty box.
+
     - `MiniGrid-PutNear-6x6-N2-v0`
     - `MiniGrid-PutNear-8x8-N3-v0`
+    - `MiniGrid-PutNear-6x6-N2-v1`
+    - `MiniGrid-PutNear-8x8-N3-v1`
 
     """
 
-    def __init__(self, size=6, numObjs=2, max_steps: int | None = None, **kwargs):
+    def __init__(
+        self,
+        size=6,
+        numObjs=2,
+        max_steps: int | None = None,
+        fix_empty_box_bug: bool = False,
+        **kwargs,
+    ):
         self.size = size
         self.numObjs = numObjs
+        self.fix_empty_box_bug = fix_empty_box_bug
         self.obj_types = ["key", "ball", "box"]
         mission_space = MissionSpace(
             mission_func=self._gen_mission,
@@ -136,7 +149,7 @@ class PutNearEnv(MiniGridEnv):
             elif objType == "ball":
                 obj = Ball(objColor)
             elif objType == "box":
-                obj = Box(objColor)
+                obj = Box(objColor, fix_empty_box_bug=self.fix_empty_box_bug)
             else:
                 raise ValueError(
                     "{} object type given. Object type can only be of values key, ball and box.".format(

@@ -59,9 +59,15 @@ class PutNextLocal(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    move object permanently uncarryable when it was drawn as a box.
+
     - `BabyAI-PutNextLocal-v0`
+    - `BabyAI-PutNextLocal-v1`
     - `BabyAI-PutNextLocalS5N3-v0`
-    - `BabyAI-PutNextLocalS6N4-v0``
+    - `BabyAI-PutNextLocalS5N3-v1`
+    - `BabyAI-PutNextLocalS6N4-v0`
+    - `BabyAI-PutNextLocalS6N4-v1`
 
     """
 
@@ -131,11 +137,21 @@ class PutNext(RoomGridLevel):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    move object permanently uncarryable when it was drawn as a box. The
+    `*Carrying` configurations start with the move object already held, so they
+    are not affected and have no v1 counterpart.
+
     - `BabyAI-PutNextS4N1-v0`
+    - `BabyAI-PutNextS4N1-v1`
     - `BabyAI-PutNextS5N2-v0`
+    - `BabyAI-PutNextS5N2-v1`
     - `BabyAI-PutNextS5N1-v0`
+    - `BabyAI-PutNextS5N1-v1`
     - `BabyAI-PutNextS6N3-v0`
+    - `BabyAI-PutNextS6N3-v1`
     - `BabyAI-PutNextS7N4-v0`
+    - `BabyAI-PutNextS7N4-v1`
     - `BabyAI-PutNextS5N2Carrying-v0`
     - `BabyAI-PutNextS6N3Carrying-v0`
     - `BabyAI-PutNextS7N4Carrying-v0`
