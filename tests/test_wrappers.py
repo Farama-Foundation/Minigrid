@@ -9,6 +9,7 @@ import pytest
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import OBJECT_TO_IDX
+from minigrid.core.world_object import Goal
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -177,6 +178,21 @@ def test_dict_observation_space_wrapper(env_spec):
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
     ]
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
+def test_dict_observation_space_wrapper_mission_space_bounds():
+    """
+    Every word in the vocabulary must encode to a value inside the declared
+    mission space (word indices are offset by 1, with 0 reserved for padding).
+    """
+    env = DictObservationSpaceWrapper(gym.make("MiniGrid-Empty-5x5-v0"))
+    mission_space = env.observation_space["mission"]
+    for word in env.word_dict:
+        indices = env.string_to_indices(word)
+        indices += [0] * (env.max_words_in_mission - len(indices))
+        assert mission_space.contains(indices), word
     env.close()
 
 
@@ -326,6 +342,37 @@ def test_direction_obs_wrapper(env_id, type):
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
 
+    env.close()
+
+
+def test_direction_obs_wrapper_tracks_goal_across_resets():
+    """The goal is stored as (x, y) and looked up again on every reset.
+
+    FourRooms puts the goal somewhere else in each episode. The wrapper used to
+    keep the first goal it found, with x and y swapped.
+    """
+    env = DirectionObsWrapper(gym.make("MiniGrid-FourRooms-v0"), type="slope")
+    for seed in range(5):
+        obs, _ = env.reset(seed=seed)
+        grid = env.unwrapped.grid
+        goal = next(
+            (i, j)
+            for i in range(grid.width)
+            for j in range(grid.height)
+            if isinstance(grid.get(i, j), Goal)
+        )
+        assert env.goal_position == goal
+
+        agent_x, agent_y = env.unwrapped.agent_pos
+        expected = np.divide(goal[1] - agent_y, goal[0] - agent_x)
+        assert obs["goal_direction"] == expected
+    env.close()
+
+
+def test_direction_obs_wrapper_without_goal():
+    env = DirectionObsWrapper(gym.make("MiniGrid-GoToDoor-5x5-v0"))
+    with pytest.raises(ValueError, match="Goal"):
+        env.reset(seed=0)
     env.close()
 
 
