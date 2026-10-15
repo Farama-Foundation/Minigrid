@@ -15,6 +15,10 @@ class DoorKeyEnv(MiniGridEnv):
     because of the sparse reward, to solve using classical RL algorithms. It is
     useful to experiment with curiosity or curriculum learning.
 
+    The animation shows a tabular Q-learning policy trained on
+    `MiniGrid-DoorKey-5x5-v0` with `FullyObsWrapper`, which exposes the full grid
+    to the policy.
+
     ## Mission Space
 
     "use the key to open the door and then get to the goal"
