@@ -4,18 +4,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.">
-    <meta property="og:title" content="MiniGrid Documentation" />
+    <meta property="og:title" content="Minigrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/index.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Basic Usage" href="content/basic_usage/" />
         <link rel="canonical" href="https://minigrid.farama.org/index.html" />
 
-    <link rel="shortcut icon" href="_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>MiniGrid Documentation</title>
+    <link rel="shortcut icon" href="_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
+        <title>Minigrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=82c8b628" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/celshast.css?v=9fbfb63d" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/celshast-extensions.css?v=42bfddca" />
     
     
 
@@ -59,7 +59,7 @@
           <a href="#">
               <img class="farama-header__logo only-light" src="_static/img/minigrid.svg" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="_static/img/minigrid-white.svg" alt="Dark Logo"/>
-            <span class="farama-header__title">MiniGrid Documentation</span>
+            <span class="farama-header__title">Minigrid Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -180,7 +180,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">MiniGrid Documentation</div></a>
+      <a href="#"><div class="brand">Minigrid Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -203,7 +203,7 @@
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="#">
       <img class="farama-header__logo only-light" src="_static/img/minigrid.svg" alt="Light Logo"/>
       <img class="farama-header__logo only-dark" src="_static/img/minigrid-white.svg" alt="Dark Logo"/>
-    <span class="farama-header__title">MiniGrid Documentation</span>
+    <span class="farama-header__title">Minigrid Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -365,7 +365,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/index.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/main/docs/index.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -413,7 +413,7 @@ Minigrid contains simple and easily configurable grid world environments to cond
 <p>The Gymnasium interface allows to initialize and interact with the Minigrid default environments as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">minigrid</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;human&quot;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s2">"human"</span><span class="p">)</span>
 <span class="n">observation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
    <span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>  <span class="c1"># User-defined policy function</span>
@@ -559,10 +559,10 @@ Minigrid contains simple and easily configurable grid world environments to cond
         })()
       </script>
 
-    <script src="_static/documentation_options.js?v=df253959"></script>
+    <script src="_static/documentation_options.js?v=efea700b"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=7660844c"></script>
+    <script src="_static/scripts/celshast.js?v=a788a8c6"></script>
     
     <script>
 

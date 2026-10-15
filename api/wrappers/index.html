@@ -4,18 +4,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid.">
-    <meta property="og:title" content="MiniGrid Documentation" />
+    <meta property="og:title" content="Minigrid Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Minigrid contains simple and easily configurable grid world environments to conduct Reinforcement Learning research. This library was previously known as gym-minigrid." />
     <meta property="og:url" content="https://minigrid.farama.org/api/wrappers.html" /><meta property="og:image" content="https://minigrid.farama.org//_static/img/minigrid-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Minigrid Environments" href="../../environments/minigrid/" /><link rel="prev" title="Wrapper" href="../wrapper/" />
         <link rel="canonical" href="https://minigrid.farama.org/api/wrappers.html" />
 
-    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Action Bonus - MiniGrid Documentation</title>
+    <link rel="shortcut icon" href="../../_static/minigrid-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
+        <title>Action Bonus - Minigrid Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast.css?v=9fbfb63d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast-extensions.css?v=42bfddca" />
     
     
 
@@ -59,7 +59,7 @@
           <a href="../../">
               <img class="farama-header__logo only-light" src="../../_static/img/minigrid.svg" alt="Light Logo"/>
               <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.svg" alt="Dark Logo"/>
-            <span class="farama-header__title">MiniGrid Documentation</span>
+            <span class="farama-header__title">Minigrid Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
@@ -180,7 +180,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../"><div class="brand">MiniGrid Documentation</div></a>
+      <a href="../../"><div class="brand">Minigrid Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -203,7 +203,7 @@
       <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../">
       <img class="farama-header__logo only-light" src="../../_static/img/minigrid.svg" alt="Light Logo"/>
       <img class="farama-header__logo only-dark" src="../../_static/img/minigrid-white.svg" alt="Dark Logo"/>
-    <span class="farama-header__title">MiniGrid Documentation</span>
+    <span class="farama-header__title">Minigrid Documentation</span>
   </a><form class="sidebar-search-container" method="get" action="../../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -365,7 +365,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/master/docs/api/wrappers.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Minigrid/edit/main/docs/api/wrappers.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -403,11 +403,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ActionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ActionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ActionBonus" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper which adds an exploration bonus.
 This is a reward to encourage exploration of less
-visited (state,action) pairs.</p>
+visited (state, action) pairs.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionBonus</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
@@ -440,13 +440,13 @@ where the textual instructions are replaced by arrays representing the indices o
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DictObservationSpaceWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;mission&#39;</span><span class="p">]</span>
-<span class="go">&#39;avoid the lava and get to the green goal square&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'mission'</span><span class="p">]</span>
+<span class="go">'avoid the lava and get to the green goal square'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">DictObservationSpaceWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;mission&#39;</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'mission'</span><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
 <span class="go">[19, 31, 17, 36, 20, 38, 31, 2, 15, 35]</span>
 </pre></div>
 </div>
@@ -458,16 +458,29 @@ where the textual instructions are replaced by arrays representing the indices o
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.DirectionObsWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DirectionObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'slope'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DirectionObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DirectionObsWrapper" title="Link to this definition">¶</a></dt>
-<dd><p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
-type = {slope , angle}</p>
+<dd><p>Adds the direction from the agent to the goal as <code class="docutils literal notranslate"><span class="pre">goal_direction</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">type=&quot;slope&quot;</span></code>, the value is <code class="docutils literal notranslate"><span class="pre">dy</span> <span class="pre">/</span> <span class="pre">dx</span></code>, with signed infinity for
+vertical directions. With <code class="docutils literal notranslate"><span class="pre">type=&quot;angle&quot;</span></code>, the legacy value is
+<code class="docutils literal notranslate"><span class="pre">atan(dy</span> <span class="pre">/</span> <span class="pre">dx)</span></code> in radians, in the range <code class="docutils literal notranslate"><span class="pre">[-pi/2,</span> <span class="pre">pi/2]</span></code>. These modes
+do not distinguish all quadrants and generally give the same value for
+opposite directions.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">type=&quot;angle_atan2&quot;</span></code> for a direction that distinguishes all quadrants:
+<code class="docutils literal notranslate"><span class="pre">atan2(dy,</span> <span class="pre">dx)</span></code> in radians, in the range <code class="docutils literal notranslate"><span class="pre">[-pi,</span> <span class="pre">pi]</span></code>. Here <code class="docutils literal notranslate"><span class="pre">dx</span></code> and
+<code class="docutils literal notranslate"><span class="pre">dy</span></code> are the goal’s coordinates minus the agent’s coordinates in the
+grid’s coordinate system, where x increases to the right and y increases
+downward. All modes return a scalar float64 array and use zero when the
+agent is at the goal.</p>
+<p>Requires a <code class="docutils literal notranslate"><span class="pre">Goal</span></code> object in the grid after each reset; otherwise reset
+raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. If there are multiple goals, the first in row-major
+order is used.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectionObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">DirectionObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;slope&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">DirectionObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"slope"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;goal_direction&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'goal_direction'</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 <span class="go">1.0</span>
 </pre></div>
 </div>
@@ -486,7 +499,7 @@ and combine these with observed images into one flat array.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlatObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">FlatObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
@@ -506,13 +519,13 @@ and combine these with observed images into one flat array.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullyObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(7, 7, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">FullyObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(11, 11, 3)</span>
 </pre></div>
 </div>
@@ -528,10 +541,10 @@ and combine these with observed images into one flat array.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImgObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="go">dict_keys([&#39;image&#39;, &#39;direction&#39;, &#39;mission&#39;])</span>
+<span class="go">dict_keys(['image', 'direction', 'mission'])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">ImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span>
@@ -552,14 +565,14 @@ Instead of dying, the agent will receive a negative reward.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDeath</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS9N1-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS9N1-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reward</span><span class="p">,</span> <span class="n">term</span>
 <span class="go">(0, True)</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">NoDeath</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;lava&quot;</span><span class="p">,),</span> <span class="n">death_cost</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">NoDeath</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="o">=</span><span class="p">(</span><span class="s2">"lava"</span><span class="p">,),</span> <span class="n">death_cost</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -567,13 +580,13 @@ Instead of dying, the agent will receive a negative reward.</p>
 <span class="go">(-1.0, False)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Dynamic-Obstacles-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Dynamic-Obstacles-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reward</span><span class="p">,</span> <span class="n">term</span>
 <span class="go">(-1, True)</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">NoDeath</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ball&quot;</span><span class="p">,),</span> <span class="n">death_cost</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">NoDeath</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">no_death_types</span><span class="o">=</span><span class="p">(</span><span class="s2">"ball"</span><span class="p">,),</span> <span class="n">death_cost</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reward</span><span class="p">,</span> <span class="n">term</span>
@@ -607,9 +620,9 @@ agent view as observation.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneHotPartialObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 <span class="go">array([[2, 5, 0],</span>
 <span class="go">       [2, 5, 0],</span>
 <span class="go">       [2, 5, 0],</span>
@@ -619,7 +632,7 @@ agent view as observation.</p>
 <span class="go">       [2, 5, 0]], dtype=uint8)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">OneHotPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 <span class="go">array([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
 <span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
 <span class="go">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],</span>
@@ -645,7 +658,7 @@ configuration when reset.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">minigrid</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReseedWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
 <span class="go">[0, 6, 5, 0, 9, 2, 2, 1, 3, 1]</span>
@@ -678,13 +691,13 @@ This can be used to have the agent to solve the gridworld in pixel space.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RGBImgObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">])</span>  
 <span class="go">![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">RGBImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">])</span>  
 <span class="go">![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
 </pre></div>
 </div>
@@ -702,17 +715,17 @@ This can be used to have the agent to solve the gridworld in pixel space.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RGBImgObsWrapper</span><span class="p">,</span> <span class="n">RGBImgPartialObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">])</span>  
 <span class="go">![NoWrapper](../figures/lavacrossing_NoWrapper.png)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">])</span>  
 <span class="go">![RGBImgObsWrapper](../figures/lavacrossing_RGBImgObsWrapper.png)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">RGBImgPartialObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="s2">"image"</span><span class="p">])</span>  
 <span class="go">![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)</span>
 </pre></div>
 </div>
@@ -733,7 +746,7 @@ are visited on the grid.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PositionBonus</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-Empty-5x5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-Empty-5x5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
@@ -776,13 +789,13 @@ the coordinates on the grid, and IDX is the id of the object.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SymbolicObsWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(7, 7, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">SymbolicObsWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(11, 11, 3)</span>
 </pre></div>
 </div>
@@ -799,13 +812,13 @@ This cannot be used with fully observable wrappers.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ViewSizeWrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniGrid-LavaCrossingS11N5-v0&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"MiniGrid-LavaCrossingS11N5-v0"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(7, 7, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">env_obs</span> <span class="o">=</span> <span class="n">ViewSizeWrapper</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">agent_view_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env_obs</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obs</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(5, 5, 3)</span>
 </pre></div>
 </div>
@@ -1020,10 +1033,10 @@ This cannot be used with fully observable wrappers.</p>
         })()
       </script>
 
-    <script src="../../_static/documentation_options.js?v=df253959"></script>
+    <script src="../../_static/documentation_options.js?v=efea700b"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
+    <script src="../../_static/scripts/celshast.js?v=a788a8c6"></script>
     
     <script>
 
