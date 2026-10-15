@@ -318,7 +318,7 @@ def test_viewsize_wrapper(view_size):
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-LavaCrossingS11N5-v0"])
-@pytest.mark.parametrize("type", ["slope", "angle"])
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
 def test_direction_obs_wrapper(env_id, type):
     env = gym.make(env_id)
     env = DirectionObsWrapper(env, type=type)
@@ -331,6 +331,12 @@ def test_direction_obs_wrapper(env_id, type):
         assert obs["goal_direction"] == slope
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
+    elif type == "angle_atan2":
+        assert obs["goal_direction"] == np.arctan2(
+            env.goal_position[1] - env.unwrapped.agent_pos[1],
+            env.goal_position[0] - env.unwrapped.agent_pos[0],
+        )
+    assert env.observation_space.contains(obs)
 
     obs, _, _, _, _ = env.step(0)
     slope = np.divide(
@@ -341,8 +347,82 @@ def test_direction_obs_wrapper(env_id, type):
         assert obs["goal_direction"] == slope
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
+    elif type == "angle_atan2":
+        assert obs["goal_direction"] == np.arctan2(
+            env.goal_position[1] - env.unwrapped.agent_pos[1],
+            env.goal_position[0] - env.unwrapped.agent_pos[0],
+        )
+    assert env.observation_space.contains(obs)
 
     env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+@pytest.mark.parametrize(
+    "agent_pos, expected_angle, expected_angle_atan2, expected_slope",
+    [
+        ((2, 2), np.pi / 4, np.pi / 4, 1.0),
+        ((4, 2), -np.pi / 4, 3 * np.pi / 4, -1.0),
+        ((4, 4), np.pi / 4, -3 * np.pi / 4, 1.0),
+        ((2, 4), -np.pi / 4, -np.pi / 4, -1.0),
+        ((2, 3), 0.0, 0.0, 0.0),
+        ((3, 2), np.pi / 2, np.pi / 2, np.inf),
+        ((4, 3), 0.0, np.pi, 0.0),
+        ((3, 4), -np.pi / 2, -np.pi / 2, -np.inf),
+        ((3, 3), 0.0, 0.0, 0.0),
+    ],
+)
+def test_direction_obs_wrapper_directions(
+    type, agent_pos, expected_angle, expected_angle_atan2, expected_slope
+):
+    """Cover all quadrants, axis-aligned directions, and the goal itself."""
+    env = DirectionObsWrapper(
+        gym.make("MiniGrid-FourRooms-v0", agent_pos=agent_pos, goal_pos=(3, 3)),
+        type=type,
+    )
+    try:
+        with np.errstate(divide="raise", invalid="raise"):
+            obs, _ = env.reset(seed=0)
+        expected = {
+            "slope": expected_slope,
+            "angle": expected_angle,
+            "angle_atan2": expected_angle_atan2,
+        }[type]
+        assert obs["goal_direction"].item() == pytest.approx(expected)
+        assert obs["goal_direction"].shape == ()
+        assert obs["goal_direction"].dtype == np.float64
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+def test_direction_obs_wrapper_reaches_goal(type):
+    env = DirectionObsWrapper(EmptyEnv(size=5, agent_start_pos=(2, 3)), type=type)
+    try:
+        env.reset(seed=0)
+        with np.errstate(divide="raise", invalid="raise"):
+            obs, reward, terminated, truncated, _ = env.step(Actions.forward)
+        assert terminated and not truncated and reward > 0
+        assert obs["goal_direction"].item() == 0.0
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+def test_direction_obs_wrapper_preserves_extra_observations(type):
+    base = EmptyEnvWithExtraObs()
+    env = DirectionObsWrapper(base, type=type)
+    try:
+        assert "goal_direction" not in base.observation_space.spaces
+        assert env.observation_space["size"] is base.observation_space["size"]
+        obs, _ = env.reset(seed=0)
+        np.testing.assert_array_equal(obs["size"], [5, 5])
+        obs, *_ = env.step(Actions.left)
+        np.testing.assert_array_equal(obs["size"], [5, 5])
+    finally:
+        env.close()
 
 
 def test_direction_obs_wrapper_tracks_goal_across_resets():

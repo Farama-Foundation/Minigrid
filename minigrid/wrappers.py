@@ -69,7 +69,7 @@ class ActionBonus(gym.Wrapper):
     """
     Wrapper which adds an exploration bonus.
     This is a reward to encourage exploration of less
-    visited (state,action) pairs.
+    visited (state, action) pairs.
 
     Example:
         >>> import gymnasium as gym
@@ -93,7 +93,7 @@ class ActionBonus(gym.Wrapper):
     """
 
     def __init__(self, env):
-        """A wrapper that adds an exploration bonus to less visited (state,action) pairs.
+        """A wrapper that adds an exploration bonus to less visited (state, action) pairs.
 
         Args:
             env: The environment to apply the wrapper
@@ -108,12 +108,12 @@ class ActionBonus(gym.Wrapper):
         env = self.unwrapped
         tup = (tuple(env.agent_pos), env.agent_dir, action)
 
-        # Get the count for this (s,a) pair
+        # Get the count for this (s, a) pair
         pre_count = 0
         if tup in self.counts:
             pre_count = self.counts[tup]
 
-        # Update the count for this (s,a) pair
+        # Update the count for this (s, a) pair
         new_count = pre_count + 1
         self.counts[tup] = new_count
 
@@ -452,7 +452,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         """
         max_words_in_mission is the length of the array to represent a mission, value 0 for missing words
         word_dict is a dictionary of words to use (keys=words, values=indices from 1 to < max_words_in_mission),
-                  if None, use the Minigrid language
+        if None, use the Minigrid language
         """
         super().__init__(env)
 
@@ -678,8 +678,24 @@ class ViewSizeWrapper(ObservationWrapper):
 
 class DirectionObsWrapper(ObservationWrapper):
     """
-    Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
-    type = {slope , angle}
+    Adds the direction from the agent to the goal as ``goal_direction``.
+
+    With ``type="slope"``, the value is ``dy / dx``, with signed infinity for
+    vertical directions. With ``type="angle"``, the legacy value is
+    ``atan(dy / dx)`` in radians, in the range ``[-pi/2, pi/2]``. These modes
+    do not distinguish all quadrants and generally give the same value for
+    opposite directions.
+
+    Use ``type="angle_atan2"`` for a direction that distinguishes all quadrants:
+    ``atan2(dy, dx)`` in radians, in the range ``[-pi, pi]``. Here ``dx`` and
+    ``dy`` are the goal's coordinates minus the agent's coordinates in the
+    grid's coordinate system, where x increases to the right and y increases
+    downward. All modes return a scalar float64 array and use zero when the
+    agent is at the goal.
+
+    Requires a ``Goal`` object in the grid after each reset; otherwise reset
+    raises ``ValueError``. If there are multiple goals, the first in row-major
+    order is used.
 
     Example:
         >>> import gymnasium as gym
@@ -694,8 +710,17 @@ class DirectionObsWrapper(ObservationWrapper):
 
     def __init__(self, env, type="slope"):
         super().__init__(env)
-        self.goal_position: tuple = None
+        self.goal_position: tuple[int, int] | None = None
         self.type = type
+        bound = {"angle": np.pi / 2, "angle_atan2": np.pi}.get(type, np.inf)
+        self.observation_space = spaces.Dict(
+            {
+                **env.observation_space.spaces,
+                "goal_direction": spaces.Box(
+                    low=-bound, high=bound, shape=(), dtype=np.float64
+                ),
+            }
+        )
 
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None
@@ -717,23 +742,26 @@ class DirectionObsWrapper(ObservationWrapper):
             raise ValueError(
                 "DirectionObsWrapper requires an environment with a Goal object."
             )
-        # in case there are multiple goals , needs to be handled for other env types
         self.goal_position = goals[0]
 
         return self.observation(obs), info
 
     def observation(self, obs):
-        slope = np.divide(
-            self.goal_position[1] - self.unwrapped.agent_pos[1],
-            self.goal_position[0] - self.unwrapped.agent_pos[0],
-        )
+        dx = self.goal_position[0] - self.unwrapped.agent_pos[0]
+        dy = self.goal_position[1] - self.unwrapped.agent_pos[1]
+        if dx == 0 and dy == 0:
+            direction = 0.0
+        elif self.type == "angle_atan2":
+            direction = np.arctan2(dy, dx)
+        elif dx == 0:
+            direction = np.copysign(np.inf, dy)
+        else:
+            direction = dy / dx
 
         if self.type == "angle":
-            obs["goal_direction"] = np.arctan(slope)
-        else:
-            obs["goal_direction"] = slope
+            direction = np.arctan(direction)
 
-        return obs
+        return {**obs, "goal_direction": np.array(direction, dtype=np.float64)}
 
 
 SYMBOLIC_OBS_DTYPE = np.int64
@@ -813,7 +841,6 @@ class StochasticActionWrapper(ActionWrapper):
         self.random_action = random_action
 
     def action(self, action):
-        """ """
         if self.np_random.random() < self.prob:
             return action
         else:
