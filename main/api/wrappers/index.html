@@ -403,7 +403,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">ActionBonus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#ActionBonus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.ActionBonus" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper which adds an exploration bonus.
 This is a reward to encourage exploration of less
-visited (state,action) pairs.</p>
+visited (state, action) pairs.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">minigrid.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionBonus</span>
@@ -458,8 +458,21 @@ where the textual instructions are replaced by arrays representing the indices o
 <dl class="py class">
 <dt class="sig sig-object py" id="minigrid.wrappers.DirectionObsWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">minigrid.wrappers.</span></span><span class="sig-name descname"><span class="pre">DirectionObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'slope'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/minigrid/wrappers/#DirectionObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#minigrid.wrappers.DirectionObsWrapper" title="Link to this definition">¶</a></dt>
-<dd><p>Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)
-type = {slope , angle}</p>
+<dd><p>Adds the direction from the agent to the goal as <code class="docutils literal notranslate"><span class="pre">goal_direction</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">type=&quot;slope&quot;</span></code>, the value is <code class="docutils literal notranslate"><span class="pre">dy</span> <span class="pre">/</span> <span class="pre">dx</span></code>, with signed infinity for
+vertical directions. With <code class="docutils literal notranslate"><span class="pre">type=&quot;angle&quot;</span></code>, the legacy value is
+<code class="docutils literal notranslate"><span class="pre">atan(dy</span> <span class="pre">/</span> <span class="pre">dx)</span></code> in radians, in the range <code class="docutils literal notranslate"><span class="pre">[-pi/2,</span> <span class="pre">pi/2]</span></code>. These modes
+do not distinguish all quadrants and generally give the same value for
+opposite directions.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">type=&quot;angle_atan2&quot;</span></code> for a direction that distinguishes all quadrants:
+<code class="docutils literal notranslate"><span class="pre">atan2(dy,</span> <span class="pre">dx)</span></code> in radians, in the range <code class="docutils literal notranslate"><span class="pre">[-pi,</span> <span class="pre">pi]</span></code>. Here <code class="docutils literal notranslate"><span class="pre">dx</span></code> and
+<code class="docutils literal notranslate"><span class="pre">dy</span></code> are the goal’s coordinates minus the agent’s coordinates in the
+grid’s coordinate system, where x increases to the right and y increases
+downward. All modes return a scalar float64 array and use zero when the
+agent is at the goal.</p>
+<p>Requires a <code class="docutils literal notranslate"><span class="pre">Goal</span></code> object in the grid after each reset; otherwise reset
+raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. If there are multiple goals, the first in row-major
+order is used.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>

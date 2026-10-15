@@ -463,7 +463,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper which adds an exploration bonus.</span>
 <span class="sd">    This is a reward to encourage exploration of less</span>
-<span class="sd">    visited (state,action) pairs.</span>
+<span class="sd">    visited (state, action) pairs.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
@@ -487,7 +487,7 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""A wrapper that adds an exploration bonus to less visited (state,action) pairs.</span>
+<span class="w">        </span><span class="sd">"""A wrapper that adds an exploration bonus to less visited (state, action) pairs.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            env: The environment to apply the wrapper</span>
@@ -502,12 +502,12 @@
         <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span>
         <span class="n">tup</span> <span class="o">=</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">),</span> <span class="n">env</span><span class="o">.</span><span class="n">agent_dir</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
 
-        <span class="c1"># Get the count for this (s,a) pair</span>
+        <span class="c1"># Get the count for this (s, a) pair</span>
         <span class="n">pre_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">tup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">:</span>
             <span class="n">pre_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">tup</span><span class="p">]</span>
 
-        <span class="c1"># Update the count for this (s,a) pair</span>
+        <span class="c1"># Update the count for this (s, a) pair</span>
         <span class="n">new_count</span> <span class="o">=</span> <span class="n">pre_count</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">tup</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_count</span>
 
@@ -867,7 +867,7 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        max_words_in_mission is the length of the array to represent a mission, value 0 for missing words</span>
 <span class="sd">        word_dict is a dictionary of words to use (keys=words, values=indices from 1 to &lt; max_words_in_mission),</span>
-<span class="sd">                  if None, use the Minigrid language</span>
+<span class="sd">        if None, use the Minigrid language</span>
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
@@ -1102,8 +1102,24 @@
 <a class="viewcode-back" href="../../../api/wrappers/#minigrid.wrappers.DirectionObsWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DirectionObsWrapper</span><span class="p">(</span><span class="n">ObservationWrapper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Provides the slope/angular direction to the goal with the observations as modeled by (y2 - y2 )/( x2 - x1)</span>
-<span class="sd">    type = {slope , angle}</span>
+<span class="sd">    Adds the direction from the agent to the goal as ``goal_direction``.</span>
+
+<span class="sd">    With ``type="slope"``, the value is ``dy / dx``, with signed infinity for</span>
+<span class="sd">    vertical directions. With ``type="angle"``, the legacy value is</span>
+<span class="sd">    ``atan(dy / dx)`` in radians, in the range ``[-pi/2, pi/2]``. These modes</span>
+<span class="sd">    do not distinguish all quadrants and generally give the same value for</span>
+<span class="sd">    opposite directions.</span>
+
+<span class="sd">    Use ``type="angle_atan2"`` for a direction that distinguishes all quadrants:</span>
+<span class="sd">    ``atan2(dy, dx)`` in radians, in the range ``[-pi, pi]``. Here ``dx`` and</span>
+<span class="sd">    ``dy`` are the goal's coordinates minus the agent's coordinates in the</span>
+<span class="sd">    grid's coordinate system, where x increases to the right and y increases</span>
+<span class="sd">    downward. All modes return a scalar float64 array and use zero when the</span>
+<span class="sd">    agent is at the goal.</span>
+
+<span class="sd">    Requires a ``Goal`` object in the grid after each reset; otherwise reset</span>
+<span class="sd">    raises ``ValueError``. If there are multiple goals, the first in row-major</span>
+<span class="sd">    order is used.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; import gymnasium as gym</span>
@@ -1118,8 +1134,17 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"slope"</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"angle"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"angle_atan2"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="o">**</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">spaces</span><span class="p">,</span>
+                <span class="s2">"goal_direction"</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+                    <span class="n">low</span><span class="o">=-</span><span class="n">bound</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">bound</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1141,23 +1166,26 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">"DirectionObsWrapper requires an environment with a Goal object."</span>
             <span class="p">)</span>
-        <span class="c1"># in case there are multiple goals , needs to be handled for other env types</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span> <span class="o">=</span> <span class="n">goals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">obs</span><span class="p">),</span> <span class="n">info</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
-        <span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-        <span class="p">)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agent_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">dx</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">dy</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"angle_atan2"</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">dy</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">dx</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"angle"</span><span class="p">:</span>
-            <span class="n">obs</span><span class="p">[</span><span class="s2">"goal_direction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">obs</span><span class="p">[</span><span class="s2">"goal_direction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">slope</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">obs</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">obs</span><span class="p">,</span> <span class="s2">"goal_direction"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)}</span></div>
 
 
 
@@ -1243,7 +1271,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">random_action</span> <span class="o">=</span> <span class="n">random_action</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">""" """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">np_random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">action</span>
         <span class="k">else</span><span class="p">:</span>
