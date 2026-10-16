@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from gymnasium import spaces
+
 from minigrid.core.grid import Grid
 from minigrid.core.mission import MissionSpace
 from minigrid.core.world_object import Goal
@@ -43,6 +45,14 @@ class EmptyEnv(MiniGridEnv):
         [minigrid/core/constants.py](minigrid/core/constants.py)
     - `STATE` refers to the door state with 0=open, 1=closed and 2=locked
 
+    Pass `discrete_obs=True` to return an integer observation for tabular algorithms
+    instead of the default dictionary. The fixed grid and goal are implicit; the
+    integer encodes `(step_count, y, x, direction)` as
+    `((step_count * height + y) * width + x) * 4 + direction`.
+    The observation space is `Discrete((max_steps + 1) * height * width * 4)`.
+    Including the step count preserves the time-dependent reward and timeout.
+    For example: `gym.make("MiniGrid-Empty-5x5-v0", discrete_obs=True)`.
+
     ## Rewards
 
     A reward of '1 - 0.9 * (step_count / max_steps)' is given for success, and '0' for failure.
@@ -71,10 +81,12 @@ class EmptyEnv(MiniGridEnv):
         agent_start_pos=(1, 1),
         agent_start_dir=0,
         max_steps: int | None = None,
+        discrete_obs: bool = False,
         **kwargs,
     ):
         self.agent_start_pos = agent_start_pos
         self.agent_start_dir = agent_start_dir
+        self.discrete_obs = discrete_obs
 
         mission_space = MissionSpace(mission_func=self._gen_mission)
 
@@ -89,6 +101,29 @@ class EmptyEnv(MiniGridEnv):
             max_steps=max_steps,
             **kwargs,
         )
+
+        if self.discrete_obs:
+            self.observation_space = spaces.Discrete(
+                (self.max_steps + 1) * self.height * self.width * 4
+            )
+
+    def _discrete_observation(self):
+        x, y = self.agent_pos
+        return int(
+            ((self.step_count * self.height + y) * self.width + x) * 4 + self.agent_dir
+        )
+
+    def reset(self, *, seed=None, options=None):
+        obs, info = super().reset(seed=seed, options=options)
+        if self.discrete_obs:
+            obs = self._discrete_observation()
+        return obs, info
+
+    def step(self, action):
+        obs, reward, terminated, truncated, info = super().step(action)
+        if self.discrete_obs:
+            obs = self._discrete_observation()
+        return obs, reward, terminated, truncated, info
 
     @staticmethod
     def _gen_mission():
