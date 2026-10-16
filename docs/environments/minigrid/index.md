@@ -40,5 +40,6 @@ PutNearEnv
 RedBlueDoorEnv
 UnlockEnv
 UnlockPickupEnv
+WindyEnv
 
 ```
