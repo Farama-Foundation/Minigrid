@@ -182,6 +182,62 @@ def test_dict_observation_space_wrapper(env_spec):
     env.close()
 
 
+@pytest.mark.parametrize("max_words_in_mission", [6, 7])
+@pytest.mark.parametrize("operation", ["reset", "step"])
+def test_dict_observation_space_wrapper_mission_length(max_words_in_mission, operation):
+    env = DictObservationSpaceWrapper(
+        gym.make("MiniGrid-Empty-5x5-v0"),
+        max_words_in_mission=max_words_in_mission,
+    )
+    try:
+        if operation == "reset":
+            obs, _ = env.reset(seed=0)
+        else:
+            env.env.reset(seed=0)
+            obs, _, _, _, _ = env.step(Actions.left)
+
+        # The six-word mission fits exactly or leaves one slot for padding.
+        assert env.unwrapped.mission == "get to the green goal square"
+        expected = env.string_to_indices(env.unwrapped.mission)
+        assert obs["mission"] == expected + [0] * (max_words_in_mission - 6)
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+def test_dict_observation_space_wrapper_empty_mission():
+    env = DictObservationSpaceWrapper(
+        gym.make("MiniGrid-Playground-v0"), max_words_in_mission=1
+    )
+    try:
+        obs, _ = env.reset(seed=0)
+        assert env.unwrapped.mission == ""
+        assert obs["mission"] == [0]
+        assert env.observation_space.contains(obs)
+        obs, _, _, _, _ = env.step(Actions.left)
+        assert obs["mission"] == [0]
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("operation", ["reset", "step"])
+def test_dict_observation_space_wrapper_mission_too_long(operation):
+    env = DictObservationSpaceWrapper(
+        gym.make("MiniGrid-Empty-5x5-v0"), max_words_in_mission=5
+    )
+    try:
+        if operation == "reset":
+            with pytest.raises(AssertionError):
+                env.reset(seed=0)
+        else:
+            env.env.reset(seed=0)
+            with pytest.raises(AssertionError):
+                env.step(Actions.left)
+    finally:
+        env.close()
+
+
 def test_dict_observation_space_wrapper_mission_space_bounds():
     """
     Every word in the vocabulary must encode to a value inside the declared
