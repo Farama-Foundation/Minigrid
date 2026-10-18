@@ -79,6 +79,9 @@ class MissionSpace(spaces.Space[str]):
 
     def contains(self, x: Any) -> bool:
         """Return boolean specifying if x is a valid member of this space."""
+        if not isinstance(x, str):
+            return False
+
         # Store a list of all the placeholders from self.ordered_placeholders that appear in x
         if self.ordered_placeholders is not None:
             check_placeholder_list = []
