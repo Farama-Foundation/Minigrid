@@ -492,7 +492,7 @@ class GoToImpUnlock(RoomGridLevel):
         while True:
             ik = self._rand_int(0, self.num_cols)
             jk = self._rand_int(0, self.num_rows)
-            if ik is id and jk is jd:
+            if ik == id and jk == jd:
                 continue
             self.add_object(ik, jk, "key", door.color)
             break
@@ -505,7 +505,7 @@ class GoToImpUnlock(RoomGridLevel):
         # objects in the locked room.
         for i in range(self.num_cols):
             for j in range(self.num_rows):
-                if i is not id or j is not jd:
+                if i != id or j != jd:
                     self.add_distractors(i, j, num_distractors=2, all_unique=False)
 
         # The agent must be placed after all the object to respect constraints
