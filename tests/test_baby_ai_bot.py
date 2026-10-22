@@ -23,36 +23,29 @@ for k_i in gym.envs.registry.keys():
 
 @pytest.mark.parametrize("env_id", babyai_envs)
 def test_bot(env_id):
-    """
-    The BabyAI Bot should be able to solve all BabyAI environments,
+    """The BabyAI Bot should be able to solve all BabyAI environments,
     allowing us therefore to generate demonstrations.
     """
-    # Use the parameter env_id to make the environment
     env = gym.make(env_id)
-    # env = gym.make(env_id, render_mode="human") # for visual debugging
+    num_steps = getattr(env, "max_steps", 240)
 
-    # reset env
-    curr_seed = 0
+    try:
+        for seed in (0, 1):
+            env.reset(seed=seed)
+            expert = BabyAIBot(env)
 
-    num_steps = 240
-    terminated = False
-    while not terminated:
-        env.reset(seed=curr_seed)
+            last_action = None
+            terminated = False
+            for _step in range(num_steps):
+                action = expert.replan(last_action)
+                obs, reward, terminated, truncated, info = env.step(action)
+                last_action = action
 
-        # create expert bot
-        expert = BabyAIBot(env)
+                if terminated:
+                    break
 
-        last_action = None
-        for _step in range(num_steps):
-            action = expert.replan(last_action)
-            obs, reward, terminated, truncated, info = env.step(action)
-            last_action = action
-            env.render()
-
-            if terminated:
-                break
-
-        # try again with a different seed
-        curr_seed += 1
-
-    env.close()
+            assert (
+                terminated
+            ), f"BabyAIBot failed to solve {env_id} on seed {seed} within {num_steps} steps"
+    finally:
+        env.close()
