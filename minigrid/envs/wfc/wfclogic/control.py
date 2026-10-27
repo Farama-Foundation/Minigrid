@@ -289,7 +289,7 @@ def execute_wfc(
                 ),
                 outstats,
             )
-        else:
+        elif attempts == attempt_limit:
             return None, outstats
 
     raise TimedOut("Attempt limit exceeded.")

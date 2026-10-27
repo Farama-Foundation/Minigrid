@@ -10,6 +10,7 @@ import pytest
 from minigrid.core.actions import Actions
 from minigrid.core.constants import OBJECT_TO_IDX
 from minigrid.core.grid import Grid
+from minigrid.core.world_object import Goal
 from minigrid.envs import EmptyEnv
 from minigrid.wrappers import (
     ActionBonus,
@@ -178,6 +179,21 @@ def test_dict_observation_space_wrapper(env_spec):
     assert env.string_to_indices(mission) == [
         value for value in obs["mission"] if value != 0
     ]
+    assert env.observation_space.contains(obs)
+    env.close()
+
+
+def test_dict_observation_space_wrapper_mission_space_bounds():
+    """
+    Every word in the vocabulary must encode to a value inside the declared
+    mission space (word indices are offset by 1, with 0 reserved for padding).
+    """
+    env = DictObservationSpaceWrapper(gym.make("MiniGrid-Empty-5x5-v0"))
+    mission_space = env.observation_space["mission"]
+    for word in env.word_dict:
+        indices = env.string_to_indices(word)
+        indices += [0] * (env.max_words_in_mission - len(indices))
+        assert mission_space.contains(indices), word
     env.close()
 
 
@@ -303,7 +319,7 @@ def test_viewsize_wrapper(view_size):
 
 
 @pytest.mark.parametrize("env_id", ["MiniGrid-LavaCrossingS11N5-v0"])
-@pytest.mark.parametrize("type", ["slope", "angle"])
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
 def test_direction_obs_wrapper(env_id, type):
     env = gym.make(env_id)
     env = DirectionObsWrapper(env, type=type)
@@ -316,6 +332,12 @@ def test_direction_obs_wrapper(env_id, type):
         assert obs["goal_direction"] == slope
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
+    elif type == "angle_atan2":
+        assert obs["goal_direction"] == np.arctan2(
+            env.goal_position[1] - env.unwrapped.agent_pos[1],
+            env.goal_position[0] - env.unwrapped.agent_pos[0],
+        )
+    assert env.observation_space.contains(obs)
 
     obs, _, _, _, _ = env.step(0)
     slope = np.divide(
@@ -326,7 +348,112 @@ def test_direction_obs_wrapper(env_id, type):
         assert obs["goal_direction"] == slope
     elif type == "angle":
         assert obs["goal_direction"] == np.arctan(slope)
+    elif type == "angle_atan2":
+        assert obs["goal_direction"] == np.arctan2(
+            env.goal_position[1] - env.unwrapped.agent_pos[1],
+            env.goal_position[0] - env.unwrapped.agent_pos[0],
+        )
+    assert env.observation_space.contains(obs)
 
+    env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+@pytest.mark.parametrize(
+    "agent_pos, expected_angle, expected_angle_atan2, expected_slope",
+    [
+        ((2, 2), np.pi / 4, np.pi / 4, 1.0),
+        ((4, 2), -np.pi / 4, 3 * np.pi / 4, -1.0),
+        ((4, 4), np.pi / 4, -3 * np.pi / 4, 1.0),
+        ((2, 4), -np.pi / 4, -np.pi / 4, -1.0),
+        ((2, 3), 0.0, 0.0, 0.0),
+        ((3, 2), np.pi / 2, np.pi / 2, np.inf),
+        ((4, 3), 0.0, np.pi, 0.0),
+        ((3, 4), -np.pi / 2, -np.pi / 2, -np.inf),
+        ((3, 3), 0.0, 0.0, 0.0),
+    ],
+)
+def test_direction_obs_wrapper_directions(
+    type, agent_pos, expected_angle, expected_angle_atan2, expected_slope
+):
+    """Cover all quadrants, axis-aligned directions, and the goal itself."""
+    env = DirectionObsWrapper(
+        gym.make("MiniGrid-FourRooms-v0", agent_pos=agent_pos, goal_pos=(3, 3)),
+        type=type,
+    )
+    try:
+        with np.errstate(divide="raise", invalid="raise"):
+            obs, _ = env.reset(seed=0)
+        expected = {
+            "slope": expected_slope,
+            "angle": expected_angle,
+            "angle_atan2": expected_angle_atan2,
+        }[type]
+        assert obs["goal_direction"].item() == pytest.approx(expected)
+        assert obs["goal_direction"].shape == ()
+        assert obs["goal_direction"].dtype == np.float64
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+def test_direction_obs_wrapper_reaches_goal(type):
+    env = DirectionObsWrapper(EmptyEnv(size=5, agent_start_pos=(2, 3)), type=type)
+    try:
+        env.reset(seed=0)
+        with np.errstate(divide="raise", invalid="raise"):
+            obs, reward, terminated, truncated, _ = env.step(Actions.forward)
+        assert terminated and not truncated and reward > 0
+        assert obs["goal_direction"].item() == 0.0
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
+@pytest.mark.parametrize("type", ["slope", "angle", "angle_atan2"])
+def test_direction_obs_wrapper_preserves_extra_observations(type):
+    base = EmptyEnvWithExtraObs()
+    env = DirectionObsWrapper(base, type=type)
+    try:
+        assert "goal_direction" not in base.observation_space.spaces
+        assert env.observation_space["size"] is base.observation_space["size"]
+        obs, _ = env.reset(seed=0)
+        np.testing.assert_array_equal(obs["size"], [5, 5])
+        obs, *_ = env.step(Actions.left)
+        np.testing.assert_array_equal(obs["size"], [5, 5])
+    finally:
+        env.close()
+
+
+def test_direction_obs_wrapper_tracks_goal_across_resets():
+    """The goal is stored as (x, y) and looked up again on every reset.
+
+    FourRooms puts the goal somewhere else in each episode. The wrapper used to
+    keep the first goal it found, with x and y swapped.
+    """
+    env = DirectionObsWrapper(gym.make("MiniGrid-FourRooms-v0"), type="slope")
+    for seed in range(5):
+        obs, _ = env.reset(seed=seed)
+        grid = env.unwrapped.grid
+        goal = next(
+            (i, j)
+            for i in range(grid.width)
+            for j in range(grid.height)
+            if isinstance(grid.get(i, j), Goal)
+        )
+        assert env.goal_position == goal
+
+        agent_x, agent_y = env.unwrapped.agent_pos
+        expected = np.divide(goal[1] - agent_y, goal[0] - agent_x)
+        assert obs["goal_direction"] == expected
+    env.close()
+
+
+def test_direction_obs_wrapper_without_goal():
+    env = DirectionObsWrapper(gym.make("MiniGrid-GoToDoor-5x5-v0"))
+    with pytest.raises(ValueError, match="Goal"):
+        env.reset(seed=0)
     env.close()
 
 
@@ -432,6 +559,29 @@ def test_stochastic_action_wrapper(env_id):
     for _ in range(20):
         _, _, _, _, _ = env.step(0)
     env.close()
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_follows_the_env_seed(env_id):
+    def sample_actions(global_seed):
+        np.random.seed(global_seed)
+        env = StochasticActionWrapper(gym.make(env_id), prob=0.5)
+        env.reset(seed=1)
+        actions = [int(env.action(Actions.left)) for _ in range(50)]
+        env.close()
+        return actions
+
+    assert sample_actions(0) == sample_actions(1)
+
+
+@pytest.mark.parametrize("env_id", ["MiniGrid-Empty-16x16-v0"])
+def test_stochastic_action_wrapper_can_sample_every_action(env_id):
+    env = StochasticActionWrapper(gym.make(env_id), prob=0.0)
+    env.reset(seed=1)
+    sampled = {int(env.action(Actions.left)) for _ in range(1000)}
+    env.close()
+
+    assert sampled == set(range(env.action_space.n))
 
 
 def test_dict_observation_space_doesnt_clash_with_one_hot():
