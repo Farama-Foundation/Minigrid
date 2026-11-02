@@ -551,7 +551,7 @@ class DictObservationSpaceWrapper(ObservationWrapper):
 
     def observation(self, obs):
         obs["mission"] = self.string_to_indices(obs["mission"])
-        assert len(obs["mission"]) < self.max_words_in_mission
+        assert len(obs["mission"]) <= self.max_words_in_mission
         obs["mission"] += [0] * (self.max_words_in_mission - len(obs["mission"]))
 
         return obs
