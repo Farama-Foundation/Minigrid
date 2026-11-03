@@ -26,6 +26,21 @@ def test_entropyLocationHeuristic() -> None:
     assert (1, 2) == result
 
 
+def test_hilbertLocationHeuristic() -> None:
+    """The Hilbert cell ordering must cover grids larger than 16x16.
+
+    Regression test: ``curve_size`` was hardcoded to ``4`` (a 16x16 curve), so
+    the ordering never completed for larger grids.
+    """
+    pytest.importorskip("hilbertcurve")
+
+    for dim in (20, 48):
+        preferences = np.full((dim, dim), 2.0, dtype=np.float64)
+        wfc_solver.makeHilbertLocationHeuristic(preferences)
+        # fill_with_curve writes curve-order values in [0, 1) into every cell
+        assert np.all((preferences >= 0) & (preferences < 1))
+
+
 def test_observe() -> None:
     my_wave = np.ones((5, 3, 4), dtype=np.bool_)
     my_wave[0, 1, 2] = False
