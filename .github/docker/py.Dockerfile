@@ -11,6 +11,6 @@ RUN apt-get -y update \
 COPY ../.. /usr/local/minigrid/
 WORKDIR /usr/local/minigrid/
 
-RUN pip install .[wfc,testing]
+RUN pip install .[wfc,testing,multiagent]
 
 ENTRYPOINT ["/usr/local/minigrid/.github/docker/docker_entrypoint"]
