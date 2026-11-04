@@ -121,8 +121,9 @@ class MissionSpace(spaces.Space[str]):
                 for j, placeholder_2 in enumerate(
                     ordered_placeholder_list[starting_id:]
                 ):
-                    # Check if place holder ids overlap and keep the longest
-                    if max(placeholder_1[0], placeholder_2[0]) < min(
+                    # Check if place holder ids overlap and keep the longest. Both end ids
+                    # are inclusive, so spans that share a single character overlap too.
+                    if max(placeholder_1[0], placeholder_2[0]) <= min(
                         placeholder_1[1], placeholder_2[1]
                     ):
                         remove_placeholder = min(
