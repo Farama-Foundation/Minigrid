@@ -380,3 +380,40 @@ def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
 
     env.reset()
     assert isinstance(env.unwrapped.pprint_grid(), str)
+
+
+@pytest.mark.parametrize(
+    "spec",
+    [
+        spec
+        for spec in all_testing_env_specs
+        if spec.entry_point == "minigrid.envs:EmptyEnv"
+    ],
+    ids=lambda spec: spec.id,
+)
+def test_empty_discrete_observations(spec):
+    env = spec.make(discrete_obs=True, max_steps=7)
+    reference = spec.make(max_steps=7)
+    assert isinstance(env.observation_space, gym.spaces.Discrete)
+    assert isinstance(reference.observation_space, gym.spaces.Dict)
+    try:
+        obs, info = env.reset(seed=0)
+        _, reference_info = reference.reset(seed=0)
+        assert info == reference_info
+        for action in [0, 1, 2, 2, 1, 2, 2]:
+            assert env.observation_space.contains(obs)
+            state, direction = divmod(obs, 4)
+            state, x = divmod(state, env.unwrapped.width)
+            step_count, y = divmod(state, env.unwrapped.height)
+            assert (x, y) == tuple(env.unwrapped.agent_pos)
+            assert direction == env.unwrapped.agent_dir
+            assert step_count == env.unwrapped.step_count
+            obs, *result = env.step(action)
+            _, *reference_result = reference.step(action)
+            assert result == reference_result
+            if result[1] or result[2]:
+                break
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+        reference.close()
