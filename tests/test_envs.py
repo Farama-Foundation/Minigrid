@@ -380,3 +380,13 @@ def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
 
     env.reset()
     assert isinstance(env.unwrapped.pprint_grid(), str)
+
+
+def test_render_tile_subdivisions(monkeypatch):
+    monkeypatch.setattr(Grid, "tile_cache", {})
+    aliased = Grid.render_tile(None, agent_dir=0, tile_size=8, subdivs=1)
+    antialiased = Grid.render_tile(None, agent_dir=0, tile_size=8, subdivs=3)
+    assert not np.array_equal(aliased, antialiased)
+    np.testing.assert_array_equal(
+        Grid.render_tile(None, agent_dir=0, tile_size=8, subdivs=1), aliased
+    )
