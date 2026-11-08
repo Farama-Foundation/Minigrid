@@ -172,6 +172,8 @@ class MissionSpace(spaces.Space[str]):
         if isinstance(other, MissionSpace):
             # Check that place holder lists are the same
             if self.ordered_placeholders is not None:
+                if other.ordered_placeholders is None:
+                    return False
                 # Check length
                 if (
                     len(self.ordered_placeholders) == len(other.ordered_placeholders)
