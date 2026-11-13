@@ -22,7 +22,8 @@ for k_i in gym.envs.registry.keys():
 
 
 @pytest.mark.parametrize("env_id", babyai_envs)
-def test_bot(env_id):
+@pytest.mark.parametrize("seed", range(5))
+def test_bot(env_id, seed):
     """
     The BabyAI Bot should be able to solve all BabyAI environments,
     allowing us therefore to generate demonstrations.
@@ -31,28 +32,26 @@ def test_bot(env_id):
     env = gym.make(env_id)
     # env = gym.make(env_id, render_mode="human") # for visual debugging
 
-    # reset env
-    curr_seed = 0
-
-    num_steps = 240
-    terminated = False
-    while not terminated:
-        env.reset(seed=curr_seed)
+    try:
+        env.reset(seed=seed)
 
         # create expert bot
         expert = BabyAIBot(env)
 
         last_action = None
-        for _step in range(num_steps):
+        for _step in range(env.unwrapped.max_steps):
             action = expert.replan(last_action)
             obs, reward, terminated, truncated, info = env.step(action)
             last_action = action
             env.render()
 
-            if terminated:
+            if terminated or truncated:
+                assert terminated and reward > 0, (
+                    f"Bot did not solve the mission: reward={reward}, "
+                    f"terminated={terminated}, truncated={truncated}"
+                )
                 break
-
-        # try again with a different seed
-        curr_seed += 1
-
-    env.close()
+        else:
+            pytest.fail("Bot exhausted the episode step budget")
+    finally:
+        env.close()
