@@ -59,7 +59,11 @@ class BlockedUnlockPickupEnv(RoomGrid):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make the
+    pickup goal permanently unreachable.
+
     - `MiniGrid-BlockedUnlockPickup-v0`
+    - `MiniGrid-BlockedUnlockPickup-v1`
 
     """
 

@@ -75,8 +75,13 @@ class Synth(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-Synth-v0`
+    - `BabyAI-Synth-v1`
     - `BabyAI-SynthS5R2-v0`
+    - `BabyAI-SynthS5R2-v1`
 
     """
 
@@ -163,7 +168,11 @@ class SynthLoc(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-SynthLoc-v0`
+    - `BabyAI-SynthLoc-v1`
     """
 
     def __init__(self, **kwargs):
@@ -268,7 +277,11 @@ class SynthSeq(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-SynthSeq-v0`
+    - `BabyAI-SynthSeq-v1`
 
     """
 
@@ -370,7 +383,11 @@ class MiniBossLevel(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-MiniBossLevel-v0`
+    - `BabyAI-MiniBossLevel-v1`
 
     """
 
@@ -473,7 +490,11 @@ class BossLevel(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-BossLevel-v0`
+    - `BabyAI-BossLevel-v1`
     """
 
     def __init__(self, **kwargs):
@@ -569,7 +590,11 @@ class BossLevelNoUnlock(LevelGen):
 
     ## Registered Configurations
 
+    "v1" prevents toggling an empty box from deleting it, which used to make a
+    pickup or put-next goal permanently unreachable when it involved a box.
+
     - `BabyAI-BossLevelNoUnlock-v0`
+    - `BabyAI-BossLevelNoUnlock-v1`
     """
 
     def __init__(self, **kwargs):

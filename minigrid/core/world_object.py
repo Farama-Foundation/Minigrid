@@ -270,9 +270,15 @@ class Ball(WorldObj):
 
 
 class Box(WorldObj):
-    def __init__(self, color, contains: WorldObj | None = None):
+    def __init__(
+        self,
+        color,
+        contains: WorldObj | None = None,
+        fix_empty_box_bug: bool = False,
+    ):
         super().__init__("box", color)
         self.contains = contains
+        self.fix_empty_box_bug = fix_empty_box_bug
 
     def can_pickup(self):
         return True
@@ -288,6 +294,9 @@ class Box(WorldObj):
         fill_coords(img, point_in_rect(0.16, 0.84, 0.47, 0.53), c)
 
     def toggle(self, env, pos):
+        if self.fix_empty_box_bug and self.contains is None:
+            return False
+
         # Replace the box by its contents
         env.grid.set(pos[0], pos[1], self.contains)
         return True
