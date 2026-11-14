@@ -415,7 +415,11 @@ class PutNextInstr(ActionInstr):
 
         # In strict mode, picking up the wrong object fails
         if self.strict:
-            if action == self.env.actions.pickup and self.env.carrying:
+            if (
+                action == self.env.actions.pickup
+                and self.env.carrying
+                and not any(self.env.carrying is obj for obj in self.desc_move.obj_set)
+            ):
                 return "failure"
 
         # Only verify when the drop action is performed
