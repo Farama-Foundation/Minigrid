@@ -156,7 +156,7 @@ class Grid:
         """
 
         # Hash map lookup key for the cache
-        key: tuple[Any, ...] = (agent_dir, highlight, tile_size)
+        key: tuple[Any, ...] = (agent_dir, highlight, tile_size, subdivs)
         key = obj.encode() + key if obj else key
 
         if key in cls.tile_cache:
