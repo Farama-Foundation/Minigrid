@@ -291,6 +291,47 @@ def test_mission_space_multiple_overlapping_placeholders():
     assert not mission_space.contains("Get the darkgreen football football.")
 
 
+@pytest.mark.parametrize("with_placeholders", [False, True])
+@pytest.mark.parametrize(
+    "value",
+    [
+        None,
+        1,
+        0.5,
+        b"Get the red ball.",
+        ["red"],
+        {"red": 1},
+        np.array(["red", "blue"]),
+    ],
+)
+def test_mission_space_non_string_membership(with_placeholders, value):
+    mission_space = (
+        MissionSpace(lambda color: f"Get the {color} ball.", [["red", "blue"]])
+        if with_placeholders
+        else MissionSpace(lambda: "Get the red ball.")
+    )
+    assert not mission_space.contains(value)
+    assert value not in mission_space
+    assert mission_space.contains(mission_space.sample())
+    assert mission_space.contains(np.str_("Get the red ball."))
+
+
+@pytest.mark.parametrize(
+    "env_id", ["MiniGrid-Empty-5x5-v0", "MiniGrid-Fetch-5x5-N2-v0"]
+)
+def test_mission_membership_in_environment_observations(env_id):
+    with gym.make(env_id) as env:
+        observation, _ = env.reset(seed=0)
+        for _ in range(5):
+            assert env.observation_space.contains(observation)
+            for value in (None, 1, b"not a mission", np.array(["red", "blue"])):
+                assert not env.observation_space.contains(
+                    {**observation, "mission": value}
+                )
+            observation, _, terminated, truncated, _ = env.step(0)
+            assert not terminated and not truncated
+
+
 def test_mission_space():
     # Test placeholders
     mission_space = MissionSpace(
