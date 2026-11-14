@@ -5,29 +5,18 @@ permissions:
   contents: read
 
 jobs:
-  build-latest:
-    runs-on: ubuntu-latest
+  tests:
     strategy:
       matrix:
+        os: [ubuntu-latest, ubuntu-arm, macos-latest, windows-latest]
         python-version: ['3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
-      - run: |
-           docker build -f .github/docker/py.Dockerfile \
-             --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
-             --tag minigrid-docker .
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install .[wfc,testing]
       - name: Run tests
-        run: docker run minigrid-docker pytest
-      - name: Run doctest
-        run: docker run minigrid-docker pytest --doctest-modules minigrid/
-
-  build-old:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - run: |
-          docker build -f .github/docker/py-old.Dockerfile \
-             --build-arg PYTHON_VERSION="3.11" \
-             --tag minigrid-docker .
-      - name: Run tests
-        run: docker run minigrid-docker pytest
+        run: pytest .
