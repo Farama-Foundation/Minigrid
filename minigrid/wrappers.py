@@ -336,11 +336,13 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
     """
     Wrapper to use partially observable RGB image as observation.
     This can be used to have the agent to solve the gridworld in pixel space.
+    Use ``ViewSizeWrapper`` to set the partial observation size, which
+    defaults to 7 tiles, i.e. (56, 56, 3) pixels at the default tile size.
 
     Example:
         >>> import gymnasium as gym
         >>> import matplotlib.pyplot as plt
-        >>> from minigrid.wrappers import RGBImgObsWrapper, RGBImgPartialObsWrapper
+        >>> from minigrid.wrappers import RGBImgObsWrapper, RGBImgPartialObsWrapper, ViewSizeWrapper
         >>> env = gym.make("MiniGrid-LavaCrossingS11N5-v0")
         >>> obs, _ = env.reset()
         >>> plt.imshow(obs["image"])  # doctest: +SKIP
@@ -353,6 +355,10 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         >>> obs, _ = env_obs.reset()
         >>> plt.imshow(obs["image"])  # doctest: +SKIP
         ![RGBImgPartialObsWrapper](../figures/lavacrossing_RGBImgPartialObsWrapper.png)
+        >>> env_obs = RGBImgPartialObsWrapper(ViewSizeWrapper(env, agent_view_size=5))
+        >>> obs, _ = env_obs.reset()
+        >>> obs["image"].shape
+        (40, 40, 3)
     """
 
     def __init__(self, env, tile_size=8):
@@ -362,6 +368,14 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         self.tile_size = tile_size
 
         obs_shape = env.observation_space.spaces["image"].shape
+
+        # The wrapped env may narrow the agent's view (e.g. ViewSizeWrapper), in
+        # which case unwrapped.agent_view_size is stale. Deriving the view size
+        # from the observation space being wrapped keeps the rendered image and
+        # observation_space consistent.
+        # See https://github.com/Farama-Foundation/Minigrid/issues/419
+        self.agent_view_size = obs_shape[0]
+
         new_image_space = spaces.Box(
             low=0,
             high=255,
@@ -374,8 +388,8 @@ class RGBImgPartialObsWrapper(ObservationWrapper):
         )
 
     def observation(self, obs):
-        rgb_img_partial = self.unwrapped.get_frame(
-            tile_size=self.tile_size, agent_pov=True
+        rgb_img_partial = self.unwrapped.get_pov_render(
+            tile_size=self.tile_size, agent_view_size=self.agent_view_size
         )
 
         return {**obs, "image": rgb_img_partial}
