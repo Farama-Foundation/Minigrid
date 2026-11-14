@@ -19,6 +19,15 @@ def register_minigrid_envs():
         entry_point="minigrid.envs:BlockedUnlockPickupEnv",
     )
 
+    # Perfect mazes
+    for size in (9, 11, 15):
+        for name, obstacle_type in (("Maze", "wall"), ("MazeLava", "lava")):
+            register(
+                id=f"MiniGrid-{name}S{size}-v0",
+                entry_point="minigrid.envs:MazeEnv",
+                kwargs={"size": size, "obstacle_type": obstacle_type},
+            )
+
     # LavaCrossing
     # ----------------------------------------
     register(
