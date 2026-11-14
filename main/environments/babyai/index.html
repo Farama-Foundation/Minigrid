@@ -398,6 +398,15 @@
             
             <section id="babyai-environments">
 <h1>BabyAI Environments<a class="headerlink" href="#babyai-environments" title="Link to this heading">¶</a></h1>
+<p>The environments listed below are implemented in the <a class="reference internal" href="#/minigrid/envs/babyai"><span class="xref myst">minigrid/envs/babyai</span></a>
+directory. They were imported from the <a class="reference external" href="https://github.com/mila-iqia/babyai">BabyAI</a> project and
+are the levels described in its ICLR 2019 paper. Each level is a Minigrid grid-world paired with an
+instruction drawn from the <em>Baby Language</em> grammar - “go to the red ball”, “pick up the grey box
+behind you, then open a door” - which the agent reads from the <code class="docutils literal notranslate"><span class="pre">mission</span></code> field of the observation,
+and with a verifier that decides when that instruction has been carried out. The levels isolate
+different competencies, from a single room with grey distractors and no language (<code class="docutils literal notranslate"><span class="pre">GoToRedBallGrey</span></code>)
+up to <code class="docutils literal notranslate"><span class="pre">BossLevel</span></code>, a superset of all the others whose instruction can be any sentence of the
+grammar. The purpose of the collection is research on grounded language learning.</p>
 
 <div class="env-grid">
     

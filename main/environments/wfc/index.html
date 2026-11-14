@@ -398,8 +398,15 @@
             
             <section id="wfc-environments">
 <h1>WFC Environments<a class="headerlink" href="#wfc-environments" title="Link to this heading">¶</a></h1>
-<p>These environments use the <a class="reference external" href="https://github.com/mxgmn/WaveFunctionCollapse">Wave Function Collapse algorithm</a>,
-adapted from the <a class="reference external" href="https://github.com/ikarth/wfc_2019f">Python implementation by Isaac Karth</a>.</p>
+<p>The environments listed below are implemented in the <a class="reference internal" href="#/minigrid/envs/wfc"><span class="xref myst">minigrid/envs/wfc</span></a>
+directory. Instead of laying out a level from fixed rules, each one generates it with the
+<a class="reference external" href="https://github.com/mxgmn/WaveFunctionCollapse">Wave Function Collapse algorithm</a> - adapted from the
+<a class="reference external" href="https://github.com/ikarth/wfc_2019f">Python implementation by Isaac Karth</a> - which samples a new
+grid that is locally similar to a small example image, so every <code class="docutils literal notranslate"><span class="pre">reset()</span></code> gives a different level of
+the same character. The mission is always to traverse the level to the goal; what changes between
+the environments is the pattern they sample from, one per preset, giving mazes, dungeons, rooms and
+scattered obstacles. These environments need the optional dependencies, installed with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">minigrid[wfc]</span></code>.</p>
 
 <div class="env-grid">
     
