@@ -7,6 +7,7 @@ firstpage:
 
 
 List of publications & submissions using Minigrid or BabyAI (please open a pull request to add missing entries):
+- [Towards Reliable VLM Judges: State-Conditional Invariance and Presentation-Aware Diagnostics](https://arxiv.org/abs/2611.13596) (University of Science and Technology of China, NeurIPS 2026, Track on Evaluations and Datasets)
 - [Beyond Winning Strategies: Admissible and Admissible Winning Strategies for Quantitative Reachability Games](https://arxiv.org/abs/2408.13369) (University of Colorado Boulder, IJCAI 2025)
 - [Using offline data to speed up Reinforcement Learning in procedurally generated environments](https://www.sciencedirect.com/science/article/pii/S0925231224018502) (TECNALIA, University of Edinburgh, Neurocomputing 2025)
 - [DRED: Zero-Shot Transfer in Reinforcement Learning via Data-Regularised Environment Design](https://arxiv.org/abs/2402.03479) (University of Edinburgh, ICML 2024)

@@ -279,7 +279,6 @@ def makeHilbertLocationHeuristic(
 
     curve_size = math.ceil(math.sqrt(max(preferences.shape[0], preferences.shape[1])))
     logger.debug(curve_size)
-    curve_size = 4
     h_curve = HilbertCurve(curve_size, 2)
     h_coords = (h_curve.point_from_distance(i) for i in itertools.count())
     cell_order = fill_with_curve(preferences, h_coords)
