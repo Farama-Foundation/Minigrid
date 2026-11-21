@@ -74,7 +74,7 @@ html_theme = "celshast"
 html_title = "Minigrid Documentation"
 html_baseurl = "https://minigrid.farama.org/"
 html_copy_source = False
-html_favicon = "_static/img/minigrid-favicon.png"
+html_favicon = "_static/img/minigrid-favicon.svg"
 html_theme_options = {
     "light_logo": "img/minigrid.svg",
     "dark_logo": "img/minigrid-white.svg",
