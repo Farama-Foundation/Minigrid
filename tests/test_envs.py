@@ -380,3 +380,37 @@ def test_pprint_grid(env_id="MiniGrid-Empty-8x8-v0"):
 
     env.reset()
     assert isinstance(env.unwrapped.pprint_grid(), str)
+
+
+@pytest.mark.parametrize(
+    "env_id",
+    [
+        # The agent starts at a tuple of Python ints
+        "MiniGrid-Empty-5x5-v0",
+        # The agent starts at a numpy array
+        "MiniGrid-LavaGapS5-v0",
+        # The agent starts at a tuple of numpy ints
+        "MiniGrid-Empty-Random-6x6-v0",
+    ],
+)
+def test_hash_same_state_after_moving_back(env_id):
+    env = gym.make(env_id).unwrapped
+    env.reset(seed=0)
+
+    # Face a free cell, so the agent can step into it and back
+    for _ in range(4):
+        if env.grid.get(*env.front_pos) is None:
+            break
+        env.step(env.actions.left)
+    else:
+        pytest.fail("the agent has no free cell next to it")
+    start_pos, start_dir = tuple(int(x) for x in env.agent_pos), env.agent_dir
+    start_hash = env.hash()
+
+    for action in ["forward", "left", "left", "forward", "left", "left"]:
+        env.step(env.actions[action])
+
+    # Same position, direction and grid as before, so the same hash
+    assert tuple(int(x) for x in env.agent_pos) == start_pos
+    assert env.agent_dir == start_dir
+    assert env.hash() == start_hash
