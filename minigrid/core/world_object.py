@@ -93,7 +93,7 @@ class WorldObj:
         elif obj_type == "door":
             v = Door(color, is_open, is_locked)
         elif obj_type == "goal":
-            v = Goal()
+            v = Goal(color)
         elif obj_type == "lava":
             v = Lava()
         else:
