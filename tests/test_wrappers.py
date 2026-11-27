@@ -196,6 +196,29 @@ def test_dict_observation_space_wrapper_mission_space_bounds():
     env.close()
 
 
+@pytest.mark.parametrize("after_step", [False, True], ids=["reset", "step"])
+@pytest.mark.parametrize(
+    "word_ids",
+    [(0, 1, 2, 3, 4, 5), (1, 2, 3, 4, 5, 6), (1, 3, 7, 9, 12, 15)],
+    ids=["zero-based", "one-based", "sparse"],
+)
+def test_dict_observation_space_wrapper_custom_word_ids(word_ids, after_step):
+    words = ("get", "to", "the", "green", "goal", "square")
+    env = DictObservationSpaceWrapper(
+        gym.make("MiniGrid-Empty-5x5-v0"),
+        max_words_in_mission=16,
+        word_dict=dict(zip(words, word_ids)),
+    )
+    try:
+        obs, _ = env.reset(seed=0)
+        if after_step:
+            obs, _, _, _, _ = env.step(Actions.left)
+        assert obs["mission"] == [idx + 1 for idx in word_ids] + [0] * 10
+        assert env.observation_space.contains(obs)
+    finally:
+        env.close()
+
+
 @pytest.mark.parametrize(
     "wrapper",
     [
