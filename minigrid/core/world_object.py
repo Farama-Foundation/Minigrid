@@ -288,6 +288,10 @@ class Box(WorldObj):
         fill_coords(img, point_in_rect(0.16, 0.84, 0.47, 0.53), c)
 
     def toggle(self, env, pos):
+        # An empty box has nothing to reveal; leave it unchanged so toggling
+        # cannot delete the box (https://github.com/Farama-Foundation/Minigrid/issues/447)
+        if self.contains is None:
+            return False
         # Replace the box by its contents
         env.grid.set(pos[0], pos[1], self.contains)
         return True
