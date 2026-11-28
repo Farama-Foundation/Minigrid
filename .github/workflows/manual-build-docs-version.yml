@@ -1,4 +1,5 @@
 name: Manual Docs Versioning
+
 on:
   workflow_dispatch:
     inputs:

@@ -1,5 +1,21 @@
 name: Tests
-on: [pull_request, push]
+on:
+  push:
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'minigrid/**'
+      - 'tests/**'
+      - 'setup.py'
+      - 'pyproject.toml'
+    branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'minigrid/**'
+      - 'tests/**'
+      - 'setup.py'
+      - 'pyproject.toml'
+    branches: [main]
 
 permissions:
   contents: read
@@ -19,4 +35,5 @@ jobs:
       - name: Install dependencies
         run: pip install .[wfc,testing]
       - name: Run tests
-        run: pytest .
+        run: pytest tests -v -s --timeout=300 --timeout-method=thread
+        timeout-minutes: 15
