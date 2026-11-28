@@ -242,8 +242,9 @@ def fill_with_curve(
         # logger.debug(fill, idx, coord)
         if fill < arr_len:
             try:
-                arr[tuple(coord)] = fill / arr_len
-                fill += 1
+                if coord[0] >= 0 and coord[1] >= 0:
+                    arr[tuple(coord)] = fill / arr_len
+                    fill += 1
             except IndexError:
                 pass
         else:

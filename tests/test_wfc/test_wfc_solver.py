@@ -41,6 +41,22 @@ def test_hilbertLocationHeuristic() -> None:
         assert np.all((preferences >= 0) & (preferences < 1))
 
 
+def test_spiralLocationHeuristic() -> None:
+    """The spiral cell ordering must cover non-square grids too.
+
+    Regression test: out-of-range spiral coordinates with negative values
+    wrapped around (numpy negative indexing) instead of being skipped, so
+    ``fill_with_curve`` counted wrapped writes and stopped before covering
+    every cell of rectangular grids.
+    """
+    for shape in ((16, 16), (10, 48), (48, 10), (3, 5)):
+        preferences = np.full(shape, 2.0, dtype=np.float64)
+        wfc_solver.makeSpiralLocationHeuristic(preferences)
+        # fill_with_curve writes a distinct curve-order value in [0, 1)
+        # into every cell
+        assert len(np.unique(preferences)) == np.prod(shape)
+
+
 def test_observe() -> None:
     my_wave = np.ones((5, 3, 4), dtype=np.bool_)
     my_wave[0, 1, 2] = False
