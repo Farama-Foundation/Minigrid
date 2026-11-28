@@ -291,6 +291,30 @@ def test_mission_space_multiple_overlapping_placeholders():
     assert not mission_space.contains("Get the darkgreen football football.")
 
 
+@pytest.mark.parametrize("n", ["1", "11"])
+def test_mission_space_placeholders_overlapping_by_one_character(n):
+    # Placeholder end ids are inclusive, so "1" at the last character of "11" overlaps it
+    # by exactly one character and must still be dropped in favour of the longer match.
+    mission_space = MissionSpace(
+        mission_func=lambda n: f"go {n} steps",
+        ordered_placeholders=[["1", "11"]],
+    )
+
+    assert mission_space.contains(f"go {n} steps")
+    assert not mission_space.contains("go 111 steps")
+
+
+def test_mission_space_placeholder_sharing_last_character():
+    # "d" shares only the final character of "red" and has to be discarded as nested in it.
+    mission_space = MissionSpace(
+        mission_func=lambda color, obj_type: f"Get the {color} {obj_type}.",
+        ordered_placeholders=[["d", "red"], ["ball", "key"]],
+    )
+
+    assert mission_space.contains("Get the red ball.")
+    assert mission_space.contains("Get the d key.")
+
+
 def test_mission_space():
     # Test placeholders
     mission_space = MissionSpace(
