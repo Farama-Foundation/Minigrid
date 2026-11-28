@@ -162,7 +162,10 @@ class MiniGridEnv(gym.Env):
         """
         sample_hash = hashlib.sha256()
 
-        to_encode = [self.grid.encode().tolist(), self.agent_pos, self.agent_dir]
+        # `agent_pos` can be a tuple of ints, a tuple of numpy ints or a numpy
+        # array, and each prints differently, so convert it to plain ints
+        agent_pos = tuple(int(x) for x in self.agent_pos)
+        to_encode = [self.grid.encode().tolist(), agent_pos, self.agent_dir]
         for item in to_encode:
             sample_hash.update(str(item).encode("utf8"))
 
