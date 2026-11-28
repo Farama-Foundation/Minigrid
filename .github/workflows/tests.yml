@@ -1,5 +1,21 @@
 name: Tests
-on: [pull_request, push]
+on:
+  push:
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'minigrid/**'
+      - 'tests/**'
+      - 'setup.py'
+      - 'pyproject.toml'
+    branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'minigrid/**'
+      - 'tests/**'
+      - 'setup.py'
+      - 'pyproject.toml'
+    branches: [main]
 
 permissions:
   contents: read

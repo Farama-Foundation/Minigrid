@@ -1,9 +1,12 @@
 name: Build main branch documentation website
+
 on:
   push:
     branches: [main]
+
 permissions:
   contents: write
+
 jobs:
   docs:
     name: Generate Website
