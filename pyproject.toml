@@ -20,6 +20,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Operating System :: OS Independent",
@@ -28,7 +29,13 @@ dependencies = ["numpy>=1.18.0", "gymnasium>=0.28.1", "pygame-ce>=2.4.0"]
 dynamic = ["version"]
 
 [project.optional-dependencies]
-testing = ["pytest>=7.0.1", "pytest-mock>=3.10.0", "matplotlib>=3.0"]
+testing = [
+    "pytest",
+    "pytest-xdist",
+    "pytest-timeout",
+    "pytest-mock",
+    "matplotlib"
+]
 wfc = ["networkx", "imageio>=2.31.1"]
 
 [project.urls]

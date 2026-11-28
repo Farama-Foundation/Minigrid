@@ -19,4 +19,5 @@ jobs:
       - name: Install dependencies
         run: pip install .[wfc,testing]
       - name: Run tests
-        run: pytest .
+        run: pytest tests -v -s --timeout=300 --timeout-method=thread
+        timeout-minutes: 15
