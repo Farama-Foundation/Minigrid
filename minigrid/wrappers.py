@@ -462,14 +462,18 @@ class DictObservationSpaceWrapper(ObservationWrapper):
         self.max_words_in_mission = max_words_in_mission
         self.word_dict = word_dict
 
+        # Word IDs shift by one for zero padding. Retain the existing width
+        # for dense vocabularies, and expand it for larger custom IDs.
+        num_mission_values = max(
+            len(word_dict) + 1, max(word_dict.values(), default=-1) + 2
+        )
+
         self.observation_space = spaces.Dict(
             {
                 "image": env.observation_space["image"],
                 "direction": spaces.Discrete(4),
-                # Word indices are offset by 1 (0 is padding), so the highest
-                # value emitted by `string_to_indices` is len(word_dict)
                 "mission": spaces.MultiDiscrete(
-                    [len(self.word_dict.keys()) + 1] * max_words_in_mission
+                    [num_mission_values] * max_words_in_mission
                 ),
             }
         )
