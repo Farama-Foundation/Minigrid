@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: codespell
         args:
-          - --ignore-words-list=linz
+          - --ignore-words-list=linz,rouge
   - repo: https://github.com/PyCQA/flake8
     rev: 7.1.1
     hooks:
